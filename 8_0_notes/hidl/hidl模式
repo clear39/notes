@@ -1,0 +1,25 @@
+绑定式 HAL
+Android 要求所有 Android 设备（无论是搭载 Android O 的设备还是升级到 Android O 的设备）上的下列 HAL 均为绑定式：
+
+
+android.hardware.biometrics.fingerprint@2.1。取代 Android 8.0 中已不存在的 fingerprintd。
+android.hardware.configstore@1.0。Android 8.0 中的新 HAL。
+android.hardware.dumpstate@1.0。此 HAL 提供的原始接口可能无法继续使用，并且已更改。因此，dumpstate_board 必须在指定的设备上重新实现（这是一个可选的 HAL）。
+android.hardware.graphics.allocator@2.0。在 Android 8.0 中，此 HAL 必须为绑定式，因此无需在可信进程和不可信进程之间分享文件描述符。
+android.hardware.radio@1.0。取代由存活于自身进程中的 rild 提供的接口。
+android.hardware.usb@1.0。Android 8.0 中的新 HAL。
+android.hardware.wifi@1.0。Android 8.0 中的新 HAL，可取代此前加载到 system_server 的旧版 WLAN HAL 库。
+android.hardware.wifi.supplicant@1.0。在现有 wpa_supplicant 进程之上的 HIDL 接口
+
+注意：Android 提供的以下 HIDL 接口将一律在绑定模式下使用：android.frameworks.*、android.system.* 和 android.hidl.*（不包括下文所述的 android.hidl.memory@1.0）。
+
+
+
+直通式 HAL
+
+
+
+
+
+
+
