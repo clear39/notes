@@ -62,6 +62,8 @@ public class PhoneFactory {
                 /* In case of multi SIM mode two instances of Phone, RIL are created,
                    where as in single SIM mode only instance. isMultiSimEnabled() function checks
                    whether it is single SIM or multi SIM mode */
+		//   String mSimConfig = SystemProperties.get(TelephonyProperties.PROPERTY_MULTI_SIM_CONFIG);
+		//   static final String PROPERTY_MULTI_SIM_CONFIG = "persist.radio.multisim.config";
                 int numPhones = TelephonyManager.getDefault().getPhoneCount();
                 // Start ImsResolver and bind to ImsServices.
                 String defaultImsPackage = sContext.getResources().getString(com.android.internal.R.string.config_ims_package);
@@ -77,9 +79,11 @@ public class PhoneFactory {
                 for (int i = 0; i < numPhones; i++) {
                     // reads the system properties and makes commandsinterface
                     // Get preferred network type.
-                    networkModes[i] = RILConstants.PREFERRED_NETWORK_MODE;
+		    //  int PREFERRED_NETWORK_MODE = SystemProperties.getInt("ro.telephony.default_network",NETWORK_MODE_WCDMA_PREF);
+                    networkModes[i] = RILConstants.PREFERRED_NETWORK_MODE; //
 
                     Rlog.i(LOG_TAG, "Network Mode set to " + Integer.toString(networkModes[i]));
+
                     sCommandsInterfaces[i] = new RIL(context, networkModes[i],cdmaSubscription, i);
                 }
                 Rlog.i(LOG_TAG, "Creating SubscriptionController");
@@ -116,8 +120,7 @@ public class PhoneFactory {
 
                 // Ensure that we have a default SMS app. Requesting the app with
                 // updateIfNeeded set to true is enough to configure a default SMS app.
-                ComponentName componentName =
-                        SmsApplication.getDefaultSmsApplication(context, true /* updateIfNeeded */);
+                ComponentName componentName = SmsApplication.getDefaultSmsApplication(context, true /* updateIfNeeded */);
                 String packageName = "NONE";
                 if (componentName != null) {
                     packageName = componentName.getPackageName();
