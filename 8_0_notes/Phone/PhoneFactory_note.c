@@ -55,7 +55,7 @@ public class PhoneFactory {
 		/* public static final String FEATURE_TELEPHONY_EUICC = "android.hardware.telephony.euicc";
 		* hasSystemFeature 的实现再 ApplicationPackageManager
 		*/
-                if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY_EUICC)) {
+                if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_TELEPHONY_EUICC)) {	
                     sEuiccController = EuiccController.init(context);
                 }
 
