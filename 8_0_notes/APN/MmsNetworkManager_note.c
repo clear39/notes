@@ -3,6 +3,7 @@ public class MmsNetworkManager {
 
      public MmsNetworkManager(){
 	......
+        // 下面 mNetworkRequest 创建 都是 初始化 NetworkCapabilities 的变量
      	mNetworkRequest = new NetworkRequest.Builder()
                 .addTransportType(NetworkCapabilities.TRANSPORT_CELLULAR)
                 .addCapability(NetworkCapabilities.NET_CAPABILITY_MMS)
@@ -30,7 +31,7 @@ public class MmsNetworkManager {
                 return;
             }
             // Not available, so start a new request if not done yet
-            if (mNetworkCallback == null) { // mNetworkCallback 
+            if (mNetworkCallback == null) { // 通过 mNetworkCallback 标记是否发送了请求
                 LogUtil.d(requestId, "MmsNetworkManager: start new network request");
                 startNewNetworkRequestLocked();
             }
