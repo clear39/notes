@@ -1,7 +1,3 @@
-
-
-
-
 public class MmsNetworkManager {
 
 
@@ -14,6 +10,51 @@ public class MmsNetworkManager {
                 .build();
 	......
      }
+
+
+    /**
+     * Acquire the MMS network
+     *
+     * @param requestId request ID for logging   (requestId用于日志打印,为调用该函数的类) packages/services/Mms/src/com/android/mms/service/MmsRequest.java:153 
+     * @throws com.android.mms.service.exception.MmsNetworkException if we fail to acquire it
+     * 
+     */
+    public void acquireNetwork(final String requestId) throws MmsNetworkException {
+        synchronized (this) {
+            // Since we are acquiring the network, remove the network release task if exists.
+            mReleaseHandler.removeCallbacks(mNetworkReleaseTask);
+            mMmsRequestCount += 1;
+            if (mNetwork != null) {
+                // Already available
+                LogUtil.d(requestId, "MmsNetworkManager: already available");
+                return;
+            }
+            // Not available, so start a new request if not done yet
+            if (mNetworkCallback == null) { // mNetworkCallback 
+                LogUtil.d(requestId, "MmsNetworkManager: start new network request");
+                startNewNetworkRequestLocked();
+            }
+            final long shouldEnd = SystemClock.elapsedRealtime() + NETWORK_ACQUIRE_TIMEOUT_MILLIS;
+            long waitTime = NETWORK_ACQUIRE_TIMEOUT_MILLIS;
+            while (waitTime > 0) {
+                try {
+                    this.wait(waitTime);
+                } catch (InterruptedException e) {
+                    LogUtil.w(requestId, "MmsNetworkManager: acquire network wait interrupted");
+                }
+                if (mNetwork != null) {
+                    // Success
+                    return;
+                }
+                // Calculate remaining waiting time to make sure we wait the full timeout period  
+                waitTime = shouldEnd - SystemClock.elapsedRealtime();
+            }
+            // Timed out, so release the request and fail
+            LogUtil.e(requestId, "MmsNetworkManager: timed out");
+            releaseRequestLocked(mNetworkCallback);
+            throw new MmsNetworkException("Acquiring network timed out");
+        }
+    }
 	
 
     // Timeout used to call ConnectivityManager.requestNetwork
@@ -35,10 +76,10 @@ public class MmsNetworkManager {
     /**
      * Network callback for our network request
      */
-    private class NetworkRequestCallback extends ConnectivityManager.NetworkCallback {
+    private class NetworkRequestCallback extends ConnectivityManager.NetworkCallback { //ConnectivityManager.NetworkCallback中都是空实现
         @Override
         public void onAvailable(Network network) {
-            super.onAvailable(network);
+            super.onAvailable(network);  // 空实现，没有实际作用
             LogUtil.i("NetworkCallbackListener.onAvailable: network=" + network);
             synchronized (MmsNetworkManager.this) {
                 mNetwork = network;
@@ -48,7 +89,7 @@ public class MmsNetworkManager {
 
         @Override
         public void onLost(Network network) {
-            super.onLost(network);
+            super.onLost(network);// 空实现，没有实际作用
             LogUtil.w("NetworkCallbackListener.onLost: network=" + network);
             synchronized (MmsNetworkManager.this) {
                 releaseRequestLocked(this);
@@ -58,7 +99,7 @@ public class MmsNetworkManager {
 
         @Override
         public void onUnavailable() {
-            super.onUnavailable();
+            super.onUnavailable();// 空实现，没有实际作用
             LogUtil.w("NetworkCallbackListener.onUnavailable");
             synchronized (MmsNetworkManager.this) {
                 releaseRequestLocked(this);
