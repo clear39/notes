@@ -393,6 +393,7 @@ public class ConnectivityService extends IConnectivityManager.Stub {
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+//frameworks/base/core/java/android/net/NetworkAgent.java:225 	netId = cm.registerNetworkAgent(new Messenger(this), new NetworkInfo(ni),
     //分析NetworkAgentInfo 的得来
     public int registerNetworkAgent(Messenger messenger, NetworkInfo networkInfo,LinkProperties linkProperties, NetworkCapabilities networkCapabilities,int currentScore, NetworkMisc networkMisc) {
         enforceConnectivityInternalPermission();
@@ -426,7 +427,9 @@ public class ConnectivityService extends IConnectivityManager.Stub {
     }
 
 
-//////////////////////////////////////////////////////////////////////////////////////////////////  
+////////////////////////////////////////////////////////////////////////////////////////////////// 
+// frameworks/base/core/java/android/net/NetworkFactory.java:121:            ConnectivityManager.from(mContext).registerNetworkFactory(mMessenger, LOG_TAG);
+ 
    //分析 mNetworkFactoryInfos 得来
     public void registerNetworkFactory(Messenger messenger, String name) {
         enforceConnectivityInternalPermission();
