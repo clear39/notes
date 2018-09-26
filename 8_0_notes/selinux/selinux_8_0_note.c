@@ -28,7 +28,8 @@
 2. 用户空间的SEAndroid Policy描述的是资源安全访问策略。系统在启动的时候，用户空间的Security Server需要将这些安全访问策略加载内核空间的SELinux LSM模块中去。这是通过SELinux文件系统接口实现的。
 3. 用户空间的Security Context描述的是资源安全上下文。SEAndroid的安全访问策略就是在资源的安全上下文基础上实现的。
 4. 用户空间的Security Server一方面需要到用户空间的Security Context去检索对象的安全上下文，另一方面也需要到内核空间去操作对象的安全上下文。
-5. 用户空间的selinux库封装了对SELinux文件系统接口的读写操作。用户空间的Security Server访问内核空间的SELinux LSM模块时，都是间接地通过selinux进行的。这样可以将对SELinux文件系统接口的读写操作封装成更有意义的函数调用。
+5. 用户空间的selinux库封装了对SELinux文件系统接口的读写操作。用户空间的Security Server访问内核空间的SELinux LSM模块时，都是间接地通过selinux进行的。
+	这样可以将对SELinux文件系统接口的读写操作封装成更有意义的函数调用。
 6. 用户空间的Security Server到用户空间的Security Context去检索对象的安全上下文时，同样也是通过selinux库来进行的。
 
  一. 内核空间
@@ -51,7 +52,7 @@
 int main(int argc, char** argv) {
     。。。。。。
 
-    bool is_first_stage = (getenv("INIT_SECOND_STAGE") == nullptr);
+    bool is_first_stage = (getenv("INIT_SECOND_STAGE") == nullptr); //系统第一次启动为true
 
     if (is_first_stage) {
  	。。。。。。
@@ -87,8 +88,54 @@ int main(int argc, char** argv) {
     return 0;
 }
 
+
+/* Callback facilities */
+union selinux_callback {
+	/* log the printf-style format and arguments,
+	   with the type code indicating the type of message */
+	int 
+#ifdef __GNUC__
+__attribute__ ((format(printf, 2, 3)))
+#endif
+	(*func_log) (int type, const char *fmt, ...);
+	/* store a string representation of auditdata (corresponding
+	   to the given security class) into msgbuf. */
+	int (*func_audit) (void *auditdata, security_class_t cls,char *msgbuf, size_t msgbufsize);
+	/* validate the supplied context, modifying if necessary */
+	int (*func_validate) (char **ctx);
+	/* netlink callback for setenforce message */
+	int (*func_setenforce) (int enforcing);
+	/* netlink callback for policyload message */
+	int (*func_policyload) (int seqno);
+};
+
+
+//	external/selinux/libselinux/src/callbacks.c
+/* callback setting function */
+void selinux_set_callback(int type, union selinux_callback cb)
+{
+	switch (type) {
+	case SELINUX_CB_LOG:
+		selinux_log = cb.func_log;
+		break;
+	case SELINUX_CB_AUDIT:
+		selinux_audit = cb.func_audit; //selinux_audit默认是空实现
+		break;
+	case SELINUX_CB_VALIDATE:
+		selinux_validate = cb.func_validate;//selinux_validate默认是空实现
+		break;
+	case SELINUX_CB_SETENFORCE:
+		selinux_netlink_setenforce = cb.func_setenforce;//selinux_netlink_setenforce默认是空实现
+		break;
+	case SELINUX_CB_POLICYLOAD:
+		selinux_netlink_policyload = cb.func_policyload;//selinux_netlink_policyload默认是空实现
+		break;
+	}
+}
+
+
 //分析一
-static void selinux_initialize(bool in_kernel_domain) {
+static void selinux_initialize(bool in_kernel_domain == true) {
     Timer t;
 
 
@@ -102,7 +149,7 @@ static void selinux_initialize(bool in_kernel_domain) {
     cb.func_audit = audit_callback;
     selinux_set_callback(SELINUX_CB_AUDIT, cb);
 
-    if (in_kernel_domain) {
+    if (in_kernel_domain) {//true
         LOG(INFO) << "Loading SELinux policy";
         //	system/core/init/init.cpp  // 将 /sepolicy 文件内容写入到 /sys/fs/selinux/load 中
         if (!selinux_load_policy()) {
@@ -161,7 +208,7 @@ static bool selinux_is_split_policy_device() { return access(plat_policy_cil_fil
 static bool selinux_load_monolithic_policy() {
     LOG(VERBOSE) << "Loading SELinux policy from monolithic file";
     // external/selinux/libselinux/src/android/android_platform.c
-    if (selinux_android_load_policy() < 0) {
+    if (selinux_android_load_policy() < 0) { //将 "/sepolicy" 文件数据写入 /sys/fs/selinux/load 中
         PLOG(ERROR) << "Failed to load monolithic SELinux policy";
         return false;
     }
@@ -169,7 +216,7 @@ static bool selinux_load_monolithic_policy() {
 }
 
 
-
+//这个函数的目的是 将 "/sepolicy" 文件数据写入 /sys/fs/selinux/load 中
 int selinux_android_load_policy()
 {
 	int fd = -1;
@@ -185,7 +232,7 @@ int selinux_android_load_policy()
 }
 
 
-int selinux_android_load_policy_from_fd(int fd, const char *description)
+int selinux_android_load_policy_from_fd(int fd, const char *description = "/sepolicy")
 {
 	int rc;
 	struct stat sb;
@@ -231,7 +278,7 @@ int selinux_android_load_policy_from_fd(int fd, const char *description)
 
 void set_selinuxmnt(const char *mnt)
 {
-	selinux_mnt = strdup(mnt);
+	selinux_mnt = strdup(mnt); // SELINUXMNT == "/sys/fs/selinux"
 }
 
 
@@ -245,7 +292,7 @@ int security_load_policy(void *data, size_t len)
 		return -1;
 	}
 
-	snprintf(path, sizeof path, "%s/load", selinux_mnt);
+	snprintf(path, sizeof path, "%s/load", selinux_mnt); //   path=="/sys/fs/selinux/load"
 	fd = open(path, O_RDWR | O_CLOEXEC);
 	if (fd < 0)
 		return -1;

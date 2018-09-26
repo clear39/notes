@@ -11,6 +11,25 @@ android.hardware.usb@1.0。Android 8.0 中的新 HAL。
 android.hardware.wifi@1.0。Android 8.0 中的新 HAL，可取代此前加载到 system_server 的旧版 WLAN HAL 库。
 android.hardware.wifi.supplicant@1.0。在现有 wpa_supplicant 进程之上的 HIDL 接口
 
+
+wxrwxr-x 3 xqli xqli    4096  8月 14 11:36 ../
+-rwxrwxr-x 1 xqli xqli   20280  8月 14 11:23 android.hardware.audio@2.0-service*
+-rwxrwxr-x 1 xqli xqli   16208  8月 14 11:22 android.hardware.bluetooth@1.0-service*
+-rwxrwxr-x 1 xqli xqli   16196  8月 14 11:22 android.hardware.camera.provider@2.4-service*
+-rwxrwxr-x 1 xqli xqli   20900  8月 14 11:22 android.hardware.configstore@1.0-service*
+-rwxrwxr-x 1 xqli xqli   16208  8月 14 11:23 android.hardware.graphics.allocator@2.0-service*
+-rwxrwxr-x 1 xqli xqli   16196  8月 14 11:23 android.hardware.light@2.0-service*
+-rwxrwxr-x 1 xqli xqli   20448  8月 14 11:33 android.hardware.media.omx@1.0-service*
+-rwxrwxr-x 1 xqli xqli   16212  8月 14 11:23 android.hardware.memtrack@1.0-service*
+-rwxrwxr-x 1 xqli xqli   16204  8月 14 11:23 android.hardware.power@1.0-service*
+-rwxrwxr-x 1 xqli xqli   16212  8月 14 11:23 android.hardware.sensors@1.0-service*
+-rwxrwxr-x 1 xqli xqli   42024  8月 14 11:23 android.hardware.usb@1.0-service*
+-rwxrwxr-x 1 xqli xqli  179868  8月 14 11:33 android.hardware.wifi@1.0-service*
+-rwxrwxr-x 1 xqli xqli   20376  8月 14 11:26 rild*
+-rwxrwxr-x 1 xqli xqli 1460472  8月 14 11:32 wpa_supplicant*
+
+
+
 注意：Android 提供的以下 HIDL 接口将一律在绑定模式下使用：android.frameworks.*、android.system.* 和 android.hidl.*（不包括下文所述的 android.hidl.memory@1.0）。
 
 
