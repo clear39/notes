@@ -13,8 +13,7 @@ public class ConnectivityService extends IConnectivityManager.Stub {
         // the default network request. This allows callers to keep track of
         // the system default network.
         if (type == NetworkRequest.Type.TRACK_DEFAULT) {
-            networkCapabilities = new NetworkCapabilities(mDefaultRequest.networkCapabilities);
-            enforceAccessPermission();
+           ......
         } else { // 执行这里
             networkCapabilities = new NetworkCapabilities(networkCapabilities);
             enforceNetworkRequestPermissions(networkCapabilities); 
@@ -32,9 +31,10 @@ public class ConnectivityService extends IConnectivityManager.Stub {
 
       
         //nextNetworkRequestId 全局静态整型自增 1 并且赋值给成员变量 requestId
-	// 
+	    //重新构建 NetworkRequest
         NetworkRequest networkRequest = new NetworkRequest(networkCapabilities, legacyType,nextNetworkRequestId(), type);
         NetworkRequestInfo nri = new NetworkRequestInfo(messenger, networkRequest, binder); //构建一个 NetworkRequestInfo 
+
         if (DBG) log("requestNetwork for " + nri);
 
         mHandler.sendMessage(mHandler.obtainMessage(EVENT_REGISTER_NETWORK_REQUEST, nri));
@@ -53,11 +53,7 @@ public class ConnectivityService extends IConnectivityManager.Stub {
 	// private final LocalLog mNetworkRequestInfoLogs = new LocalLog(MAX_NETWORK_REQUEST_LOGS);
         mNetworkRequestInfoLogs.log("REGISTER " + nri);  //日志保存，可以忽略
         if (nri.request.isListen()) { //  判断请求是否为 LISTEN ，这里值为NetworkRequest.Type.REQUEST，所以不执行
-            for (NetworkAgentInfo network : mNetworkAgentInfos.values()) {
-                if (nri.request.networkCapabilities.hasSignalStrength() && network.satisfiesImmutableCapabilitiesOf(nri.request)) {
-                    updateSignalStrengthThresholds(network, "REGISTER", nri.request);
-                }
-            }
+            。。。。。。
         }
 
         rematchAllNetworksAndRequests(null, 0);
@@ -88,8 +84,8 @@ public class ConnectivityService extends IConnectivityManager.Stub {
         // can only add more NetworkRequests satisfied by "changed", and this is exactly what
         // rematchNetworkAndRequests() handles.
         final long now = SystemClock.elapsedRealtime();
-        if (changed != null && oldScore < changed.getCurrentScore()) { 这里 changed 为null，所以不执行
-            rematchNetworkAndRequests(changed, ReapUnvalidatedNetworks.REAP, now);
+        if (changed != null && oldScore < changed.getCurrentScore()) { //这里 changed 为null，所以不执行
+            ......
         } else {
             final NetworkAgentInfo[] nais = mNetworkAgentInfos.values().toArray(new NetworkAgentInfo[mNetworkAgentInfos.size()]);
             // Rematch higher scoring networks first to prevent requests first matching a lower
@@ -97,7 +93,7 @@ public class ConnectivityService extends IConnectivityManager.Stub {
             // callbacks and inadvertently unlinger networks.
             Arrays.sort(nais);
             for (NetworkAgentInfo nai : nais) {
- 		// Only reap the last time through the loop.  Reaping before all rematching
+ 		         // Only reap（收获） the last time through the loop.  Reaping before all rematching
                 // is complete could incorrectly teardown a network that hasn't yet been
                 // rematched.
                 rematchNetworkAndRequests(nai,(nai != nais[nais.length-1]) ? ReapUnvalidatedNetworks.DONT_REAP : ReapUnvalidatedNetworks.REAP, now);
@@ -164,8 +160,7 @@ public class ConnectivityService extends IConnectivityManager.Stub {
             final boolean satisfies = newNetwork.satisfies(nri.request);
             if (newNetwork == currentNetwork && satisfies) {
                 if (VDBG) {
-                    log("Network " + newNetwork.name() + " was already satisfying" +
-                            " request " + nri.request.requestId + ". No change.");
+                    log("Network " + newNetwork.name() + " was already satisfying" + " request " + nri.request.requestId + ". No change.");
                 }
                 keep = true;
                 continue;
@@ -177,9 +172,7 @@ public class ConnectivityService extends IConnectivityManager.Stub {
                 // next check if it's better than any current network we're using for
                 // this request
                 if (VDBG) {
-                    log("currentScore = " +
-                            (currentNetwork != null ? currentNetwork.getCurrentScore() : 0) +
-                            ", newScore = " + score);
+                    log("currentScore = " + (currentNetwork != null ? currentNetwork.getCurrentScore() : 0) + ", newScore = " + score);
                 }
                 if (currentNetwork == null || currentNetwork.getCurrentScore() < score) {
                     if (VDBG) log("rematch for " + newNetwork.name());
@@ -369,13 +362,18 @@ public class ConnectivityService extends IConnectivityManager.Stub {
 
     private void sendUpdatedScoreToFactories(NetworkRequest networkRequest, int score == 0) {
         if (VDBG) log("sending new Min Network Score(" + score + "): " + networkRequest.toString());
+        // 这里遍历所有注册到 ConnectivityService中的 NetworkFactoryInfo，都对应的目标Handler发送一个android.net.NetworkFactory.CMD_REQUEST_NETWORK 消息 
+        // 注意 networkRequest 包含了  NetworkCapabilities 信息  NetworkCapabilities.NET_CAPABILITY_MMS 
         for (NetworkFactoryInfo nfi : mNetworkFactoryInfos.values()) {
-            nfi.asyncChannel.sendMessage(android.net.NetworkFactory.CMD_REQUEST_NETWORK, score, 0,networkRequest);
+            // nfi.asyncChannel 为 AsyncChannel 在 NetworkFactoryInfo注册进 ConnectivityService时 连接 如下：
+            // nfi.asyncChannel.connect(mContext, mTrackerHandler, nfi.messenger);
+            // //通过这里调用根据参数属性NetworkCapabilities.NET_CAPABILITY_MMS，我们进入到  TelephonyNetworkFactory 中，只有 TelephonyNetworkFactory会处理
+            nfi.asyncChannel.sendMessage(android.net.NetworkFactory.CMD_REQUEST_NETWORK, score == 0 , 0,networkRequest);
         }
     }
 
 
-    // EVENT_TIMEOUT_NETWORK_REQUEST 处理
+    // EVENT_TIMEOUT_NETWORK_REQUEST 处理超时
     private void handleTimedOutNetworkRequest(final NetworkRequestInfo nri) {
         if (mNetworkRequests.get(nri.request) == null) {
             return;
@@ -393,7 +391,7 @@ public class ConnectivityService extends IConnectivityManager.Stub {
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
-//frameworks/base/core/java/android/net/NetworkAgent.java:225 	netId = cm.registerNetworkAgent(new Messenger(this), new NetworkInfo(ni),
+    //frameworks/base/core/java/android/net/NetworkAgent.java:225 	netId = cm.registerNetworkAgent(new Messenger(this), new NetworkInfo(ni),
     //分析NetworkAgentInfo 的得来
     public int registerNetworkAgent(Messenger messenger, NetworkInfo networkInfo,LinkProperties linkProperties, NetworkCapabilities networkCapabilities,int currentScore, NetworkMisc networkMisc) {
         enforceConnectivityInternalPermission();
@@ -427,10 +425,10 @@ public class ConnectivityService extends IConnectivityManager.Stub {
     }
 
 
-////////////////////////////////////////////////////////////////////////////////////////////////// 
-// frameworks/base/core/java/android/net/NetworkFactory.java:121:            ConnectivityManager.from(mContext).registerNetworkFactory(mMessenger, LOG_TAG);
+    ////////////////////////////////////////////////////////////////////////////////////////////////// 
+    // frameworks/base/core/java/android/net/NetworkFactory.java:121:            ConnectivityManager.from(mContext).registerNetworkFactory(mMessenger, LOG_TAG);
  
-   //分析 mNetworkFactoryInfos 得来
+    //分析 mNetworkFactoryInfos 得来
     public void registerNetworkFactory(Messenger messenger, String name) {
         enforceConnectivityInternalPermission();
         NetworkFactoryInfo nfi = new NetworkFactoryInfo(name, messenger, new AsyncChannel());
@@ -441,6 +439,8 @@ public class ConnectivityService extends IConnectivityManager.Stub {
     private void handleRegisterNetworkFactory(NetworkFactoryInfo nfi) {
         if (DBG) log("Got NetworkFactory Messenger for " + nfi.name);
         mNetworkFactoryInfos.put(nfi.messenger, nfi);
+        // mTrackerHandler 为 源端  当 nfi.messenger 回发消息时，在此Handler中处理
+        // nfi.messenger 为 目标端  nfi.asyncChannel 调用消息发送 都是发送此 Handler
         nfi.asyncChannel.connect(mContext, mTrackerHandler, nfi.messenger);
     }
 

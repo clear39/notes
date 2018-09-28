@@ -95,17 +95,12 @@ public class PhoneFactory {
 
                 for (int i = 0; i < numPhones; i++) {
                     Phone phone = null;
-                    int phoneType = TelephonyManager.getPhoneType(networkModes[i]);
+                    int phoneType = TelephonyManager.getPhoneType(networkModes[i]); // 这里返回 PhoneConstants.PHONE_TYPE_GSM
+                    //TelephonyComponentFactory为构造器，没有具体实现，用于封装一些组件类创建
                     if (phoneType == PhoneConstants.PHONE_TYPE_GSM) {
-                        phone = new GsmCdmaPhone(context,
-                                sCommandsInterfaces[i], sPhoneNotifier, i,
-                                PhoneConstants.PHONE_TYPE_GSM,
-                                TelephonyComponentFactory.getInstance());
+                        phone = new GsmCdmaPhone(context,sCommandsInterfaces[i], sPhoneNotifier, i,PhoneConstants.PHONE_TYPE_GSM,     TelephonyComponentFactory.getInstance());
                     } else if (phoneType == PhoneConstants.PHONE_TYPE_CDMA) {
-                        phone = new GsmCdmaPhone(context,
-                                sCommandsInterfaces[i], sPhoneNotifier, i,
-                                PhoneConstants.PHONE_TYPE_CDMA_LTE,
-                                TelephonyComponentFactory.getInstance());
+                        phone = new GsmCdmaPhone(context,sCommandsInterfaces[i], sPhoneNotifier, i,PhoneConstants.PHONE_TYPE_CDMA_LTE,TelephonyComponentFactory.getInstance());
                     }
                     Rlog.i(LOG_TAG, "Creating Phone with type = " + phoneType + " sub = " + i);
 

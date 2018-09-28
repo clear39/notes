@@ -65,54 +65,21 @@ public class ConnectivityManager {
             return TYPE_NONE;
         }
 
-	// 判断 netCap 中 mTransportTypes 对应 NetworkCapabilities.TRANSPORT_CELLULAR 的位 为1 返回true，否则 为false 
+	    // 判断 netCap 中 mTransportTypes 对应 NetworkCapabilities.TRANSPORT_CELLULAR 的位 为1 返回true，否则 为false 
         if (!netCap.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) { // 所有这里整体为false，继续往下执行
             return TYPE_NONE;
         }
 
         // Do this only for SUPL, until GnssLocationProvider is fixed. http://b/25876485 .
-	// 判断 netCap 中 mNetworkCapabilities 对应 NetworkCapabilities.NET_CAPABILITY_SUPL 的位 为1 返回true，否则 为false 
-        if (!netCap.hasCapability(NetworkCapabilities.NET_CAPABILITY_SUPL)) {// 所以这里整体为true，返回 TYPE_NONE
+	    // 判断 netCap 中 mNetworkCapabilities 对应 NetworkCapabilities.NET_CAPABILITY_SUPL 的位 为1 返回true，否则 为false 
+        if (!netCap.hasCapability(NetworkCapabilities.NET_CAPABILITY_SUPL)) {   // 所以这里整体为true，返回 TYPE_NONE
             // NOTE: if this causes app breakage, we should not just comment out this early return;
-            // instead, we should make this early return conditional on the requesting app's target
+            // instead, we should make this early return conditional on the requesting app's target 
             // SDK version, as described in the comment above.
             return TYPE_NONE;
         }
 
-        String type = null;
-        int result = TYPE_NONE;
-
-        if (netCap.hasCapability(NetworkCapabilities.NET_CAPABILITY_CBS)) {
-            type = "enableCBS";
-            result = TYPE_MOBILE_CBS;
-        } else if (netCap.hasCapability(NetworkCapabilities.NET_CAPABILITY_IMS)) {
-            type = "enableIMS";
-            result = TYPE_MOBILE_IMS;
-        } else if (netCap.hasCapability(NetworkCapabilities.NET_CAPABILITY_FOTA)) {
-            type = "enableFOTA";
-            result = TYPE_MOBILE_FOTA;
-        } else if (netCap.hasCapability(NetworkCapabilities.NET_CAPABILITY_DUN)) {
-            type = "enableDUN";
-            result = TYPE_MOBILE_DUN;
-        } else if (netCap.hasCapability(NetworkCapabilities.NET_CAPABILITY_SUPL)) {
-            type = "enableSUPL";
-            result = TYPE_MOBILE_SUPL;
-        // back out this hack for mms as they no longer need this and it's causing
-        // device slowdowns - b/23350688 (note, supl still needs this)
-        //} else if (netCap.hasCapability(NetworkCapabilities.NET_CAPABILITY_MMS)) {
-        //    type = "enableMMS";
-        //    result = TYPE_MOBILE_MMS;
-        } else if (netCap.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)) {
-            type = "enableHIPRI";
-            result = TYPE_MOBILE_HIPRI;
-        }
-        if (type != null) {
-            NetworkCapabilities testCap = networkCapabilitiesForFeature(TYPE_MOBILE, type);
-            if (testCap.equalsNetCapabilities(netCap) && testCap.equalsTransportTypes(netCap)) {
-                return result;
-            }
-        }
-        return TYPE_NONE;
+        。。。。。。
     }
 
 
@@ -153,13 +120,13 @@ public class ConnectivityManager {
                 Messenger messenger = new Messenger(handler);
                 Binder binder = new Binder();
                 if (action == LISTEN) {
-                    request = mService.listenForNetwork(need, messenger, binder);
+                    。。。。。。
                 } else {
                     //执行这里，进入到ConnectivityService中
                     request = mService.requestNetwork(need, messenger, timeoutMs, binder, legacyType);
                 }
                 if (request != null) {
-                    sCallbacks.put(request, callback);
+                    sCallbacks中.put(request, callback);  //注意 这里加入到 sCallbacks 中
                 }
                 callback.networkRequest = request;  //注意这里对callback.networkRequest赋值
             }
