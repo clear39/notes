@@ -140,6 +140,7 @@ int main(int argc, char* const argv[])
         // copies of them before we overwrite them with the process name.
         args.add(application ? String8("application") : String8("tool"));
         //注意这里 只有应用APK 将参数设置到AppRuntime的集合中
+        // 如果application为true，则className为android.app.ActivityThread
         runtime.setClassNameAndArgs(className, argc - i, argv + i);//设置AppRuntime中的 String8 mClassName成员以及其他参数
 
         if (!LOG_NDEBUG) {
@@ -156,7 +157,7 @@ int main(int argc, char* const argv[])
         }
     } else {// zygote 和 systemserver 程序启动
         // We're in zygote mode.
-        maybeCreateDalvikCache(); //
+        maybeCreateDalvikCache(); //创建"/data/dalvik-cache/arm"目录
 
         if (startSystemServer) {
             args.add(String8("start-system-server"));

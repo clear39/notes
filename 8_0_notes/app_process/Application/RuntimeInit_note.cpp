@@ -136,7 +136,7 @@ virtual void AppRuntime::onStarted()
     proc->startThreadPool();
 
     AndroidRuntime* ar = AndroidRuntime::getRuntime();// 这里 ar == gCurRuntime
-    ar->callMain(mClassName, mClass, mArgs);
+    ar->callMain(mClassName, mClass, mArgs); //mClassName == android.app.ActivityThread
 
     IPCThreadState::self()->stopProcess();
     //??? 这里没有进行初始化 为什么要stopProcess
@@ -144,7 +144,10 @@ virtual void AppRuntime::onStarted()
 }
 
 
-//这里注意args为前面通过setClassNameAndArgs设置的
+
+// 注意这里className是由setClassNameAndArgs传入   android.app.ActivityThread
+//clazz 是在AppRuntime : :onVmCreated初始化的
+//这里注意args为前面通过setClassNameAndArgs设置的 
 status_t AndroidRuntime::callMain(const String8& className, jclass clazz,const Vector<String8>& args)
 {
     JNIEnv* env;
@@ -179,6 +182,6 @@ status_t AndroidRuntime::callMain(const String8& className, jclass clazz,const V
         env->SetObjectArrayElement(strArray, i, argStr);
     }
 
-    env->CallStaticVoidMethod(clazz, methodId, strArray);
+    env->CallStaticVoidMethod(clazz, methodId, strArray); //这里开始进入android.app.ActivityThread.main()函数中执行
     return NO_ERROR;
 }

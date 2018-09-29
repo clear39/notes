@@ -25,7 +25,7 @@ AndroidRuntime::AndroidRuntime(char* argBlockStart, const size_t argBlockLength)
     gCurRuntime = this; //保存AndroidRuntime到全局静态gCurRuntime变量中
 }
 
-
+//如果为APK程序则className = android.app.ActivityThread
 void AppRuntime::setClassNameAndArgs(const String8& className, int argc, char * const *argv) {
     mClassName = className;
     for (int i = 0; i < argc; ++i) {
@@ -43,7 +43,7 @@ void AppRuntime::setClassNameAndArgs(const String8& className, int argc, char * 
  * Passes the main function two arguments, the class name and the specified
  * options string.
  */
-void AndroidRuntime::start(const char* className, const Vector<String8>& options, bool zygote)
+void AndroidRuntime::start(const char* className = , const Vector<String8>& options, bool zygote)
 {
     ALOGD(">>>>>> START %s uid %d <<<<<<\n", className != NULL ? className : "(unknown)", getuid());
 
@@ -160,4 +160,35 @@ char* AndroidRuntime::toSlashClassName(const char* className)
         }
     }
     return result;
+}
+
+
+virtual void AppRuntime : :onVmCreated(JNIEnv* env)
+{
+    if (mClassName.isEmpty()) {
+        return; // Zygote. Nothing to do here.  如果为Zygote程序，则什么也不做
+    }
+
+    /*
+     * This is a little awkward because the JNI FindClass call uses the
+     * class loader associated with the native method we're executing in.
+     * If called in onStarted (from RuntimeInit.finishInit because we're
+     * launching "am", for example), FindClass would see that we're calling
+     * from a boot class' native method, and so wouldn't look for the class
+     * we're trying to look up in CLASSPATH. Unfortunately it needs to,
+     * because the "am" classes are not boot classes.
+     *
+     * The easiest fix is to call FindClass here, early on before we start
+     * executing boot class Java code and thereby deny ourselves access to
+     * non-boot classes.
+     */
+    //将android.app.ActivityThread转化为android/app/ActivityThread
+    char* slashClassName = toSlashClassName(mClassName.string()); 
+    mClass = env->FindClass(slashClassName);
+    if (mClass == NULL) {
+        ALOGE("ERROR: could not find class '%s'\n", mClassName.string());
+    }
+    free(slashClassName);
+
+    mClass = reinterpret_cast<jclass>(env->NewGlobalRef(mClass));
 }
