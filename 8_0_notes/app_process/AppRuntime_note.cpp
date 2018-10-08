@@ -25,38 +25,19 @@ AndroidRuntime::AndroidRuntime(char* argBlockStart, const size_t argBlockLength)
     gCurRuntime = this; //保存AndroidRuntime到全局静态gCurRuntime变量中
 }
 
-//如果为APK程序则className = android.app.ActivityThread
-void AppRuntime::setClassNameAndArgs(const String8& className, int argc, char * const *argv) {
-    mClassName = className;
-    for (int i = 0; i < argc; ++i) {
-         mArgs.add(String8(argv[i]));
+
+void AndroidRuntime::setArgv0(const char* argv0 = “zygote”, bool setProcName = true) {
+    if (setProcName) {
+        int len = strlen(argv0);
+        if (len < 15) {
+            pthread_setname_np(pthread_self(), argv0);
+        } else {
+            pthread_setname_np(pthread_self(), argv0 + len - 15);
+        }
     }
+    memset(mArgBlockStart, 0, mArgBlockLength);
+    strlcpy(mArgBlockStart, argv0, mArgBlockLength);
 }
-
-
-int AndroidRuntime::startVm(JavaVM** pJavaVM, JNIEnv** pEnv, bool zygote)
-{
-    
-    //忽略参数解析已经重新打包
-    .......
-
-
-    /*
-     * Initialize the VM.
-     *
-     * The JavaVM* is essentially per-process, and the JNIEnv* is per-thread.
-     * If this call succeeds, the VM is ready, and we can start issuing
-     * JNI calls.
-     */
-    if (JNI_CreateJavaVM(pJavaVM, pEnv, &initArgs) < 0) {
-        ALOGE("JNI_CreateJavaVM failed\n");
-        return -1;
-    }
-
-    return 0;
-}
-
-
 
 /*
  * Start the Android runtime.  This involves starting the virtual machine
@@ -84,7 +65,7 @@ void AndroidRuntime::start(const char* className = "com.android.internal.os.Runt
         }
     }
 
-    const char* rootDir = getenv("ANDROID_ROOT");//	/system
+    const char* rootDir = getenv("ANDROID_ROOT");// /system
     if (rootDir == NULL) {
         rootDir = "/system";
         if (!hasDir("/system")) {
@@ -110,7 +91,7 @@ void AndroidRuntime::start(const char* className = "com.android.internal.os.Runt
     }
 
 
-    onVmCreated(env);
+    onVmCreated(env);//Zygote什么不做
 
     /*
      * Register android functions.
@@ -156,7 +137,7 @@ void AndroidRuntime::start(const char* className = "com.android.internal.os.Runt
         ALOGE("JavaVM unable to locate class '%s'\n", slashClassName);
         /* keep going */
     } else {
-    	//调用启动类中main函数
+        //调用启动类中main函数
         jmethodID startMeth = env->GetStaticMethodID(startClass, "main","([Ljava/lang/String;)V");
         if (startMeth == NULL) {
             ALOGE("JavaVM unable to find main() in '%s'\n", className);
@@ -179,6 +160,38 @@ void AndroidRuntime::start(const char* className = "com.android.internal.os.Runt
         ALOGW("Warning: VM did not shut down cleanly\n");
 }
 
+
+int AndroidRuntime::startVm(JavaVM** pJavaVM, JNIEnv** pEnv, bool zygote)
+{
+    
+    //忽略参数解析已经重新打包
+    .......
+
+
+    initArgs.version = JNI_VERSION_1_4;
+    initArgs.options = mOptions.editArray(); //Vector<JavaVMOption> mOptions;
+    initArgs.nOptions = mOptions.size();
+    initArgs.ignoreUnrecognized = JNI_FALSE;
+
+    /*
+     * Initialize the VM.
+     *
+     * The JavaVM* is essentially per-process, and the JNIEnv* is per-thread.
+     * If this call succeeds, the VM is ready, and we can start issuing
+     * JNI calls.
+     */
+    if (JNI_CreateJavaVM(pJavaVM, pEnv, &initArgs) < 0) {
+        ALOGE("JNI_CreateJavaVM failed\n");
+        return -1;
+    }
+
+    return 0;
+}
+
+
+
+
+
 char* AndroidRuntime::toSlashClassName(const char* className)
 {
     char* result = strdup(className);
@@ -191,32 +204,21 @@ char* AndroidRuntime::toSlashClassName(const char* className)
 }
 
 
-virtual void AppRuntime : :onVmCreated(JNIEnv* env)
-{
-    if (mClassName.isEmpty()) {
-        return; // Zygote. Nothing to do here.  如果为Zygote程序，则什么也不做
-    }
 
-    /*
-     * This is a little awkward because the JNI FindClass call uses the
-     * class loader associated with the native method we're executing in.
-     * If called in onStarted (from RuntimeInit.finishInit because we're
-     * launching "am", for example), FindClass would see that we're calling
-     * from a boot class' native method, and so wouldn't look for the class
-     * we're trying to look up in CLASSPATH. Unfortunately it needs to,
-     * because the "am" classes are not boot classes.
-     *
-     * The easiest fix is to call FindClass here, early on before we start
-     * executing boot class Java code and thereby deny ourselves access to
-     * non-boot classes.
-     */
-    //将android.app.ActivityThread转化为android/app/ActivityThread
-    char* slashClassName = toSlashClassName(mClassName.string()); 
-    mClass = env->FindClass(slashClassName);
-    if (mClass == NULL) {
-        ALOGE("ERROR: could not find class '%s'\n", mClassName.string());
-    }
-    free(slashClassName);
+//  libnativehelper/include/nativehelper/jni.h
+/*
+ * JNI 1.2+ initialization.  (As of 1.6, the pre-1.2 structures are no
+ * longer supported.)
+ */
+typedef struct JavaVMOption {
+    const char* optionString;
+    void*       extraInfo;
+} JavaVMOption;
 
-    mClass = reinterpret_cast<jclass>(env->NewGlobalRef(mClass));
-}
+typedef struct JavaVMInitArgs {
+    jint        version;    /* use JNI_VERSION_1_2 or later */
+
+    jint        nOptions;
+    JavaVMOption* options;
+    jboolean    ignoreUnrecognized;
+} JavaVMInitArgs;

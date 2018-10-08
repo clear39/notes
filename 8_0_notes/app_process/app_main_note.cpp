@@ -141,28 +141,8 @@ int main(int argc, char* const argv[])
     Vector<String8> args;
     //这里className空
     if (!className.isEmpty()) {//这里用于不是通过zygote来fork的 ,例如am工具或者通过 app_process 来启动应用，
-        // We're not in zygote mode, the only argument we need to pass
-        // to RuntimeInit is the application argument.
-        //
-        // The Remainder of args get passed to startup class main(). Make
-        // copies of them before we overwrite them with the process name.
-        args.add(application ? String8("application") : String8("tool"));
-        //注意这里 只有应用APK 将参数设置到AppRuntime的集合中
-        // 如果application为true，则className为android.app.ActivityThread
-        runtime.setClassNameAndArgs(className, argc - i, argv + i);//设置AppRuntime中的 String8 mClassName成员以及其他参数
-
-        if (!LOG_NDEBUG) {
-          String8 restOfArgs;
-          char* const* argv_new = argv + i;
-          int argc_new = argc - i;
-          for (int k = 0; k < argc_new; ++k) {
-            restOfArgs.append("\"");
-            restOfArgs.append(argv_new[k]);
-            restOfArgs.append("\" ");
-          }
-          //打印启动类名，以及启动参数
-          ALOGV("Class name = %s, args = %s", className.string(), restOfArgs.string());
-        }
+       。。。。。。
+       
     } else {// zygote 程序启动
         // We're in zygote mode.
         maybeCreateDalvikCache(); //创建"/data/dalvik-cache/arm"目录
@@ -189,7 +169,7 @@ int main(int argc, char* const argv[])
         }
     }
 
-    if (!niceName.isEmpty()) {//
+    if (!niceName.isEmpty()) {//Zygote这里执行
         runtime.setArgv0(niceName.string(), true /* setProcName */);
     }
 

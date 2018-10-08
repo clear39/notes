@@ -1,10 +1,41 @@
 //      art/runtime/runtime.cc
 
 //虚拟机创建入口
-bool Runtime::Create(const RuntimeOptions& raw_options, bool ignore_unrecognized) {
+bool Runtime::Create(const RuntimeOptions& raw_options, bool ignore_unrecognized = JNI_FALSE) {
   RuntimeArgumentMap runtime_options;
   return ParseOptions(raw_options, ignore_unrecognized, &runtime_options) && Create(std::move(runtime_options));
 }
+
+
+bool Runtime::ParseOptions(const RuntimeOptions& raw_options,bool ignore_unrecognized,RuntimeArgumentMap* runtime_options) {
+  InitLogging(/* argv */ nullptr, Abort);  // Calls Locks::Init() as a side effect.
+  bool parsed = ParsedOptions::Parse(raw_options, ignore_unrecognized, runtime_options);
+  if (!parsed) {
+    LOG(ERROR) << "Failed to parse options";
+    return false;
+  }
+  return true;
+}
+
+
+// Callback to check whether it is safe to call Abort (e.g., to use a call to
+// LOG(FATAL)).  It is only safe to call Abort if the runtime has been created,
+// properly initialized, and has not shut down.
+static bool IsSafeToCallAbort() NO_THREAD_SAFETY_ANALYSIS {
+  Runtime* runtime = Runtime::Current();
+  return runtime != nullptr && runtime->IsStarted() && !runtime->IsShuttingDownLocked();
+}
+
+void Locks::SetClientCallback(ClientCallback* safe_to_call_abort_cb) {
+  safe_to_call_abort_callback.StoreRelease(safe_to_call_abort_cb); //原子函数指针
+}
+
+// Helper to allow checking shutdown while ignoring locking requirements.
+bool Locks::IsSafeToCallAbortRacy() {
+  Locks::ClientCallback* safe_to_call_abort_cb = safe_to_call_abort_callback.LoadAcquire();
+  return safe_to_call_abort_cb != nullptr && safe_to_call_abort_cb();
+}
+
 
 bool Runtime::Create(RuntimeArgumentMap&& runtime_options) {
   // TODO: acquire a static mutex on Runtime to avoid racing.
@@ -12,7 +43,8 @@ bool Runtime::Create(RuntimeArgumentMap&& runtime_options) {
     return false;
   }
   instance_ = new Runtime;
-  Locks::SetClientCallback(IsSafeToCallAbort);
+  //  art/runtime/base/mutex.cc
+  Locks::SetClientCallback(IsSafeToCallAbort);//设置虚拟机回调函数
   if (!instance_->Init(std::move(runtime_options))) {
     // TODO: Currently deleting the instance will abort the runtime on destruction. Now This will
     // leak memory, instead. Fix the destructor. b/19100793.

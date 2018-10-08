@@ -69,7 +69,8 @@ public class ZygoteInit {
 
 	        /* Request to fork the system server process */
 	        //
-	        pid = Zygote.forkSystemServer(parsedArgs.uid, parsedArgs.gid,parsedArgs.gids,parsedArgs.debugFlags,null,parsedArgs.permittedCapabilities,parsedArgs.effectiveCapabilities);
+	        pid = Zygote.forkSystemServer(parsedArgs.uid, parsedArgs.gid,parsedArgs.gids,parsedArgs.debugFlags,
+                                            null,parsedArgs.permittedCapabilities,parsedArgs.effectiveCapabilities);
 
 	    } catch (IllegalArgumentException ex) {
 	        throw new RuntimeException(ex);
@@ -77,8 +78,8 @@ public class ZygoteInit {
 
 	    /* For child process */
 	    if (pid == 0) {
-	        if (hasSecondZygote(abiList)) {//	“armeabi-v7a,armeabi”
-	            waitForSecondaryZygote(socketName);
+	        if (hasSecondZygote(abiList)) {//这里hasSecondZygote返回false，	abiList == “armeabi-v7a,armeabi”
+	            waitForSecondaryZygote(socketName);//不执行
 	        }
 
 	        zygoteServer.closeServerSocket();
@@ -96,12 +97,8 @@ public class ZygoteInit {
      * be another zygote.
      */
     private static boolean hasSecondZygote(String abiList) {
+        //这里系统 ro.product.cpu.abilist 值 为 armeabi-v7a,armeabi ，所以返回 false
         return !SystemProperties.get("ro.product.cpu.abilist").equals(abiList);
-    }
-
-    private static void waitForSecondaryZygote(String socketName) {
-        String otherZygoteName = Process.ZYGOTE_SOCKET.equals(socketName) ? Process.SECONDARY_ZYGOTE_SOCKET : Process.ZYGOTE_SOCKET;
-        ZygoteProcess.waitForConnectionToZygote(otherZygoteName);
     }
 
       /**
@@ -166,6 +163,26 @@ public class ZygoteInit {
 
         /* should never reach here */
     }
+
+
+
+
+     /**
+     * Creates a PathClassLoader for the given class path that is associated with a shared
+     * namespace, i.e., this classloader can access platform-private native libraries. The
+     * classloader will use java.library.path as the native library path.
+     */
+    static PathClassLoader createPathClassLoader(String classPath, int targetSdkVersion) {
+      String libraryPath = System.getProperty("java.library.path");
+
+      return PathClassLoaderFactory.createClassLoader(classPath,
+                                                      libraryPath,
+                                                      libraryPath,
+                                                      ClassLoader.getSystemClassLoader(),
+                                                      targetSdkVersion,
+                                                      true /* isNamespaceShared */);
+    }
+
 
 
 
