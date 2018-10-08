@@ -34,6 +34,29 @@ void AppRuntime::setClassNameAndArgs(const String8& className, int argc, char * 
 }
 
 
+int AndroidRuntime::startVm(JavaVM** pJavaVM, JNIEnv** pEnv, bool zygote)
+{
+    
+    //忽略参数解析已经重新打包
+    .......
+
+
+    /*
+     * Initialize the VM.
+     *
+     * The JavaVM* is essentially per-process, and the JNIEnv* is per-thread.
+     * If this call succeeds, the VM is ready, and we can start issuing
+     * JNI calls.
+     */
+    if (JNI_CreateJavaVM(pJavaVM, pEnv, &initArgs) < 0) {
+        ALOGE("JNI_CreateJavaVM failed\n");
+        return -1;
+    }
+
+    return 0;
+}
+
+
 
 /*
  * Start the Android runtime.  This involves starting the virtual machine
@@ -43,7 +66,7 @@ void AppRuntime::setClassNameAndArgs(const String8& className, int argc, char * 
  * Passes the main function two arguments, the class name and the specified
  * options string.
  */
-void AndroidRuntime::start(const char* className = , const Vector<String8>& options, bool zygote)
+void AndroidRuntime::start(const char* className = "com.android.internal.os.RuntimeInit  ", const Vector<String8>& options, bool zygote)
 {
     ALOGD(">>>>>> START %s uid %d <<<<<<\n", className != NULL ? className : "(unknown)", getuid());
 
@@ -77,11 +100,16 @@ void AndroidRuntime::start(const char* className = , const Vector<String8>& opti
     /* start the virtual machine */
     //虚拟机初始化，这里先不做讨论，日后分析art再分析
     JniInvocation jni_invocation;
-    jni_invocation.Init(NULL);
+    jni_invocation.Init(NULL);//加载对应虚拟机库
+
+
+
     JNIEnv* env;
     if (startVm(&mJavaVM, &env, zygote) != 0) {
         return;
     }
+
+
     onVmCreated(env);
 
     /*

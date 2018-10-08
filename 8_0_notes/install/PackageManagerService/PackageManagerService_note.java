@@ -91,8 +91,7 @@ public class PackageManagerService extends IPackageManager.Stub implements Packa
             sUserManager = new UserManagerService(context, this,new UserDataPreparer(mInstaller, mInstallLock, mContext, mOnlyCore), mPackages);
 
             // Propagate permission configuration in to package manager.
-            ArrayMap<String, SystemConfig.PermissionEntry> permConfig
-                    = systemConfig.getPermissions();
+            ArrayMap<String, SystemConfig.PermissionEntry> permConfig = systemConfig.getPermissions();
             for (int i=0; i<permConfig.size(); i++) {
                 SystemConfig.PermissionEntry perm = permConfig.valueAt(i);
                 BasePermission bp = mSettings.mPermissions.get(perm.name);
@@ -110,8 +109,7 @@ public class PackageManagerService extends IPackageManager.Stub implements Packa
             for (int i = 0; i < builtInLibCount; i++) {
                 String name = libConfig.keyAt(i);
                 String path = libConfig.valueAt(i);
-                addSharedLibraryLPw(path, null, name, SharedLibraryInfo.VERSION_UNDEFINED,
-                        SharedLibraryInfo.TYPE_BUILTIN, PLATFORM_PACKAGE_NAME, 0);
+                addSharedLibraryLPw(path, null, name, SharedLibraryInfo.VERSION_UNDEFINED,SharedLibraryInfo.TYPE_BUILTIN, PLATFORM_PACKAGE_NAME, 0);
             }
 
             mFoundPolicyFile = SELinuxMMAC.readInstallPolicy();
@@ -125,8 +123,7 @@ public class PackageManagerService extends IPackageManager.Stub implements Packa
             final int packageSettingCount = mSettings.mPackages.size();
             for (int i = packageSettingCount - 1; i >= 0; i--) {
                 PackageSetting ps = mSettings.mPackages.valueAt(i);
-                if (!isExternal(ps) && (ps.codePath == null || !ps.codePath.exists())
-                        && mSettings.getDisabledSystemPkgLPr(ps.name) != null) {
+                if (!isExternal(ps) && (ps.codePath == null || !ps.codePath.exists()) && mSettings.getDisabledSystemPkgLPr(ps.name) != null) {
                     mSettings.mPackages.removeAt(i);
                     mSettings.enableSystemPackageLPw(ps.name);
                 }
@@ -136,19 +133,16 @@ public class PackageManagerService extends IPackageManager.Stub implements Packa
                 requestCopyPreoptedFiles();
             }
 
-            String customResolverActivity = Resources.getSystem().getString(
-                    R.string.config_customResolverActivity);
+            String customResolverActivity = Resources.getSystem().getString(R.string.config_customResolverActivity);
             if (TextUtils.isEmpty(customResolverActivity)) {
                 customResolverActivity = null;
             } else {
-                mCustomResolverComponentName = ComponentName.unflattenFromString(
-                        customResolverActivity);
+                mCustomResolverComponentName = ComponentName.unflattenFromString(customResolverActivity);
             }
 
             long startTime = SystemClock.uptimeMillis();
 
-            EventLog.writeEvent(EventLogTags.BOOT_PROGRESS_PMS_SYSTEM_SCAN_START,
-                    startTime);
+            EventLog.writeEvent(EventLogTags.BOOT_PROGRESS_PMS_SYSTEM_SCAN_START, startTime);
 
             final String bootClassPath = System.getenv("BOOTCLASSPATH");
             final String systemServerClassPath = System.getenv("SYSTEMSERVERCLASSPATH");
@@ -166,13 +160,11 @@ public class PackageManagerService extends IPackageManager.Stub implements Packa
             final VersionInfo ver = mSettings.getInternalVersion();
             mIsUpgrade = !Build.FINGERPRINT.equals(ver.fingerprint);
             if (mIsUpgrade) {
-                logCriticalInfo(Log.INFO,
-                        "Upgrading from " + ver.fingerprint + " to " + Build.FINGERPRINT);
+                logCriticalInfo(Log.INFO,  "Upgrading from " + ver.fingerprint + " to " + Build.FINGERPRINT);
             }
 
             // when upgrading from pre-M, promote system app permissions from install to runtime
-            mPromoteSystemApps =
-                    mIsUpgrade && ver.sdkVersion <= Build.VERSION_CODES.LOLLIPOP_MR1;
+            mPromoteSystemApps = mIsUpgrade && ver.sdkVersion <= Build.VERSION_CODES.LOLLIPOP_MR1;
 
             // When upgrading from pre-N, we need to handle package extraction like first boot,
             // as there is no profiling data available.
@@ -192,7 +184,8 @@ public class PackageManagerService extends IPackageManager.Stub implements Packa
                 }
             }
 
-            mCacheDir = preparePackageParserCache(mIsUpgrade);
+            //得到Cache目录
+            mCacheDir = preparePackageParserCache(mIsUpgrade); //这里默认是返回null
 
             // Set flag to monitor and not change apk file paths when
             // scanning install directories.
@@ -213,6 +206,7 @@ public class PackageManagerService extends IPackageManager.Stub implements Packa
             mParallelPackageParserCallback.findStaticOverlayPackages();
 
             // Find base frameworks (resource packages without code).
+            //  frameworkDir == "/system/framework/"
             scanDirTracedLI(frameworkDir, mDefParseFlags
                     | PackageParser.PARSE_IS_SYSTEM
                     | PackageParser.PARSE_IS_SYSTEM_DIR
@@ -221,12 +215,14 @@ public class PackageManagerService extends IPackageManager.Stub implements Packa
 
             // Collected privileged system packages.
             final File privilegedAppDir = new File(Environment.getRootDirectory(), "priv-app");
+            //  privilegedAppDir = "/system/priv-app"
             scanDirTracedLI(privilegedAppDir, mDefParseFlags
                     | PackageParser.PARSE_IS_SYSTEM
                     | PackageParser.PARSE_IS_SYSTEM_DIR
                     | PackageParser.PARSE_IS_PRIVILEGED, scanFlags, 0);
 
             // Collect ordinary system packages.
+            //  privilegedAppDir = "/system/app"
             final File systemAppDir = new File(Environment.getRootDirectory(), "app");
             scanDirTracedLI(systemAppDir, mDefParseFlags
                     | PackageParser.PARSE_IS_SYSTEM
@@ -323,8 +319,7 @@ public class PackageManagerService extends IPackageManager.Stub implements Packa
             mSettings.pruneSharedUsersLPw();
 
             if (!mOnlyCore) {
-                EventLog.writeEvent(EventLogTags.BOOT_PROGRESS_PMS_DATA_SCAN_START,
-                        SystemClock.uptimeMillis());
+                EventLog.writeEvent(EventLogTags.BOOT_PROGRESS_PMS_DATA_SCAN_START,SystemClock.uptimeMillis());
                 scanDirTracedLI(mAppInstallDir, 0, scanFlags | SCAN_REQUIRE_KNOWN, 0);
 
                 scanDirTracedLI(mDrmAppPrivateInstallDir, mDefParseFlags
@@ -709,6 +704,86 @@ public class PackageManagerService extends IPackageManager.Stub implements Packa
                 return feat.version >= version;
             }
         }
+    }
+
+
+
+
+    private void scanDirTracedLI(File dir, final int parseFlags, int scanFlags, long currentTime) {
+        Trace.traceBegin(TRACE_TAG_PACKAGE_MANAGER, "scanDir [" + dir.getAbsolutePath() + "]");
+        try {
+            scanDirLI(dir, parseFlags, scanFlags, currentTime);
+        } finally {
+            Trace.traceEnd(TRACE_TAG_PACKAGE_MANAGER);
+        }
+    }
+
+
+     public static boolean isStageName(String name) {
+        final boolean isFile = name.startsWith("vmdl") && name.endsWith(".tmp");
+        final boolean isContainer = name.startsWith("smdl") && name.endsWith(".tmp");
+        final boolean isLegacyContainer = name.startsWith("smdl2tmp");
+        return isFile || isContainer || isLegacyContainer;
+    }
+
+    private void scanDirLI(File dir, int parseFlags, int scanFlags, long currentTime) {
+        final File[] files = dir.listFiles();
+        if (ArrayUtils.isEmpty(files)) {
+            Log.d(TAG, "No files in app dir " + dir);
+            return;
+        }
+
+        if (DEBUG_PACKAGE_SCANNING) {
+            Log.d(TAG, "Scanning app dir " + dir + " scanFlags=" + scanFlags + " flags=0x" + Integer.toHexString(parseFlags));
+        }
+        ParallelPackageParser parallelPackageParser = new ParallelPackageParser(mSeparateProcesses, mOnlyCore, mMetrics, mCacheDir,mParallelPackageParserCallback);
+
+        // Submit files for parsing in parallel
+        int fileCount = 0;
+        for (File file : files) {
+            final boolean isPackage = (isApkFile(file) || file.isDirectory()) && !PackageInstallerService.isStageName(file.getName());
+            if (!isPackage) {
+                // Ignore entries which are not packages
+                continue;
+            }
+            parallelPackageParser.submit(file, parseFlags);
+            fileCount++;
+        }
+
+        // Process results one by one
+        for (; fileCount > 0; fileCount--) {
+            ParallelPackageParser.ParseResult parseResult = parallelPackageParser.take();
+            Throwable throwable = parseResult.throwable;
+            int errorCode = PackageManager.INSTALL_SUCCEEDED;
+
+            if (throwable == null) {
+                // Static shared libraries have synthetic package names
+                if (parseResult.pkg.applicationInfo.isStaticSharedLibrary()) {
+                    renameStaticSharedLibraryPackage(parseResult.pkg);
+                }
+                try {
+                    if (errorCode == PackageManager.INSTALL_SUCCEEDED) {
+                        scanPackageLI(parseResult.pkg, parseResult.scanFile, parseFlags, scanFlags,currentTime, null);
+                    }
+                } catch (PackageManagerException e) {
+                    errorCode = e.error;
+                    Slog.w(TAG, "Failed to scan " + parseResult.scanFile + ": " + e.getMessage());
+                }
+            } else if (throwable instanceof PackageParser.PackageParserException) {
+                PackageParser.PackageParserException e = (PackageParser.PackageParserException) throwable;
+                errorCode = e.error;
+                Slog.w(TAG, "Failed to parse " + parseResult.scanFile + ": " + e.getMessage());
+            } else {
+                throw new IllegalStateException("Unexpected exception occurred while parsing "  + parseResult.scanFile, throwable);
+            }
+
+            // Delete invalid userdata apps
+            if ((parseFlags & PackageParser.PARSE_IS_SYSTEM) == 0 &&  errorCode == PackageManager.INSTALL_FAILED_INVALID_APK) {
+                logCriticalInfo(Log.WARN, "Deleting invalid package at " + parseResult.scanFile);
+                removeCodePathLI(parseResult.scanFile);
+            }
+        }
+        parallelPackageParser.close();
     }
 
 }

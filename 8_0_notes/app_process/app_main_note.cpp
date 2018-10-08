@@ -25,6 +25,7 @@ int main(int argc, char* const argv[])
 {
     /**
     *打印启动参数
+    *01-01 00:11:34.416   243   243 V appproc : app_process main with argv: "/system/bin/app_process" "-Xzygote" "/system/bin" "--zygote" "--start-system-server" 
     */
     if (!LOG_NDEBUG) {
       String8 argv_String;
@@ -73,6 +74,10 @@ int main(int argc, char* const argv[])
     // Allow "spaced commands" to be succeeded by exactly 1 argument (regardless of -s).
     bool known_command = false;
 
+
+    /**
+    *01-01 00:11:34.426   243   243 V appproc : app_process main add option '-Xzygote'
+    */
     int i;
     for (i = 0; i < argc; i++) {
         if (known_command == true) {
@@ -101,6 +106,9 @@ int main(int argc, char* const argv[])
         ALOGV("app_process main add option '%s'", argv[i]);
     }
 
+
+
+
     // Parse runtime arguments.  Stop at first unrecognized option.
     bool zygote = false;
     bool startSystemServer = false;
@@ -111,10 +119,10 @@ int main(int argc, char* const argv[])
     ++i;  // Skip unused "parent dir" argument.
     while (i < argc) {
         const char* arg = argv[i++];
-        if (strcmp(arg, "--zygote") == 0) {
+        if (strcmp(arg, "--zygote") == 0) {//这里满足
             zygote = true;
             niceName = ZYGOTE_NICE_NAME;
-        } else if (strcmp(arg, "--start-system-server") == 0) {
+        } else if (strcmp(arg, "--start-system-server") == 0) {//这里满足
             startSystemServer = true;
         } else if (strcmp(arg, "--application") == 0) {
             application = true;
@@ -131,8 +139,8 @@ int main(int argc, char* const argv[])
 
     // 注意这里只要zygote把argv参数加入到args中，应用APK没有，而是保存到AppRuntime中
     Vector<String8> args;
-    //如果className不为空
-    if (!className.isEmpty()) {//普通应用
+    //这里className空
+    if (!className.isEmpty()) {//这里用于不是通过zygote来fork的 ,例如am工具或者通过 app_process 来启动应用，
         // We're not in zygote mode, the only argument we need to pass
         // to RuntimeInit is the application argument.
         //
@@ -155,11 +163,11 @@ int main(int argc, char* const argv[])
           //打印启动类名，以及启动参数
           ALOGV("Class name = %s, args = %s", className.string(), restOfArgs.string());
         }
-    } else {// zygote 和 systemserver 程序启动
+    } else {// zygote 程序启动
         // We're in zygote mode.
         maybeCreateDalvikCache(); //创建"/data/dalvik-cache/arm"目录
 
-        if (startSystemServer) {
+        if (startSystemServer) {//true
             args.add(String8("start-system-server"));
         }
 
@@ -181,7 +189,7 @@ int main(int argc, char* const argv[])
         }
     }
 
-    if (!niceName.isEmpty()) {
+    if (!niceName.isEmpty()) {//
         runtime.setArgv0(niceName.string(), true /* setProcName */);
     }
 

@@ -1,3 +1,6 @@
+
+//Installer用于和Installd二进制服务通讯的封装
+
 public class Installer extends SystemService {
 
     /**
@@ -16,6 +19,23 @@ public class Installer extends SystemService {
             mInstalld = null;
         } else {
             connect();
+        }
+    }
+
+    /**
+     * Do several pre-flight checks before making a remote call.
+     *
+     * @return if the remote call should continue.
+     */
+    private boolean checkBeforeRemote() {
+        if (mWarnIfHeld != null && Thread.holdsLock(mWarnIfHeld)) {
+            Slog.wtf(TAG, "Calling thread " + Thread.currentThread().getName() + " is holding 0x" + Integer.toHexString(System.identityHashCode(mWarnIfHeld)), new Throwable());
+        }
+        if (mIsolated) {
+            Slog.i(TAG, "Ignoring request because this installer is isolated");
+            return false;
+        } else {
+            return true;
         }
     }
 

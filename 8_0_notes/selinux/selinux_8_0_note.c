@@ -366,13 +366,24 @@ int security_getenforce(void)
 
 static bool selinux_is_enforcing(void)
 {
-    if (ALLOW_PERMISSIVE_SELINUX) {
+    if (ALLOW_PERMISSIVE_SELINUX) { // 由编译引入ALLOW_PERMISSIVE_SELINUX=1
         return selinux_status_from_cmdline() == SELINUX_ENFORCING;
     }
     return true;
 }
 
+static selinux_enforcing_status selinux_status_from_cmdline() {
+    selinux_enforcing_status status = SELINUX_ENFORCING;
+    // 这里 androidboot.selinux=permissive
+    // system/core/init/util.cpp 
+    import_kernel_cmdline(false, [&](const std::string& key, const std::string& value, bool in_qemu) {
+        if (key == "androidboot.selinux" && value == "permissive") {
+            status = SELINUX_PERMISSIVE;
+        }
+    });
 
+    return status;
+}
 
 void import_kernel_cmdline(bool in_qemu, const std::function<void(const std::string&, const std::string&, bool)>& fn) {
     std::string cmdline;
@@ -395,18 +406,7 @@ androidboot.serialno=111139d4e6fdf288 androidboot.soc_type=imx6q androidboot.sto
     }
 }
 
-static selinux_enforcing_status selinux_status_from_cmdline() {
-    selinux_enforcing_status status = SELINUX_ENFORCING;
-    // 这里 androidboot.selinux=permissive
-    // system/core/init/util.cpp 
-    import_kernel_cmdline(false, [&](const std::string& key, const std::string& value, bool in_qemu) {
-        if (key == "androidboot.selinux" && value == "permissive") {
-            status = SELINUX_PERMISSIVE;
-        }
-    });
 
-    return status;
-}
 
 int security_setenforce(int value)
 {
