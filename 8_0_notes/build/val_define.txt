@@ -1,0 +1,2 @@
+//	build/make/core/main.mk:37:
+BUILD_SYSTEM := $(TOPDIR)build/core

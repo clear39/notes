@@ -71,16 +71,73 @@ u:r:hal_wifi_default:s0        wifi           263     1 0 00:00:22 ?     00:00:0
 
 
 
+//    完整的基本安全控制语句格式为：
+//    AV规则      主体      客体:客体类别    许可
+//    allow     netd       proc:file     write
+
+//用户    定义
+//      @system/sepolicy/private/users              
+
+//角色    定义
+//      @system/sepolicy/public/roles               
+
+
+//客体类别  定义
+//      @system/sepolicy/private/security_classes  
+
+
+//属性定义      定义了所有Security Context中的通用type
+//     @system/sepolicy/private/attributes
+//     @system/sepolicy/public/attributes
+/** 所有进程 types
+    # All types used for processes.
+    attribute domain;
+*/
+
+
+//
+//          @system/sepolicy/private/access_vectors
+/*
+//通用文件许可权限定义
+common file
+{
+    ioctl
+    ......
+}
+
+
+//客体类别 继承文件 通用许可权限定义
+class file
+inherits file
+{
+    execute_no_trans
+    entrypoint
+    execmod
+    open
+    audit_access
+}
+*/
+
+
+
+
+
+//文件上下
+//      @system/sepolicy/private/file_contexts      
+
+
+
+
 int main(int argc, char** argv) {
     。。。。。。
 
     bool is_first_stage = (getenv("INIT_SECOND_STAGE") == nullptr); //系统第一次启动为true
 
     if (is_first_stage) {
- 	。。。。。。
+ 	    。。。。。。
         mount("selinuxfs", "/sys/fs/selinux", "selinuxfs", 0, NULL);
 
-	。。。。。。
+	    。。。。。。
 
         // Set up SELinux, loading the SELinux policy.
         selinux_initialize(true);  //分析一  // 将 /sepolicy 文件内容写入到 /sys/fs/selinux/load 中
@@ -173,7 +230,7 @@ static void selinux_initialize(bool in_kernel_domain == true) {
     cb.func_log = selinux_klog_callback;
     selinux_set_callback(SELINUX_CB_LOG, cb);
     cb.func_audit = audit_callback;
-    selinux_set_callback(SELINUX_CB_AUDIT, cb);
+    selinux_set_callback(SELINUX_CB_AUDIT, cb);//设置selinux记录回到函数
 
     if (in_kernel_domain) {//true
         LOG(INFO) << "Loading SELinux policy";
@@ -222,7 +279,7 @@ static bool selinux_load_policy() {
 }
 
 
-//	返回false
+///system/etc/selinux/plat_sepolicy.cil不存在，则返回false
 static constexpr const char plat_policy_cil_file[] = "/system/etc/selinux/plat_sepolicy.cil";
 static bool selinux_is_split_policy_device() { return access(plat_policy_cil_file, R_OK) != -1; }
 

@@ -58,16 +58,17 @@ extern "C" jint JNI_CreateJavaVM(JavaVM** p_vm, JNIEnv** p_env, void* vm_args) {
     options.push_back(std::make_pair(std::string(option->optionString), option->extraInfo));
   }
   bool ignore_unrecognized = args->ignoreUnrecognized; //JNI_FALSE
-  if (!Runtime::Create(options, ignore_unrecognized)) {
+  if (!Runtime::Create(options, ignore_unrecognized)) {//Runtime创建
     return JNI_ERR;
   }
 
   // Initialize native loader. This step makes sure we have
   // everything set up before we start using JNI.
+  //  system/core/libnativeloader/native_loader.cpp 
   android::InitializeNativeLoader();//????????????
 
   Runtime* runtime = Runtime::Current();
-  bool started = runtime->Start();
+  bool started = runtime->Start();                  //Runtime启动
   if (!started) {
     delete Thread::Current()->GetJniEnv();
     delete runtime->GetJavaVM();

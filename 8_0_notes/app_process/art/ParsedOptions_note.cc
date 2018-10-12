@@ -246,10 +246,18 @@ bool ParsedOptions::DoParse(const RuntimeOptions& options,bool ignore_unrecogniz
 
 
 
+
+
+//	#define RUNTIME_OPTIONS_KEY(Type, Name, ...) const RuntimeArgumentMap::Key<Type> RuntimeArgumentMap::Name {__VA_ARGS__}; 
+//	
+
 std::unique_ptr<RuntimeParser> ParsedOptions::MakeParser(bool ignore_unrecognized) {
   using M = RuntimeArgumentMap;
 
+  //	art/cmdline/cmdline_parser.h:43:struct CmdlineParser 
+  //	art/runtime/parsed_options.cc:54:using RuntimeParser = CmdlineParser<RuntimeArgumentMap, RuntimeArgumentMap::Key>;
   std::unique_ptr<RuntimeParser::Builder> parser_builder = std::unique_ptr<RuntimeParser::Builder>(new RuntimeParser::Builder());
+
 
   parser_builder->Define("-Xzygote").IntoKey(M::Zygote)
       .Define("-help").IntoKey(M::Help)
