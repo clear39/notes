@@ -533,6 +533,15 @@ static int __write_to_log_initialize() {
 }
 
 //  @system/core/liblog/include/log/log_transport.h
+/* clang-format off */
+#define LOGGER_DEFAULT 0x00
+#define LOGGER_LOGD    0x01
+#define LOGGER_KERNEL  0x02 /* Reserved/Deprecated */
+#define LOGGER_NULL    0x04 /* Does not release resources of other selections */
+#define LOGGER_LOCAL   0x08 /* logs sent to local memory */
+#define LOGGER_STDERR  0x10 /* logs sent to stderr */
+/* clang-format on */
+
 
 
 //  @system/core/liblog/config_write.c
