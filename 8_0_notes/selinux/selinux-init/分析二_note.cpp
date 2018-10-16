@@ -1041,10 +1041,13 @@ static int restorecon_sb(const char *pathname = "/init", const struct stat *sb,b
      * have different labeling rules, based off of /seapp_contexts, and
      * installd is responsible for managing these labels instead of init.
      */
+    //  @external/selinux/libselinux/src/android/android_platform.c:1178:#define DATA_DATA_PATH "/data/data"
     //  @external/selinux/libselinux/src/android/android_platform.c:1183:#define DATA_DATA_PREFIX DATA_DATA_PATH "/"
 
+    //  @external/selinux/libselinux/src/android/android_platform.c:1179:#define DATA_USER_PATH "/data/user"
     //  @external/selinux/libselinux/src/android/android_platform.c:1184:#define DATA_USER_PREFIX DATA_USER_PATH "/"
 
+    //  @external/selinux/libselinux/src/android/android_platform.c:1180:#define DATA_USER_DE_PATH "/data/user_de"
     //  @external/selinux/libselinux/src/android/android_platform.c:1185:#define DATA_USER_DE_PREFIX DATA_USER_DE_PATH "/"
 
     //  @external/selinux/libselinux/src/android/android_platform.c:1181:#define EXPAND_USER_PATH "/mnt/expand/\?\?\?\?\?\?\?\?-\?\?\?\?-\?\?\?\?-\?\?\?\?-\?\?\?\?\?\?\?\?\?\?\?\?/user"
@@ -1054,10 +1057,8 @@ static int restorecon_sb(const char *pathname = "/init", const struct stat *sb,b
         !strncmp(pathname, DATA_USER_PREFIX, sizeof(DATA_USER_PREFIX)-1) ||
         !strncmp(pathname, DATA_USER_DE_PREFIX, sizeof(DATA_USER_DE_PREFIX)-1) ||
         !fnmatch(EXPAND_USER_PATH, pathname, FNM_LEADING_DIR|FNM_PATHNAME) ||
-        !fnmatch(EXPAND_USER_DE_PATH, pathname, FNM_LEADING_DIR|FNM_PATHNAME)) {
-
-        if (pkgdir_selabel_lookup(pathname, seinfo, uid, &secontext) < 0)
-            goto err;
+        !fnmatch(EXPAND_USER_DE_PATH, pathname, FNM_LEADING_DIR|FNM_PATHNAME)) { //fnmatch系统api，匹配文件或者文件夹
+        ......
     }
 
     if (strcmp(oldsecontext, secontext) != 0) {
@@ -1077,9 +1078,7 @@ out:
     return rc;
 
 err:
-    selinux_log(SELINUX_ERROR,
-                "SELinux: Could not set context for %s:  %s\n",
-                pathname, strerror(errno));
+    selinux_log(SELINUX_ERROR,"SELinux: Could not set context for %s:  %s\n",pathname, strerror(errno));
     rc = -1;
     goto out;
 }
@@ -1305,6 +1304,42 @@ out:
         free(buf);
     else
         *context = buf;
+    return ret;
+}
+
+//  external/selinux/libselinux/src/lsetfilecon.c
+int lsetfilecon_raw(const char *path, const char * context)
+{
+    int rc = lsetxattr(path, XATTR_NAME_SELINUX, context, strlen(context) + 1,
+             0);
+    if (rc < 0 && errno == ENOTSUP) {
+        char * ccontext = NULL;
+        int err = errno;
+        if ((lgetfilecon_raw(path, &ccontext) >= 0) &&
+            (strcmp(context,ccontext) == 0)) {
+            rc = 0;
+        } else {
+            errno = err;
+        }
+        freecon(ccontext);
+    }
+    return rc;
+}
+
+hidden_def(lsetfilecon_raw)
+
+int lsetfilecon(const char *path, const char *context)
+{
+    int ret;
+    char * rcontext;
+
+    if (selinux_trans_to_raw_context(context, &rcontext))
+        return -1;
+
+    ret = lsetfilecon_raw(path, rcontext);
+
+    freecon(rcontext);
+
     return ret;
 }
 
