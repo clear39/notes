@@ -75,7 +75,8 @@ int main(int argc, char* argv[]) {
     // Serves the purpose of managing the last logs times read on a
     // socket connection, and as a reader lock on a range of log
     // entries.
-
+    //  LogTimeEntry@system/core/logd/LogTimes.h:32
+    //  system/core/logd/LogTimes.h:144:typedef std::list<LogTimeEntry*> LastLogTimes;
     LastLogTimes* times = new LastLogTimes();
 
     // LogBuffer is the object which is responsible for holding all
@@ -178,7 +179,7 @@ static int issueReinit() {
 
 
 int android_get_control_file(const char* path) {
-    //system/core/libcutils/include/cutils/android_get_control_file.h:20:#define ANDROID_FILE_ENV_PREFIX "ANDROID_FILE_"
+    //@system/core/libcutils/include/cutils/android_get_control_file.h:20:#define ANDROID_FILE_ENV_PREFIX "ANDROID_FILE_"
     int fd = __android_get_control_from_env(ANDROID_FILE_ENV_PREFIX, path);
 
 #if defined(__linux__)
@@ -216,7 +217,7 @@ LIBCUTILS_HIDDEN int __android_get_control_from_env(const char* prefix,const cha
 
     char *cp = key;
     while (*cp) {
-        if (!isalnum(*cp)) *cp = '_';//isalnum判断是否为字母和数字，如果不是替换成下划线；这里得到ANDROID_FILE__dev_kmsg
+        if (!isalnum(*cp)) *cp = '_';//isalnum判断是否为字母和数字，如果不是则替换成下划线；这里得到ANDROID_FILE__dev_kmsg
         ++cp;
     }
 

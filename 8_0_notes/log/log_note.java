@@ -4,7 +4,7 @@ private static final boolean DEBUG = Log.isLoggable(TAG, Log.DEBUG);
 
 
 public final class Log {
-	public static native boolean isLoggable(String tag, int level);
+  public static native boolean isLoggable(String tag, int level);
   /** @hide */ public static native int println_native(int bufID,int priority, String tag, String msg);
 }
 
@@ -51,8 +51,8 @@ static int __android_log_level(const char* tag, size_t len, int default_prio) {
   char c = 0;
   /*
    * Single layer cache of four properties. Priorities are:
-   *    log.tag.<tag>					// log.tag.MediaRouterService
-   *    persist.log.tag.<tag>				// persist.log.tag.MediaRouterService
+   *    log.tag.<tag>         // log.tag.MediaRouterService
+   *    persist.log.tag.<tag>       // persist.log.tag.MediaRouterService
    *    log.tag
    *    persist.log.tag
    * Where the missing tag matches all tags and becomes the
@@ -147,7 +147,7 @@ static int __android_log_level(const char* tag, size_t len, int default_prio) {
         break;
       }
 
-      kp = key + base_offset;	// kp == "log.tag.MediaRouterService"
+      kp = key + base_offset; // kp == "log.tag.MediaRouterService"
     }
   } //if (taglen) 
 
@@ -277,7 +277,7 @@ static void refresh_cache(struct cache_char* cache, const char* key) {
 
 
 
-//	bionic/libc/bionic/system_properties.cpp
+//  bionic/libc/bionic/system_properties.cpp
 // 获取system_property全局操作序列号
 uint32_t __system_property_area_serial() {
   prop_area* pa = __system_property_area__;
@@ -401,8 +401,242 @@ LIBLOG_ABI_PUBLIC int __android_log_buf_write(int bufID, int prio,const char* ta
   vec[2].iov_base = (void*)msg;
   vec[2].iov_len = strlen(msg) + 1;
 
-  return write_to_log(bufID, vec, 3); //__write_to_log_daemon
+  //第一次调用的时候  static int (*write_to_log)(log_id_t, struct iovec* vec,size_t nr) = __write_to_log_init;
+  //以后调用 write_to_log ==  __write_to_log_daemon
+  return write_to_log(bufID, vec, 3); 
 }
+
+
+//  @system/core/liblog/include/log/log_id.h
+typedef enum log_id {
+  LOG_ID_MIN = 0,
+
+  LOG_ID_MAIN = 0,
+  LOG_ID_RADIO = 1,
+  LOG_ID_EVENTS = 2,
+  LOG_ID_SYSTEM = 3,
+  LOG_ID_CRASH = 4,
+  LOG_ID_SECURITY = 5,
+  LOG_ID_KERNEL = 6, /* place last, third-parties can not use it */
+
+  LOG_ID_MAX
+} log_id_t;
+
+//  @
+static int __write_to_log_daemon(log_id_t log_id, struct iovec* vec, size_t nr) {
+  struct android_log_transport_write* node;
+  int ret;
+  struct timespec ts;
+  size_t len, i;
+
+  //计算总长度
+  for (len = i = 0; i < nr; ++i) {
+    len += vec[i].iov_len;
+  }
+  if (!len) {
+    return -EINVAL;
+  }
+
+#if defined(__ANDROID__)
+  clock_gettime(android_log_clockid(), &ts);
+
+  if (log_id == LOG_ID_SECURITY) {
+    if (vec[0].iov_len < 4) {
+      return -EINVAL;
+    }
+
+    ret = check_log_uid_permissions();
+    if (ret < 0) {
+      return ret;
+    }
+    if (!__android_log_security()) {
+      /* If only we could reset downstream logd counter */
+      return -EPERM;
+    }
+  } else if (log_id == LOG_ID_EVENTS) {
+    const char* tag;
+    size_t len;
+    EventTagMap *m, *f;
+
+    if (vec[0].iov_len < 4) {
+      return -EINVAL;
+    }
+
+    tag = NULL;
+    len = 0;
+    f = NULL;
+    m = (EventTagMap*)atomic_load(&tagMap);
+
+    if (!m) {
+      ret = __android_log_trylock();
+      m = (EventTagMap*)atomic_load(&tagMap); /* trylock flush cache */
+      if (!m) {
+        m = android_openEventTagMap(NULL);
+        if (ret) { /* trylock failed, use local copy, mark for close */
+          f = m;
+        } else {
+          if (!m) { /* One chance to open map file */
+            m = (EventTagMap*)(uintptr_t)-1LL;
+          }
+          atomic_store(&tagMap, (uintptr_t)m);
+        }
+      }
+      if (!ret) { /* trylock succeeded, unlock */
+        __android_log_unlock();
+      }
+    }
+    if (m && (m != (EventTagMap*)(uintptr_t)-1LL)) {
+      tag = android_lookupEventTag_len(m, &len, get4LE(vec[0].iov_base));
+    }
+    ret = __android_log_is_loggable_len(ANDROID_LOG_INFO, tag, len,ANDROID_LOG_VERBOSE);
+    if (f) { /* local copy marked for close */
+      android_closeEventTagMap(f);
+    }
+    if (!ret) {
+      return -EPERM;
+    }
+  } else {
+    /* Validate the incoming tag, tag content can not split across iovec */
+    char prio = ANDROID_LOG_VERBOSE;
+    const char* tag = vec[0].iov_base;
+    size_t len = vec[0].iov_len;
+    if (!tag) {
+      len = 0;
+    }
+    if (len > 0) {
+      prio = *tag;
+      if (len > 1) {
+        --len;
+        ++tag;
+      } else {
+        len = vec[1].iov_len;
+        tag = ((const char*)vec[1].iov_base);
+        if (!tag) {
+          len = 0;
+        }
+      }
+    }
+    /* tag must be nul terminated */
+    if (tag && strnlen(tag, len) >= len) {
+      tag = NULL;
+    }
+
+    if (!__android_log_is_loggable_len(prio, tag, len - 1, ANDROID_LOG_VERBOSE)) {
+      return -EPERM;
+    }
+  }
+
+  
+#else
+  /* simulate clock_gettime(CLOCK_REALTIME, &ts); */
+  {
+    struct timeval tv;
+    gettimeofday(&tv, NULL);
+    ts.tv_sec = tv.tv_sec;
+    ts.tv_nsec = tv.tv_usec * 1000;
+  }
+#endif
+
+  ret = 0;
+  i = 1 << log_id;
+  write_transport_for_each(node, &__android_log_transport_write) {
+    if (node->logMask & i) {
+      ssize_t retval;
+      retval = (*node->write)(log_id, &ts, vec, nr);
+      if (ret >= 0) {
+        ret = retval;
+      }
+    }
+  }
+
+  write_transport_for_each(node, &__android_log_persist_write) {
+    if (node->logMask & i) {
+      (void)(*node->write)(log_id, &ts, vec, nr);
+    }
+  }
+
+  return ret;
+}
+
+//  当log_id == LOG_ID_SECURITY
+//  @system/core/liblog/properties.c
+
+
+struct cache {
+  const prop_info* pinfo;
+  uint32_t serial;
+};
+
+struct cache_char {
+  struct cache cache;
+  unsigned char c;
+};
+
+/*
+ * For properties that are read often, but generally remain constant.
+ * Since a change is rare, we will accept a trylock failure gracefully.
+ * Use a separate lock from is_loggable to keep contention down b/25563384.
+ */
+struct cache2_char {
+  pthread_mutex_t lock;
+  uint32_t serial;
+  const char* key_persist;
+  struct cache_char cache_persist;
+  const char* key_ro;
+  struct cache_char cache_ro;
+  unsigned char (*const evaluate)(const struct cache2_char* self);
+};
+
+/*
+ * Security state generally remains constant, but the DO must be able
+ * to turn off logging should it become spammy after an attack is detected.
+ */
+static unsigned char evaluate_security(const struct cache2_char* self) {
+  unsigned char c = self->cache_ro.c;
+
+  return (c != BOOLEAN_FALSE) && c && (self->cache_persist.c == BOOLEAN_TRUE);
+}
+
+LIBLOG_ABI_PUBLIC int __android_log_security() {
+  static struct cache2_char security = {
+    PTHREAD_MUTEX_INITIALIZER, 0,
+    "persist.logd.security",   { { NULL, -1 }, BOOLEAN_FALSE },
+    "ro.device_owner",         { { NULL, -1 }, BOOLEAN_FALSE },
+    evaluate_security
+  };
+
+  return do_cache2_char(&security);
+}
+
+
+static inline unsigned char do_cache2_char(struct cache2_char* self) {
+  uint32_t current_serial;
+  int change_detected;
+  unsigned char c;
+
+  if (pthread_mutex_trylock(&self->lock)) {
+    /* We are willing to accept some race in this context */
+    return self->evaluate(self);
+  }
+
+  change_detected = check_cache(&self->cache_persist.cache) || check_cache(&self->cache_ro.cache);
+  current_serial = __system_property_area_serial();
+  if (current_serial != self->serial) {
+    change_detected = 1;
+  }
+  if (change_detected) {
+    refresh_cache(&self->cache_persist, self->key_persist);
+    refresh_cache(&self->cache_ro, self->key_ro);
+    self->serial = current_serial;
+  }
+  c = self->evaluate(self);
+
+  pthread_mutex_unlock(&self->lock);
+
+  return c;
+}
+
+
 
 
 
@@ -415,7 +649,8 @@ LIBLOG_ABI_PUBLIC int __android_log_buf_write(int bufID, int prio,const char* ta
 
 //  @system/core/liblog/logger_write.c
 static int __write_to_log_init(log_id_t log_id, struct iovec* vec, size_t nr) {
-  __android_log_lock();
+  //  @system/core/liblog/logger_lock.c
+  __android_log_lock();//加锁
 
   //  static int (*write_to_log)(log_id_t, struct iovec* vec,size_t nr) = __write_to_log_init;
   if (write_to_log == __write_to_log_init) {
@@ -436,29 +671,6 @@ static int __write_to_log_init(log_id_t log_id, struct iovec* vec, size_t nr) {
   __android_log_unlock();
 
   return write_to_log(log_id, vec, nr);
-}
-
-
-//  @system/core/liblog/logger_lock.c
-#if !defined(_WIN32)
-static pthread_mutex_t log_init_lock = PTHREAD_MUTEX_INITIALIZER;
-#endif
-
-LIBLOG_HIDDEN void __android_log_lock() {
-#if !defined(_WIN32)
-  /*
-   * If we trigger a signal handler in the middle of locked activity and the
-   * signal handler logs a message, we could get into a deadlock state.
-   */
-  pthread_mutex_lock(&log_init_lock);
-#endif
-}
-
-
-LIBLOG_HIDDEN void __android_log_unlock() {
-#if !defined(_WIN32)
-  pthread_mutex_unlock(&log_init_lock);
-#endif
 }
 
 
@@ -492,6 +704,7 @@ static int __write_to_log_initialize() {
   struct listnode* n;
   int i = 0, ret = 0;
 
+  //通过 __android_log_transport 配置__android_log_transport_write 和 __android_log_persist_write
   __android_log_config_write();
 
   write_transport_for_each_safe(transport, n, &__android_log_transport_write) {
@@ -608,140 +821,7 @@ LIBLOG_HIDDEN void __android_log_config_write() {
 
 
 
-static int __write_to_log_daemon(log_id_t log_id, struct iovec* vec, size_t nr) {
-  struct android_log_transport_write* node;
-  int ret;
-  struct timespec ts;
-  size_t len, i;
 
-  for (len = i = 0; i < nr; ++i) {
-    len += vec[i].iov_len;
-  }
-  if (!len) {
-    return -EINVAL;
-  }
-
-#if defined(__ANDROID__)
-  clock_gettime(android_log_clockid(), &ts);
-
-  if (log_id == LOG_ID_SECURITY) {
-    if (vec[0].iov_len < 4) {
-      return -EINVAL;
-    }
-
-    ret = check_log_uid_permissions();
-    if (ret < 0) {
-      return ret;
-    }
-    if (!__android_log_security()) {
-      /* If only we could reset downstream logd counter */
-      return -EPERM;
-    }
-  } else if (log_id == LOG_ID_EVENTS) {
-    const char* tag;
-    size_t len;
-    EventTagMap *m, *f;
-
-    if (vec[0].iov_len < 4) {
-      return -EINVAL;
-    }
-
-    tag = NULL;
-    len = 0;
-    f = NULL;
-    m = (EventTagMap*)atomic_load(&tagMap);
-
-    if (!m) {
-      ret = __android_log_trylock();
-      m = (EventTagMap*)atomic_load(&tagMap); /* trylock flush cache */
-      if (!m) {
-        m = android_openEventTagMap(NULL);
-        if (ret) { /* trylock failed, use local copy, mark for close */
-          f = m;
-        } else {
-          if (!m) { /* One chance to open map file */
-            m = (EventTagMap*)(uintptr_t)-1LL;
-          }
-          atomic_store(&tagMap, (uintptr_t)m);
-        }
-      }
-      if (!ret) { /* trylock succeeded, unlock */
-        __android_log_unlock();
-      }
-    }
-    if (m && (m != (EventTagMap*)(uintptr_t)-1LL)) {
-      tag = android_lookupEventTag_len(m, &len, get4LE(vec[0].iov_base));
-    }
-    ret = __android_log_is_loggable_len(ANDROID_LOG_INFO, tag, len,
-                                        ANDROID_LOG_VERBOSE);
-    if (f) { /* local copy marked for close */
-      android_closeEventTagMap(f);
-    }
-    if (!ret) {
-      return -EPERM;
-    }
-  } else {
-    /* Validate the incoming tag, tag content can not split across iovec */
-    char prio = ANDROID_LOG_VERBOSE;
-    const char* tag = vec[0].iov_base;
-    size_t len = vec[0].iov_len;
-    if (!tag) {
-      len = 0;
-    }
-    if (len > 0) {
-      prio = *tag;
-      if (len > 1) {
-        --len;
-        ++tag;
-      } else {
-        len = vec[1].iov_len;
-        tag = ((const char*)vec[1].iov_base);
-        if (!tag) {
-          len = 0;
-        }
-      }
-    }
-    /* tag must be nul terminated */
-    if (tag && strnlen(tag, len) >= len) {
-      tag = NULL;
-    }
-
-    if (!__android_log_is_loggable_len(prio, tag, len - 1, ANDROID_LOG_VERBOSE)) {
-      return -EPERM;
-    }
-  }
-
-  
-#else
-  /* simulate clock_gettime(CLOCK_REALTIME, &ts); */
-  {
-    struct timeval tv;
-    gettimeofday(&tv, NULL);
-    ts.tv_sec = tv.tv_sec;
-    ts.tv_nsec = tv.tv_usec * 1000;
-  }
-#endif
-
-  ret = 0;
-  i = 1 << log_id;
-  write_transport_for_each(node, &__android_log_transport_write) {
-    if (node->logMask & i) {
-      ssize_t retval;
-      retval = (*node->write)(log_id, &ts, vec, nr);
-      if (ret >= 0) {
-        ret = retval;
-      }
-    }
-  }
-
-  write_transport_for_each(node, &__android_log_persist_write) {
-    if (node->logMask & i) {
-      (void)(*node->write)(log_id, &ts, vec, nr);
-    }
-  }
-
-  return ret;
-}
 
 
 
