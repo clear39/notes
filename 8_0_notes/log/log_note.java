@@ -758,6 +758,7 @@ static int __write_to_log_initialize() {
 
 
 //  @system/core/liblog/config_write.c
+//  __android_log_transport默认值为0
 LIBLOG_HIDDEN void __android_log_config_write() {
 
   // __android_log_transport 定义 @system/core/liblog/logger_write.c
@@ -772,15 +773,16 @@ LIBLOG_HIDDEN void __android_log_config_write() {
 
   if ((__android_log_transport == LOGGER_DEFAULT) || (__android_log_transport & LOGGER_LOGD)) {
 
-//  FAKE_LOG_DEVICE == 1 定义在 @system/core/liblog/Android.bp 中
+//  FAKE_LOG_DEVICE == 1 只有host定义,定义在 @system/core/liblog/Android.bp 中,android版本没有定义FAKE_LOG_DEVICE
 #if (FAKE_LOG_DEVICE == 0)
+//android版本执行这里
     extern struct android_log_transport_write logdLoggerWrite;
     extern struct android_log_transport_write pmsgLoggerWrite;
 
     __android_log_add_transport(&__android_log_transport_write,  &logdLoggerWrite);
     __android_log_add_transport(&__android_log_persist_write, &pmsgLoggerWrite);
 #else
-    
+    //host 版本执行这里
     //  @system/core/liblog/fake_writer.c
     extern struct android_log_transport_write fakeLoggerWrite;
 

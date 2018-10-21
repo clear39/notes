@@ -173,7 +173,7 @@ LIBLOG_HIDDEN int fakeLogOpen(const char* pathName) {
 //在openLogTable中查找一个fakeFd为0的成员返回
 static LogState* createLogState() {
   size_t i;
-
+  //  @system/core/liblog/fake_log_device.c:120:static LogState openLogTable[MAX_OPEN_LOGS];
   for (i = 0; i < (sizeof(openLogTable) / sizeof(openLogTable[0])); i++) {
     if (openLogTable[i].fakeFd == 0) {
       openLogTable[i].fakeFd = FAKE_FD_BASE + i;//	#define FAKE_FD_BASE 10000
