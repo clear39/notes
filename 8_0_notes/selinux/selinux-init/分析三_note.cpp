@@ -38,7 +38,7 @@ struct selabel_handle* selinux_android_file_context_handle(void)
     }
 }
 
-
+//	@external/selinux/libselinux/src/android/android_platform.c
 void selinux_android_set_sehandle(const struct selabel_handle *hndl)
 {
       fc_sehandle = (struct selabel_handle *) hndl;
