@@ -15,9 +15,35 @@ public AssetManager() {
         }
         init(false); //native
         if (localLOGV) Log.v(TAG, "New asset manager: " + this);
-        ensureSystemAssets();
+        ensureSystemAssets();//只创建一次,单实例模式sSystem
     }
 }
+
+
+//注意这里是java层的全局静态变量
+private static void ensureSystemAssets() {
+    synchronized (sSync) {
+        if (sSystem == null) {
+            AssetManager system = new AssetManager(true);
+            system.makeStringBlocks(null);
+            sSystem = system;
+        }
+    }
+}
+
+
+//这里调用是全局调用
+private AssetManager(boolean isSystem) {
+    if (DEBUG_REFS) {
+        synchronized (this) {
+            mNumRefs = 0;
+            incRefsLocked(this.hashCode());
+        }
+    }
+    init(true);//native
+    if (localLOGV) Log.v(TAG, "New asset manager: " + this);
+}
+
 
 //	@frameworks/base/core/jni/android_util_AssetManager.cpp
 static void android_content_AssetManager_init(JNIEnv* env, jobject clazz, jboolean isSystem)
@@ -31,35 +57,10 @@ static void android_content_AssetManager_init(JNIEnv* env, jobject clazz, jboole
         return;
     }
 
-    am->addDefaultAssets();
+    am->addDefaultAssets();//添加系统资源/system/framework/framework-res.apk
 
     ALOGV("Created AssetManager %p for Java object %p\n", am, clazz);
     env->SetLongField(clazz, gAssetManagerOffsets.mObject, reinterpret_cast<jlong>(am));
-}
-
-
-
-
-private static void ensureSystemAssets() {
-    synchronized (sSync) {
-        if (sSystem == null) {
-            AssetManager system = new AssetManager(true);
-            system.makeStringBlocks(null);
-            sSystem = system;
-        }
-    }
-}
-
-
-private AssetManager(boolean isSystem) {
-    if (DEBUG_REFS) {
-        synchronized (this) {
-            mNumRefs = 0;
-            incRefsLocked(this.hashCode());
-        }
-    }
-    init(true);//native
-    if (localLOGV) Log.v(TAG, "New asset manager: " + this);
 }
 
 
@@ -112,18 +113,18 @@ static void verifySystemIdmaps()
                 struct stat st;
 
                 memset(argv, NULL, sizeof(argv));
-                argv[argc++] = AssetManager::IDMAP_BIN;
+                argv[argc++] = AssetManager::IDMAP_BIN;//	const char* AssetManager::IDMAP_BIN = "/system/bin/idmap";
                 argv[argc++] = "--scan";
-                argv[argc++] = AssetManager::TARGET_PACKAGE_NAME;
-                argv[argc++] = AssetManager::TARGET_APK_PATH;
-                argv[argc++] = AssetManager::IDMAP_DIR;
+                argv[argc++] = AssetManager::TARGET_PACKAGE_NAME;	//const char* AssetManager::TARGET_PACKAGE_NAME = "android";
+                argv[argc++] = AssetManager::TARGET_APK_PATH;//	const char* AssetManager::TARGET_APK_PATH = "/system/framework/framework-res.apk";
+                argv[argc++] = AssetManager::IDMAP_DIR;	//	const char* AssetManager::IDMAP_DIR = "/data/resource-cache";
 
                 // Directories to scan for overlays: if OVERLAY_THEME_DIR_PROPERTY is defined,
                 // use OVERLAY_DIR/<value of OVERLAY_THEME_DIR_PROPERTY> in addition to OVERLAY_DIR.
                 char subdir[PROP_VALUE_MAX];
-                int len = __system_property_get(AssetManager::OVERLAY_THEME_DIR_PROPERTY, subdir);
+                int len = __system_property_get(AssetManager::OVERLAY_THEME_DIR_PROPERTY, subdir);//	const char* AssetManager::OVERLAY_THEME_DIR_PROPERTY = "ro.boot.vendor.overlay.theme";
                 if (len > 0) {
-                    String8 overlayPath = String8(AssetManager::OVERLAY_DIR) + "/" + subdir;
+                    String8 overlayPath = String8(AssetManager::OVERLAY_DIR) + "/" + subdir;	//const char* AssetManager::OVERLAY_DIR = "/vendor/overlay";
                     if (stat(overlayPath.string(), &st) == 0) {
                         argv[argc++] = overlayPath.string();
                     }
@@ -134,7 +135,7 @@ static void verifySystemIdmaps()
 
                 // Finally, invoke idmap (if any overlay directory exists)
                 if (argc > 5) {
-                    execv(AssetManager::IDMAP_BIN, (char* const*)argv);
+                    execv(AssetManager::IDMAP_BIN, (char* const*)argv);//	const char* AssetManager::IDMAP_BIN = "/system/bin/idmap";    //	idmap@frameworks/base/cmds/idmap
                     ALOGE("failed to execv for idmap: %s", strerror(errno));
                     exit(1); // should never get here
                 } else {
@@ -150,7 +151,7 @@ static void verifySystemIdmaps()
 
 
 /*package*/ final void makeStringBlocks(StringBlock[] seed) {
-    final int seedNum = (seed != null) ? seed.length : 0;
+    final int seedNum = (seed != null) ? seed.length : 0;//0
     final int num = getStringBlockCount();//native
     mStringBlocks = new StringBlock[num];
     if (localLOGV) Log.v(TAG, "Making string blocks for " + this + ": " + num);
