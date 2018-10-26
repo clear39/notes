@@ -159,7 +159,7 @@ public class PackageParser {
      */
     @Deprecated
     public Package parseMonolithicPackage(File apkFile, int flags) throws PackageParserException {
-        final AssetManager assets = newConfiguredAssetManager();
+        final AssetManager assets = newConfiguredAssetManager();//创建AssetManager并且初始化
         final PackageLite lite = parseMonolithicPackageLite(apkFile, flags);
         if (mOnlyCoreApps) {
             if (!lite.coreApp) {
@@ -866,7 +866,7 @@ public class PackageParser {
         AssetManager assets = null;
         XmlResourceParser parser = null;
         try {
-            assets = newConfiguredAssetManager();
+            assets = newConfiguredAssetManager();//创建AssetManager.并且初始化
             int cookie = assets.addAssetPath(apkPath);
             if (cookie == 0) {
                 throw new PackageParserException(INSTALL_PARSE_FAILED_NOT_APK, "Failed to parse " + apkPath);
