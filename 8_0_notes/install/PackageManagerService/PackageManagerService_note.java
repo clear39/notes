@@ -29,7 +29,7 @@ public class PackageManagerService extends IPackageManager.Stub implements Packa
         mFactoryTest = factoryTest;
         mOnlyCore = onlyCore;
         mMetrics = new DisplayMetrics();
-        mSettings = new Settings(mPackages);
+        mSettings = new Settings(mPackages);//      final ArrayMap<String, PackageParser.Package> mPackages = new ArrayMap<String, PackageParser.Package>();
         mSettings.addSharedUserLPw("android.uid.system", Process.SYSTEM_UID,ApplicationInfo.FLAG_SYSTEM, ApplicationInfo.PRIVATE_FLAG_PRIVILEGED);
         mSettings.addSharedUserLPw("android.uid.phone", RADIO_UID,ApplicationInfo.FLAG_SYSTEM, ApplicationInfo.PRIVATE_FLAG_PRIVILEGED);
         mSettings.addSharedUserLPw("android.uid.log", LOG_UID,ApplicationInfo.FLAG_SYSTEM, ApplicationInfo.PRIVATE_FLAG_PRIVILEGED);
@@ -84,10 +84,10 @@ public class PackageManagerService extends IPackageManager.Stub implements Packa
             mInstantAppRegistry = new InstantAppRegistry(this);
 
             File dataDir = Environment.getDataDirectory();
-            mAppInstallDir = new File(dataDir, "app");
+            mAppInstallDir = new File(dataDir, "app");//    /data/app
             mAppLib32InstallDir = new File(dataDir, "app-lib");
             mAsecInternalPath = new File(dataDir, "app-asec").getPath();
-            mDrmAppPrivateInstallDir = new File(dataDir, "app-private");
+            mDrmAppPrivateInstallDir = new File(dataDir, "app-private");//    /data/app-private
             sUserManager = new UserManagerService(context, this,new UserDataPreparer(mInstaller, mInstallLock, mContext, mOnlyCore), mPackages);
 
             // Propagate permission configuration in to package manager.
@@ -198,6 +198,8 @@ public class PackageManagerService extends IPackageManager.Stub implements Packa
             // Collect vendor overlay packages. (Do this before scanning any apps.)
             // For security and version matching reason, only consider
             // overlay packages if they reside in the right directory.
+
+            //  private static final String VENDOR_OVERLAY_DIR = "/vendor/overlay";
             scanDirTracedLI(new File(VENDOR_OVERLAY_DIR), mDefParseFlags
                     | PackageParser.PARSE_IS_SYSTEM
                     | PackageParser.PARSE_IS_SYSTEM_DIR
@@ -240,7 +242,7 @@ public class PackageManagerService extends IPackageManager.Stub implements Packa
                     | PackageParser.PARSE_IS_SYSTEM_DIR, scanFlags, 0);
 
             // Collect all OEM packages.
-            final File oemAppDir = new File(Environment.getOemDirectory(), "app");
+            final File oemAppDir = new File(Environment.getOemDirectory(), "app");//    /oem/app
             scanDirTracedLI(oemAppDir, mDefParseFlags
                     | PackageParser.PARSE_IS_SYSTEM
                     | PackageParser.PARSE_IS_SYSTEM_DIR, scanFlags, 0);
@@ -320,11 +322,10 @@ public class PackageManagerService extends IPackageManager.Stub implements Packa
 
             if (!mOnlyCore) {
                 EventLog.writeEvent(EventLogTags.BOOT_PROGRESS_PMS_DATA_SCAN_START,SystemClock.uptimeMillis());
-                scanDirTracedLI(mAppInstallDir, 0, scanFlags | SCAN_REQUIRE_KNOWN, 0);
+                scanDirTracedLI(mAppInstallDir, 0, scanFlags | SCAN_REQUIRE_KNOWN, 0);//  mAppInstallDir =  /data/app
 
-                scanDirTracedLI(mDrmAppPrivateInstallDir, mDefParseFlags
-                        | PackageParser.PARSE_FORWARD_LOCK,
-                        scanFlags | SCAN_REQUIRE_KNOWN, 0);
+                //  mDrmAppPrivateInstallDir = /data/app-private
+                scanDirTracedLI(mDrmAppPrivateInstallDir, mDefParseFlags | PackageParser.PARSE_FORWARD_LOCK, scanFlags | SCAN_REQUIRE_KNOWN, 0);
 
                 /**
                  * Remove disable package settings for any updated system
@@ -719,12 +720,7 @@ public class PackageManagerService extends IPackageManager.Stub implements Packa
     }
 
 
-     public static boolean isStageName(String name) {
-        final boolean isFile = name.startsWith("vmdl") && name.endsWith(".tmp");
-        final boolean isContainer = name.startsWith("smdl") && name.endsWith(".tmp");
-        final boolean isLegacyContainer = name.startsWith("smdl2tmp");
-        return isFile || isContainer || isLegacyContainer;
-    }
+     
 
     private void scanDirLI(File dir, int parseFlags, int scanFlags, long currentTime) {
         final File[] files = dir.listFiles();
@@ -784,6 +780,345 @@ public class PackageManagerService extends IPackageManager.Stub implements Packa
             }
         }
         parallelPackageParser.close();
+    }
+
+
+    public static boolean isStageName(String name) {
+        final boolean isFile = name.startsWith("vmdl") && name.endsWith(".tmp");
+        final boolean isContainer = name.startsWith("smdl") && name.endsWith(".tmp");
+        final boolean isLegacyContainer = name.startsWith("smdl2tmp");
+        return isFile || isContainer || isLegacyContainer;
+    }
+
+
+      /**
+     *  Scans a package and returns the newly parsed package.
+     *  @throws PackageManagerException on a parse error.
+     */
+    private PackageParser.Package scanPackageLI(PackageParser.Package pkg, File scanFile,final int policyFlags, int scanFlags, long currentTime, @Nullable UserHandle user)  throws PackageManagerException {
+        // If the package has children and this is the first dive in the function
+        // we scan the package with the SCAN_CHECK_ONLY flag set to see whether all
+        // packages (parent and children) would be successfully scanned before the
+        // actual scan since scanning mutates internal state and we want to atomically
+        // install the package and its children.
+        if ((scanFlags & SCAN_CHECK_ONLY) == 0) {
+            if (pkg.childPackages != null && pkg.childPackages.size() > 0) {
+                scanFlags |= SCAN_CHECK_ONLY;
+            }
+        } else {
+            scanFlags &= ~SCAN_CHECK_ONLY;
+        }
+
+        // Scan the parent
+        PackageParser.Package scannedPkg = scanPackageInternalLI(pkg, scanFile, policyFlags,scanFlags, currentTime, user);
+
+        // Scan the children
+        final int childCount = (pkg.childPackages != null) ? pkg.childPackages.size() : 0;
+        for (int i = 0; i < childCount; i++) {
+            PackageParser.Package childPackage = pkg.childPackages.get(i);
+            scanPackageInternalLI(childPackage, scanFile, policyFlags, scanFlags,currentTime, user);
+        }
+
+
+        if ((scanFlags & SCAN_CHECK_ONLY) != 0) {
+            return scanPackageLI(pkg, scanFile, policyFlags, scanFlags, currentTime, user);
+        }
+
+        return scannedPkg;
+    }
+
+
+
+      /**
+     *  Scans a package and returns the newly parsed package.
+     *  @throws PackageManagerException on a parse error.
+     */
+    private PackageParser.Package scanPackageInternalLI(PackageParser.Package pkg, File scanFile,int policyFlags, int scanFlags, long currentTime, @Nullable UserHandle user) throws PackageManagerException {
+        PackageSetting ps = null;
+        PackageSetting updatedPkg;
+        // reader
+        synchronized (mPackages) {
+            // Look to see if we already know about this package.
+            String oldName = mSettings.getRenamedPackageLPr(pkg.packageName);
+            if (pkg.mOriginalPackages != null && pkg.mOriginalPackages.contains(oldName)) {
+                // This package has been renamed to its original name.  Let's
+                // use that.
+                ps = mSettings.getPackageLPr(oldName);
+            }
+            // If there was no original package, see one for the real package name.
+            if (ps == null) {
+                ps = mSettings.getPackageLPr(pkg.packageName);
+            }
+            // Check to see if this package could be hiding/updating a system
+            // package.  Must look for it either under the original or real
+            // package name depending on our state.
+            updatedPkg = mSettings.getDisabledSystemPkgLPr(ps != null ? ps.name : pkg.packageName);
+            if (DEBUG_INSTALL && updatedPkg != null) Slog.d(TAG, "updatedPkg = " + updatedPkg);
+
+            // If this is a package we don't know about on the system partition, we
+            // may need to remove disabled child packages on the system partition
+            // or may need to not add child packages if the parent apk is updated
+            // on the data partition and no longer defines this child package.
+            if ((policyFlags & PackageParser.PARSE_IS_SYSTEM) != 0) {
+                // If this is a parent package for an updated system app and this system
+                // app got an OTA update which no longer defines some of the child packages
+                // we have to prune them from the disabled system packages.
+                PackageSetting disabledPs = mSettings.getDisabledSystemPkgLPr(pkg.packageName);
+                if (disabledPs != null) {
+                    final int scannedChildCount = (pkg.childPackages != null) ? pkg.childPackages.size() : 0;
+                    final int disabledChildCount = disabledPs.childPackageNames != null ? disabledPs.childPackageNames.size() : 0;
+                    for (int i = 0; i < disabledChildCount; i++) {
+                        String disabledChildPackageName = disabledPs.childPackageNames.get(i);
+                        boolean disabledPackageAvailable = false;
+                        for (int j = 0; j < scannedChildCount; j++) {
+                            PackageParser.Package childPkg = pkg.childPackages.get(j);
+                            if (childPkg.packageName.equals(disabledChildPackageName)) {
+                                disabledPackageAvailable = true;
+                                break;
+                            }
+                         }
+                         if (!disabledPackageAvailable) {
+                             mSettings.removeDisabledSystemPackageLPw(disabledChildPackageName);
+                         }
+                    }
+                }
+            }
+        }
+
+        final boolean isUpdatedPkg = updatedPkg != null;
+        final boolean isUpdatedSystemPkg = isUpdatedPkg && (policyFlags & PackageParser.PARSE_IS_SYSTEM) != 0;
+        boolean isUpdatedPkgBetter = false;
+        // First check if this is a system package that may involve an update
+        if (isUpdatedSystemPkg) {
+            // If new package is not located in "/system/priv-app" (e.g. due to an OTA),
+            // it needs to drop FLAG_PRIVILEGED.
+            if (locationIsPrivileged(scanFile)) {
+                updatedPkg.pkgPrivateFlags |= ApplicationInfo.PRIVATE_FLAG_PRIVILEGED;
+            } else {
+                updatedPkg.pkgPrivateFlags &= ~ApplicationInfo.PRIVATE_FLAG_PRIVILEGED;
+            }
+
+            if (ps != null && !ps.codePath.equals(scanFile)) {
+                // The path has changed from what was last scanned...  check the
+                // version of the new path against what we have stored to determine
+                // what to do.
+                if (DEBUG_INSTALL) Slog.d(TAG, "Path changing from " + ps.codePath);
+                if (pkg.mVersionCode <= ps.versionCode) {
+                    // The system package has been updated and the code path does not match
+                    // Ignore entry. Skip it.
+                    if (DEBUG_INSTALL) Slog.i(TAG, "Package " + ps.name + " at " + scanFile
+                            + " ignored: updated version " + ps.versionCode
+                            + " better than this " + pkg.mVersionCode);
+                    if (!updatedPkg.codePath.equals(scanFile)) {
+                        Slog.w(PackageManagerService.TAG, "Code path for hidden system pkg "
+                                + ps.name + " changing from " + updatedPkg.codePathString
+                                + " to " + scanFile);
+                        updatedPkg.codePath = scanFile;
+                        updatedPkg.codePathString = scanFile.toString();
+                        updatedPkg.resourcePath = scanFile;
+                        updatedPkg.resourcePathString = scanFile.toString();
+                    }
+                    updatedPkg.pkg = pkg;
+                    updatedPkg.versionCode = pkg.mVersionCode;
+
+                    // Update the disabled system child packages to point to the package too.
+                    final int childCount = updatedPkg.childPackageNames != null
+                            ? updatedPkg.childPackageNames.size() : 0;
+                    for (int i = 0; i < childCount; i++) {
+                        String childPackageName = updatedPkg.childPackageNames.get(i);
+                        PackageSetting updatedChildPkg = mSettings.getDisabledSystemPkgLPr(
+                                childPackageName);
+                        if (updatedChildPkg != null) {
+                            updatedChildPkg.pkg = pkg;
+                            updatedChildPkg.versionCode = pkg.mVersionCode;
+                        }
+                    }
+                } else {
+                    // The current app on the system partition is better than
+                    // what we have updated to on the data partition; switch
+                    // back to the system partition version.
+                    // At this point, its safely assumed that package installation for
+                    // apps in system partition will go through. If not there won't be a working
+                    // version of the app
+                    // writer
+                    synchronized (mPackages) {
+                        // Just remove the loaded entries from package lists.
+                        mPackages.remove(ps.name);
+                    }
+
+                    logCriticalInfo(Log.WARN, "Package " + ps.name + " at " + scanFile
+                            + " reverting from " + ps.codePathString
+                            + ": new version " + pkg.mVersionCode
+                            + " better than installed " + ps.versionCode);
+
+                    InstallArgs args = createInstallArgsForExisting(packageFlagsToInstallFlags(ps),
+                            ps.codePathString, ps.resourcePathString, getAppDexInstructionSets(ps));
+                    synchronized (mInstallLock) {
+                        args.cleanUpResourcesLI();
+                    }
+                    synchronized (mPackages) {
+                        mSettings.enableSystemPackageLPw(ps.name);
+                    }
+                    isUpdatedPkgBetter = true;
+                }
+            }
+        }
+
+        String resourcePath = null;
+        String baseResourcePath = null;
+        if ((policyFlags & PackageParser.PARSE_FORWARD_LOCK) != 0 && !isUpdatedPkgBetter) {
+            if (ps != null && ps.resourcePathString != null) {
+                resourcePath = ps.resourcePathString;
+                baseResourcePath = ps.resourcePathString;
+            } else {
+                // Should not happen at all. Just log an error.
+                Slog.e(TAG, "Resource path not set for package " + pkg.packageName);
+            }
+        } else {
+            resourcePath = pkg.codePath;
+            baseResourcePath = pkg.baseCodePath;
+        }
+
+        // Set application objects path explicitly.
+        pkg.setApplicationVolumeUuid(pkg.volumeUuid);
+        pkg.setApplicationInfoCodePath(pkg.codePath);
+        pkg.setApplicationInfoBaseCodePath(pkg.baseCodePath);
+        pkg.setApplicationInfoSplitCodePaths(pkg.splitCodePaths);
+        pkg.setApplicationInfoResourcePath(resourcePath);
+        pkg.setApplicationInfoBaseResourcePath(baseResourcePath);
+        pkg.setApplicationInfoSplitResourcePaths(pkg.splitCodePaths);
+
+        // throw an exception if we have an update to a system application, but, it's not more
+        // recent than the package we've already scanned
+        if (isUpdatedSystemPkg && !isUpdatedPkgBetter) {
+            throw new PackageManagerException(Log.WARN, "Package " + ps.name + " at "
+                    + scanFile + " ignored: updated version " + ps.versionCode
+                    + " better than this " + pkg.mVersionCode);
+        }
+
+        if (isUpdatedPkg) {
+            // An updated system app will not have the PARSE_IS_SYSTEM flag set
+            // initially
+            policyFlags |= PackageParser.PARSE_IS_SYSTEM;
+
+            // An updated privileged app will not have the PARSE_IS_PRIVILEGED
+            // flag set initially
+            if ((updatedPkg.pkgPrivateFlags & ApplicationInfo.PRIVATE_FLAG_PRIVILEGED) != 0) {
+                policyFlags |= PackageParser.PARSE_IS_PRIVILEGED;
+            }
+        }
+
+        // Verify certificates against what was last scanned
+        collectCertificatesLI(ps, pkg, scanFile, policyFlags);
+
+        /*
+         * A new system app appeared, but we already had a non-system one of the
+         * same name installed earlier.
+         */
+        boolean shouldHideSystemApp = false;
+        if (!isUpdatedPkg && ps != null
+                && (policyFlags & PackageParser.PARSE_IS_SYSTEM_DIR) != 0 && !isSystemApp(ps)) {
+            /*
+             * Check to make sure the signatures match first. If they don't,
+             * wipe the installed application and its data.
+             */
+            if (compareSignatures(ps.signatures.mSignatures, pkg.mSignatures)
+                    != PackageManager.SIGNATURE_MATCH) {
+                logCriticalInfo(Log.WARN, "Package " + ps.name + " appeared on system, but"
+                        + " signatures don't match existing userdata copy; removing");
+                try (PackageFreezer freezer = freezePackage(pkg.packageName,
+                        "scanPackageInternalLI")) {
+                    deletePackageLIF(pkg.packageName, null, true, null, 0, null, false, null);
+                }
+                ps = null;
+            } else {
+                /*
+                 * If the newly-added system app is an older version than the
+                 * already installed version, hide it. It will be scanned later
+                 * and re-added like an update.
+                 */
+                if (pkg.mVersionCode <= ps.versionCode) {
+                    shouldHideSystemApp = true;
+                    logCriticalInfo(Log.INFO, "Package " + ps.name + " appeared at " + scanFile
+                            + " but new version " + pkg.mVersionCode + " better than installed "
+                            + ps.versionCode + "; hiding system");
+                } else {
+                    /*
+                     * The newly found system app is a newer version that the
+                     * one previously installed. Simply remove the
+                     * already-installed application and replace it with our own
+                     * while keeping the application data.
+                     */
+                    logCriticalInfo(Log.WARN, "Package " + ps.name + " at " + scanFile
+                            + " reverting from " + ps.codePathString + ": new version "
+                            + pkg.mVersionCode + " better than installed " + ps.versionCode);
+                    InstallArgs args = createInstallArgsForExisting(packageFlagsToInstallFlags(ps), ps.codePathString, ps.resourcePathString, getAppDexInstructionSets(ps));
+                    synchronized (mInstallLock) {
+                        args.cleanUpResourcesLI();
+                    }
+                }
+            }
+        }
+
+        // The apk is forward locked (not public) if its code and resources
+        // are kept in different files. (except for app in either system or
+        // vendor path).
+        // TODO grab this value from PackageSettings
+        if ((policyFlags & PackageParser.PARSE_IS_SYSTEM_DIR) == 0) {
+            if (ps != null && !ps.codePath.equals(ps.resourcePath)) {
+                policyFlags |= PackageParser.PARSE_FORWARD_LOCK;
+            }
+        }
+
+        final int userId = ((user == null) ? 0 : user.getIdentifier());
+        if (ps != null && ps.getInstantApp(userId)) {
+            scanFlags |= SCAN_AS_INSTANT_APP;
+        }
+
+        // Note that we invoke the following method only if we are about to unpack an application
+        PackageParser.Package scannedPkg = scanPackageLI(pkg, policyFlags, scanFlags | SCAN_UPDATE_SIGNATURE, currentTime, user);
+
+        /*
+         * If the system app should be overridden by a previously installed
+         * data, hide the system app now and let the /data/app scan pick it up
+         * again.
+         */
+        if (shouldHideSystemApp) {
+            synchronized (mPackages) {
+                mSettings.disableSystemPackageLPw(pkg.packageName, true);
+            }
+        }
+
+        return scannedPkg;
+    }
+
+
+
+
+     /**
+     * Create args that describe an existing installed package. Typically used
+     * when cleaning up old installs, or used as a move source.
+     */
+    private InstallArgs createInstallArgsForExisting(int installFlags, String codePath,String resourcePath, String[] instructionSets) {
+        final boolean isInAsec;
+        if (installOnExternalAsec(installFlags)) {
+            /* Apps on SD card are always in ASEC containers. */
+            isInAsec = true;
+        } else if (installForwardLocked(installFlags)   && !codePath.startsWith(mDrmAppPrivateInstallDir.getAbsolutePath())) {
+            /*
+             * Forward-locked apps are only in ASEC containers if they're the
+             * new style
+             */
+            isInAsec = true;
+        } else {
+            isInAsec = false;
+        }
+
+        if (isInAsec) {
+            return new AsecInstallArgs(codePath, instructionSets, installOnExternalAsec(installFlags), installForwardLocked(installFlags));
+        } else {
+            return new FileInstallArgs(codePath, resourcePath, instructionSets);
+        }
     }
 
 }
