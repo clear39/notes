@@ -98,7 +98,7 @@ int main(int argc, char* argv[]) {
       setrlimit(RLIMIT_STACK, &rlim);
     }
 
-    int ret = execvp(path, args.data());
+    int ret = execvp(path, args.data());//  build/soong/soong_ui.bash  --make-mode   $(MAKECMDGOALS)
     if (ret < 0) {
       error(errno, errno, "exec %s failed", path);
     }
@@ -168,6 +168,7 @@ static std::vector<std::string> ReadMakeflags() {
 }
 
 
+//由于args为空
 static bool ParseMakeflags(std::vector<std::string>& args,int* in_fd, int* out_fd, bool* parallel, bool* keep_going) {
 
   std::vector<char*> getopt_argv;
