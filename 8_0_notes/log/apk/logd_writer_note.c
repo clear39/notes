@@ -1,3 +1,5 @@
+//  用于Android版本打印传输
+
 //	@system/core/liblog/logd_writer.c
 
 LIBLOG_HIDDEN struct android_log_transport_write logdLoggerWrite = {
@@ -10,7 +12,7 @@ LIBLOG_HIDDEN struct android_log_transport_write logdLoggerWrite = {
   .write = logdWrite,
 };
 
-
+//  @system/core/liblog/logd_writer.c
 /* log_init_lock assumed */
 static int logdOpen() {
   int i, ret = 0;
@@ -52,6 +54,19 @@ static int logdOpen() {
 }
 
 
+
+
+//  @system/core/liblog/include/private/android_logger.h
+/* Header Structure to logd, and second header for pstore */
+typedef struct __attribute__((__packed__)) {
+  typeof_log_id_t id;
+  uint16_t tid;
+  log_time realtime;
+} android_log_header_t;
+
+
+
+//  @system/core/liblog/logd_writer.c
 static int logdWrite(log_id_t logId, struct timespec* ts, struct iovec* vec,size_t nr) {
   ssize_t ret;
   int sock;
@@ -63,7 +78,8 @@ static int logdWrite(log_id_t logId, struct timespec* ts, struct iovec* vec,size
   static atomic_int_fast32_t droppedSecurity;
 
   sock = atomic_load(&logdLoggerWrite.context.sock);
-  if (sock < 0) switch (sock) {
+  if (sock < 0) 
+    switch (sock) {
       case -ENOTCONN:
       case -ECONNREFUSED:
       case -ENOENT:

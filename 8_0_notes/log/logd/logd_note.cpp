@@ -2,6 +2,15 @@
 
 //system/core/logd
 
+service logd /system/bin/logd
+    socket logd stream 0666 logd logd
+    socket logdr seqpacket 0666 logd logd
+    socket logdw dgram+passcred 0222 logd logd
+    file /proc/kmsg r
+    file /dev/kmsg w
+    user logd
+    group logd system package_info readproc
+    writepid /dev/cpuset/system-background/tasks
 
 service logd-reinit /system/bin/logd --reinit
     oneshot
@@ -9,6 +18,12 @@ service logd-reinit /system/bin/logd --reinit
     user logd
     group logd
     writepid /dev/cpuset/system-background/tasks
+
+on fs
+    write /dev/event-log-tags "# content owned by logd"
+    chown logd logd /dev/event-log-tags
+    chmod 0644 /dev/event-log-tags
+    restorecon /dev/event-log-tags
 
 
 
@@ -122,6 +137,7 @@ int main(int argc, char* argv[]) {
 
     LogAudit* al = nullptr;
     if (auditd) {
+        //  ro.logd.auditd.dmesg属性为空，
         al = new LogAudit(logBuf, reader, __android_logger_property_get_bool("ro.logd.auditd.dmesg", BOOL_DEFAULT_TRUE)? fdDmesg : -1);
     }
 
@@ -175,6 +191,83 @@ static int issueReinit() {
     if (ret < 0) return -errno;
 
     return strncmp(buffer, success, sizeof(success) - 1) != 0;
+}
+
+static void* reinit_thread_start(void* /*obj*/) {
+    prctl(PR_SET_NAME, "logd.daemon");
+    set_sched_policy(0, SP_BACKGROUND);
+    setpriority(PRIO_PROCESS, 0, ANDROID_PRIORITY_BACKGROUND);
+
+    // We should drop to AID_LOGD, if we are anything else, we have
+    // even lesser privileges and accept our fate.
+    gid_t groups[] = {
+        AID_SYSTEM,        // search access to /data/system path
+        AID_PACKAGE_INFO,  // readonly access to /data/system/packages.list
+    };
+    if (setgroups(arraysize(groups), groups) == -1) {
+        android::prdebug(
+            "logd.daemon: failed to set AID_SYSTEM AID_PACKAGE_INFO groups");
+    }
+    if (setgid(AID_LOGD) != 0) {
+        android::prdebug("logd.daemon: failed to set AID_LOGD gid");
+    }
+    if (setuid(AID_LOGD) != 0) {
+        android::prdebug("logd.daemon: failed to set AID_LOGD uid");
+    }
+
+    cap_t caps = cap_init();
+    (void)cap_clear(caps);
+    (void)cap_set_proc(caps);
+    (void)cap_free(caps);
+
+    while (reinit_running && !sem_wait(&reinit) && reinit_running) {
+        // uidToName Privileged Worker
+        if (uid) {
+            name = nullptr;
+
+            // if we got the perms wrong above, this would spam if we reported
+            // problems with acquisition of an uid name from the packages.
+            (void)packagelist_parse(package_list_parser_cb, nullptr);
+
+            uid = 0;
+            sem_post(&uidName);
+            continue;
+        }
+
+        if (fdDmesg >= 0) {
+            static const char reinit_message[] = { KMSG_PRIORITY(LOG_INFO),
+                                                   'l',
+                                                   'o',
+                                                   'g',
+                                                   'd',
+                                                   '.',
+                                                   'd',
+                                                   'a',
+                                                   'e',
+                                                   'm',
+                                                   'o',
+                                                   'n',
+                                                   ':',
+                                                   ' ',
+                                                   'r',
+                                                   'e',
+                                                   'i',
+                                                   'n',
+                                                   'i',
+                                                   't',
+                                                   '\n' };
+            write(fdDmesg, reinit_message, sizeof(reinit_message));
+        }
+
+        // Anything that reads persist.<property>
+        if (logBuf) {
+            logBuf->init();
+            logBuf->initPrune(nullptr);
+        }
+        android::ReReadEventLogTags();
+    }
+
+    return nullptr;
 }
 
 
@@ -245,6 +338,47 @@ LIBCUTILS_HIDDEN int __android_get_control_from_env(const char* prefix,const cha
 #endif
 
     return static_cast<int>(fd);
+}
+
+static void readDmesg(LogAudit* al, LogKlog* kl) {
+    if (!al && !kl) {
+        return;
+    }
+
+    // klogctl为系统api read and/or clear kernel message ring buffer; set console_loglevel
+    int rc = klogctl(KLOG_SIZE_BUFFER, nullptr, 0);
+    if (rc <= 0) {
+        return;
+    }
+
+    // Margin for additional input race or trailing nul
+    ssize_t len = rc + 1024;
+    std::unique_ptr<char[]> buf(new char[len]);
+
+    rc = klogctl(KLOG_READ_ALL, buf.get(), len);
+    if (rc <= 0) {
+        return;
+    }
+
+    if (rc < len) {
+        len = rc + 1;
+    }
+    buf[--len] = '\0';
+
+    if (kl && kl->isMonotonic()) {
+        kl->synchronize(buf.get(), len);
+    }
+
+    ssize_t sublen;
+    for (char *ptr = nullptr, *tok = buf.get(); (rc >= 0) && !!(tok = android::log_strntok_r(tok, len, ptr, sublen)); tok = nullptr) {
+        if ((sublen <= 0) || !*tok) continue;
+        if (al) {
+            rc = al->log(tok, sublen);
+        }
+        if (kl) {
+            rc = kl->log(tok, sublen);
+        }
+    }
 }
 
 

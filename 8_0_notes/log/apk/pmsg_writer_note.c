@@ -1,3 +1,5 @@
+//  用于Android版本打印传输
+
 //	@system/core/liblog/pmsg_writer.c
 LIBLOG_HIDDEN struct android_log_transport_write pmsgLoggerWrite = {
   .node = { &pmsgLoggerWrite.node, &pmsgLoggerWrite.node },
@@ -15,7 +17,7 @@ static int pmsgOpen() {
   int fd = atomic_load(&pmsgLoggerWrite.context.fd);
   if (fd < 0) {
     int i;
-
+    //  /dev/pmsg0 不存在
     fd = TEMP_FAILURE_RETRY(open("/dev/pmsg0", O_WRONLY | O_CLOEXEC));
     i = atomic_exchange(&pmsgLoggerWrite.context.fd, fd);
     if ((i >= 0) && (i != fd)) {

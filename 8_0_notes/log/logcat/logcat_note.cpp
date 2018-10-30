@@ -195,6 +195,7 @@ static int __logcat(android_logcat_context_internal* context) {
     context->output = stdout;
     context->error = stderr;
 
+    //识别是否有重定向
     for (int i = 0; i < argc; ++i) {
         // Simulate shell stderr redirect parsing
         if ((argv[i][0] != '2') || (argv[i][1] != '>')) continue;
@@ -202,19 +203,19 @@ static int __logcat(android_logcat_context_internal* context) {
         // Append to file not implemented, just open file
         size_t skip = (argv[i][2] == '>') + 2;
         if (!strcmp(&argv[i][skip], "/dev/null")) {
-            context->stderr_null = true;
+            context->stderr_null = true;    //
         } else if (!strcmp(&argv[i][skip], "&1")) {
-            context->stderr_stdout = true;
+            context->stderr_stdout = true; //   标准输出
         } else {
             // stderr file redirections are not supported
-            fprintf(context->stderr_stdout ? stdout : stderr,
-                    "stderr redirection to file %s unsupported, skipping\n",
-                    &argv[i][skip]);
+            fprintf(context->stderr_stdout ? stdout : stderr,"stderr redirection to file %s unsupported, skipping\n",&argv[i][skip]);
         }
         // Only the first one
         break;
     }
 
+
+    //读取重定向文件路径
     const char* filename = nullptr;
     for (int i = 0; i < argc; ++i) {
         // Simulate shell stdout redirect parsing
@@ -227,6 +228,7 @@ static int __logcat(android_logcat_context_internal* context) {
     }
 
     // Deal with setting up file descriptors and FILE pointers
+    //  默认 context->error_fd == -1，所以跳过
     if (context->error_fd >= 0) {  // Is an error file descriptor supplied?
         if (context->error_fd == context->output_fd) {
             context->stderr_stdout = true;
@@ -237,13 +239,13 @@ static int __logcat(android_logcat_context_internal* context) {
             context->error = fdopen(context->error_fd, "web");
             if (!context->error) {
                 context->retval = -errno;
-                fprintf(context->stderr_stdout ? stdout : stderr,
-                        "Failed to fdopen(error_fd=%d) %s\n", context->error_fd,
-                        strerror(errno));
+                fprintf(context->stderr_stdout ? stdout : stderr,"Failed to fdopen(error_fd=%d) %s\n", context->error_fd,strerror(errno));
                 goto exit;
             }
         }
     }
+
+    //  默认 context->output_fd == -1，所以跳过
     if (context->output_fd >= 0) {  // Is an output file descriptor supplied?
         if (filename) {  // redirect to file, close supplied file descriptor.
             close(context->output_fd);
@@ -252,9 +254,7 @@ static int __logcat(android_logcat_context_internal* context) {
             context->output = fdopen(context->output_fd, "web");
             if (!context->output) {
                 context->retval = -errno;
-                fprintf(context->stderr_stdout ? stdout : context->error,
-                        "Failed to fdopen(output_fd=%d) %s\n",
-                        context->output_fd, strerror(errno));
+                fprintf(context->stderr_stdout ? stdout : context->error,"Failed to fdopen(output_fd=%d) %s\n",context->output_fd, strerror(errno));
                 goto exit;
             }
         }
@@ -263,7 +263,9 @@ static int __logcat(android_logcat_context_internal* context) {
         context->output = fopen(filename, "web");
     }
     // Deal with 2>&1
-    if (context->stderr_stdout) context->error = context->output;
+    if (context->stderr_stdout) 
+        context->error = context->output;
+
     // Deal with 2>/dev/null
     if (context->stderr_null) {
         context->error_fd = -1;
@@ -290,6 +292,7 @@ static int __logcat(android_logcat_context_internal* context) {
     // net for stability dealing with possible mistaken inputs.
     static const char delimiters[] = ",:; \t\n\r\f";
 
+    //  @system/core/logcat/include/log/getopt.h
     struct getopt_context optctx;
     INIT_GETOPT_CONTEXT(optctx);
     optctx.opterr = !!context->error;
@@ -607,8 +610,7 @@ static int __logcat(android_logcat_context_internal* context) {
                 break;
 
             case 'v': {
-                if (!strcmp(optctx.optarg, "help") ||
-                    !strcmp(optctx.optarg, "--help")) {
+                if (!strcmp(optctx.optarg, "help") || !strcmp(optctx.optarg, "--help")) {
                     show_format_help(context);
                     context->retval = EXIT_SUCCESS;
                     goto exit;
@@ -735,8 +737,7 @@ static int __logcat(android_logcat_context_internal* context) {
                 break;
 
             case ':':
-                logcat_panic(context, HELP_TRUE,
-                             "Option -%c needs an argument\n", optctx.optopt);
+                logcat_panic(context, HELP_TRUE,"Option -%c needs an argument\n", optctx.optopt);
                 goto exit;
 
             case 'h':
@@ -745,15 +746,13 @@ static int __logcat(android_logcat_context_internal* context) {
                 goto exit;
 
             default:
-                logcat_panic(context, HELP_TRUE, "Unrecognized Option %c\n",
-                             optctx.optopt);
+                logcat_panic(context, HELP_TRUE, "Unrecognized Option %c\n",optctx.optopt);
                 goto exit;
         }
     }
 
     if (context->maxCount && got_t) {
-        logcat_panic(context, HELP_TRUE,
-                     "Cannot use -m (--max-count) and -t together\n");
+        logcat_panic(context, HELP_TRUE,"Cannot use -m (--max-count) and -t together\n");
         goto exit;
     }
     if (context->printItAnyways && (!context->regex || !context->maxCount)) {
@@ -789,17 +788,14 @@ static int __logcat(android_logcat_context_internal* context) {
 
     if (!!setId) {
         if (!context->outputFileName) {
-            logcat_panic(context, HELP_TRUE,
-                         "--id='%s' requires -f as well\n", setId);
+            logcat_panic(context, HELP_TRUE,"--id='%s' requires -f as well\n", setId);
             goto exit;
         }
 
-        std::string file_name = android::base::StringPrintf(
-                                        "%s.id", context->outputFileName);
+        std::string file_name = android::base::StringPrintf("%s.id", context->outputFileName);
         std::string file;
         bool file_ok = android::base::ReadFileToString(file_name, &file);
-        android::base::WriteStringToFile(setId, file_name, S_IRUSR | S_IWUSR,
-                                         getuid(), getgid());
+        android::base::WriteStringToFile(setId, file_name, S_IRUSR | S_IWUSR,getuid(), getgid());
         if (!file_ok || !file.compare(setId)) setId = nullptr;
     }
 
@@ -807,16 +803,14 @@ static int __logcat(android_logcat_context_internal* context) {
         const char* logFormat = android::getenv(context, "ANDROID_PRINTF_LOG");
 
         if (!!logFormat) {
-            std::unique_ptr<char, void (*)(void*)> formats(strdup(logFormat),
-                                                           free);
+            std::unique_ptr<char, void (*)(void*)> formats(strdup(logFormat),free);
             char* sv = nullptr;  // protect against -ENOMEM above
             char* arg = formats.get();
             while (!!(arg = strtok_r(arg, delimiters, &sv))) {
                 err = setLogFormat(context, arg);
                 // environment should not cause crash of logcat
                 if ((err < 0) && context->error) {
-                    fprintf(context->error,
-                            "invalid format in ANDROID_PRINTF_LOG '%s'\n", arg);
+                    fprintf(context->error,"invalid format in ANDROID_PRINTF_LOG '%s'\n", arg);
                 }
                 arg = nullptr;
                 if (err > 0) hasSetLogFormat = true;
@@ -828,11 +822,9 @@ static int __logcat(android_logcat_context_internal* context) {
     }
 
     if (forceFilters.size()) {
-        err = android_log_addFilterString(context->logformat,
-                                          forceFilters.c_str());
+        err = android_log_addFilterString(context->logformat,forceFilters.c_str());
         if (err < 0) {
-            logcat_panic(context, HELP_FALSE,
-                         "Invalid filter expression in logcat args\n");
+            logcat_panic(context, HELP_FALSE,"Invalid filter expression in logcat args\n");
             goto exit;
         }
     } else if (argc == optctx.optind) {
@@ -840,12 +832,10 @@ static int __logcat(android_logcat_context_internal* context) {
         const char* env_tags_orig = android::getenv(context, "ANDROID_LOG_TAGS");
 
         if (!!env_tags_orig) {
-            err = android_log_addFilterString(context->logformat,
-                                              env_tags_orig);
+            err = android_log_addFilterString(context->logformat,env_tags_orig);
 
             if (err < 0) {
-                logcat_panic(context, HELP_TRUE,
-                            "Invalid filter expression in ANDROID_LOG_TAGS\n");
+                logcat_panic(context, HELP_TRUE,"Invalid filter expression in ANDROID_LOG_TAGS\n");
                 goto exit;
             }
         }
@@ -859,8 +849,7 @@ static int __logcat(android_logcat_context_internal* context) {
 
             err = android_log_addFilterString(context->logformat, argv[i]);
             if (err < 0) {
-                logcat_panic(context, HELP_TRUE,
-                             "Invalid filter expression '%s'\n", argv[i]);
+                logcat_panic(context, HELP_TRUE,"Invalid filter expression '%s'\n", argv[i]);
                 goto exit;
             }
         }
@@ -953,8 +942,7 @@ static int __logcat(android_logcat_context_internal* context) {
 
     // report any errors in the above loop and exit
     if (openDeviceFail) {
-        logcat_panic(context, HELP_FALSE,
-                     "Unable to open log device '%s'\n", openDeviceFail);
+        logcat_panic(context, HELP_FALSE,"Unable to open log device '%s'\n", openDeviceFail);
         goto close;
     }
     if (clearFail) {
@@ -1052,8 +1040,7 @@ static int __logcat(android_logcat_context_internal* context) {
 
     dev = nullptr;
 
-    while (!context->stop &&
-           (!context->maxCount || (context->printCount < context->maxCount))) {
+    while (!context->stop && (!context->maxCount || (context->printCount < context->maxCount))) {
         struct log_msg log_msg;
         int ret = android_logger_list_read(logger_list, &log_msg);
         if (!ret) {
@@ -1124,5 +1111,57 @@ exit:
     context->thread_stopped = true;
     return context->retval;
 }
+
+
+//  @system/core/liblog/logprint.c
+LIBLOG_ABI_PUBLIC AndroidLogFormat* android_log_format_new() {
+  AndroidLogFormat* p_ret;
+
+  p_ret = calloc(1, sizeof(AndroidLogFormat));
+
+  p_ret->global_pri = ANDROID_LOG_VERBOSE;
+  p_ret->format = FORMAT_BRIEF;
+  p_ret->colored_output = false;
+  p_ret->usec_time_output = false;
+  p_ret->nsec_time_output = false;
+  p_ret->printable_output = false;
+  p_ret->year_output = false;
+  p_ret->zone_output = false;
+  p_ret->epoch_output = false;
+#ifdef __ANDROID__
+  p_ret->monotonic_output = android_log_clockid() == CLOCK_MONOTONIC;
+#else
+  p_ret->monotonic_output = false;
+#endif
+  p_ret->uid_output = false;
+  p_ret->descriptive_output = false;
+  descriptive_output = false;
+
+  return p_ret;
+}
+
+
+//  @system/core/logcat/include/log/getopt.h
+struct getopt_context {
+    int opterr;
+    int optind;
+    int optopt;
+    int optreset;
+    const char* optarg;
+    FILE* optstderr; /* NULL defaults to stderr */
+    /* private */
+    const char* place;
+    int nonopt_start;
+    int nonopt_end;
+    int dash_prefix;
+    /* expansion space */
+    int __extra__;
+    void* __stuff__;
+};
+
+#define EMSG ""
+#define NO_PREFIX (-1)
+
+#define INIT_GETOPT_CONTEXT(context)  context = { 1, 1, '?', 0, NULL, NULL, EMSG, -1, -1, NO_PREFIX, 0, NULL }
 
 

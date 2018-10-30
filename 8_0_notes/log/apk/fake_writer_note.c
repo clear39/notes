@@ -1,3 +1,5 @@
+//  用于host版本打印传输
+
 //  @system/core/liblog/logger.h
 /* Union, sock or fd of zero is not allowed unless static initialized */
 union android_log_context {
