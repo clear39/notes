@@ -69,9 +69,9 @@ public class PackageParser {
         }
 
         if (packageFile.isDirectory()) {
-            parsed = parseClusterPackage(packageFile, flags);
+            parsed = parseClusterPackage(packageFile, flags);//执行这里
         } else {
-            parsed = parseMonolithicPackage(packageFile, flags);//执行这里
+            parsed = parseMonolithicPackage(packageFile, flags);
         }
 
         cacheResult(packageFile, flags, parsed);//同理由于系统默认 mCacheDir为null，所以cacheResult 什么也不做
@@ -170,16 +170,14 @@ public class PackageParser {
                     }
                     if (versionCode != lite.versionCode) {
                         throw new PackageParserException(INSTALL_PARSE_FAILED_BAD_MANIFEST,
-                                "Inconsistent version " + lite.versionCode + " in " + file
-                                + "; expected " + versionCode);
+                                "Inconsistent version " + lite.versionCode + " in " + file   + "; expected " + versionCode);
                     }
                 }
 
                 // Assert that each split is defined only once
                 if (apks.put(lite.splitName, lite) != null) {
                     throw new PackageParserException(INSTALL_PARSE_FAILED_BAD_MANIFEST,
-                            "Split name " + lite.splitName
-                            + " defined more than once; most recent was " + file);
+                            "Split name " + lite.splitName + " defined more than once; most recent was " + file);
                 }
             }
         }
