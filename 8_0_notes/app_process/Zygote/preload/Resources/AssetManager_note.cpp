@@ -132,7 +132,7 @@ bool AssetManager::appendPathToResTable(const asset_path& ap, bool appAsLib = fa
     bool shared = true;
     bool onlyEmptyResources = true;
     ATRACE_NAME(ap.path.string());
-    Asset* idmap = openIdmapLocked(ap);
+    Asset* idmap = openIdmapLocked(ap);//由于第一次执行，idmap = null
     size_t nextEntryIdx = mResources->getTableCount();
     ALOGV("Looking for resource asset in '%s'\n", ap.path.string());
     if (ap.type != kFileTypeDirectory) {
@@ -167,9 +167,9 @@ bool AssetManager::appendPathToResTable(const asset_path& ap, bool appAsLib = fa
 #ifdef __ANDROID__
                 const char* data = getenv("ANDROID_DATA");
                 LOG_ALWAYS_FATAL_IF(data == NULL, "ANDROID_DATA not set");
-                String8 overlaysListPath(data);
-                overlaysListPath.appendPath(kResourceCache);
-                overlaysListPath.appendPath("overlays.list");
+                String8 overlaysListPath(data);//
+                overlaysListPath.appendPath(kResourceCache);//  static const char* kResourceCache = "resource-cache";
+                overlaysListPath.appendPath("overlays.list");// /data/resource-cache/overlays.list
                 addSystemOverlays(overlaysListPath.string(), ap.path, sharedRes, nextEntryIdx);
 #endif
                 sharedRes = const_cast<AssetManager*>(this)->mZipSet.setZipResourceTable(ap.path, sharedRes);
@@ -183,10 +183,9 @@ bool AssetManager::appendPathToResTable(const asset_path& ap, bool appAsLib = fa
         ALOGV("Installing resource asset %p in to table %p\n", ass, mResources);
         if (sharedRes != NULL) {
             ALOGV("Copying existing resources for %s", ap.path.string());
-            mResources->add(sharedRes, ap.isSystemAsset);
+            mResources->add(sharedRes, ap.isSystemAsset);// mutable ResTable* mResources; //  @frameworks/base/libs/androidfw/ResourceTypes.cpp
         } else {
-            ALOGV("Parsing resources for %s", ap.path.string());
-            mResources->add(ass, idmap, nextEntryIdx + 1, !shared, appAsLib, ap.isSystemAsset);
+            ......
         }
         onlyEmptyResources = false;
 
@@ -365,6 +364,7 @@ static int32_t OpenArchiveInternal(ZipArchive* archive,const char* debug_file_na
   return 0;
 }
 
+
 /*
  * Find the zip Central Directory and memory-map it.
  *
@@ -409,16 +409,55 @@ static int32_t MapCentralDirectory(const char* debug_file_name, ZipArchive* arch
   //system/core/libziparchive/zip_archive.cc:58:static const uint32_t kMaxEOCDSearch = kMaxCommentLen + sizeof(EocdRecord);
   // 如果 apk 文件大于 kMaxEOCDSearch ，则读取尾部kMaxEOCDSearch字节；
   // 如果 apk 文件小于 kMaxEOCDSearch ，则读取整个文件所有字节；
-  off64_t read_amount = kMaxEOCDSearch字节；
+  off64_t read_amount = kMaxEOCDSearch；
   // 如果 apk 文件小于;
   if (file_length < read_amount) {
     read_amount = file_length;
   }
 
-  std::vector<uint8_t> scan_buffer(read_amount);
+  std::vector<uint8_t> scan_buffer(read_amount);//用于存储尾部 read_amount 字节
   int32_t result = MapCentralDirectory0(debug_file_name, archive, file_length, read_amount,scan_buffer.data());
   return result;
 }
+
+
+//  system/core/libziparchive/zip_archive_common.h
+struct EocdRecord {
+  static const uint32_t kSignature = 0x06054b50;
+
+  // End of central directory signature, should always be
+  // |kSignature|.
+  uint32_t eocd_signature;
+  // The number of the current "disk", i.e, the "disk" that this
+  // central directory is on.
+  //
+  // This implementation assumes that each archive spans a single
+  // disk only. i.e, that disk_num == 1.
+  uint16_t disk_num;          //  当前磁盘编号
+  // The disk where the central directory starts.
+  //
+  // This implementation assumes that each archive spans a single
+  // disk only. i.e, that cd_start_disk == 1.
+  uint16_t cd_start_disk;     //  核心目录开始位置的磁盘编号
+  // The number of central directory records on this disk.
+  //
+  // This implementation assumes that each archive spans a single
+  // disk only. i.e, that num_records_on_disk == num_records.
+  uint16_t num_records_on_disk;     //  该磁盘上所记录的核心目录数量
+  // The total number of central directory records.
+  uint16_t num_records;             //  核心目录结构总数 
+  // The size of the central directory (in bytes).
+  uint32_t cd_size;                 //  核心目录的大小
+  // The offset of the start of the central directory, relative
+  // to the start of the file.
+  uint32_t cd_start_offset;         //  核心目录开始位置相对于archive开始的位移
+  // Length of the central directory comment.
+  uint16_t comment_length;          //  注释长度
+ private:
+  EocdRecord() = default;
+  DISALLOW_COPY_AND_ASSIGN(EocdRecord);
+} __attribute__((packed));
+
 
 
 static int32_t MapCentralDirectory0(const char* debug_file_name, ZipArchive* archive,off64_t file_length, off64_t read_amount,uint8_t* scan_buffer) {
@@ -440,6 +479,8 @@ static int32_t MapCentralDirectory0(const char* debug_file_name, ZipArchive* arc
   for (; i >= 0; i--) {
     if (scan_buffer[i] == 0x50) {//查找第一个 0x50
       uint32_t* sig_addr = reinterpret_cast<uint32_t*>(&scan_buffer[i]);
+      //  system/core/libziparchive/zip_archive_common.h:30:  static const uint32_t kSignature = 0x06054b50; 在文件存储为 （50 4b 05 06）
+      // 查找zip文件 EOCD（End of central directory record(EOCD) 目录结束标识）
       if (get_unaligned<uint32_t>(sig_addr) == EocdRecord::kSignature) {
         ALOGV("+++ Found EOCD at buf+%d", i);
         break;
@@ -451,12 +492,13 @@ static int32_t MapCentralDirectory0(const char* debug_file_name, ZipArchive* arc
     return kInvalidFile;
   }
 
-  const off64_t eocd_offset = search_start + i;
-  const EocdRecord* eocd = reinterpret_cast<const EocdRecord*>(scan_buffer + i);
+  const off64_t eocd_offset = search_start + i;//得到 EOCD 偏移
+  const EocdRecord* eocd = reinterpret_cast<const EocdRecord*>(scan_buffer + i); //读取EOCD保存到EocdRecord
   /*
    * Verify that there's no trailing space at the end of the central directory
    * and its comment.
    */
+  //  校验数据是否出错
   const off64_t calculated_length = eocd_offset + sizeof(EocdRecord) + eocd->comment_length;
   if (calculated_length != file_length) {
     ALOGW("Zip: %" PRId64 " extraneous bytes at the end of the central directory",static_cast<int64_t>(file_length - calculated_length));
@@ -515,6 +557,25 @@ bool MappedZipFile::ReadAtOffset(uint8_t* buf, size_t len, off64_t off) {
 }
 
 
+//  @system/core/libziparchive/zip_archive.cc
+bool ZipArchive::InitializeCentralDirectory(const char* debug_file_name, off64_t cd_start_offset,size_t cd_size) {
+  if (mapped_zip.HasFd()) {
+    //directory_map->create  @system/core/libutils/FileMap.cpp
+    // 对文件进程mmap映射
+    if (!directory_map->create(debug_file_name, mapped_zip.GetFileDescriptor(),cd_start_offset, cd_size, true /* read only */)) {
+      return false;
+    }
+
+    CHECK_EQ(directory_map->getDataLength(), cd_size);
+    // 对文件进程mmap映射
+    central_directory.Initialize(directory_map->getDataPtr(), 0/*offset*/, cd_size);
+  } else {
+    。。。。。。
+  }
+  return true;
+}
+
+
 
 
 
@@ -530,11 +591,9 @@ static int32_t ParseZipArchive(ZipArchive* archive) {
    * least one unused entry to avoid an infinite loop during creation.
    */
   archive->hash_table_size = RoundUpPower2(1 + (num_entries * 4) / 3);
-  archive->hash_table = reinterpret_cast<ZipString*>(calloc(archive->hash_table_size,
-      sizeof(ZipString)));
+  archive->hash_table = reinterpret_cast<ZipString*>(calloc(archive->hash_table_size,sizeof(ZipString)));
   if (archive->hash_table == nullptr) {
-    ALOGW("Zip: unable to allocate the %u-entry hash_table, entry size: %zu",
-          archive->hash_table_size, sizeof(ZipString));
+    ALOGW("Zip: unable to allocate the %u-entry hash_table, entry size: %zu",archive->hash_table_size, sizeof(ZipString));
     return -1;
   }
 
@@ -553,8 +612,7 @@ static int32_t ParseZipArchive(ZipArchive* archive) {
       return -1;
     }
 
-    const CentralDirectoryRecord* cdr =
-        reinterpret_cast<const CentralDirectoryRecord*>(ptr);
+    const CentralDirectoryRecord* cdr = reinterpret_cast<const CentralDirectoryRecord*>(ptr);
     if (cdr->record_signature != CentralDirectoryRecord::kSignature) {
       ALOGW("Zip: missed a central dir sig (at %" PRIu16 ")", i);
       return -1;
@@ -562,8 +620,7 @@ static int32_t ParseZipArchive(ZipArchive* archive) {
 
     const off64_t local_header_offset = cdr->local_file_header_offset;
     if (local_header_offset >= archive->directory_offset) {
-      ALOGW("Zip: bad LFH offset %" PRId64 " at entry %" PRIu16,
-          static_cast<int64_t>(local_header_offset), i);
+      ALOGW("Zip: bad LFH offset %" PRId64 " at entry %" PRIu16, static_cast<int64_t>(local_header_offset), i);
       return -1;
     }
 
@@ -585,8 +642,7 @@ static int32_t ParseZipArchive(ZipArchive* archive) {
     ZipString entry_name;
     entry_name.name = file_name;
     entry_name.name_length = file_name_length;
-    const int add_result = AddToHash(archive->hash_table,
-        archive->hash_table_size, entry_name);
+    const int add_result = AddToHash(archive->hash_table, archive->hash_table_size, entry_name);
     if (add_result != 0) {
       ALOGW("Zip: Error adding entry to hash table %d", add_result);
       return add_result;
@@ -594,8 +650,7 @@ static int32_t ParseZipArchive(ZipArchive* archive) {
 
     ptr += sizeof(CentralDirectoryRecord) + file_name_length + extra_length + comment_length;
     if ((ptr - cd_ptr) > static_cast<int64_t>(cd_length)) {
-      ALOGW("Zip: bad CD advance (%tu vs %zu) at entry %" PRIu16,
-          ptr - cd_ptr, cd_length, i);
+      ALOGW("Zip: bad CD advance (%tu vs %zu) at entry %" PRIu16, ptr - cd_ptr, cd_length, i);
       return -1;
     }
   }

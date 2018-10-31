@@ -55,6 +55,24 @@ public final class AssetManager implements AutoCloseable {
         init(true);//native
         if (localLOGV) Log.v(TAG, "New asset manager: " + this);
     }
+
+
+    /*package*/ final void makeStringBlocks(StringBlock[] seed) {
+        final int seedNum = (seed != null) ? seed.length : 0;//0
+        final int num = getStringBlockCount();//native
+        mStringBlocks = new StringBlock[num];
+        if (localLOGV) Log.v(TAG, "Making string blocks for " + this + ": " + num);
+        for (int i=0; i<num; i++) {
+            if (i < seedNum) {
+                mStringBlocks[i] = seed[i];
+            } else {
+                mStringBlocks[i] = new StringBlock(getNativeStringBlock(i), true);
+            }
+        }
+    }
+
+
+
 }
 
 
@@ -75,6 +93,7 @@ static void android_content_AssetManager_init(JNIEnv* env, jobject clazz, jboole
     am->addDefaultAssets();
 
     ALOGV("Created AssetManager %p for Java object %p\n", am, clazz);
+
     env->SetLongField(clazz, gAssetManagerOffsets.mObject, reinterpret_cast<jlong>(am));
 }
 
@@ -178,64 +197,6 @@ static void verifySystemIdmaps()
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-/**
- * Create a new AssetManager containing only the basic system assets.
- * Applications will not generally use this method, instead retrieving the
- * appropriate asset manager with {@link Resources#getAssets}.    Not for
- * use by applications.
- * {@hide}
- */
-public AssetManager() {
-    synchronized (this) {
-        if (DEBUG_REFS) {//	private static final boolean DEBUG_REFS = false;
-            mNumRefs = 0;
-            incRefsLocked(this.hashCode());
-        }
-        init(false); //native
-        if (localLOGV) Log.v(TAG, "New asset manager: " + this);
-        ensureSystemAssets();//只创建一次,单实例模式sSystem
-    }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*package*/ final void makeStringBlocks(StringBlock[] seed) {
-    final int seedNum = (seed != null) ? seed.length : 0;//0
-    final int num = getStringBlockCount();//native
-    mStringBlocks = new StringBlock[num];
-    if (localLOGV) Log.v(TAG, "Making string blocks for " + this + ": " + num);
-    for (int i=0; i<num; i++) {
-        if (i < seedNum) {
-            mStringBlocks[i] = seed[i];
-        } else {
-            mStringBlocks[i] = new StringBlock(getNativeStringBlock(i), true);
-        }
-    }
-}
-
-
 static jint android_content_AssetManager_getStringBlockCount(JNIEnv* env, jobject clazz)
 {
     AssetManager* am = assetManagerForJavaObject(env, clazz);
@@ -244,3 +205,105 @@ static jint android_content_AssetManager_getStringBlockCount(JNIEnv* env, jobjec
     }
     return am->getResources().getTableCount();
 }
+
+// this guy is exported to other jni routines
+AssetManager* assetManagerForJavaObject(JNIEnv* env, jobject obj)
+{
+    jlong amHandle = env->GetLongField(obj, gAssetManagerOffsets.mObject);
+    AssetManager* am = reinterpret_cast<AssetManager*>(amHandle);
+    if (am != NULL) {
+        return am;
+    }
+    jniThrowException(env, "java/lang/IllegalStateException", "AssetManager has been finalized!");
+    return NULL;
+}
+
+
+const ResTable& AssetManager::getResources(bool required) const
+{
+    const ResTable* rt = getResTable(required);
+    return *rt;
+}
+
+const ResTable* AssetManager::getResTable(bool required) const
+{
+    ResTable* rt = mResources;
+    if (rt) {
+        return rt;
+    }
+
+    // Iterate through all asset packages, collecting resources from each.
+
+    AutoMutex _l(mLock);
+
+    if (mResources != NULL) {
+        return mResources;
+    }
+
+    if (required) {
+        LOG_FATAL_IF(mAssetPaths.size() == 0, "No assets added to AssetManager");
+    }
+
+    mResources = new ResTable();
+    updateResourceParamsLocked();
+
+    bool onlyEmptyResources = true;
+    const size_t N = mAssetPaths.size();
+    for (size_t i=0; i<N; i++) {
+        bool empty = appendPathToResTable(mAssetPaths.itemAt(i));
+        onlyEmptyResources = onlyEmptyResources && empty;
+    }
+
+    if (required && onlyEmptyResources) {
+        ALOGW("Unable to find resources file resources.arsc");
+        delete mResources;
+        mResources = NULL;
+    }
+
+    return mResources;
+}
+
+
+void AssetManager::updateResourceParamsLocked() const
+{
+    ATRACE_CALL();
+    ResTable* res = mResources;
+    if (!res) {
+        return;
+    }
+
+    if (mLocale) {
+        mConfig->setBcp47Locale(mLocale);
+    } else {
+        mConfig->clearLocale();
+    }
+
+    res->setParameters(mConfig);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
