@@ -10,6 +10,7 @@ public class NativeActivity extends Activity implements SurfaceHolder.Callback2,
 
         mIMM = getSystemService(InputMethodManager.class);
 
+        //getWindow 获得就是PhoneWindow
         getWindow().takeSurface(this);
         getWindow().takeInputQueue(this);
         getWindow().setFormat(PixelFormat.RGB_565);
