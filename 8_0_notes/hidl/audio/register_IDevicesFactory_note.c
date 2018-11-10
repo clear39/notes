@@ -3,11 +3,11 @@
    status = registerPassthroughServiceImplementation<IDevicesFactory>();
 */
 
-//	system/libhidl/transport/include/hidl/LegacySupport.h
+//	@system/libhidl/transport/include/hidl/LegacySupport.h
 /**
  * Registers passthrough service implementation.
  */
-template<class Interface>
+template<class Interface> //    Interface == IDevicesFactory 
 __attribute__((warn_unused_result))
 status_t registerPassthroughServiceImplementation(std::string name = "default") {
     sp<Interface> service = Interface::getService(name, true /* getStub */);//  sp<IDevicesFactory> service = IDevicesFactory::getService("default", true /* getStub */);
@@ -31,7 +31,7 @@ status_t registerPassthroughServiceImplementation(std::string name = "default") 
     return status;
 }
 
-// out/soong/.intermediates/hardware/interfaces/audio/2.0/android.hardware.audio@2.0_genc++/gen/android/hardware/audio/2.0/DevicesFactoryAll.cpp
+// @out/soong/.intermediates/hardware/interfaces/audio/2.0/android.hardware.audio@2.0_genc++/gen/android/hardware/audio/2.0/DevicesFactoryAll.cpp
 //  sp<IDevicesFactory> service = IDevicesFactory::getService("default", true /* getStub */);
 // static
 ::android::sp<IDevicesFactory> IDevicesFactory::getService(const std::string &serviceName, const bool getStub) {
@@ -78,6 +78,7 @@ status_t registerPassthroughServiceImplementation(std::string name = "default") 
 
 #endif // __ANDROID_TREBLE__
 
+    // 由于getStub = true 所以下面for循环的代码 不执行
     for (int tries = 0; !getStub && (vintfHwbinder || (vintfLegacy && tries == 0)); tries++) { //getStub = true
         if (tries > 1) {
             ALOGI("getService: Will do try %d for %s/%s in 1s...", tries, IDevicesFactory::descriptor, serviceName.c_str());
@@ -96,7 +97,7 @@ status_t registerPassthroughServiceImplementation(std::string name = "default") 
             if (tries > 0) {
                 ALOGW("IDevicesFactory: found null hwbinder interface");
             }
-	    continue;
+	       continue;
         }
         Return<sp<IDevicesFactory>> castRet = IDevicesFactory::castFrom(base, true /* emitError */);
         if (!castRet.isOk()) {
@@ -165,14 +166,6 @@ sp<IServiceManager> defaultServiceManager() {
     return details::gDefaultServiceManager;
 }
 
-void waitForHwServiceManager() {
-    using std::literals::chrono_literals::operator""s;
-
-    //	static const char* kHwServicemanagerReadyProperty = "hwservicemanager.ready";
-    while (!WaitForProperty(kHwServicemanagerReadyProperty, "true", 1s)) { //	system/core/base/properties.cpp:146
-        LOG(WARNING) << "Waited for hwservicemanager.ready for a second, waiting another...";
-    }
-}
 
 
 //	ProcessState::self()->getContextObject(NULL)
@@ -255,22 +248,10 @@ sp<IType> fromBinder(const sp<IBinder>& binderIface) {// sp<IServiceManager> fro
 
 
 
-// status_t status = service->registerAsService(name);
-::android::status_t IDevicesFactory::registerAsService(const std::string &serviceName) { // serviceName  == "default"
-    ::android::hardware::details::onRegistration("android.hardware.audio@2.0", "IDevicesFactory", serviceName);
-
-    const ::android::sp<::android::hidl::manager::V1_0::IServiceManager> sm = ::android::hardware::defaultServiceManager();
-    if (sm == nullptr) {
-        return ::android::INVALID_OPERATION;
-    }
-    ::android::hardware::Return<bool> ret = sm->add(serviceName.c_str(), this);
-    return ret.isOk() && ret ? ::android::OK : ::android::UNKNOWN_ERROR;
-}
-
-
 
 sp<IServiceManager> getPassthroughServiceManager() {
-    static sp<PassthroughServiceManager> manager(new PassthroughServiceManager());// PassthroughServiceManager	system/libhidl/transport/ServiceManagement.cpp:252
+    // PassthroughServiceManager    @system/libhidl/transport/ServiceManagement.cpp:252
+    static sp<PassthroughServiceManager> manager(new PassthroughServiceManager());
     return manager;
 }
 
@@ -534,6 +515,23 @@ struct IDevicesFactory : public ::android::hidl::base::V1_0::IBase {
 
 
 
+
+
+
+
+
+
+// status_t status = service->registerAsService(name);
+::android::status_t IDevicesFactory::registerAsService(const std::string &serviceName) { // serviceName  == "default"
+    ::android::hardware::details::onRegistration("android.hardware.audio@2.0", "IDevicesFactory", serviceName);
+
+    const ::android::sp<::android::hidl::manager::V1_0::IServiceManager> sm = ::android::hardware::defaultServiceManager();
+    if (sm == nullptr) {
+        return ::android::INVALID_OPERATION;
+    }
+    ::android::hardware::Return<bool> ret = sm->add(serviceName.c_str(), this);
+    return ret.isOk() && ret ? ::android::OK : ::android::UNKNOWN_ERROR;
+}
 
 
 

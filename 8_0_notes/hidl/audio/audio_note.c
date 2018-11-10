@@ -1,4 +1,4 @@
-//入口:hardware/interfaces/audio/2.0/default/service.cpp
+//入口:   @hardware/interfaces/audio/2.0/default/service.cpp
 
 
 int main(int /* argc */, char* /* argv */ []) {

@@ -1,7 +1,8 @@
 public class ZygoteInit {
+
 	 public static void main(String argv[]) {
     	
-    	.......
+    	//.......
 
         try {
            	......
@@ -151,6 +152,4 @@ public class ZygoteInit {
     }
 
 
-
-    
 }
