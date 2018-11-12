@@ -1,0 +1,79 @@
+Usage: oatdump [options] ...
+    Example: oatdump --image=$ANDROID_PRODUCT_OUT/system/framework/boot.art
+    Example: adb shell oatdump --image=/system/framework/boot.art
+
+  --oat-file=<file.oat>: specifies an input oat filename.
+      Example: --oat-file=/system/framework/boot.oat
+
+  --image=<file.art>: specifies an input image location.
+      Example: --image=/system/framework/boot.art
+
+  --app-image=<file.art>: specifies an input app image. Must also have a specified
+ boot image (with --image) and app oat file (with --app-oat).
+      Example: --app-image=app.art
+
+  --app-oat=<file.odex>: specifies an input app oat.
+      Example: --app-oat=app.odex
+
+  --boot-image=<file.art>: provide the image location for the boot class path.
+      Do not include the arch as part of the name, it is added automatically.
+      Example: --boot-image=/system/framework/boot.art
+               (specifies /system/framework/<arch>/boot.art as the image file)
+
+  --instruction-set=(arm|arm64|mips|mips64|x86|x86_64): for locating the image
+      file based on the image location set.
+      Example: --instruction-set=x86
+      Default: arm64
+
+  --output=<file> may be used to send the output to a file.
+      Example: --output=/tmp/oatdump.txt
+
+  --no-dump:vmap may be used to disable vmap dumping.
+      Example: --no-dump:vmap
+
+  --dump:code_info_stack_maps enables dumping of stack maps in CodeInfo sections.
+      Example: --dump:code_info_stack_maps
+
+  --no-disassemble may be used to disable disassembly.
+      Example: --no-disassemble
+
+  --header-only may be used to print only the oat header.
+      Example: --header-only
+
+  --list-classes may be used to list target file classes (can be used with filters).
+      Example: --list-classes
+      Example: --list-classes --class-filter=com.example.foo
+
+  --list-methods may be used to list target file methods (can be used with filters).
+      Example: --list-methods
+      Example: --list-methods --class-filter=com.example --method-filter=foo
+
+  --symbolize=<file.oat>: output a copy of file.oat with elf symbols included.
+      Example: --symbolize=/system/framework/boot.oat
+
+  --only-keep-debug<file.oat>: Modifies the behaviour of --symbolize so that
+      .rodata and .text sections are omitted in the output file to save space.
+      Example: --symbolize=/system/framework/boot.oat --only-keep-debug
+
+  --class-filter=<class name>: only dumps classes that contain the filter.
+      Example: --class-filter=com.example.foo
+
+  --method-filter=<method name>: only dumps methods that contain the filter.
+      Example: --method-filter=foo
+
+  --export-dex-to=<directory>: may be used to export oat embedded dex files.
+      Example: --export-dex-to=/data/local/tmp
+
+  --addr2instr=<address>: output matching method disassembled code from relative
+                          address (e.g. PC from crash dump)
+      Example: --addr2instr=0x00001a3b
+
+  --dump-imt=<file.txt>: output IMT collisions (if any) for the given receiver
+                         types and interface methods in the given file. The file
+                         is read line-wise, where each line should either be a class
+                         name or descriptor, or a class name/descriptor and a prefix
+                         of a complete method name (separated by a whitespace).
+      Example: --dump-imt=imt.txt
+
+  --dump-imt-stats: output IMT statistics for the given boot image
+      Example: --dump-imt-stats
