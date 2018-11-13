@@ -1,0 +1,1 @@
+OAT文件包含有两个特殊的段oatdata和oatexec

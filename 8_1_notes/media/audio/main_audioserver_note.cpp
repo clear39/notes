@@ -1,10 +1,27 @@
-//	frameworks/av/media/audioserver/main_audioserver.cpp
+service audioserver /system/bin/audioserver
+    class main
+    user audioserver
+    # media gid needed for /dev/fm (radio) and for /data/misc/media (tee)
+    group audio camera drmrpc inet media mediadrm net_bt net_bt_admin net_bw_acct
+    ioprio rt 4
+    writepid /dev/cpuset/foreground/tasks /dev/stune/foreground/tasks
+    onrestart restart audio-hal-2-0
 
+on property:vts.native_server.on=1
+    stop audioserver
+on property:vts.native_server.on=0
+    start audioserver
+
+
+
+
+    
+
+//	@frameworks/av/media/audioserver/main_audioserver.cpp
 int main(int argc __unused, char **argv)
 {
     signal(SIGPIPE, SIG_IGN);
 
-    //设置 ro.test_harness 为1 则开启 MediaLogService
     bool doLog = (bool) property_get_bool("ro.test_harness", 0);
 
     pid_t childPid;
@@ -59,10 +76,7 @@ int main(int argc __unused, char **argv)
             }
             struct rusage usage;
             getrusage(RUSAGE_CHILDREN, &usage);
-            ALOG(LOG_ERROR, "media.log", "pid %d status %d code %s user %ld.%03lds sys %ld.%03lds",
-                    info.si_pid, info.si_status, code,
-                    usage.ru_utime.tv_sec, usage.ru_utime.tv_usec / 1000,
-                    usage.ru_stime.tv_sec, usage.ru_stime.tv_usec / 1000);
+            ALOG(LOG_ERROR, "media.log", "pid %d status %d code %s user %ld.%03lds sys %ld.%03lds",info.si_pid, info.si_status, code,usage.ru_utime.tv_sec, usage.ru_utime.tv_usec / 1000,usage.ru_stime.tv_sec, usage.ru_stime.tv_usec / 1000);
             sp<IServiceManager> sm = defaultServiceManager();
             sp<IBinder> binder = sm->getService(String16("media.log"));
             if (binder != 0) {
@@ -90,19 +104,34 @@ int main(int argc __unused, char **argv)
         sp<ProcessState> proc(ProcessState::self());
         sp<IServiceManager> sm = defaultServiceManager();
         ALOGI("ServiceManager: %p", sm.get());
-        AudioFlinger::instantiate();
-        AudioPolicyService::instantiate();
-        AAudioService::instantiate();
-        RadioService::instantiate();
-        SoundTriggerHwService::instantiate();
 
 
         
+        AudioFlinger::instantiate();
+        AudioPolicyService::instantiate();
+
+        // AAudioService should only be used in OC-MR1 and later.
+        // And only enable the AAudioService if the system MMAP policy explicitly allows it.
+        // This prevents a client from misusing AAudioService when it is not supported.
+        aaudio_policy_t mmapPolicy = property_get_int32(AAUDIO_PROP_MMAP_POLICY,AAUDIO_POLICY_NEVER);
+        if (mmapPolicy == AAUDIO_POLICY_AUTO || mmapPolicy == AAUDIO_POLICY_ALWAYS) {
+            AAudioService::instantiate();
+        }
+
+        SoundTriggerHwService::instantiate();
+
+
+
+
         ProcessState::self()->startThreadPool();
 
-// FIXME: remove when BUG 31748996 is fixed
+		// FIXME: remove when BUG 31748996 is fixed
         android::hardware::ProcessState::self()->startThreadPool();
 
         IPCThreadState::self()->joinThreadPool();
     }
 }
+
+
+
+

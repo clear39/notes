@@ -1,0 +1,57 @@
+
+ART运行时堆划分为四个空间:
+Image Space(用来存在一些预加载的类)
+Zygote Space(Zygote堆)
+Allocation Space(Active堆)
+Large Object Space(是一些离散地址的集合，用来分配一些大对象从而提高了GC的管理效率和整体性能)
+
+
+Image Space、Zygote Space、Allocation Space是在地址上连续的空间，称为Continuous Space，而Large Object Space是一些离散地址的集合，用来分配一些大对象，称为Discontinuous Space
+
+
+
+//	@art/runtime/gc/gc_cause.h
+// What caused the GC?
+enum GcCause {
+  // Invalid GC cause used as a placeholder.
+  kGcCauseNone,
+  // GC triggered by a failed allocation. Thread doing allocation is blocked waiting for GC before
+  // retrying allocation.
+  kGcCauseForAlloc,
+  // A background GC trying to ensure there is free memory ahead of allocations.
+  kGcCauseBackground,
+  // An explicit System.gc() call.
+  kGcCauseExplicit,
+  // GC triggered for a native allocation when NativeAllocationGcWatermark is exceeded.
+  // (This may be a blocking GC depending on whether we run a non-concurrent collector).
+  kGcCauseForNativeAlloc,
+  // GC triggered for a native allocation when NativeAllocationBlockingGcWatermark is exceeded.
+  // (This is always a blocking GC).
+  kGcCauseForNativeAllocBlocking,
+  // GC triggered for a collector transition.
+  kGcCauseCollectorTransition,
+  // Not a real GC cause, used when we disable moving GC (currently for GetPrimitiveArrayCritical).
+  kGcCauseDisableMovingGc,
+  // Not a real GC cause, used when we trim the heap.
+  kGcCauseTrim,
+  // Not a real GC cause, used to implement exclusion between GC and instrumentation.
+  kGcCauseInstrumentation,
+  // Not a real GC cause, used to add or remove app image spaces.
+  kGcCauseAddRemoveAppImageSpace,
+  // Not a real GC cause, used to implement exclusion between GC and debugger.
+  kGcCauseDebugger,
+  // GC triggered for background transition when both foreground and background collector are CMS.
+  kGcCauseHomogeneousSpaceCompact,
+  // Class linker cause, used to guard filling art methods with special values.
+  kGcCauseClassLinker,
+  // Not a real GC cause, used to implement exclusion between code cache metadata and GC.
+  kGcCauseJitCodeCache,
+  // Not a real GC cause, used to add or remove system-weak holders.
+  kGcCauseAddRemoveSystemWeakHolder,
+  // Not a real GC cause, used to prevent hprof running in the middle of GC.
+  kGcCauseHprof,
+  // Not a real GC cause, used to prevent GetObjectsAllocated running in the middle of GC.
+  kGcCauseGetObjectsAllocated,
+  // GC cause for the profile saver.
+  kGcCauseProfileSaver,
+};

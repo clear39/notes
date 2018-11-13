@@ -44,6 +44,7 @@ bool JavaVMExt::IsBadJniVersion(int version) {
 
 //  vm_args传入虚拟机参数
 extern "C" jint JNI_CreateJavaVM(JavaVM** p_vm, JNIEnv** p_env, void* vm_args) {
+
   ScopedTrace trace(__FUNCTION__);
   const JavaVMInitArgs* args = static_cast<JavaVMInitArgs*>(vm_args);
   if (JavaVMExt::IsBadJniVersion(args->version)) { //判断虚拟机版本JNI_VERSION_1_4
@@ -51,7 +52,7 @@ extern "C" jint JNI_CreateJavaVM(JavaVM** p_vm, JNIEnv** p_env, void* vm_args) {
     return JNI_EVERSION;
   }
 
-  //  art/runtime/runtime.h:98:typedef std::vector<std::pair<std::string, const void*>> RuntimeOptions;
+  //  art/runtime/runtime.h:98: typedef std::vector<std::pair<std::string, const void*>> RuntimeOptions;
   RuntimeOptions options;
   for (int i = 0; i < args->nOptions; ++i) {
     JavaVMOption* option = &args->options[i];
