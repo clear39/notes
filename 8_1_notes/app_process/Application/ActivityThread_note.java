@@ -68,32 +68,26 @@ public final class ActivityThread {
         }
     }
 
-    private void attach(boolean system = false) {
-        sCurrentActivityThread = this;  //这里注意一下保存到静态全局变量中
-        mSystemThread = system;// false
+    private void attach(boolean system) {
+        sCurrentActivityThread = this; //这里注意一下保存到静态全局变量中
+        mSystemThread = system;
         if (!system) {
-
-        	//执行这里 添加第一次UI绘制处理，仅仅进行UI第一次回执才会通过Handler的post调用
             ViewRootImpl.addFirstDrawHandler(new Runnable() {
                 @Override
                 public void run() {
-                    ensureJitEnabled();//??????????????????????
+                    ensureJitEnabled();
                 }
             });
+            android.ddm.DdmHandleAppName.setAppName("<pre-initialized>", UserHandle.myUserId());
 
-
-
-            android.ddm.DdmHandleAppName.setAppName("<pre-initialized>",UserHandle.myUserId());//???????????????????
-
-            RuntimeInit.setApplicationObject(mAppThread.asBinder());//这里将ApplicationThread用于异常处理
+            RuntimeInit.setApplicationObject(mAppThread.asBinder());
+            
             final IActivityManager mgr = ActivityManager.getService();
             try {
-            	//这里 将ApplicationThread和ActivityManagerService建立联系
-                mgr.attachApplication(mAppThread);  // final ApplicationThread mAppThread = new ApplicationThread();
+                mgr.attachApplication(mAppThread);
             } catch (RemoteException ex) {
                 throw ex.rethrowFromSystemServer();
             }
-
             // Watch for getting close to heap limit.
             BinderInternal.addGcWatcher(new Runnable() {
                 @Override public void run() {
@@ -104,9 +98,7 @@ public final class ActivityThread {
                     long dalvikMax = runtime.maxMemory();
                     long dalvikUsed = runtime.totalMemory() - runtime.freeMemory();
                     if (dalvikUsed > ((3*dalvikMax)/4)) {
-                        if (DEBUG_MEMORY_TRIM) {
-                        	Slog.d(TAG, "Dalvik max=" + (dalvikMax/1024) + " total=" + (runtime.totalMemory()/1024)  + " used=" + (dalvikUsed/1024));
-                        }
+                        if (DEBUG_MEMORY_TRIM) Slog.d(TAG, "Dalvik max=" + (dalvikMax/1024) + " total=" + (runtime.totalMemory()/1024) + " used=" + (dalvikUsed/1024));
                         mSomeActivitiesChanged = false;
                         try {
                             mgr.releaseSomeActivities(mAppThread);
@@ -116,32 +108,22 @@ public final class ActivityThread {
                     }
                 }
             });
-        } else {	//   if (!system) {
-            // Don't set application object here -- if the system crashes,
-            // we can't display an alert, we just want to die die die.
-            android.ddm.DdmHandleAppName.setAppName("system_process",UserHandle.myUserId());
-            try {
-                mInstrumentation = new Instrumentation();
-                ContextImpl context = ContextImpl.createAppContext(this, getSystemContext().mPackageInfo);
-                mInitialApplication = context.mPackageInfo.makeApplication(true, null);
-                mInitialApplication.onCreate();
-            } catch (Exception e) {
-                throw new RuntimeException("Unable to instantiate Application():" + e.toString(), e);
-            }
+        } else {
+            ......
         }
 
         // add dropbox logging to libcore
         DropBox.setReporter(new DropBoxReporter());
 
-        ViewRootImpl.ConfigChangedCallback configChangedCallback = (Configuration globalConfig) -> {
+        ViewRootImpl.ConfigChangedCallback configChangedCallback  = (Configuration globalConfig) -> {
             synchronized (mResourcesManager) {
                 // We need to apply this change to the resources immediately, because upon returning
                 // the view hierarchy will be informed about it.
-                if (mResourcesManager.applyConfigurationToResourcesLocked(globalConfig,null /* compat */)) {
-                    updateLocaleListFromAppContext(mInitialApplication.getApplicationContext(),mResourcesManager.getConfiguration().getLocales());
+                if (mResourcesManager.applyConfigurationToResourcesLocked(globalConfig, null /* compat */)) {
+                    updateLocaleListFromAppContext(mInitialApplication.getApplicationContext(), mResourcesManager.getConfiguration().getLocales());
 
                     // This actually changed the resources! Tell everyone about it.
-                    if (mPendingConfiguration == null|| mPendingConfiguration.isOtherSeqNewer(globalConfig)) {
+                    if (mPendingConfiguration == null || mPendingConfiguration.isOtherSeqNewer(globalConfig)) {
                         mPendingConfiguration = globalConfig;
                         sendMessage(H.CONFIGURATION_CHANGED, globalConfig);
                     }
@@ -150,9 +132,6 @@ public final class ActivityThread {
         };
         ViewRootImpl.addConfigCallback(configChangedCallback);
     }
-
-
-
 
 
     private void handleBindApplication(AppBindData data) {

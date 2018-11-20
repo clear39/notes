@@ -1,7 +1,7 @@
 //	@art/runtime/runtime.cc
 bool Runtime::ParseOptions(const RuntimeOptions& raw_options,bool ignore_unrecognized = JNI_FALSE,RuntimeArgumentMap* runtime_options) {
   InitLogging(/* argv */ nullptr, Abort);  // Calls Locks::Init() as a side effect.			//@art/runtime/base/logging.cc
-  bool parsed = ParsedOptions::(raw_options, ignore_unrecognized, runtime_options);
+  bool parsed = ParsedOptions::Parse(raw_options, ignore_unrecognized, runtime_options);
   if (!parsed) {
     LOG(ERROR) << "Failed to parse options";
     return false;
@@ -105,10 +105,7 @@ bool ParsedOptions::DoParse(const RuntimeOptions& options,bool ignore_unrecogniz
     Usage(nullptr);
     return false;
   } else if (args.Exists(M::ShowVersion)) {
-    UsageMessage(stdout,
-                 "ART version %s %s\n",
-                 Runtime::GetVersion(),
-                 GetInstructionSetString(kRuntimeISA));
+    UsageMessage(stdout,"ART version %s %s\n",Runtime::GetVersion(),GetInstructionSetString(kRuntimeISA));
     Exit(0);
   } else if (args.Exists(M::BootClassPath)) {
     LOG(INFO) << "setting boot class path to " << *args.Get(M::BootClassPath);
@@ -130,8 +127,7 @@ bool ParsedOptions::DoParse(const RuntimeOptions& options,bool ignore_unrecogniz
   }
 
   // Default to number of processors minus one since the main GC thread also does work.
-  args.SetIfMissing(M::ParallelGCThreads, gc::Heap::kDefaultEnableParallelGC ?
-      static_cast<unsigned int>(sysconf(_SC_NPROCESSORS_CONF) - 1u) : 0u);
+  args.SetIfMissing(M::ParallelGCThreads, gc::Heap::kDefaultEnableParallelGC ? static_cast<unsigned int>(sysconf(_SC_NPROCESSORS_CONF) - 1u) : 0u);
 
   // -verbose:
   {

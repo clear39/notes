@@ -285,8 +285,7 @@ typename std::result_of<Function(I *, Args...)>::type
 timeoutIPC(std::chrono::duration<R, P> wait, const sp<I> &interfaceObject, Function &&func,Args &&... args) {
     using ::android::hardware::Status;
     typename std::result_of<Function(I *, Args...)>::type ret{Status::ok()};
-    auto boundFunc = std::bind(std::forward<Function>(func),
-            interfaceObject.get(), std::forward<Args>(args)...);
+    auto boundFunc = std::bind(std::forward<Function>(func),interfaceObject.get(), std::forward<Args>(args)...);
     bool success = timeout(wait, [&ret, &boundFunc] {
         ret = std::move(boundFunc());
     });

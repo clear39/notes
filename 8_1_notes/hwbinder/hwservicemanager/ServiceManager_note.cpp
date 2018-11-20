@@ -53,7 +53,7 @@ vintf::Transport getTransport(const std::string &interfaceName, const std::strin
 }
 
 
-
+//关于文件解析可一个看manifest.xml_parse_note.cpp
 vintf::Transport getTransportFromManifest(const FQName &fqName, const std::string &instanceName,const vintf::HalManifest *vm) {
     if (vm == nullptr) {
         return vintf::Transport::EMPTY;
@@ -64,167 +64,10 @@ vintf::Transport getTransportFromManifest(const FQName &fqName, const std::strin
 
 
 
-// static
-const HalManifest *VintfObject::GetDeviceHalManifest(bool skipCache =  false) {
-	//	static LockedUniquePtr<HalManifest> gDeviceManifest;
-    return Get(&gDeviceManifest, skipCache,std::bind(&HalManifest::fetchAllInformation, std::placeholders::_1,"/vendor/manifest.xml"));
-}
-
-// static
-const HalManifest *VintfObject::GetFrameworkHalManifest(bool skipCache =  false) {
-	//	static LockedUniquePtr<HalManifest> gFrameworkManifest;
-    return Get(&gFrameworkManifest, skipCache,std::bind(&HalManifest::fetchAllInformation, std::placeholders::_1,"/system/manifest.xml"));
-}
-
-
-
-template <typename T, typename F>
-static const T *Get(LockedUniquePtr<T> *ptr,bool skipCache,const F &fetchAllInformation) {
-    std::unique_lock<std::mutex> _lock(ptr->mutex);
-    if (skipCache || ptr->object == nullptr) {
-        ptr->object = std::make_unique<T>();//std::make_unique<HalManifest>();
-        if (fetchAllInformation(ptr->object.get()) != OK) {
-            ptr->object = nullptr; // frees the old object
-        }
-    }
-    return ptr->object.get();
-}
-
-
-status_t HalManifest::fetchAllInformation(const std::string &path) {
-	//	@system/libvintf/parse_xml.cpp:817:const HalManifestConverter halManifestConverter{};
-	//	@system/libvintf/parse_xml.cpp:946:const XmlConverter<HalManifest> &gHalManifestConverter = halManifestConverter;
-    return details::fetchAllInformation(path, gHalManifestConverter, this);
-}
-
-
-/**
-using NodeType = tinyxml2::XMLElement;
-using DocType = tinyxml2::XMLDocument;
-*/
-//	@system/libvintf/parse_xml.cpp:136
-template<typename Object>
-struct XmlNodeConverter : public XmlConverter<Object> {
-	 inline bool deserialize(Object *o, const std::string &xml) const {
-        DocType *doc = createDocument(xml);
-        if (doc == nullptr) {
-            this->mLastError = "Not a valid XML";
-            return false;
-        }
-        bool ret = deserialize(o, getRootChild(doc));
-        deleteDocument(doc);
-        return ret;
-    }
-
-    // caller is responsible for deleteDocument() call
-	inline DocType *createDocument(const std::string &xml) {
-	    DocType *doc = new tinyxml2::XMLDocument();
-	    if (doc->Parse(xml.c_str()) == tinyxml2::XML_NO_ERROR) {
-	        return doc;
-	    }
-	    delete doc;
-	    return nullptr;
-	}
-
-
-    inline NodeType *getRootChild(DocType *parent) {
-	    return parent->FirstChildElement();
-	}
-
-
-	inline bool deserialize(Object *object, NodeType *root) const {
-        if (nameOf(root) != this->elementName()) {
-            return false;
-        }
-        return this->buildObject(object, root);
-    }
-
-
-}
-
-
-template <typename T>
-status_t fetchAllInformation(const std::string& path, const XmlConverter<T>& converter,T* outObject) {
-    std::string info;
-
-    if (gFetcher == nullptr) {
-        // Should never happen.
-        return NO_INIT;
-    }
-
-    status_t result = gFetcher->fetch(path, info);//读取path内容到info
-
-    if (result != OK) {
-        return result;
-    }
-
-    bool success = converter(outObject, info);
-    if (!success) {
-        LOG(ERROR) << "Illformed file: " << path << ": " << converter.lastError();
-        return BAD_VALUE;
-    }
-    return OK;
-}
-
-
-// Return the file from the given location as a string.
-//
-// This class can be used to create a mock for overriding.
-class FileFetcher {
-   public:
-    virtual ~FileFetcher() {}
-    virtual status_t fetch(const std::string& path, std::string& fetched) {
-        std::ifstream in;
-
-        in.open(path);
-        if (!in.is_open()) {
-            LOG(WARNING) << "Cannot open " << path;
-            return INVALID_OPERATION;
-        }
-
-        std::stringstream ss;
-        ss << in.rdbuf();
-        fetched = ss.str();
-
-        return OK;
-    }
-};
 
 
 
 
-
-//	@system/libvintf/HalManifest.cpp
-Transport HalManifest::getTransport(const std::string &package, const Version &v,const std::string &interfaceName, const std::string &instanceName) const {
-
-    for (const ManifestHal *hal : getHals(package)) {
-        bool found = false;
-        for (auto& ver : hal->versions) {
-            if (ver.majorVer == v.majorVer && ver.minorVer >= v.minorVer) {
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
-            LOG(DEBUG) << "HalManifest::getTransport(" << to_string(mType) << "): Cannot find " << to_string(v) << " in supported versions of " << package;
-            continue;
-        }
-        auto it = hal->interfaces.find(interfaceName);
-        if (it == hal->interfaces.end()) {
-            LOG(DEBUG) << "HalManifest::getTransport(" << to_string(mType) << "): Cannot find interface '" << interfaceName << "' in " << package << "@" << to_string(v);
-            continue;
-        }
-        const auto &instances = it->second.instances;
-        if (instances.find(instanceName) == instances.end()) {
-            LOG(DEBUG) << "HalManifest::getTransport(" << to_string(mType) << "): Cannot find instance '" << instanceName << "' in "  << package << "@" << to_string(v) << "::" << interfaceName;
-            continue;
-        }
-        return hal->transportArch.transport;
-    }
-    LOG(DEBUG) << "HalManifest::getTransport(" << to_string(mType) << "): Cannot get transport for " << package << "@" << v << "::" << interfaceName << "/" << instanceName;
-    return Transport::EMPTY;
-
-}
 
 
 

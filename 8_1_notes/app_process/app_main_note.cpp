@@ -1,3 +1,13 @@
+
+./out/target/product/mek_8q/root/init.zygote32.rc:service zygote /system/bin/app_process -Xzygote /system/bin --zygote --start-system-server
+./out/target/product/mek_8q/root/init.zygote64_32.rc:service zygote /system/bin/app_process64 -Xzygote /system/bin --zygote --start-system-server --socket-name=zygote
+./system/core/rootdir/init.zygote64.rc:service zygote /system/bin/app_process64 -Xzygote /system/bin --zygote --start-system-server
+./system/core/rootdir/init.zygote32.rc:service zygote /system/bin/app_process -Xzygote /system/bin --zygote --start-system-server
+./system/core/rootdir/init.zygote32_64.rc:service zygote /system/bin/app_process32 -Xzygote /system/bin --zygote --start-system-server --socket-name=zygote
+./system/core/rootdir/init.zygote64_32.rc:service zygote /system/bin/app_process64 -Xzygote /system/bin --zygote --start-system-server --socket-name=zygote
+
+
+
 //  frameworks/base/cmds/app_process/app_main.cpp
 
 static size_t computeArgBlockSize(int argc, char* const argv[]) {

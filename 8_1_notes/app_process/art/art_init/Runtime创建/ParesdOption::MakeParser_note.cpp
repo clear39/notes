@@ -7,7 +7,58 @@ std::unique_ptr<RuntimeParser> ParsedOptions::MakeParser(bool ignore_unrecognize
   //	@art/runtime/parsed_options.h:46:  using RuntimeParser = CmdlineParser<RuntimeArgumentMap, RuntimeArgumentMap::Key>;
   //	@art/cmdline/cmdline_parser.h:43:   CmdlineParser 
   std::unique_ptr<RuntimeParser::Builder> parser_builder = std::unique_ptr<RuntimeParser::Builder>(new RuntimeParser::Builder());
-
+/*
+06-25 21:24:56.533  2798  2798 D AndroidRuntime: >>>>>> START com.android.internal.os.ZygoteInit uid 0 <<<<<<
+06-25 21:24:56.581  2798  2798 I zygote  : option[0]=-Xzygote
+06-25 21:24:56.581  2798  2798 I zygote  : option[1]=-Xusetombstonedtraces
+06-25 21:24:56.581  2798  2798 I zygote  : option[2]=exit
+06-25 21:24:56.581  2798  2798 I zygote  : option[3]=vfprintf
+06-25 21:24:56.581  2798  2798 I zygote  : option[4]=sensitiveThread
+06-25 21:24:56.581  2798  2798 I zygote  : option[5]=-verbose:gc
+06-25 21:24:56.581  2798  2798 I zygote  : option[6]=-Xms16m
+06-25 21:24:56.581  2798  2798 I zygote  : option[7]=-Xmx512m
+06-25 21:24:56.581  2798  2798 I zygote  : option[8]=-XX:HeapGrowthLimit=192m
+06-25 21:24:56.581  2798  2798 I zygote  : option[9]=-XX:HeapMinFree=512k
+06-25 21:24:56.581  2798  2798 I zygote  : option[10]=-XX:HeapMaxFree=8m
+06-25 21:24:56.581  2798  2798 I zygote  : option[11]=-XX:HeapTargetUtilization=0.75
+06-25 21:24:56.581  2798  2798 I zygote  : option[12]=-Xusejit:true
+06-25 21:24:56.581  2798  2798 I zygote  : option[13]=-Xjitsaveprofilinginfo
+06-25 21:24:56.581  2798  2798 I zygote  : option[14]=-agentlib:jdwp=transport=dt_android_adb,suspend=n,server=y
+06-25 21:24:56.582  2798  2798 I zygote  : option[15]=-Xlockprofthreshold:500
+06-25 21:24:56.582  2798  2798 I zygote  : option[16]=-Ximage-compiler-option
+06-25 21:24:56.582  2798  2798 I zygote  : option[17]=--runtime-arg
+06-25 21:24:56.582  2798  2798 I zygote  : option[18]=-Ximage-compiler-option
+06-25 21:24:56.582  2798  2798 I zygote  : option[19]=-Xms64m
+06-25 21:24:56.582  2798  2798 I zygote  : option[20]=-Ximage-compiler-option
+06-25 21:24:56.582  2798  2798 I zygote  : option[21]=--runtime-arg
+06-25 21:24:56.582  2798  2798 I zygote  : option[22]=-Ximage-compiler-option
+06-25 21:24:56.582  2798  2798 I zygote  : option[23]=-Xmx64m
+06-25 21:24:56.582  2798  2798 I zygote  : option[24]=-Ximage-compiler-option
+06-25 21:24:56.582  2798  2798 I zygote  : option[25]=--image-classes=/system/etc/preloaded-classes
+06-25 21:24:56.582  2798  2798 I zygote  : option[26]=-Ximage-compiler-option
+06-25 21:24:56.582  2798  2798 I zygote  : option[27]=--compiled-classes=/system/etc/compiled-classes
+06-25 21:24:56.582  2798  2798 I zygote  : option[28]=-Ximage-compiler-option
+06-25 21:24:56.582  2798  2798 I zygote  : option[29]=--dirty-image-objects=/system/etc/dirty-image-objects
+06-25 21:24:56.582  2798  2798 I zygote  : option[30]=-Xcompiler-option
+06-25 21:24:56.582  2798  2798 I zygote  : option[31]=--runtime-arg
+06-25 21:24:56.582  2798  2798 I zygote  : option[32]=-Xcompiler-option
+06-25 21:24:56.582  2798  2798 I zygote  : option[33]=-Xms64m
+06-25 21:24:56.582  2798  2798 I zygote  : option[34]=-Xcompiler-option
+06-25 21:24:56.582  2798  2798 I zygote  : option[35]=--runtime-arg
+06-25 21:24:56.582  2798  2798 I zygote  : option[36]=-Xcompiler-option
+06-25 21:24:56.582  2798  2798 I zygote  : option[37]=-Xmx512m
+06-25 21:24:56.582  2798  2798 I zygote  : option[38]=-Ximage-compiler-option
+06-25 21:24:56.582  2798  2798 I zygote  : option[39]=--instruction-set-variant=cortex-a9
+06-25 21:24:56.582  2798  2798 I zygote  : option[40]=-Xcompiler-option
+06-25 21:24:56.582  2798  2798 I zygote  : option[41]=--instruction-set-variant=cortex-a9
+06-25 21:24:56.583  2798  2798 I zygote  : option[42]=-Ximage-compiler-option
+06-25 21:24:56.583  2798  2798 I zygote  : option[43]=--instruction-set-features=default
+06-25 21:24:56.583  2798  2798 I zygote  : option[44]=-Xcompiler-option
+06-25 21:24:56.583  2798  2798 I zygote  : option[45]=--instruction-set-features=default
+06-25 21:24:56.583  2798  2798 I zygote  : option[46]=-Duser.locale=en-US
+06-25 21:24:56.583  2798  2798 I zygote  : option[47]=--cpu-abilist=armeabi-v7a,armeabi
+06-25 21:24:56.583  2798  2798 I zygote  : option[48]=-Xfingerprint:Android/autolink_8qxp/autolink_8qxp:8.1.0/1.2.0-beta2-rc3/20180724:userdebug/dev-keys
+*/
   parser_builder->
        Define("-Xzygote")
           .IntoKey(M::Zygote)
@@ -251,7 +302,8 @@ std::unique_ptr<RuntimeParser> ParsedOptions::MakeParser(bool ignore_unrecognize
       .Define("-Xforce-nb-testing")
           .IntoKey(M::ForceNativeBridge)
       .Define("-Xplugin:_")
-          .WithType<std::vector<Plugin>>().AppendValues()
+          .WithType<std::vector<Plugin>>()
+          .AppendValues()
           .IntoKey(M::Plugins)
       .Define("-XX:ThreadSuspendTimeout=_")  // in ms
           .WithType<MillisecondsToNanoseconds>()  // store as ns
@@ -279,17 +331,19 @@ std::unique_ptr<RuntimeParser> ParsedOptions::MakeParser(bool ignore_unrecognize
 
 //	  parser_builder->Define("-Xzygote").IntoKey(M::Zygote)
 /***
-1)	Define 的作用是构造一个 UntypedArgumentBuilder 实例 ，保存参数字符串"-Xzygote"到其names_中，而且内部存放了Builder类对象实例；
+1)	Define 的作用 
+      得到一个 UntypedArgumentBuilder 实例 ，保存参数字符串"-Xzygote"到其names_中，且内部保存了Builder类对象实例；
+  。。。。。。
+
+      通过UntypedArgumentBuilder调用WithType 构造一个对应类型ArgumentBuilder
+
+      其中 UntypedArgumentBuilder 调用 AppendValues 方法   argument_info_.appending_values_ = true;
 
 2)	
 IntoKey的作用：
 	由Define的到了UntypedArgumentBuilder，再通过IntoKey实现：
 	第一 新建一个ArgumentBuilder<Unit>并且传入Builder参数，以及Builder.save_destination_
 	第二 将names_ 通过SetNames方法再次传入给ArgumentBuilder<Unit>的成员argument_info_.names_
-
-	。。。。。。
-
-
 	第三 调用ArgumentBuilder<Unit>的IntoKey方法，再次传入M::Zygote
 	第四 在ArgumentBuilder<Unit>的IntoKey方法里，给save_value_和load_value_这俩个方法（注意save_value_和load_value_俩个方法操作的就是 save_destination_中的SaveToMap和GetOrCreateFromMap）
 	第五 调用 ArgumentBuilder<Unit>的CompleteArgument方法
@@ -314,6 +368,10 @@ struct Builder {
 	  b.SetNames(names);
 	  return std::move(b);
 	}
+
+
+
+
 }
 
 
@@ -340,6 +398,12 @@ struct UntypedArgumentBuilder {
       return std::move(b);
     }
 
+
+    template <typename TArg>
+    ArgumentBuilder<TArg> WithType() {
+      return CreateTypedBuilder<TArg>();
+    }
+
 }
 
 
@@ -354,6 +418,8 @@ CmdlineParser<TVariantMap, TVariantMapKey>::CreateArgumentBuilder(CmdlineParser<
 
 template <typename TArg>
 struct ArgumentBuilder {
+
+  CmdlineParserArgumentInfo<TArg> argument_info_;// @art/cmdline/detail/cmdline_parse_argument_detail.h:
 
     ArgumentBuilder(CmdlineParser::Builder& parser,std::shared_ptr<SaveDestination> save_destination)
         : parent_(parser),
@@ -370,6 +436,29 @@ struct ArgumentBuilder {
         return *reinterpret_cast<TArg*>(0);  // Blow up.
       };
     }
+
+    // Map the parsed string values (from _) onto a concrete value. If no wildcard
+    // has been specified, then map the value directly from the arg name (i.e.
+    // if there are multiple aliases, then use the alias to do the mapping).
+    //
+    // Do not use if a values list has already been set.
+    ArgumentBuilder<TArg>& WithValueMap(std::initializer_list<std::pair<const char*, TArg>> key_value_list) {
+      assert(!argument_info_.has_value_list_);
+      argument_info_.has_value_map_ = true;
+      argument_info_.value_map_ = key_value_list;
+      return *this;
+    }
+
+
+        // If this argument is seen multiple times, successive arguments mutate the same value
+    // instead of replacing it with a new value.
+    ArgumentBuilder<TArg>& AppendValues() {
+      argument_info_.appending_values_ = true;
+      return *this;
+    }
+
+
+
 
     void SetNames(std::initializer_list<const char*> names) {
       argument_info_.names_ = names;	//	detail::CmdlineParserArgumentInfo<TArg> argument_info_;
@@ -470,4 +559,111 @@ struct CmdlineParser{
       completed_arguments_(std::move(completed_arguments)) {
     assert(save_destination != nullptr);
   }
+}
+
+
+
+template <typename TArg>
+struct CmdlineParserArgumentInfo {
+    // Mark the argument definition as completed, do not mutate the object anymore after this
+      // call is done.
+      //
+      // Performs several sanity checks and token calculations.
+      void CompleteArgument() {
+        assert(names_.size() >= 1);
+        assert(!is_completed_);
+
+        is_completed_ = true;
+
+        size_t blank_count = 0;
+        size_t token_count = 0;
+
+        size_t global_blank_count = 0;
+        size_t global_token_count = 0;
+        for (auto&& name : names_) {
+          std::string s(name);
+
+          size_t local_blank_count = std::count(s.begin(), s.end(), '_');
+          size_t local_token_count = std::count(s.begin(), s.end(), ' ');
+
+          if (global_blank_count != 0) {
+            assert(local_blank_count == global_blank_count
+                   && "Every argument descriptor string must have same amount of blanks (_)");
+          }
+
+          if (local_blank_count != 0) {
+            global_blank_count = local_blank_count;
+            blank_count++;
+
+            assert(local_blank_count == 1 && "More than one blank is not supported");
+            assert(s.back() == '_' && "The blank character must only be at the end of the string");
+          }
+
+          if (global_token_count != 0) {
+            assert(local_token_count == global_token_count
+                   && "Every argument descriptor string must have same amount of tokens (spaces)");
+          }
+
+          if (local_token_count != 0) {
+            global_token_count = local_token_count;
+            token_count++;
+          }
+
+          // Tokenize every name, turning it from a string to a token list.
+          tokenized_names_.clear();
+          for (auto&& name1 : names_) {
+            // Split along ' ' only, removing any duplicated spaces.
+            tokenized_names_.push_back(
+                TokenRange::Split(name1, {' '}).RemoveToken(" "));
+          }
+
+          // remove the _ character from each of the token ranges
+          // we will often end up with an empty token (i.e. ["-XX", "_"] -> ["-XX", ""]
+          // and this is OK because we still need an empty token to simplify
+          // range comparisons
+          simple_names_.clear();
+
+          for (auto&& tokenized_name : tokenized_names_) {
+            simple_names_.push_back(tokenized_name.RemoveCharacter('_'));
+          }
+        }
+
+        if (token_count != 0) {
+          assert(("Every argument descriptor string must have equal amount of tokens (spaces)" && token_count == names_.size()));
+        }
+
+        if (blank_count != 0) {
+          assert(("Every argument descriptor string must have an equal amount of blanks (_)" && blank_count == names_.size()));
+        }
+
+        using_blanks_ = blank_count > 0;
+        {
+          size_t smallest_name_token_range_size =  std::accumulate(tokenized_names_.begin(), tokenized_names_.end(), ~(0u),[](size_t min, const TokenRange& cur) {
+                                                                                                                                                                                                              return std::min(min, cur.Size());
+                                                                                                                                                                                                            });
+          size_t largest_name_token_range_size = std::accumulate(tokenized_names_.begin(), tokenized_names_.end(), 0u,[](size_t max, const TokenRange& cur) {
+                                                                                                                                                                                                          return std::max(max, cur.Size());
+                                                                                                                                                                                                        });
+
+          token_range_size_ = std::make_pair(smallest_name_token_range_size,largest_name_token_range_size);
+        }
+
+        if (has_value_list_) {
+          assert(names_.size() == value_list_.size()  && "Number of arg descriptors must match number of values");
+          assert(!has_value_map_);
+        }
+        if (has_value_map_) {
+          if (!using_blanks_) {
+            assert(names_.size() == value_map_.size() && "Since no blanks were specified, each arg is mapped directly into a mapped " "value without parsing; sizes must match");
+          }
+
+          assert(!has_value_list_);
+        }
+
+        if (!using_blanks_ && !CmdlineType<TArg>::kCanParseBlankless) {
+          assert((has_value_map_ || has_value_list_) && "Arguments without a blank (_) must provide either a value map or a value list");
+        }
+
+        TypedCheck();//这里空实现
+      }
 }

@@ -11,18 +11,9 @@ if (!Runtime::Create(options, ignore_unrecognized)) {//Runtime创建
 //虚拟机创建入口
 bool Runtime::Create(const RuntimeOptions& raw_options, bool ignore_unrecognized = JNI_FALSE) {
   RuntimeArgumentMap runtime_options;
+  //  ParseOptions函数分析 看 Runtime::PareseOptions_note.cpp文件
   return ParseOptions(raw_options, ignore_unrecognized, &runtime_options) && Create(std::move(runtime_options));
 }
-
-
-
-
-
-
-
-
-
-
 
 
 bool Runtime::Create(RuntimeArgumentMap&& runtime_options) {
@@ -31,7 +22,7 @@ bool Runtime::Create(RuntimeArgumentMap&& runtime_options) {
     return false;
   }
   instance_ = new Runtime;
-  Locks::SetClientCallback(IsSafeToCallAbort);
+  Locks::SetClientCallback(IsSafeToCallAbort);//  @art/runtime/base/mutex.cc
   if (!instance_->Init(std::move(runtime_options))) {
     // TODO: Currently deleting the instance will abort the runtime on destruction. Now This will
     // leak memory, instead. Fix the destructor. b/19100793.
@@ -41,7 +32,6 @@ bool Runtime::Create(RuntimeArgumentMap&& runtime_options) {
   }
   return true;
 }
-
 
 
 bool Runtime::Init(RuntimeArgumentMap&& runtime_options_in) {
@@ -62,8 +52,7 @@ bool Runtime::Init(RuntimeArgumentMap&& runtime_options_in) {
   // Note: Don't request an error message. That will lead to a maps dump in the case of failure,
   //       leading to logspam.
   {
-    constexpr uintptr_t kSentinelAddr =
-        RoundDown(static_cast<uintptr_t>(Context::kBadGprBase), kPageSize);
+    constexpr uintptr_t kSentinelAddr = RoundDown(static_cast<uintptr_t>(Context::kBadGprBase), kPageSize);
     protected_fault_page_.reset(MemMap::MapAnonymous("Sentinel fault page",
                                                      reinterpret_cast<uint8_t*>(kSentinelAddr),
                                                      kPageSize,
@@ -87,8 +76,7 @@ bool Runtime::Init(RuntimeArgumentMap&& runtime_options_in) {
   oat_file_manager_ = new OatFileManager;
 
   Thread::SetSensitiveThreadHook(runtime_options.GetOrDefault(Opt::HookIsSensitiveThread));
-  Monitor::Init(runtime_options.GetOrDefault(Opt::LockProfThreshold),
-                runtime_options.GetOrDefault(Opt::StackDumpLockProfThreshold));
+  Monitor::Init(runtime_options.GetOrDefault(Opt::LockProfThreshold),runtime_options.GetOrDefault(Opt::StackDumpLockProfThreshold));
 
   boot_class_path_string_ = runtime_options.ReleaseOrDefault(Opt::BootClassPath);
   class_path_string_ = runtime_options.ReleaseOrDefault(Opt::ClassPath);
@@ -100,7 +88,7 @@ bool Runtime::Init(RuntimeArgumentMap&& runtime_options_in) {
   is_zygote_ = runtime_options.Exists(Opt::Zygote);
   is_explicit_gc_disabled_ = runtime_options.Exists(Opt::DisableExplicitGC);
   dex2oat_enabled_ = runtime_options.GetOrDefault(Opt::Dex2Oat);
-  image_dex2oat_enabled_ = runtime_options.GetOrDefault(Opt::ImageDex2Oat);
+  image_dex2oat_enabled_ = runtime_options.GetOrDefault(Opt::ImageDex2Oat);//没有该参数
   dump_native_stack_on_sig_quit_ = runtime_options.GetOrDefault(Opt::DumpNativeStackOnSigQuit);
 
   vfprintf_ = runtime_options.GetOrDefault(Opt::HookVfprintf);
@@ -110,8 +98,7 @@ bool Runtime::Init(RuntimeArgumentMap&& runtime_options_in) {
   default_stack_size_ = runtime_options.GetOrDefault(Opt::StackSize);
   use_tombstoned_traces_ = runtime_options.GetOrDefault(Opt::UseTombstonedTraces);
 #if !defined(ART_TARGET_ANDROID)
-  CHECK(!use_tombstoned_traces_)
-      << "-Xusetombstonedtraces is only supported in an Android environment";
+  CHECK(!use_tombstoned_traces_) << "-Xusetombstonedtraces is only supported in an Android environment";
 #endif
   stack_trace_file_ = runtime_options.ReleaseOrDefault(Opt::StackTraceFile);
 
@@ -126,8 +113,7 @@ bool Runtime::Init(RuntimeArgumentMap&& runtime_options_in) {
   image_compiler_options_ = runtime_options.ReleaseOrDefault(Opt::ImageCompilerOptions);
   image_location_ = runtime_options.GetOrDefault(Opt::Image);
 
-  max_spins_before_thin_lock_inflation_ =
-      runtime_options.GetOrDefault(Opt::MaxSpinsBeforeThinLockInflation);
+  max_spins_before_thin_lock_inflation_ = runtime_options.GetOrDefault(Opt::MaxSpinsBeforeThinLockInflation);
 
   monitor_list_ = new MonitorList;
   monitor_pool_ = MonitorPool::Create();
@@ -165,9 +151,7 @@ bool Runtime::Init(RuntimeArgumentMap&& runtime_options_in) {
     // If low memory mode, use 1.0 as the multiplier by default.
     foreground_heap_growth_multiplier = 1.0f;
   } else {
-    foreground_heap_growth_multiplier =
-        runtime_options.GetOrDefault(Opt::ForegroundHeapGrowthMultiplier) +
-            kExtraDefaultHeapGrowthMultiplier;
+    foreground_heap_growth_multiplier =  runtime_options.GetOrDefault(Opt::ForegroundHeapGrowthMultiplier) + kExtraDefaultHeapGrowthMultiplier;
   }
   XGcOption xgc_option = runtime_options.GetOrDefault(Opt::GcOption);
   heap_ = new gc::Heap(runtime_options.GetOrDefault(Opt::MemoryInitialSize),
@@ -182,8 +166,7 @@ bool Runtime::Init(RuntimeArgumentMap&& runtime_options_in) {
                        runtime_options.GetOrDefault(Opt::ImageInstructionSet),
                        // Override the collector type to CC if the read barrier config.
                        kUseReadBarrier ? gc::kCollectorTypeCC : xgc_option.collector_type_,
-                       kUseReadBarrier ? BackgroundGcOption(gc::kCollectorTypeCCBackground)
-                                       : runtime_options.GetOrDefault(Opt::BackgroundGc),
+                       kUseReadBarrier ? BackgroundGcOption(gc::kCollectorTypeCCBackground)  : runtime_options.GetOrDefault(Opt::BackgroundGc),
                        runtime_options.GetOrDefault(Opt::LargeObjectSpace),
                        runtime_options.GetOrDefault(Opt::LargeObjectThreshold),
                        runtime_options.GetOrDefault(Opt::ParallelGCThreads),
@@ -231,8 +214,7 @@ bool Runtime::Init(RuntimeArgumentMap&& runtime_options_in) {
   // can't be trimmed as easily.
   const bool use_malloc = IsAotCompiler();
   arena_pool_.reset(new ArenaPool(use_malloc, /* low_4gb */ false));
-  jit_arena_pool_.reset(
-      new ArenaPool(/* use_malloc */ false, /* low_4gb */ false, "CompilerMetadata"));
+  jit_arena_pool_.reset(new ArenaPool(/* use_malloc */ false, /* low_4gb */ false, "CompilerMetadata"));
 
   if (IsAotCompiler() && Is64BitInstructionSet(kRuntimeISA)) {
     // 4gb, no malloc. Explanation in header.
@@ -290,7 +272,7 @@ bool Runtime::Init(RuntimeArgumentMap&& runtime_options_in) {
   }
 
   std::string error_msg;
-  java_vm_ = JavaVMExt::Create(this, runtime_options, &error_msg);
+  java_vm_ = JavaVMExt::Create(this, runtime_options, &error_msg);//  @art/runtime/java_vm_ext.cc
   if (java_vm_.get() == nullptr) {
     LOG(ERROR) << "Could not initialize JavaVMExt: " << error_msg;
     return false;
@@ -485,6 +467,17 @@ bool Runtime::Init(RuntimeArgumentMap&& runtime_options_in) {
 
   return true;
 }
+
+
+
+
+
+
+
+
+
+
+
 
 
 
