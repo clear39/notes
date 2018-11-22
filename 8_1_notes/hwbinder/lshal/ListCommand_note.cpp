@@ -15,6 +15,17 @@ Status ListCommand::main(const std::string &command, const Arg &arg) {
     return status;
 }
 
+
+/*
+ struct option {
+   const char *name;
+   int         has_arg;
+   int        *flag;
+   int         val;
+};
+
+*/
+
 Status ListCommand::parseArgs(const std::string &command, const Arg &arg) {
     static struct option longOptions[] = {
         // long options with short alternatives
@@ -170,6 +181,7 @@ Status ListCommand::fetchBinderized(const sp<IServiceManager> &manager) {
 
     hidl_vec<hidl_string> fqInstanceNames;
     // copying out for timeoutIPC
+    //  @frameworks/native/cmds/lshal/Timeout.h
     auto listRet = timeoutIPC(manager, &IServiceManager::list, [&] (const auto &names) {
         fqInstanceNames = names;
     });
@@ -205,9 +217,7 @@ Status ListCommand::fetchBinderized(const sp<IServiceManager> &manager) {
             }
         });
         if (!debugRet.isOk()) {
-            mErr << "Warning: Skipping \"" << fqInstanceName << "\": "
-                 << "debugging information cannot be retrieved:"
-                 << debugRet.description() << std::endl;
+            mErr << "Warning: Skipping \"" << fqInstanceName << "\": " << "debugging information cannot be retrieved:" << debugRet.description() << std::endl;
             status |= DUMP_BINDERIZED_ERROR;
         }
     }
@@ -280,21 +290,34 @@ Status ListCommand::fetchPassthrough(const sp<IServiceManager> &manager) {
 }
 
 
-template<class R, class P, class Function, class I, class... Args>
-typename std::result_of<Function(I *, Args...)>::type
-timeoutIPC(std::chrono::duration<R, P> wait, const sp<I> &interfaceObject, Function &&func,Args &&... args) {
-    using ::android::hardware::Status;
-    typename std::result_of<Function(I *, Args...)>::type ret{Status::ok()};
-    auto boundFunc = std::bind(std::forward<Function>(func),interfaceObject.get(), std::forward<Args>(args)...);
-    bool success = timeout(wait, [&ret, &boundFunc] {
-        ret = std::move(boundFunc());
+Status ListCommand::fetchAllLibraries(const sp<IServiceManager> &manager) {
+    using namespace ::android::hardware;
+    using namespace ::android::hidl::manager::V1_0;
+    using namespace ::android::hidl::base::V1_0;
+    using std::literals::chrono_literals::operator""s;
+    auto ret = timeoutIPC(2s, manager, &IServiceManager::debugDump, [&] (const auto &infos) {
+        std::map<std::string, TableEntry> entries;
+        for (const auto &info : infos) {
+            std::string interfaceName = std::string{info.interfaceName.c_str()} + "/" +  std::string{info.instanceName.c_str()};
+            entries.emplace(interfaceName, TableEntry{
+                .interfaceName = interfaceName,
+                .transport = "passthrough",
+                .serverPid = NO_PID,
+                .serverObjectAddress = NO_PTR,
+                .clientPids = info.clientPids,
+                .arch = ARCH_UNKNOWN
+            }).first->second.arch |= fromBaseArchitecture(info.arch);
+        }
+        for (auto &&pair : entries) {
+            putEntry(LIST_DLLIB, std::move(pair.second));
+        }
     });
-    if (!success) {
-        return Status::fromStatusT(TIMED_OUT);
+    if (!ret.isOk()) {
+        mErr << "Error: Failed to call list on getPassthroughServiceManager(): " << ret.description() << std::endl;
+        return DUMP_ALL_LIBS_ERROR;
     }
-    return ret;
+    return OK;
 }
-
 
 
 
