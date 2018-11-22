@@ -21,6 +21,160 @@ int main(int argc, char **argv)
     return 0;
 }
 
+//  @frameworks/native/cmds/servicemanager/binder.c
+struct binder_state *binder_open(unsigned mapsize)
+{
+    struct binder_state *bs;
+
+    bs = malloc(sizeof(*bs));
+    if (!bs) {
+        errno = ENOMEM;
+        return 0;
+    }
+
+    bs->fd = open("/dev/binder", O_RDWR);
+    if (bs->fd < 0) {
+        fprintf(stderr,"binder: cannot open device (%s)\n",strerror(errno));
+        goto fail_open;
+    }
+
+    bs->mapsize = mapsize;
+    bs->mapped = mmap(NULL, mapsize, PROT_READ, MAP_PRIVATE, bs->fd, 0);
+    if (bs->mapped == MAP_FAILED) {
+        fprintf(stderr,"binder: cannot map device (%s)\n",strerror(errno));
+        goto fail_map;
+    }
+
+        /* TODO: check version */
+
+    return bs;
+
+fail_map:
+    close(bs->fd);
+fail_open:
+    free(bs);
+    return 0;
+}
+
+//  @kernel_imx/drivers/staging/android/binder.c
+/**
+struct vm_area_struct表示的是一块连续的虚拟地址空间区域,表示的虚拟地址是给进程使用的
+struct vm_struct 这个数据结构也是表示一块连续的虚拟地址空间区域,表示的虚拟地址是给内核使用的
+它们对应的物理页面都可以是不连续的   
+
+
+struct vm_area_struct表示的地址空间范围是0~3G，而struct vm_struct表示的地址空间范围是(3G + 896M + 8M) ~ 4G
+3G ~ (3G + 896M)范围的地址是用来映射连续的物理页面的，这个范围的虚拟地址和对应的实际物理地址有着简单的对应关系，即对应0~896M的物理地址空间;
+而(3G + 896M) ~ (3G + 896M + 8M)是安全保护区域（例如，所有指向这8M地址空间的指针都是非法的），因此struct vm_struct使用(3G + 896M + 8M) ~ 4G地址空间来映射非连续的物理页面;
+
+
+
+Binder进程间通信机制的精髓所在了，同一个物理页面，一方映射到进程虚拟地址空间，一方面映射到内核虚拟地址空间，这样，进程和内核之间就可以减少一次内存拷贝了，提到了进程间通信效率。
+
+
+
+*/
+static int binder_mmap(struct file *filp, struct vm_area_struct *vma)
+{
+    int ret;
+    struct vm_struct *area;
+    struct binder_proc *proc = filp->private_data;
+    const char *failure_string;
+    struct binder_buffer *buffer;
+
+    if (proc->tsk != current)
+        return -EINVAL;
+
+    if ((vma->vm_end - vma->vm_start) > SZ_4M)
+        vma->vm_end = vma->vm_start + SZ_4M;
+
+    binder_debug(BINDER_DEBUG_OPEN_CLOSE,
+             "binder_mmap: %d %lx-%lx (%ld K) vma %lx pagep %lx\n",
+             proc->pid, vma->vm_start, vma->vm_end,
+             (vma->vm_end - vma->vm_start) / SZ_1K, vma->vm_flags,
+             (unsigned long)pgprot_val(vma->vm_page_prot));
+
+    if (vma->vm_flags & FORBIDDEN_MMAP_FLAGS) {
+        ret = -EPERM;
+        failure_string = "bad vm_flags";
+        goto err_bad_arg;
+    }
+    vma->vm_flags = (vma->vm_flags | VM_DONTCOPY) & ~VM_MAYWRITE;
+
+    mutex_lock(&binder_mmap_lock);
+    if (proc->buffer) {
+        ret = -EBUSY;
+        failure_string = "already mapped";
+        goto err_already_mapped;
+    }
+
+    area = get_vm_area(vma->vm_end - vma->vm_start, VM_IOREMAP);
+    if (area == NULL) {
+        ret = -ENOMEM;
+        failure_string = "get_vm_area";
+        goto err_get_vm_area_failed;
+    }
+    proc->buffer = area->addr;
+    //内核使用的虚拟地址与进程使用的虚拟地址之间的差值，即如果某个物理页面在内核空间中对应的虚拟地址是addr的话，那么这个物理页面在进程空间对应的虚拟地址就为addr + user_buffer_offset。
+    proc->user_buffer_offset = vma->vm_start - (uintptr_t)proc->buffer;
+    mutex_unlock(&binder_mmap_lock);
+
+#ifdef CONFIG_CPU_CACHE_VIPT
+    if (cache_is_vipt_aliasing()) {
+        while (CACHE_COLOUR((vma->vm_start ^ (uint32_t)proc->buffer))) {
+            pr_info("binder_mmap: %d %lx-%lx maps %p bad alignment\n", proc->pid, vma->vm_start, vma->vm_end, proc->buffer);
+            vma->vm_start += PAGE_SIZE;
+        }
+    }
+#endif
+    //是一个struct page*类型的数组，struct page是用来描述物理页面的数据结构；
+    proc->pages = kzalloc(sizeof(proc->pages[0]) * ((vma->vm_end - vma->vm_start) / PAGE_SIZE), GFP_KERNEL);
+    if (proc->pages == NULL) {
+        ret = -ENOMEM;
+        failure_string = "alloc page array";
+        goto err_alloc_pages_failed;
+    }
+    proc->buffer_size = vma->vm_end - vma->vm_start;//表示要映射的内存的大小
+
+    vma->vm_ops = &binder_vm_ops;
+    vma->vm_private_data = proc;
+
+    if (binder_update_page_range(proc, 1, proc->buffer, proc->buffer + PAGE_SIZE, vma)) {
+        ret = -ENOMEM;
+        failure_string = "alloc small buf";
+        goto err_alloc_small_buf_failed;
+    }
+    buffer = proc->buffer;//它表示要映射的物理内存在内核空间中的起始位置
+    INIT_LIST_HEAD(&proc->buffers);
+    list_add(&buffer->entry, &proc->buffers);
+    buffer->free = 1;
+    binder_insert_free_buffer(proc, buffer);
+    proc->free_async_space = proc->buffer_size / 2;
+    barrier();
+    proc->files = get_files_struct(current);
+    proc->vma = vma;
+    proc->vma_vm_mm = vma->vm_mm;
+
+    /*pr_info("binder_mmap: %d %lx-%lx maps %p\n",
+         proc->pid, vma->vm_start, vma->vm_end, proc->buffer);*/
+    return 0;
+
+err_alloc_small_buf_failed:
+    kfree(proc->pages);
+    proc->pages = NULL;
+err_alloc_pages_failed:
+    mutex_lock(&binder_mmap_lock);
+    vfree(proc->buffer);
+    proc->buffer = NULL;
+err_get_vm_area_failed:
+err_already_mapped:
+    mutex_unlock(&binder_mmap_lock);
+err_bad_arg:
+    pr_err("binder_mmap: %d %lx-%lx %s failed %d\n",proc->pid, vma->vm_start, vma->vm_end, failure_string, ret);
+    return ret;
+}
+
+
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////
