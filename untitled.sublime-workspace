@@ -1,0 +1,341 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"Thr",
+				"Throwable"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "8_0_notes/install/installd/installd_note.cpp",
+			"settings":
+			{
+				"buffer_size": 14178,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "8_0_notes/install/installd/Installer_note.java",
+			"settings":
+			{
+				"buffer_size": 5301,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "8_0_notes/install/installd/InstalldNativeService_note.cpp",
+			"settings":
+			{
+				"buffer_size": 895,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"Package Control: ",
+				"Package Control: Install Package"
+			]
+		],
+		"width": 0.0
+	},
+	"console":
+	{
+		"height": 0.0,
+		"history":
+		[
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/home/xqli/work/notes",
+		"/home/xqli/work/notes/8_0_notes",
+		"/home/xqli/work/notes/8_0_notes/install",
+		"/home/xqli/work/notes/8_0_notes/install/installd",
+		"/home/xqli/work/notes/8_1_notes"
+	],
+	"file_history":
+	[
+		"/home/xqli/work/notes/8_0_notes/install/installd/Installer_note.jva",
+		"/home/xqli/work/notes/untitled.sublime-project",
+		"/home/xqli/work/workspace/work-sublime/imx8/untitled.sublime-project",
+		"/media/xqli/KINGSTON/中控数据上传/tools/Untitled Document",
+		"/work/workcodes/imx8-android-O-beta2/frameworks/base/api/system-current.txt",
+		"/home/xqli/work/workcodes/imx8-android-O-beta2/frameworks/native/cmds/installd/globals.cpp",
+		"/home/xqli/work/workcodes/imx8-android-O-beta2/frameworks/native/cmds/installd/utils.cpp",
+		"/home/xqli/work/workcodes/imx8-android-O-beta2/frameworks/native/cmds/installd/globals.h",
+		"/home/xqli/work/workcodes/imx8-android-O-beta2/packages/providers/MediaProvider/src/com/android/providers/media/MediaProviderApp.java",
+		"/home/xqli/work/workcodes/imx8-android-O-beta2/packages/providers/MediaProvider/src/com/android/providers/media/MediaScannerService.java",
+		"/home/xqli/work/workcodes/imx8-android-O-beta2/packages/providers/MediaProvider/AndroidManifest.xml",
+		"/work/workcodes/imx8-android-O-beta2/.classpath",
+		"/home/xqli/work/workcodes/imx8-android-O-beta2/frameworks/base/core/java/android/app/LoadedApk.java",
+		"/etc/udev/rules.d/51-android.rules",
+		"/usr/share/applications/sublime_text.desktop",
+		"/work/workcodes/imx8-android-O-beta2/build/core/combo/javac.mk",
+		"/home/xqli/.bashrc",
+		"/work/tools/android-sdk/platform-tools/.bashrc",
+		"/work/tools/android-sdk/platform-tools/～、",
+		"/home/xqli/work/workcodes/autolink-src/build/envsetup.sh",
+		"/home/xqli/work/workcodes/imx6-android-O/build/envsetup.sh",
+		"/home/xqli/work/workcodes/imx8-android-O-beta2/build/envsetup.sh"
+	],
+	"find":
+	{
+		"height": 24.0
+	},
+	"find_in_files":
+	{
+		"height": 98.0,
+		"where_history":
+		[
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+		],
+		"reverse": false,
+		"show_context": true,
+		"use_buffer2": true,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 1,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "8_0_notes/install/installd/installd_note.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 14178,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								13323,
+								13323
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 5540.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "8_0_notes/install/installd/Installer_note.java",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5301,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5295,
+								5295
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/Java/Java.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1550.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "8_0_notes/install/installd/InstalldNativeService_note.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 895,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								895,
+								895
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 24.0
+	},
+	"input":
+	{
+		"height": 0.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.find_results":
+	{
+		"height": 0.0
+	},
+	"pinned_build_system": "",
+	"project": "untitled.sublime-project",
+	"replace":
+	{
+		"height": 44.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+			[
+				"ApplicationInfo",
+				"base/core/java/android/content/pm/ApplicationInfo.java"
+			],
+			[
+				"LoadedApk.java",
+				"base/core/java/android/app/LoadedApk.java"
+			],
+			[
+				"ActivityManagerDebugConfig",
+				"base/services/core/java/com/android/server/am/ActivityManagerDebugConfig.java"
+			],
+			[
+				"ActivityManagerServ",
+				"base/services/core/java/com/android/server/am/ActivityManagerService.java"
+			],
+			[
+				"LoadedApk",
+				"base/core/java/android/app/LoadedApk.java"
+			],
+			[
+				"ActivityThrea",
+				"base/core/java/android/app/ActivityThread.java"
+			]
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_symbol":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": false,
+	"show_tabs": true,
+	"side_bar_visible": true,
+	"side_bar_width": 370.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}
