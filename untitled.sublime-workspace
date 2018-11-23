@@ -12,28 +12,20 @@
 	"buffers":
 	[
 		{
-			"file": "8_0_notes/install/installd/installd_note.cpp",
+			"file": "8_1_notes/app_process/art/test_files/system_server_maps.log",
 			"settings":
 			{
-				"buffer_size": 14178,
+				"buffer_size": 244704,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "8_0_notes/install/installd/Installer_note.java",
+			"file": "8_1_notes/app_process/art/test_files/zygote_64_maps.log",
 			"settings":
 			{
-				"buffer_size": 5301,
+				"buffer_size": 148007,
 				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "8_0_notes/install/installd/InstalldNativeService_note.cpp",
-			"settings":
-			{
-				"buffer_size": 895,
 				"line_ending": "Unix"
 			}
 		}
@@ -75,13 +67,21 @@
 	"expanded_folders":
 	[
 		"/home/xqli/work/notes",
-		"/home/xqli/work/notes/8_0_notes",
-		"/home/xqli/work/notes/8_0_notes/install",
-		"/home/xqli/work/notes/8_0_notes/install/installd",
-		"/home/xqli/work/notes/8_1_notes"
+		"/home/xqli/work/notes/8_1_notes",
+		"/home/xqli/work/notes/8_1_notes/app_process",
+		"/home/xqli/work/notes/8_1_notes/app_process/art",
+		"/home/xqli/work/notes/8_1_notes/app_process/art/test_files"
 	],
 	"file_history":
 	[
+		"/home/xqli/work/notes/8_1_notes/install/install-daemon/Installer_note.java",
+		"/home/xqli/work/notes/8_1_notes/install/install-daemon/InstalldNativeService_note.cpp",
+		"/home/xqli/system_server_maps.log",
+		"/home/xqli/work/notes/8_1_notes/install/install-daemon/installd_note.cpp",
+		"/home/xqli/work/notes/8_0_notes/install/installd/installd_note.cpp",
+		"/home/xqli/work/notes/8_0_notes/hidl/hidl-gen/hidl-gen_note.c",
+		"/home/xqli/work/notes/8_0_notes/install/installd/Installer_note.java",
+		"/home/xqli/work/notes/8_0_notes/install/installd/InstalldNativeService_note.cpp",
 		"/home/xqli/work/notes/8_0_notes/install/installd/Installer_note.jva",
 		"/home/xqli/work/notes/untitled.sublime-project",
 		"/home/xqli/work/workspace/work-sublime/imx8/untitled.sublime-project",
@@ -143,29 +143,27 @@
 			[
 				{
 					"buffer": 0,
-					"file": "8_0_notes/install/installd/installd_note.cpp",
+					"file": "8_1_notes/app_process/art/test_files/system_server_maps.log",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 14178,
+						"buffer_size": 244704,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								13323,
-								13323
+								15053,
+								15053
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 5540.0,
+						"translation.y": 2295.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -173,60 +171,30 @@
 				},
 				{
 					"buffer": 1,
-					"file": "8_0_notes/install/installd/Installer_note.java",
+					"file": "8_1_notes/app_process/art/test_files/zygote_64_maps.log",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5301,
+						"buffer_size": 148007,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								5295,
-								5295
+								11151,
+								11151
 							]
 						],
 						"settings":
 						{
-							"syntax": "Packages/Java/Java.sublime-syntax"
+							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 1550.0,
+						"translation.y": 1080.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "8_0_notes/install/installd/InstalldNativeService_note.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 895,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								895,
-								895
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 2,
 					"type": "text"
 				}
 			]
@@ -238,7 +206,7 @@
 	},
 	"input":
 	{
-		"height": 0.0
+		"height": 36.0
 	},
 	"layout":
 	{
