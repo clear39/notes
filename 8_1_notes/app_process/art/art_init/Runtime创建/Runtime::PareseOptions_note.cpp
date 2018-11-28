@@ -62,7 +62,9 @@ bool Runtime::ParseOptions(const RuntimeOptions& raw_options,bool ignore_unrecog
 06-25 21:24:56.583  2798  2798 I zygote  : option[47]=--cpu-abilist=armeabi-v7a,armeabi
 06-25 21:24:56.583  2798  2798 I zygote  : option[48]=-Xfingerprint:Android/autolink_8qxp/autolink_8qxp:8.1.0/1.2.0-beta2-rc3/20180724:userdebug/dev-keys
 */
+//  art/runtime/parsed_options.h:38 typedef std::vector<std::pair<std::string, const void*>> RuntimeOptions;
 bool ParsedOptions::DoParse(const RuntimeOptions& options,bool ignore_unrecognized,RuntimeArgumentMap* runtime_options) {
+
   LOG(INFO) << "art ParsedOptions::DoParse start:"
   for (size_t i = 0; i < options.size(); ++i) {
     if (true && options[0].first == "-Xzygote") {
@@ -75,7 +77,7 @@ bool ParsedOptions::DoParse(const RuntimeOptions& options,bool ignore_unrecogniz
 
   // Convert to a simple string list (without the magic pointer options)
   std::vector<std::string> argv_list;
-  if (!ProcessSpecialOptions(options, nullptr, &argv_list)) {
+  if (!ProcessSpecialOptions(options, nullptr, &argv_list)) {// @art/runtime/parsed_options.cc
     return false;
   }
 
@@ -107,10 +109,11 @@ bool ParsedOptions::DoParse(const RuntimeOptions& options,bool ignore_unrecogniz
   } else if (args.Exists(M::ShowVersion)) {
     UsageMessage(stdout,"ART version %s %s\n",Runtime::GetVersion(),GetInstructionSetString(kRuntimeISA));
     Exit(0);
-  } else if (args.Exists(M::BootClassPath)) {
+  } else if (args.Exists(M::BootClassPath)) {//没有该参数
     LOG(INFO) << "setting boot class path to " << *args.Get(M::BootClassPath);
   }
 
+  // M::UseJitCompilation: option[12]=-Xusejit:true  
   if (args.GetOrDefault(M::UseJitCompilation) && args.GetOrDefault(M::Interpret)) {
     Usage("-Xusejit:true and -Xint cannot be specified together");
     Exit(0);
@@ -133,7 +136,7 @@ bool ParsedOptions::DoParse(const RuntimeOptions& options,bool ignore_unrecogniz
   {
     LogVerbosity *log_verbosity = args.Get(M::Verbose);
     if (log_verbosity != nullptr) {
-      gLogVerbosity = *log_verbosity;
+      gLogVerbosity = *log_verbosity;//@art/runtime/base/logging.cc:86:LogVerbosity gLogVerbosity;
     }
   }
 
@@ -222,8 +225,8 @@ bool ParsedOptions::DoParse(const RuntimeOptions& options,bool ignore_unrecogniz
   }
 
   // 0 means no growth limit, and growth limit should be always <= heap size
-  if (args.GetOrDefault(M::HeapGrowthLimit) <= 0u ||
-      args.GetOrDefault(M::HeapGrowthLimit) > args.GetOrDefault(M::MemoryMaximumSize)) {
+  //  option[8]=-XX:HeapGrowthLimit=192m              option[7]=-Xmx512m
+  if (args.GetOrDefault(M::HeapGrowthLimit) <= 0u || args.GetOrDefault(M::HeapGrowthLimit) > args.GetOrDefault(M::MemoryMaximumSize)) {
     args.Set(M::HeapGrowthLimit, args.GetOrDefault(M::MemoryMaximumSize));
   }
 
@@ -256,6 +259,23 @@ struct RuntimeArgumentMapKey : VariantMapKey<TValue> {
   // Don't ODR-use constexpr default values, which means that Struct::Fields
   // that are declared 'static constexpr T Name = Value' don't need to have a matching definition.
 };
+
+
+template <typename Base, template <typename TV> class TKey>
+struct VariantMap {
+
+  // Lookup the value from the key. If it was not set in the map, return the default value.
+  // The default value is either the key's default, or TValue{} if the key doesn't have a default.
+  template <typename TValue>
+  TValue GetOrDefault(const TKey<TValue>& key) const {
+    auto* ptr = Get(key);
+    return (ptr == nullptr) ? key.CreateDefaultValue() : *ptr;
+  }
+
+
+}
+
+
 
  //  VariantMap@art/runtime/base/variant_map.h
 struct RuntimeArgumentMap : VariantMap<RuntimeArgumentMap, RuntimeArgumentMapKey> {
@@ -499,3 +519,98 @@ void Runtime::Abort(const char* msg) {
 #endif
   // notreached
 }
+
+
+
+
+
+//ProcessSpecialOptions(options, nullptr, &argv_list)
+
+
+// @art/runtime/parsed_options.cc
+// Remove all the special options that have something in the void* part of the option.
+// If runtime_options is not null, put the options in there.
+// As a side-effect, populate the hooks from options.
+bool ParsedOptions::ProcessSpecialOptions(const RuntimeOptions& options,RuntimeArgumentMap* runtime_options,std::vector<std::string>* out_options) {
+  using M = RuntimeArgumentMap;
+
+  // TODO: Move the below loop into JNI
+  // Handle special options that set up hooks
+  for (size_t i = 0; i < options.size(); ++i) {
+    const std::string option(options[i].first);
+      // TODO: support -Djava.class.path
+    if (option == "bootclasspath") {
+      auto boot_class_path = static_cast<std::vector<std::unique_ptr<const DexFile>>*>(const_cast<void*>(options[i].second));
+
+      if (runtime_options != nullptr) {
+        runtime_options->Set(M::BootClassPathDexList, boot_class_path);
+      }
+    } else if (option == "compilercallbacks") {
+      CompilerCallbacks* compiler_callbacks = reinterpret_cast<CompilerCallbacks*>(const_cast<void*>(options[i].second));
+      if (runtime_options != nullptr) {
+        runtime_options->Set(M::CompilerCallbacksPtr, compiler_callbacks);
+      }
+    } else if (option == "imageinstructionset") {
+      const char* isa_str = reinterpret_cast<const char*>(options[i].second);
+      auto&& image_isa = GetInstructionSetFromString(isa_str);
+      if (image_isa == kNone) {
+        Usage("%s is not a valid instruction set.", isa_str);
+        return false;
+      }
+      if (runtime_options != nullptr) {
+        runtime_options->Set(M::ImageInstructionSet, image_isa);
+      }
+    } else if (option == "sensitiveThread") {
+      const void* hook = options[i].second;
+      bool (*hook_is_sensitive_thread)() = reinterpret_cast<bool (*)()>(const_cast<void*>(hook));
+
+      if (runtime_options != nullptr) {
+        runtime_options->Set(M::HookIsSensitiveThread, hook_is_sensitive_thread);
+      }
+    } else if (option == "vfprintf") {
+      const void* hook = options[i].second;
+      if (hook == nullptr) {
+        Usage("vfprintf argument was nullptr");
+        return false;
+      }
+      int (*hook_vfprintf)(FILE *, const char*, va_list) =
+          reinterpret_cast<int (*)(FILE *, const char*, va_list)>(const_cast<void*>(hook));
+
+      if (runtime_options != nullptr) {
+        runtime_options->Set(M::HookVfprintf, hook_vfprintf);
+      }
+      hook_vfprintf_ = hook_vfprintf;
+    } else if (option == "exit") {
+      const void* hook = options[i].second;
+      if (hook == nullptr) {
+        Usage("exit argument was nullptr");
+        return false;
+      }
+      void(*hook_exit)(jint) = reinterpret_cast<void(*)(jint)>(const_cast<void*>(hook));
+      if (runtime_options != nullptr) {
+        runtime_options->Set(M::HookExit, hook_exit);
+      }
+      hook_exit_ = hook_exit;
+    } else if (option == "abort") {
+      const void* hook = options[i].second;
+      if (hook == nullptr) {
+        Usage("abort was nullptr\n");
+        return false;
+      }
+      void(*hook_abort)() = reinterpret_cast<void(*)()>(const_cast<void*>(hook));
+      if (runtime_options != nullptr) {
+        runtime_options->Set(M::HookAbort, hook_abort);
+      }
+      hook_abort_ = hook_abort;
+    } else {
+      // It is a regular option, that doesn't have a known 'second' value.
+      // Push it on to the regular options which will be parsed by our parser.
+      if (out_options != nullptr) {
+        out_options->push_back(option);
+      }
+    }
+  }
+
+  return true;
+}
+

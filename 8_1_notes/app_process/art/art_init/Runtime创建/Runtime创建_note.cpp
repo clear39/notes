@@ -37,7 +37,7 @@ bool Runtime::Create(RuntimeArgumentMap&& runtime_options) {
 bool Runtime::Init(RuntimeArgumentMap&& runtime_options_in) {
   // (b/30160149): protect subprocesses from modifications to LD_LIBRARY_PATH, etc.
   // Take a snapshot of the environment at the time the runtime was created, for use by Exec, etc.
-  env_snapshot_.TakeSnapshot();
+  env_snapshot_.TakeSnapshot();//读取全局环境变量，并存入env_snapshot_中的vertor集合中
 
   RuntimeArgumentMap runtime_options(std::move(runtime_options_in));
   ScopedTrace trace(__FUNCTION__);
@@ -78,29 +78,29 @@ bool Runtime::Init(RuntimeArgumentMap&& runtime_options_in) {
   Thread::SetSensitiveThreadHook(runtime_options.GetOrDefault(Opt::HookIsSensitiveThread));
   Monitor::Init(runtime_options.GetOrDefault(Opt::LockProfThreshold),runtime_options.GetOrDefault(Opt::StackDumpLockProfThreshold));
 
-  boot_class_path_string_ = runtime_options.ReleaseOrDefault(Opt::BootClassPath);
-  class_path_string_ = runtime_options.ReleaseOrDefault(Opt::ClassPath);
-  properties_ = runtime_options.ReleaseOrDefault(Opt::PropertiesList);
+  boot_class_path_string_ = runtime_options.ReleaseOrDefault(Opt::BootClassPath);   //none
+  class_path_string_ = runtime_options.ReleaseOrDefault(Opt::ClassPath);            //none
+  properties_ = runtime_options.ReleaseOrDefault(Opt::PropertiesList);              //none
 
-  compiler_callbacks_ = runtime_options.GetOrDefault(Opt::CompilerCallbacksPtr);
-  patchoat_executable_ = runtime_options.ReleaseOrDefault(Opt::PatchOat);
-  must_relocate_ = runtime_options.GetOrDefault(Opt::Relocate);
-  is_zygote_ = runtime_options.Exists(Opt::Zygote);
-  is_explicit_gc_disabled_ = runtime_options.Exists(Opt::DisableExplicitGC);
-  dex2oat_enabled_ = runtime_options.GetOrDefault(Opt::Dex2Oat);
-  image_dex2oat_enabled_ = runtime_options.GetOrDefault(Opt::ImageDex2Oat);//没有该参数
-  dump_native_stack_on_sig_quit_ = runtime_options.GetOrDefault(Opt::DumpNativeStackOnSigQuit);
+  compiler_callbacks_ = runtime_options.GetOrDefault(Opt::CompilerCallbacksPtr);    //none
+  patchoat_executable_ = runtime_options.ReleaseOrDefault(Opt::PatchOat);           //none
+  must_relocate_ = runtime_options.GetOrDefault(Opt::Relocate);                   //none
+  is_zygote_ = runtime_options.Exists(Opt::Zygote);                               //option[0]=-Xzygote
+  is_explicit_gc_disabled_ = runtime_options.Exists(Opt::DisableExplicitGC);      //none
+  dex2oat_enabled_ = runtime_options.GetOrDefault(Opt::Dex2Oat);                  //none
+  image_dex2oat_enabled_ = runtime_options.GetOrDefault(Opt::ImageDex2Oat);       //没有该参数
+  dump_native_stack_on_sig_quit_ = runtime_options.GetOrDefault(Opt::DumpNativeStackOnSigQuit);//none
 
-  vfprintf_ = runtime_options.GetOrDefault(Opt::HookVfprintf);
-  exit_ = runtime_options.GetOrDefault(Opt::HookExit);
-  abort_ = runtime_options.GetOrDefault(Opt::HookAbort);
+  vfprintf_ = runtime_options.GetOrDefault(Opt::HookVfprintf);                    //none
+  exit_ = runtime_options.GetOrDefault(Opt::HookExit);                            //none
+  abort_ = runtime_options.GetOrDefault(Opt::HookAbort);                          //none
 
-  default_stack_size_ = runtime_options.GetOrDefault(Opt::StackSize);
-  use_tombstoned_traces_ = runtime_options.GetOrDefault(Opt::UseTombstonedTraces);
+  default_stack_size_ = runtime_options.GetOrDefault(Opt::StackSize);              //none
+  use_tombstoned_traces_ = runtime_options.GetOrDefault(Opt::UseTombstonedTraces);  //option[1]=-Xusetombstonedtraces
 #if !defined(ART_TARGET_ANDROID)
   CHECK(!use_tombstoned_traces_) << "-Xusetombstonedtraces is only supported in an Android environment";
 #endif
-  stack_trace_file_ = runtime_options.ReleaseOrDefault(Opt::StackTraceFile);
+  stack_trace_file_ = runtime_options.ReleaseOrDefault(Opt::StackTraceFile);//  none
 
   compiler_executable_ = runtime_options.ReleaseOrDefault(Opt::Compiler);
   compiler_options_ = runtime_options.ReleaseOrDefault(Opt::CompilerOptions);
@@ -153,7 +153,14 @@ bool Runtime::Init(RuntimeArgumentMap&& runtime_options_in) {
   } else {
     foreground_heap_growth_multiplier =  runtime_options.GetOrDefault(Opt::ForegroundHeapGrowthMultiplier) + kExtraDefaultHeapGrowthMultiplier;
   }
+
+  //默认参数为空
   XGcOption xgc_option = runtime_options.GetOrDefault(Opt::GcOption);
+  
+  /**
+  */
+
+  //  static constexpr bool kUseReadBarrier = kUseBakerReadBarrier || kUseBrooksReadBarrier || kUseTableLookupReadBarrier;
   heap_ = new gc::Heap(runtime_options.GetOrDefault(Opt::MemoryInitialSize),
                        runtime_options.GetOrDefault(Opt::HeapGrowthLimit),
                        runtime_options.GetOrDefault(Opt::HeapMinFree),
@@ -165,7 +172,7 @@ bool Runtime::Init(RuntimeArgumentMap&& runtime_options_in) {
                        runtime_options.GetOrDefault(Opt::Image),
                        runtime_options.GetOrDefault(Opt::ImageInstructionSet),
                        // Override the collector type to CC if the read barrier config.
-                       kUseReadBarrier ? gc::kCollectorTypeCC : xgc_option.collector_type_,
+                       kUseReadBarrier ? gc::kCollectorTypeCC : xgc_option.collector_type_,// art/runtime/globals.h:125
                        kUseReadBarrier ? BackgroundGcOption(gc::kCollectorTypeCCBackground)  : runtime_options.GetOrDefault(Opt::BackgroundGc),
                        runtime_options.GetOrDefault(Opt::LargeObjectSpace),
                        runtime_options.GetOrDefault(Opt::LargeObjectThreshold),
@@ -466,6 +473,24 @@ bool Runtime::Init(RuntimeArgumentMap&& runtime_options_in) {
   VLOG(startup) << "Runtime::Init exiting";
 
   return true;
+}
+
+
+
+
+
+void Runtime::EnvSnapshot::TakeSnapshot() {
+  char** env = GetEnviron();//获取全局环境变量
+  for (size_t i = 0; env[i] != nullptr; ++i) {
+    name_value_pairs_.emplace_back(new std::string(env[i]));//  std::vector<std::unique_ptr<std::string>> name_value_pairs_;
+  }
+  // The strings in name_value_pairs_ retain ownership of the c_str, but we assign pointers
+  // for quick use by GetSnapshot.  This avoids allocation and copying cost at Exec.
+  c_env_vector_.reset(new char*[name_value_pairs_.size() + 1]);// std::unique_ptr<char*[]> c_env_vector_;
+  for (size_t i = 0; env[i] != nullptr; ++i) {
+    c_env_vector_[i] = const_cast<char*>(name_value_pairs_[i]->c_str());
+  }
+  c_env_vector_[name_value_pairs_.size()] = nullptr;
 }
 
 

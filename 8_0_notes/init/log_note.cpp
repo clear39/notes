@@ -401,6 +401,17 @@ void LogMessage::LogLine(const char* file, unsigned int line, LogId id,LogSeveri
   Logger()(id, severity, tag, file, line, message);
 }
 
+//  @system/core/base/logging.cpp
+static std::string& ProgramInvocationName() {
+  static auto& programInvocationName = *new std::string(getprogname());
+  return programInvocationName;
+}
+
+
+const char* getprogname() {
+  return program_invocation_short_name;//这个是linux系统导出的进程名
+}
+
 
 
 

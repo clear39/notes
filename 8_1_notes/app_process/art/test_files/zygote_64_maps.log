@@ -1,4 +1,4 @@
-130|autolink_8qxp:/proc/2809 # cat maps             
+130|autolink_8qxp:/proc/2809 # cat maps
 12c00000-52c00000 rw-p 00000000 00:05 2738                               /dev/ashmem/dalvik-main space (region space) (deleted)
 
 

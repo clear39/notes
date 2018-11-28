@@ -1,23 +1,8 @@
-
-autolink_8qxp:/proc/3622 # c ps | gre     -ef | grep zygpte   ote
-root          2809     1 0 15:43:57 ?     00:00:03 zygote64
-root          2828     1 0 15:43:57 ?     00:00:02 zygote
-webview_zygote 3994    1 0 15:44:19 ?     00:00:01 webview_zygote32
-root          5468  5057 1 17:24:29 ttyLP0 00:00:00 grep zygote
-autolink_8qxp:/proc/3622 # c cd ../2828
-autolink_8qxp:/proc/2828 # ls
-attr            cpuset  loginuid   ns            sessionid time_in_state 
-autogroup       cwd     map_files  oom_adj       smaps     timerslack_ns 
-auxv            environ maps       oom_score     stack     wchan         
-cgroup          exe     mem        oom_score_adj stat      
-clear_refs      fd      mountinfo  pagemap       statm     
-cmdline         fdinfo  mounts     personality   status    
-comm            io      mountstats root          syscall   
-coredump_filter limits  net        schedstat     task      
-autolink_8qxp:/proc/2828 # cat ma
-map_files/   maps
-autolink_8qxp:/proc/2828 # cat map                                             s
+autolink_8qxp:/proc/2828 # cat maps
 12c00000-52c00000 rw-p 00000000 00:05 14413                              /dev/ashmem/dalvik-main space (region space) (deleted)
+
+
+
 6fe69000-70018000 rw-p 00000000 b3:0a 327113                             /data/dalvik-cache/arm/system@framework@boot.art
 70018000-700b4000 rw-p 00000000 b3:0a 327114                             /data/dalvik-cache/arm/system@framework@boot-core-libart.art
 700b4000-700f2000 rw-p 00000000 b3:0a 327116                             /data/dalvik-cache/arm/system@framework@boot-conscrypt.art

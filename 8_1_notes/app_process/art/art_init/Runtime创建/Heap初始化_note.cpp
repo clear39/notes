@@ -1,25 +1,25 @@
 //	@art/runtime/gc/heap.cc
-Heap::Heap(size_t initial_size,
-           size_t growth_limit,
-           size_t min_free,
-           size_t max_free,
-           double target_utilization,
+Heap::Heap(size_t initial_size,// -Xms_   //option[19]=-Xms64m
+           size_t growth_limit, //  option[8]=-XX:HeapGrowthLimit=192m
+           size_t min_free,     //option[9]=-XX:HeapMinFree=512k
+           size_t max_free,     //option[10]=-XX:HeapMaxFree=8m
+           double target_utilization,     //option[11]=-XX:HeapTargetUtilization=0.75
            double foreground_heap_growth_multiplier,
-           size_t capacity,
-           size_t non_moving_space_capacity,
-           const std::string& image_file_name,
-           const InstructionSet image_instruction_set,
-           CollectorType foreground_collector_type,
+           size_t capacity,               //  option[37]=-Xmx512m    option[23]=-Xmx64m     option[7]=-Xmx512m
+           size_t non_moving_space_capacity,//none
+           const std::string& image_file_name,//none
+           const InstructionSet image_instruction_set,//none find in MakeParser
+           CollectorType foreground_collector_type,     // CollectorType @ art/runtime/gc/collector_type.h:26
            CollectorType background_collector_type,
-           space::LargeObjectSpaceType large_object_space_type,
-           size_t large_object_threshold,
-           size_t parallel_gc_threads,
-           size_t conc_gc_threads,
-           bool low_memory_mode,
-           size_t long_pause_log_threshold,
-           size_t long_gc_log_threshold,
-           bool ignore_max_footprint,
-           bool use_tlab,
+           space::LargeObjectSpaceType large_object_space_type,//none   @art/runtime/gc/space/large_object_space.h
+           size_t large_object_threshold,         //none 
+           size_t parallel_gc_threads,            //none 
+           size_t conc_gc_threads,                //none 
+           bool low_memory_mode,                  //none 
+           size_t long_pause_log_threshold,       //none
+           size_t long_gc_log_threshold,          //none
+           bool ignore_max_footprint,             //none
+           bool use_tlab,                         //none
            bool verify_pre_gc_heap,
            bool verify_pre_sweeping_heap,
            bool verify_post_gc_heap,
@@ -28,8 +28,8 @@ Heap::Heap(size_t initial_size,
            bool verify_post_gc_rosalloc,
            bool gc_stress_mode,
            bool measure_gc_performance,
-           bool use_homogeneous_space_compaction_for_oom,
-           uint64_t min_interval_homogeneous_space_compaction_by_oom)
+           bool use_homogeneous_space_compaction_for_oom,      //none
+           uint64_t min_interval_homogeneous_space_compaction_by_oom)//none
     : non_moving_space_(nullptr),
       rosalloc_space_(nullptr),
       dlmalloc_space_(nullptr),
@@ -119,6 +119,7 @@ Heap::Heap(size_t initial_size,
       gc_disabled_for_shutdown_(false) {
 
 
+  //  @art/runtime/base/logging.h:143:#define VLOG_IS_ON(module) UNLIKELY(::art::gLogVerbosity.module)
   if (VLOG_IS_ON(heap) || VLOG_IS_ON(startup)) {
     LOG(INFO) << "Heap() entering";
   }
@@ -152,6 +153,8 @@ Heap::Heap(size_t initial_size,
   }
 
   // Load image space(s).
+  //  @art/runtime/gc/space/image_space.cc
+  //  @art/runtime/gc/heap.h:1445:  std::vector<space::ImageSpace*> boot_image_spaces_;
   if (space::ImageSpace::LoadBootImage(image_file_name,image_instruction_set,&boot_image_spaces_,&requested_alloc_space_begin)) {
     for (auto space : boot_image_spaces_) {
       AddSpace(space);
@@ -172,8 +175,7 @@ Heap::Heap(size_t initial_size,
                                      +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-
   */
   // We don't have hspace compaction enabled with GSS or CC.
-  if (foreground_collector_type_ == kCollectorTypeGSS ||
-      foreground_collector_type_ == kCollectorTypeCC) {
+  if (foreground_collector_type_ == kCollectorTypeGSS ||foreground_collector_type_ == kCollectorTypeCC) {
     use_homogeneous_space_compaction_for_oom_ = false;
   }
   bool support_homogeneous_space_compaction =
@@ -272,8 +274,7 @@ Heap::Heap(size_t initial_size,
     CHECK(region_space_mem_map != nullptr) << "No region space mem map";
     region_space_ = space::RegionSpace::Create(kRegionSpaceName, region_space_mem_map);
     AddSpace(region_space_);
-  } else if (IsMovingGc(foreground_collector_type_) &&
-      foreground_collector_type_ != kCollectorTypeGSS) {
+  } else if (IsMovingGc(foreground_collector_type_) && foreground_collector_type_ != kCollectorTypeGSS) {
     // Create bump pointer spaces.
     // We only to create the bump pointer if the foreground collector is a compacting GC.
     // TODO: Place bump-pointer spaces somewhere to minimize size of card table.
@@ -298,12 +299,10 @@ Heap::Heap(size_t initial_size,
       CHECK_EQ(foreground_collector_type_, background_collector_type_);
       // Create bump pointer spaces instead of a backup space.
       main_mem_map_2.release();
-      bump_pointer_space_ = space::BumpPointerSpace::Create("Bump pointer space 1",
-                                                            kGSSBumpPointerSpaceCapacity, nullptr);
+      bump_pointer_space_ = space::BumpPointerSpace::Create("Bump pointer space 1",kGSSBumpPointerSpaceCapacity, nullptr);
       CHECK(bump_pointer_space_ != nullptr);
       AddSpace(bump_pointer_space_);
-      temp_space_ = space::BumpPointerSpace::Create("Bump pointer space 2",
-                                                    kGSSBumpPointerSpaceCapacity, nullptr);
+      temp_space_ = space::BumpPointerSpace::Create("Bump pointer space 2",kGSSBumpPointerSpaceCapacity, nullptr);
       CHECK(temp_space_ != nullptr);
       AddSpace(temp_space_);
     } else if (main_mem_map_2.get() != nullptr) {
@@ -319,8 +318,7 @@ Heap::Heap(size_t initial_size,
   CHECK(!non_moving_space_->CanMoveObjects());
   // Allocate the large object space.
   if (large_object_space_type == space::LargeObjectSpaceType::kFreeList) {
-    large_object_space_ = space::FreeListSpace::Create("free list large object space", nullptr,
-                                                       capacity_);
+    large_object_space_ = space::FreeListSpace::Create("free list large object space", nullptr,capacity_);
     CHECK(large_object_space_ != nullptr) << "Failed to create large object space";
   } else if (large_object_space_type == space::LargeObjectSpaceType::kMap) {
     large_object_space_ = space::LargeObjectMapSpace::Create("mem map large object space");
@@ -352,8 +350,7 @@ Heap::Heap(size_t initial_size,
   // Start at 64 KB, we can be sure there are no spaces mapped this low since the address range is
   // reserved by the kernel.
   static constexpr size_t kMinHeapAddress = 4 * KB;
-  card_table_.reset(accounting::CardTable::Create(reinterpret_cast<uint8_t*>(kMinHeapAddress),
-                                                  4 * GB - kMinHeapAddress));
+  card_table_.reset(accounting::CardTable::Create(reinterpret_cast<uint8_t*>(kMinHeapAddress), 4 * GB - kMinHeapAddress));
   CHECK(card_table_.get() != nullptr) << "Failed to create card table";
   if (foreground_collector_type_ == kCollectorTypeCC && kUseTableLookupReadBarrier) {
     rb_table_.reset(new accounting::ReadBarrierTable());
