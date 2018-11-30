@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<WifiConfigStoreData>
+<int name="Version" value="1" />
+<NetworkList />
+<DeletedEphemeralSSIDList>
+<set name="SSIDList" />
+</DeletedEphemeralSSIDList>
+<PasspointConfigData>
+<ProviderList />
+</PasspointConfigData>
+<OpenNetworkNotifierBlacklistConfigData />
+</WifiConfigStoreData>

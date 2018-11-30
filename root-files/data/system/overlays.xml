@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<overlays version="3">
+    <item packageName="com.android.systemui.theme.dark" userId="0" targetPackageName="com.android.systemui" baseCodePath="/vendor/overlay/SysuiDarkTheme/SysuiDarkThemeOverlay.apk" state="2" isEnabled="false" isStatic="false" priority="1" />
+</overlays>

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<task task_id="23" real_activity="com.android.music/.MusicBrowserActivity" real_activity_suspended="false" affinity="android.task.music" root_has_reset="true" auto_remove_recents="false" asked_compat_mode="false" user_id="0" user_setup_complete="true" effective_uid="10036" task_type="0" first_active_time="3827042035033" last_active_time="3827042035444" last_time_moved="3827042035040" never_relinquish_identity="true" task_description_color="ff212121" task_description_colorBackground="ff303030" task_thumbnailinfo_task_width="0" task_thumbnailinfo_task_height="0" task_thumbnailinfo_screen_orientation="0" task_affiliation_color="-14606047" task_affiliation="23" prev_affiliation="-1" next_affiliation="-1" calling_uid="10036" calling_package="com.android.music" resize_mode="4" supports_picture_in_picture="false" privileged="false" min_width="-1" min_height="-1" persist_task_version="1">
+<intent action="android.intent.action.MAIN" component="com.android.music/.MusicBrowserActivity" flags="10200000">
+<categories category="android.intent.category.LAUNCHER" />
+</intent>
+</task>
+

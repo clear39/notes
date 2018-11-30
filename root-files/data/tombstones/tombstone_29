@@ -1,0 +1,544 @@
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+Build fingerprint: 'Android/autolink_8qxp/autolink_8qxp:8.1.0/1.2.0-beta2-rc3/20180724:eng/dev-keys'
+Revision: '0'
+ABI: 'arm64'
+pid: 11750, tid: 11750, name: /system/bin/mediaextractor  >>> mediaextractor <<<
+signal 6 (SIGABRT), code -6 (SI_TKILL), fault addr --------
+Abort message: 'Failed to initialize ICU U_FILE_ACCESS_ERROR'
+    x0   0000000000000000  x1   0000000000002de6  x2   0000000000000006  x3   0000000000000008
+    x4   0000000000000000  x5   0000000000000000  x6   0000000000000000  x7   0000000000000080
+    x8   0000000000000083  x9   0000000010000000  x10  0000ffffe3e4c0c0  x11  0000000000000001
+    x12  0000ffffe3e4c1e0  x13  0000000000000038  x14  ffffffffffffffff  x15  00005a6fdb000000
+    x16  0000f1d043dab2e8  x17  0000f1d043d08178  x18  0000000000000007  x19  0000000000002de6
+    x20  0000000000002de6  x21  0000000000000083  x22  0000ffffe3e4c878  x23  0000000000000000
+    x24  0000000000000000  x25  0000000000000000  x26  0000000000000000  x27  0000000000000000
+    x28  0000000000000000  x29  0000ffffe3e4c100  x30  0000f1d043cfd760
+    sp   0000ffffe3e4c0c0  pc   0000f1d043cfd788  pstate 0000000060000000
+
+backtrace:
+    #00 pc 000000000001d788  /system/lib64/libc.so (abort+120)
+    #01 pc 0000000000007f08  /system/lib64/liblog.so (__android_log_assert+296)
+    #02 pc 00000000000014a4  /system/bin/mediaextractor
+    #03 pc 0000000000001178  /system/bin/mediaextractor
+    #04 pc 00000000000a1cec  /system/lib64/libc.so (__libc_init+88)
+    #05 pc 0000000000001000  /system/bin/mediaextractor
+
+stack:
+         0000ffffe3e4c040  0000000000000007
+         0000ffffe3e4c048  0000f1d04471768f  /system/lib64/liblog.so
+         0000ffffe3e4c050  0000000000000000
+         0000ffffe3e4c058  0000ffffe3e4c1e0  [stack]
+         0000ffffe3e4c060  0000ffffe3e4c100  [stack]
+         0000ffffe3e4c068  0000f1d04470ba34  /system/lib64/liblog.so (__android_log_buf_write+304)
+         0000ffffe3e4c070  0000000700000000
+         0000ffffe3e4c078  3fac2dde689dbd09
+         0000ffffe3e4c080  0000000000000000
+         0000ffffe3e4c088  0000000000000000
+         0000ffffe3e4c090  ffffffffffffffdf
+         0000ffffe3e4c098  3fac2dde689dbd09
+         0000ffffe3e4c0a0  0000000000002de6
+         0000ffffe3e4c0a8  0000000000002de6
+         0000ffffe3e4c0b0  0000ffffe3e4c100  [stack]
+         0000ffffe3e4c0b8  0000f1d043cfd760  /system/lib64/libc.so (abort+80)
+    #00  0000ffffe3e4c0c0  000000000000002d
+         0000ffffe3e4c0c8  3fac2dde689dbd09
+         0000ffffe3e4c0d0  0000000000000000
+         0000ffffe3e4c0d8  0000000000000000
+         0000ffffe3e4c0e0  0000000000000001
+         0000ffffe3e4c0e8  ffffffffffffffdf
+         0000ffffe3e4c0f0  0000ffffe3e4c628  [stack]
+         0000ffffe3e4c0f8  0000000000000000
+         0000ffffe3e4c100  0000ffffe3e4c610  [stack]
+         0000ffffe3e4c108  0000f1d04470bf0c  /system/lib64/liblog.so (__android_log_bwrite)
+    #01  0000ffffe3e4c110  0000000000000000
+         0000ffffe3e4c118  0000000000000000
+         0000ffffe3e4c120  2f6d65747379732f
+         0000ffffe3e4c128  2f7563692f727375
+         0000ffffe3e4c130  0000000000000000
+         0000ffffe3e4c138  0000000000000000
+         0000ffffe3e4c140  0000000000000000
+         0000ffffe3e4c148  0000000000000000
+         0000ffffe3e4c150  8020080280200802
+         0000ffffe3e4c158  8020080280200802
+         0000ffffe3e4c160  0000000000000000
+         0000ffffe3e4c168  0000000000000000
+         0000ffffe3e4c170  0000000000000000
+         0000ffffe3e4c178  0000000000000000
+         0000ffffe3e4c180  8020080280200802
+         0000ffffe3e4c188  8020080280200802
+         ........  ........
+    #02  0000ffffe3e4c620  0000f1d042a27200  [anon:libc_malloc]
+         0000ffffe3e4c628  3fac2dde689dbd09
+         0000ffffe3e4c630  0000000443db6934
+         0000ffffe3e4c638  2f6d65747379732f
+         0000ffffe3e4c640  2f7563692f727375
+         0000ffffe3e4c648  0000f1d042a27200  [anon:libc_malloc]
+         0000ffffe3e4c650  0000f1d042a27200  [anon:libc_malloc]
+         0000ffffe3e4c658  0000f1d042a67000  [anon:libc_malloc]
+         0000ffffe3e4c660  0000ffffe3e4c6d0  [stack]
+         0000ffffe3e4c668  0000f1d043d7492c  /system/lib64/libc.so (je_free+124)
+         0000ffffe3e4c670  0000000000000000
+         0000ffffe3e4c678  0000000000000000
+         0000ffffe3e4c680  0000f1d04556ca40
+         0000ffffe3e4c688  0000000000000001
+         0000ffffe3e4c690  0000f1d042a67300  [anon:libc_malloc]
+         0000ffffe3e4c698  3fac2dde689dbd09
+         ........  ........
+    #03  0000ffffe3e4c770  0000000000000041
+         0000ffffe3e4c778  0000000000000030
+         0000ffffe3e4c780  0000c6a1f3306c08  /system/bin/mediaextractor
+         0000ffffe3e4c788  0000000000000001
+         0000ffffe3e4c790  0000000000000041
+         0000ffffe3e4c798  0000000000000030
+         0000ffffe3e4c7a0  0000f1d042a3e6c0  [anon:libc_malloc]
+         0000ffffe3e4c7a8  0000000000000000
+         0000ffffe3e4c7b0  0000000000000041
+         0000ffffe3e4c7b8  0000000000000030
+         0000ffffe3e4c7c0  0000f1d042a3e680  [anon:libc_malloc]
+         0000ffffe3e4c7c8  3fac2dde689dbd09
+         0000ffffe3e4c7d0  0000ffffe3e4c868  [stack]
+         0000ffffe3e4c7d8  0000c6a1f33050a0  /system/bin/mediaextractor
+         0000ffffe3e4c7e0  0000ffffe3e4c810  [stack]
+         0000ffffe3e4c7e8  0000f1d043d81cf0  /system/lib64/libc.so (__libc_init+92)
+    #04  0000ffffe3e4c7f0  0000000000000000
+         0000ffffe3e4c7f8  0000000000000000
+         0000ffffe3e4c800  0000000000000000
+         0000ffffe3e4c808  0000000000000000
+         0000ffffe3e4c810  0000ffffe3e4c820  [stack]
+         0000ffffe3e4c818  0000c6a1f3305004  /system/bin/mediaextractor
+    #05  0000ffffe3e4c820  0000000000000000
+         0000ffffe3e4c828  0000f1d0454280a8  /system/bin/linker64 (_start+8)
+         0000ffffe3e4c830  0000000000000000
+         0000ffffe3e4c838  0000ffffe3e4c860  [stack]
+         0000ffffe3e4c840  0000000000000000
+         0000ffffe3e4c848  0000c6a1f3306be8  /system/bin/mediaextractor
+         0000ffffe3e4c850  0000c6a1f3306bf8  /system/bin/mediaextractor
+         0000ffffe3e4c858  0000c6a1f3306c08  /system/bin/mediaextractor
+         0000ffffe3e4c860  0000000000000001
+         0000ffffe3e4c868  0000ffffe3e4cb3b  [stack]
+         0000ffffe3e4c870  0000000000000000
+         0000ffffe3e4c878  0000ffffe3e4cb56  [stack]
+         0000ffffe3e4c880  0000ffffe3e4cba0  [stack]
+         0000ffffe3e4c888  0000ffffe3e4cbbb  [stack]
+         0000ffffe3e4c890  0000ffffe3e4cbce  [stack]
+         0000ffffe3e4c898  0000ffffe3e4cbe3  [stack]
+memory map:
+c6a1f3304000-c6a1f3306000 r-xp 00000000 b3:03 1337                       /system/bin/mediaextractor
+c6a1f3306000-c6a1f3307000 r--p 00001000 b3:03 1337                       /system/bin/mediaextractor
+c6a1f3307000-c6a1f3308000 rw-p 00002000 b3:03 1337                       /system/bin/mediaextractor
+f1d04253d000-f1d042682000 r--p 00000000 b3:03 1303                       /system/bin/linker64
+f1d042682000-f1d042782000 r--p 00000000 b3:03 916                        /system/lib64/libc.so
+f1d042782000-f1d042864000 r-xp 00000000 b3:03 733                        /system/lib64/vndk-sp/libc++.so
+f1d042864000-f1d042865000 ---p 00000000 00:00 0 
+f1d042865000-f1d04286d000 r--p 000e2000 b3:03 733                        /system/lib64/vndk-sp/libc++.so
+f1d04286d000-f1d04286e000 rw-p 000ea000 b3:03 733                        /system/lib64/vndk-sp/libc++.so
+f1d04286e000-f1d042871000 rw-p 00000000 00:00 0                          [anon:.bss]
+f1d042890000-f1d0428aa000 r-xp 00000000 b3:03 738                        /system/lib64/vndk-sp/libbacktrace.so
+f1d0428aa000-f1d0428ab000 r--p 00019000 b3:03 738                        /system/lib64/vndk-sp/libbacktrace.so
+f1d0428ab000-f1d0428ac000 rw-p 0001a000 b3:03 738                        /system/lib64/vndk-sp/libbacktrace.so
+f1d0428cc000-f1d0428ee000 r-xp 00000000 b3:03 739                        /system/lib64/vndk-sp/liblzma.so
+f1d0428ee000-f1d0428ef000 r--p 00021000 b3:03 739                        /system/lib64/vndk-sp/liblzma.so
+f1d0428ef000-f1d0428f0000 rw-p 00022000 b3:03 739                        /system/lib64/vndk-sp/liblzma.so
+f1d0428f0000-f1d0428f6000 rw-p 00000000 00:00 0                          [anon:.bss]
+f1d042909000-f1d042919000 r-xp 00000000 b3:03 751                        /system/lib64/vndk-sp/libbase.so
+f1d042919000-f1d04291a000 r--p 0000f000 b3:03 751                        /system/lib64/vndk-sp/libbase.so
+f1d04291a000-f1d04291b000 rw-p 00010000 b3:03 751                        /system/lib64/vndk-sp/libbase.so
+f1d04297a000-f1d042993000 r-xp 00000000 b3:03 742                        /system/lib64/vndk-sp/libunwind.so
+f1d042993000-f1d042994000 ---p 00000000 00:00 0 
+f1d042994000-f1d042995000 r--p 00019000 b3:03 742                        /system/lib64/vndk-sp/libunwind.so
+f1d042995000-f1d042996000 rw-p 0001a000 b3:03 742                        /system/lib64/vndk-sp/libunwind.so
+f1d042996000-f1d0429ff000 rw-p 00000000 00:00 0                          [anon:.bss]
+f1d042a00000-f1d042e00000 rw-p 00000000 00:00 0                          [anon:libc_malloc]
+f1d042e5c000-f1d042e79000 r-xp 00000000 b3:03 753                        /system/lib64/vndk-sp/libutils.so
+f1d042e79000-f1d042e7a000 ---p 00000000 00:00 0 
+f1d042e7a000-f1d042e7b000 r--p 0001d000 b3:03 753                        /system/lib64/vndk-sp/libutils.so
+f1d042e7b000-f1d042e7c000 rw-p 0001e000 b3:03 753                        /system/lib64/vndk-sp/libutils.so
+f1d042e8b000-f1d042e9b000 r-xp 00000000 b3:03 743                        /system/lib64/vndk-sp/libcutils.so
+f1d042e9b000-f1d042e9d000 r--p 0000f000 b3:03 743                        /system/lib64/vndk-sp/libcutils.so
+f1d042e9d000-f1d042e9e000 rw-p 00011000 b3:03 743                        /system/lib64/vndk-sp/libcutils.so
+f1d042ed8000-f1d042eea000 r-xp 00000000 b3:03 579                        /system/lib64/libminijail.so
+f1d042eea000-f1d042eee000 r--p 00011000 b3:03 579                        /system/lib64/libminijail.so
+f1d042eee000-f1d042eef000 rw-p 00015000 b3:03 579                        /system/lib64/libminijail.so
+f1d042f01000-f1d042f2c000 r-xp 00000000 b3:03 763                        /system/lib64/libmemunreachable.so
+f1d042f2c000-f1d042f2e000 r--p 0002a000 b3:03 763                        /system/lib64/libmemunreachable.so
+f1d042f2e000-f1d042f2f000 rw-p 0002c000 b3:03 763                        /system/lib64/libmemunreachable.so
+f1d042f6a000-f1d042f74000 r-xp 00000000 b3:03 955                        /system/lib64/android.hardware.graphics.common@1.0.so
+f1d042f74000-f1d042f75000 r--p 00009000 b3:03 955                        /system/lib64/android.hardware.graphics.common@1.0.so
+f1d042f75000-f1d042f76000 rw-p 0000a000 b3:03 955                        /system/lib64/android.hardware.graphics.common@1.0.so
+f1d042fb3000-f1d042fb6000 r-xp 00000000 b3:03 875                        /system/lib64/libstdc++.so
+f1d042fb6000-f1d042fb7000 r--p 00002000 b3:03 875                        /system/lib64/libstdc++.so
+f1d042fb7000-f1d042fb8000 rw-p 00003000 b3:03 875                        /system/lib64/libstdc++.so
+f1d042fc4000-f1d042fcc000 r-xp 00000000 b3:03 588                        /system/lib64/libcamera_metadata.so
+f1d042fcc000-f1d042fcd000 r--p 00007000 b3:03 588                        /system/lib64/libcamera_metadata.so
+f1d042fcd000-f1d042fcf000 rw-p 00008000 b3:03 588                        /system/lib64/libcamera_metadata.so
+f1d043024000-f1d043027000 r-xp 00000000 b3:03 900                        /system/lib64/libhidlmemory.so
+f1d043027000-f1d043028000 r--p 00002000 b3:03 900                        /system/lib64/libhidlmemory.so
+f1d043028000-f1d043029000 rw-p 00003000 b3:03 900                        /system/lib64/libhidlmemory.so
+f1d04304a000-f1d043262000 r-xp 00000000 b3:03 719                        /system/lib64/libicui18n.so
+f1d043262000-f1d043275000 r--p 00217000 b3:03 719                        /system/lib64/libicui18n.so
+f1d043275000-f1d043276000 rw-p 0022a000 b3:03 719                        /system/lib64/libicui18n.so
+f1d0432a2000-f1d0432ba000 r-xp 00000000 b3:03 702                        /system/lib64/android.hidl.token@1.0.so
+f1d0432ba000-f1d0432bb000 ---p 00000000 00:00 0 
+f1d0432bb000-f1d0432bd000 r--p 00018000 b3:03 702                        /system/lib64/android.hidl.token@1.0.so
+f1d0432bd000-f1d0432be000 rw-p 0001a000 b3:03 702                        /system/lib64/android.hidl.token@1.0.so
+f1d0432ce000-f1d043345000 r-xp 00000000 b3:03 849                        /system/lib64/libbinder.so
+f1d043345000-f1d043346000 ---p 00000000 00:00 0 
+f1d043346000-f1d043355000 r--p 00077000 b3:03 849                        /system/lib64/libbinder.so
+f1d043355000-f1d043356000 rw-p 00086000 b3:03 849                        /system/lib64/libbinder.so
+f1d0433a4000-f1d043428000 r-xp 00000000 b3:03 823                        /system/lib64/libgui.so
+f1d043428000-f1d043429000 ---p 00000000 00:00 0 
+f1d043429000-f1d04343b000 r--p 00084000 b3:03 823                        /system/lib64/libgui.so
+f1d04343b000-f1d04343c000 rw-p 00096000 b3:03 823                        /system/lib64/libgui.so
+f1d043442000-f1d0434d5000 r-xp 00000000 b3:03 764                        /system/lib64/libmedia.so
+f1d0434d5000-f1d0434f6000 r--p 00092000 b3:03 764                        /system/lib64/libmedia.so
+f1d0434f6000-f1d0434f7000 rw-p 000b3000 b3:03 764                        /system/lib64/libmedia.so
+f1d043507000-f1d043517000 r-xp 00000000 b3:03 943                        /system/lib64/libbase.so
+f1d043517000-f1d043518000 r--p 0000f000 b3:03 943                        /system/lib64/libbase.so
+f1d043518000-f1d043519000 rw-p 00010000 b3:03 943                        /system/lib64/libbase.so
+f1d04355a000-f1d04356e000 r-xp 00000000 b3:03 673                        /system/lib64/libmedia_helper.so
+f1d04356e000-f1d04356f000 ---p 00000000 00:00 0 
+f1d04356f000-f1d043571000 r--p 00014000 b3:03 673                        /system/lib64/libmedia_helper.so
+f1d043571000-f1d043572000 rw-p 00016000 b3:03 673                        /system/lib64/libmedia_helper.so
+f1d043580000-f1d0435b7000 r-xp 00000000 b3:03 633                        /system/lib64/libm.so
+f1d0435b7000-f1d0435b8000 r--p 00036000 b3:03 633                        /system/lib64/libm.so
+f1d0435b8000-f1d0435b9000 rw-p 00037000 b3:03 633                        /system/lib64/libm.so
+f1d0435ca000-f1d0435ce000 r-xp 00000000 b3:03 861                        /system/lib64/libcap.so
+f1d0435ce000-f1d0435cf000 ---p 00000000 00:00 0 
+f1d0435cf000-f1d0435d0000 r--p 00004000 b3:03 861                        /system/lib64/libcap.so
+f1d0435d0000-f1d0435d1000 rw-p 00005000 b3:03 861                        /system/lib64/libcap.so
+f1d043605000-f1d043639000 r-xp 00000000 b3:03 632                        /system/lib64/libmedia_omx.so
+f1d043639000-f1d043646000 r--p 00033000 b3:03 632                        /system/lib64/libmedia_omx.so
+f1d043646000-f1d043647000 rw-p 00040000 b3:03 632                        /system/lib64/libmedia_omx.so
+f1d04368f000-f1d043694000 r-xp 00000000 b3:03 959                        /system/lib64/libnativeloader.so
+f1d043694000-f1d043695000 r--p 00004000 b3:03 959                        /system/lib64/libnativeloader.so
+f1d043695000-f1d043696000 rw-p 00005000 b3:03 959                        /system/lib64/libnativeloader.so
+f1d0436c7000-f1d0436de000 r-xp 00000000 b3:03 678                        /system/lib64/android.hidl.allocator@1.0.so
+f1d0436de000-f1d0436e0000 r--p 00016000 b3:03 678                        /system/lib64/android.hidl.allocator@1.0.so
+f1d0436e0000-f1d0436e1000 rw-p 00018000 b3:03 678                        /system/lib64/android.hidl.allocator@1.0.so
+f1d04371f000-f1d043721000 r-xp 00000000 b3:03 582                        /system/lib64/android.hidl.token@1.0-utils.so
+f1d043721000-f1d043722000 ---p 00000000 00:00 0 
+f1d043722000-f1d043723000 r--p 00002000 b3:03 582                        /system/lib64/android.hidl.token@1.0-utils.so
+f1d043723000-f1d043724000 rw-p 00003000 b3:03 582                        /system/lib64/android.hidl.token@1.0-utils.so
+f1d043764000-f1d043779000 r-xp 00000000 b3:03 697                        /system/lib64/libz.so
+f1d043779000-f1d04377a000 r--p 00014000 b3:03 697                        /system/lib64/libz.so
+f1d04377a000-f1d04377b000 rw-p 00015000 b3:03 697                        /system/lib64/libz.so
+f1d0437a6000-f1d0437a8000 r-xp 00000000 b3:03 768                        /system/lib64/libnetd_client.so
+f1d0437a8000-f1d0437a9000 ---p 00000000 00:00 0 
+f1d0437a9000-f1d0437aa000 r--p 00002000 b3:03 768                        /system/lib64/libnetd_client.so
+f1d0437aa000-f1d0437ab000 rw-p 00003000 b3:03 768                        /system/lib64/libnetd_client.so
+f1d0437d2000-f1d0437d5000 r-xp 00000000 b3:03 610                        /system/lib64/libspeexresampler.so
+f1d0437d5000-f1d0437d6000 ---p 00000000 00:00 0 
+f1d0437d6000-f1d0437d7000 r--p 00003000 b3:03 610                        /system/lib64/libspeexresampler.so
+f1d0437d7000-f1d0437d8000 rw-p 00004000 b3:03 610                        /system/lib64/libspeexresampler.so
+f1d043810000-f1d043834000 r-xp 00000000 b3:03 896                        /system/lib64/libexpat.so
+f1d043834000-f1d043835000 ---p 00000000 00:00 0 
+f1d043835000-f1d043837000 r--p 00024000 b3:03 896                        /system/lib64/libexpat.so
+f1d043837000-f1d043838000 rw-p 00026000 b3:03 896                        /system/lib64/libexpat.so
+f1d043879000-f1d04387b000 r-xp 00000000 b3:03 780                        /system/lib64/libhardware.so
+f1d04387b000-f1d04387c000 r--p 00001000 b3:03 780                        /system/lib64/libhardware.so
+f1d04387c000-f1d04387d000 rw-p 00002000 b3:03 780                        /system/lib64/libhardware.so
+f1d043893000-f1d0438ec000 r-xp 00000000 b3:03 913                        /system/lib64/libsonivox.so
+f1d0438ec000-f1d0438ed000 r--p 00058000 b3:03 913                        /system/lib64/libsonivox.so
+f1d0438ed000-f1d0438ee000 rw-p 00059000 b3:03 913                        /system/lib64/libsonivox.so
+f1d0438ee000-f1d0438f5000 rw-p 00000000 00:00 0                          [anon:.bss]
+f1d043906000-f1d043980000 r-xp 00000000 b3:03 863                        /system/lib64/android.hardware.drm@1.0.so
+f1d043980000-f1d043981000 ---p 00000000 00:00 0 
+f1d043981000-f1d043989000 r--p 0007a000 b3:03 863                        /system/lib64/android.hardware.drm@1.0.so
+f1d043989000-f1d04398a000 rw-p 00082000 b3:03 863                        /system/lib64/android.hardware.drm@1.0.so
+f1d0439c4000-f1d0439ea000 r-xp 00000000 b3:03 958                        /system/lib64/android.hardware.configstore@1.0.so
+f1d0439ea000-f1d0439ed000 r--p 00025000 b3:03 958                        /system/lib64/android.hardware.configstore@1.0.so
+f1d0439ed000-f1d0439ee000 rw-p 00028000 b3:03 958                        /system/lib64/android.hardware.configstore@1.0.so
+f1d043a05000-f1d043a29000 r-xp 00000000 b3:03 914                        /system/lib64/android.hidl.memory@1.0.so
+f1d043a29000-f1d043a2a000 ---p 00000000 00:00 0 
+f1d043a2a000-f1d043a2d000 r--p 00024000 b3:03 914                        /system/lib64/android.hidl.memory@1.0.so
+f1d043a2d000-f1d043a2e000 rw-p 00027000 b3:03 914                        /system/lib64/android.hidl.memory@1.0.so
+f1d043a41000-f1d043a64000 r-xp 00000000 b3:03 608                        /system/lib64/libEGL.so
+f1d043a64000-f1d043a68000 r--p 00022000 b3:03 608                        /system/lib64/libEGL.so
+f1d043a68000-f1d043a69000 rw-p 00026000 b3:03 608                        /system/lib64/libEGL.so
+f1d043a69000-f1d043a70000 rw-p 00000000 00:00 0                          [anon:.bss]
+f1d043a84000-f1d043a87000 r-xp 00000000 b3:03 946                        /system/lib64/libnativebridge.so
+f1d043a87000-f1d043a88000 ---p 00000000 00:00 0 
+f1d043a88000-f1d043a89000 r--p 00003000 b3:03 946                        /system/lib64/libnativebridge.so
+f1d043a89000-f1d043a8a000 rw-p 00004000 b3:03 946                        /system/lib64/libnativebridge.so
+f1d043ac1000-f1d043ac2000 r-xp 00000000 b3:03 929                        /system/lib64/libvndksupport.so
+f1d043ac2000-f1d043ac3000 r--p 00000000 b3:03 929                        /system/lib64/libvndksupport.so
+f1d043ac3000-f1d043ac4000 rw-p 00001000 b3:03 929                        /system/lib64/libvndksupport.so
+f1d043b1d000-f1d043b2e000 r-xp 00000000 b3:03 690                        /system/lib64/libaudioutils.so
+f1d043b2e000-f1d043b2f000 ---p 00000000 00:00 0 
+f1d043b2f000-f1d043b30000 r--p 00011000 b3:03 690                        /system/lib64/libaudioutils.so
+f1d043b30000-f1d043b31000 rw-p 00012000 b3:03 690                        /system/lib64/libaudioutils.so
+f1d043b48000-f1d043bcf000 r-xp 00000000 b3:03 613                        /system/lib64/android.hardware.media.omx@1.0.so
+f1d043bcf000-f1d043bd0000 ---p 00000000 00:00 0 
+f1d043bd0000-f1d043bd9000 r--p 00087000 b3:03 613                        /system/lib64/android.hardware.media.omx@1.0.so
+f1d043bd9000-f1d043bda000 rw-p 00090000 b3:03 613                        /system/lib64/android.hardware.media.omx@1.0.so
+f1d043c1d000-f1d043c3a000 r-xp 00000000 b3:03 614                        /system/lib64/android.hardware.cas.native@1.0.so
+f1d043c3a000-f1d043c3d000 r--p 0001c000 b3:03 614                        /system/lib64/android.hardware.cas.native@1.0.so
+f1d043c3d000-f1d043c3e000 rw-p 0001f000 b3:03 614                        /system/lib64/android.hardware.cas.native@1.0.so
+f1d043c45000-f1d043c67000 r-xp 00000000 b3:03 696                        /system/lib64/liblzma.so
+f1d043c67000-f1d043c68000 r--p 00021000 b3:03 696                        /system/lib64/liblzma.so
+f1d043c68000-f1d043c69000 rw-p 00022000 b3:03 696                        /system/lib64/liblzma.so
+f1d043c69000-f1d043c6f000 rw-p 00000000 00:00 0                          [anon:.bss]
+f1d043c8a000-f1d043c8e000 r-xp 00000000 b3:03 701                        /system/lib64/libnativewindow.so
+f1d043c8e000-f1d043c8f000 r--p 00003000 b3:03 701                        /system/lib64/libnativewindow.so
+f1d043c8f000-f1d043c90000 rw-p 00004000 b3:03 701                        /system/lib64/libnativewindow.so
+f1d043ce0000-f1d043da5000 r-xp 00000000 b3:03 916                        /system/lib64/libc.so
+f1d043da5000-f1d043da6000 ---p 00000000 00:00 0 
+f1d043da6000-f1d043dac000 r--p 000c5000 b3:03 916                        /system/lib64/libc.so
+f1d043dac000-f1d043dae000 rw-p 000cb000 b3:03 916                        /system/lib64/libc.so
+f1d043dae000-f1d043daf000 rw-p 00000000 00:00 0                          [anon:.bss]
+f1d043daf000-f1d043db0000 r--p 00000000 00:00 0                          [anon:.bss]
+f1d043db0000-f1d043db7000 rw-p 00000000 00:00 0                          [anon:.bss]
+f1d043df1000-f1d043df3000 r-xp 00000000 b3:03 809                        /system/lib64/libsync.so
+f1d043df3000-f1d043df4000 r--p 00001000 b3:03 809                        /system/lib64/libsync.so
+f1d043df4000-f1d043df5000 rw-p 00002000 b3:03 809                        /system/lib64/libsync.so
+f1d043e1c000-f1d043e3c000 r-xp 00000000 b3:03 872                        /system/lib64/libui.so
+f1d043e3c000-f1d043e3e000 r--p 0001f000 b3:03 872                        /system/lib64/libui.so
+f1d043e3e000-f1d043e3f000 rw-p 00021000 b3:03 872                        /system/lib64/libui.so
+f1d043e43000-f1d043e71000 r-xp 00000000 b3:03 647                        /system/lib64/libmediadrm.so
+f1d043e71000-f1d043e72000 ---p 00000000 00:00 0 
+f1d043e72000-f1d043e7a000 r--p 0002e000 b3:03 647                        /system/lib64/libmediadrm.so
+f1d043e7a000-f1d043e7b000 rw-p 00036000 b3:03 647                        /system/lib64/libmediadrm.so
+f1d043eaf000-f1d043ef4000 r-xp 00000000 b3:03 779                        /system/lib64/android.hardware.graphics.bufferqueue@1.0.so
+f1d043ef4000-f1d043ef5000 ---p 00000000 00:00 0 
+f1d043ef5000-f1d043ef9000 r--p 00045000 b3:03 779                        /system/lib64/android.hardware.graphics.bufferqueue@1.0.so
+f1d043ef9000-f1d043efa000 rw-p 00049000 b3:03 779                        /system/lib64/android.hardware.graphics.bufferqueue@1.0.so
+f1d043f03000-f1d043f06000 r-xp 00000000 b3:03 835                        /system/lib64/libavservices_minijail.so
+f1d043f06000-f1d043f07000 r--p 00002000 b3:03 835                        /system/lib64/libavservices_minijail.so
+f1d043f07000-f1d043f08000 rw-p 00003000 b3:03 835                        /system/lib64/libavservices_minijail.so
+f1d043f49000-f1d043f5e000 r-xp 00000000 b3:03 843                        /system/lib64/libstagefright_flacdec.so
+f1d043f5e000-f1d043f5f000 r--p 00014000 b3:03 843                        /system/lib64/libstagefright_flacdec.so
+f1d043f5f000-f1d043f60000 rw-p 00015000 b3:03 843                        /system/lib64/libstagefright_flacdec.so
+f1d043f81000-f1d043fca000 r-xp 00000000 b3:03 574                        /system/lib64/android.hardware.cas@1.0.so
+f1d043fca000-f1d043fcb000 ---p 00000000 00:00 0 
+f1d043fcb000-f1d043fd1000 r--p 00049000 b3:03 574                        /system/lib64/android.hardware.cas@1.0.so
+f1d043fd1000-f1d043fd2000 rw-p 0004f000 b3:03 574                        /system/lib64/android.hardware.cas@1.0.so
+f1d04400e000-f1d044015000 r-xp 00000000 b3:03 729                        /system/lib64/libnativehelper.so
+f1d044015000-f1d044016000 r--p 00006000 b3:03 729                        /system/lib64/libnativehelper.so
+f1d044016000-f1d044017000 rw-p 00007000 b3:03 729                        /system/lib64/libnativehelper.so
+f1d044043000-f1d044086000 r-xp 00000000 b3:03 625                        /system/lib64/libcamera_client.so
+f1d044086000-f1d044087000 ---p 00000000 00:00 0 
+f1d044087000-f1d044092000 r--p 00043000 b3:03 625                        /system/lib64/libcamera_client.so
+f1d044092000-f1d044093000 rw-p 0004e000 b3:03 625                        /system/lib64/libcamera_client.so
+f1d0440e3000-f1d0440fc000 r-xp 00000000 b3:03 789                        /system/lib64/libunwind.so
+f1d0440fc000-f1d0440fd000 ---p 00000000 00:00 0 
+f1d0440fd000-f1d0440fe000 r--p 00019000 b3:03 789                        /system/lib64/libunwind.so
+f1d0440fe000-f1d0440ff000 rw-p 0001a000 b3:03 789                        /system/lib64/libunwind.so
+f1d0440ff000-f1d044168000 rw-p 00000000 00:00 0                          [anon:.bss]
+f1d044197000-f1d04429c000 r-xp 00000000 b3:03 619                        /system/lib64/libcrypto.so
+f1d04429c000-f1d04429d000 ---p 00000000 00:00 0 
+f1d04429d000-f1d0442ae000 r--p 00105000 b3:03 619                        /system/lib64/libcrypto.so
+f1d0442ae000-f1d0442af000 rw-p 00116000 b3:03 619                        /system/lib64/libcrypto.so
+f1d0442af000-f1d0442b0000 rw-p 00000000 00:00 0                          [anon:.bss]
+f1d0442f1000-f1d0442f3000 r-xp 00000000 b3:03 575                        /system/lib64/libdl.so
+f1d0442f3000-f1d0442f4000 r--p 00001000 b3:03 575                        /system/lib64/libdl.so
+f1d0442f4000-f1d0442f5000 rw-p 00002000 b3:03 575                        /system/lib64/libdl.so
+f1d0442f5000-f1d0442f6000 rw-p 00000000 00:00 0                          [anon:.bss]
+f1d04430e000-f1d04434d000 r-xp 00000000 b3:03 655                        /system/lib64/libprotobuf-cpp-lite.so
+f1d04434d000-f1d04434f000 r--p 0003e000 b3:03 655                        /system/lib64/libprotobuf-cpp-lite.so
+f1d04434f000-f1d044350000 rw-p 00040000 b3:03 655                        /system/lib64/libprotobuf-cpp-lite.so
+f1d044386000-f1d044390000 r-xp 00000000 b3:03 712                        /system/lib64/libmediametrics.so
+f1d044390000-f1d044392000 r--p 00009000 b3:03 712                        /system/lib64/libmediametrics.so
+f1d044392000-f1d044393000 rw-p 0000b000 b3:03 712                        /system/lib64/libmediametrics.so
+f1d0443d5000-f1d0443d9000 r-xp 00000000 b3:03 636                        /system/lib64/libmediaextractorservice.so
+f1d0443d9000-f1d0443da000 ---p 00000000 00:00 0 
+f1d0443da000-f1d0443db000 r--p 00004000 b3:03 636                        /system/lib64/libmediaextractorservice.so
+f1d0443db000-f1d0443dc000 rw-p 00005000 b3:03 636                        /system/lib64/libmediaextractorservice.so
+f1d044400000-f1d044410000 r-xp 00000000 b3:03 795                        /system/lib64/libcutils.so
+f1d044410000-f1d044412000 r--p 0000f000 b3:03 795                        /system/lib64/libcutils.so
+f1d044412000-f1d044413000 rw-p 00011000 b3:03 795                        /system/lib64/libcutils.so
+f1d04444a000-f1d0444b4000 r-xp 00000000 b3:03 956                        /system/lib64/libhidltransport.so
+f1d0444b4000-f1d0444bc000 r--p 00069000 b3:03 956                        /system/lib64/libhidltransport.so
+f1d0444bc000-f1d0444bd000 rw-p 00071000 b3:03 956                        /system/lib64/libhidltransport.so
+f1d0444d2000-f1d04464c000 r-xp 00000000 b3:03 829                        /system/lib64/libicuuc.so
+f1d04464c000-f1d04464d000 ---p 00000000 00:00 0 
+f1d04464d000-f1d044661000 r--p 0017a000 b3:03 829                        /system/lib64/libicuuc.so
+f1d044661000-f1d044662000 rw-p 0018e000 b3:03 829                        /system/lib64/libicuuc.so
+f1d044662000-f1d044663000 rw-p 00000000 00:00 0                          [anon:.bss]
+f1d044681000-f1d044686000 r-xp 00000000 b3:03 725                        /system/lib64/android.hardware.media@1.0.so
+f1d044686000-f1d044687000 ---p 00000000 00:00 0 
+f1d044687000-f1d044688000 r--p 00005000 b3:03 725                        /system/lib64/android.hardware.media@1.0.so
+f1d044688000-f1d044689000 rw-p 00006000 b3:03 725                        /system/lib64/android.hardware.media@1.0.so
+f1d0446cf000-f1d0446ec000 r-xp 00000000 b3:03 951                        /system/lib64/libutils.so
+f1d0446ec000-f1d0446ed000 ---p 00000000 00:00 0 
+f1d0446ed000-f1d0446ee000 r--p 0001d000 b3:03 951                        /system/lib64/libutils.so
+f1d0446ee000-f1d0446ef000 rw-p 0001e000 b3:03 951                        /system/lib64/libutils.so
+f1d044704000-f1d04471b000 r-xp 00000000 b3:03 644                        /system/lib64/liblog.so
+f1d04471b000-f1d04471c000 r--p 00016000 b3:03 644                        /system/lib64/liblog.so
+f1d04471c000-f1d04471d000 rw-p 00017000 b3:03 644                        /system/lib64/liblog.so
+f1d04474b000-f1d044762000 r-xp 00000000 b3:03 917                        /system/lib64/android.hardware.graphics.allocator@2.0.so
+f1d044762000-f1d044763000 ---p 00000000 00:00 0 
+f1d044763000-f1d044765000 r--p 00017000 b3:03 917                        /system/lib64/android.hardware.graphics.allocator@2.0.so
+f1d044765000-f1d044766000 rw-p 00019000 b3:03 917                        /system/lib64/android.hardware.graphics.allocator@2.0.so
+f1d04479f000-f1d0447ab000 r-xp 00000000 b3:03 907                        /system/lib64/libstagefright_xmlparser.so
+f1d0447ab000-f1d0447ac000 ---p 00000000 00:00 0 
+f1d0447ac000-f1d0447ad000 r--p 0000c000 b3:03 907                        /system/lib64/libstagefright_xmlparser.so
+f1d0447ad000-f1d0447ae000 rw-p 0000d000 b3:03 907                        /system/lib64/libstagefright_xmlparser.so
+f1d0447f2000-f1d044839000 r-xp 00000000 b3:03 602                        /system/lib64/libRScpp.so
+f1d044839000-f1d04483a000 r--p 00046000 b3:03 602                        /system/lib64/libRScpp.so
+f1d04483a000-f1d04483b000 rw-p 00047000 b3:03 602                        /system/lib64/libRScpp.so
+f1d044843000-f1d044861000 r-xp 00000000 b3:03 637                        /system/lib64/libvorbisidec.so
+f1d044861000-f1d044862000 r--p 0001d000 b3:03 637                        /system/lib64/libvorbisidec.so
+f1d044862000-f1d044863000 rw-p 0001e000 b3:03 637                        /system/lib64/libvorbisidec.so
+f1d044895000-f1d0448af000 r-xp 00000000 b3:03 691                        /system/lib64/libbacktrace.so
+f1d0448af000-f1d0448b0000 r--p 00019000 b3:03 691                        /system/lib64/libbacktrace.so
+f1d0448b0000-f1d0448b1000 rw-p 0001a000 b3:03 691                        /system/lib64/libbacktrace.so
+f1d0448cb000-f1d0448e9000 r-xp 00000000 b3:03 816                        /system/lib64/libdrmframework.so
+f1d0448e9000-f1d0448ee000 r--p 0001d000 b3:03 816                        /system/lib64/libdrmframework.so
+f1d0448ee000-f1d0448ef000 rw-p 00022000 b3:03 816                        /system/lib64/libdrmframework.so
+f1d044902000-f1d04495c000 r-xp 00000000 b3:03 724                        /system/lib64/libaudioclient.so
+f1d04495c000-f1d04496a000 r--p 00059000 b3:03 724                        /system/lib64/libaudioclient.so
+f1d04496a000-f1d04496b000 rw-p 00067000 b3:03 724                        /system/lib64/libaudioclient.so
+f1d044983000-f1d0449a1000 r-xp 00000000 b3:03 668                        /system/lib64/android.hardware.graphics.mapper@2.0.so
+f1d0449a1000-f1d0449a4000 r--p 0001d000 b3:03 668                        /system/lib64/android.hardware.graphics.mapper@2.0.so
+f1d0449a4000-f1d0449a5000 rw-p 00020000 b3:03 668                        /system/lib64/android.hardware.graphics.mapper@2.0.so
+f1d0449e8000-f1d0449f5000 r-xp 00000000 b3:03 953                        /system/lib64/libmediautils.so
+f1d0449f5000-f1d0449f7000 r--p 0000c000 b3:03 953                        /system/lib64/libmediautils.so
+f1d0449f7000-f1d0449f8000 rw-p 0000e000 b3:03 953                        /system/lib64/libmediautils.so
+f1d044a05000-f1d044a29000 r-xp 00000000 b3:03 902                        /system/lib64/libhwbinder.so
+f1d044a29000-f1d044a2a000 ---p 00000000 00:00 0 
+f1d044a2a000-f1d044a2c000 r--p 00024000 b3:03 902                        /system/lib64/libhwbinder.so
+f1d044a2c000-f1d044a2d000 rw-p 00026000 b3:03 902                        /system/lib64/libhwbinder.so
+f1d044a6e000-f1d044a72000 r-xp 00000000 b3:03 786                        /system/lib64/libstagefright_omx_utils.so
+f1d044a72000-f1d044a73000 r--p 00003000 b3:03 786                        /system/lib64/libstagefright_omx_utils.so
+f1d044a73000-f1d044a74000 rw-p 00004000 b3:03 786                        /system/lib64/libstagefright_omx_utils.so
+f1d044a90000-f1d044abb000 r-xp 00000000 b3:03 689                        /system/lib64/libstagefright_foundation.so
+f1d044abb000-f1d044abc000 ---p 00000000 00:00 0 
+f1d044abc000-f1d044abe000 r--p 0002b000 b3:03 689                        /system/lib64/libstagefright_foundation.so
+f1d044abe000-f1d044abf000 rw-p 0002d000 b3:03 689                        /system/lib64/libstagefright_foundation.so
+f1d044ade000-f1d044ccf000 r-xp 00000000 b3:03 845                        /system/lib64/libstagefright.so
+f1d044ccf000-f1d044cfa000 r--p 001f0000 b3:03 845                        /system/lib64/libstagefright.so
+f1d044cfa000-f1d044cfb000 rw-p 0021b000 b3:03 845                        /system/lib64/libstagefright.so
+f1d044d09000-f1d044deb000 r-xp 00000000 b3:03 615                        /system/lib64/libc++.so
+f1d044deb000-f1d044dec000 ---p 00000000 00:00 0 
+f1d044dec000-f1d044df4000 r--p 000e2000 b3:03 615                        /system/lib64/libc++.so
+f1d044df4000-f1d044df5000 rw-p 000ea000 b3:03 615                        /system/lib64/libc++.so
+f1d044df5000-f1d044df8000 rw-p 00000000 00:00 0                          [anon:.bss]
+f1d044e36000-f1d044e38000 r-xp 00000000 b3:03 765                        /system/lib64/android.hardware.configstore-utils.so
+f1d044e38000-f1d044e39000 r--p 00001000 b3:03 765                        /system/lib64/android.hardware.configstore-utils.so
+f1d044e39000-f1d044e3a000 rw-p 00002000 b3:03 765                        /system/lib64/android.hardware.configstore-utils.so
+f1d044e65000-f1d044e6c000 r-xp 00000000 b3:03 802                        /system/lib64/libaudiomanager.so
+f1d044e6c000-f1d044e6e000 r--p 00006000 b3:03 802                        /system/lib64/libaudiomanager.so
+f1d044e6e000-f1d044e6f000 rw-p 00008000 b3:03 802                        /system/lib64/libaudiomanager.so
+f1d044ea4000-f1d044eb9000 r-xp 00000000 b3:03 869                        /system/lib64/libGLESv2.so
+f1d044eb9000-f1d044eba000 r--p 00014000 b3:03 869                        /system/lib64/libGLESv2.so
+f1d044eba000-f1d044ebb000 rw-p 00015000 b3:03 869                        /system/lib64/libGLESv2.so
+f1d044ecc000-f1d044ece000 r-xp 00000000 b3:03 921                        /system/lib64/libgraphicsenv.so
+f1d044ece000-f1d044ecf000 r--p 00001000 b3:03 921                        /system/lib64/libgraphicsenv.so
+f1d044ecf000-f1d044ed0000 rw-p 00002000 b3:03 921                        /system/lib64/libgraphicsenv.so
+f1d044efb000-f1d044f1b000 r--s 00000000 00:12 2230                       /dev/__properties__/u:object_r:default_prop:s0
+f1d044f1b000-f1d044f3b000 r-xp 00000000 b3:03 828                        /system/lib64/libhidlbase.so
+f1d044f3b000-f1d044f3d000 r--p 0001f000 b3:03 828                        /system/lib64/libhidlbase.so
+f1d044f3d000-f1d044f3e000 rw-p 00021000 b3:03 828                        /system/lib64/libhidlbase.so
+f1d044f41000-f1d044f45000 r-xp 00000000 b3:03 790                        /system/lib64/libpowermanager.so
+f1d044f45000-f1d044f46000 ---p 00000000 00:00 0 
+f1d044f46000-f1d044f47000 r--p 00004000 b3:03 790                        /system/lib64/libpowermanager.so
+f1d044f47000-f1d044f48000 rw-p 00005000 b3:03 790                        /system/lib64/libpowermanager.so
+f1d044f65000-f1d044f85000 r--s 00000000 00:12 2270                       /dev/__properties__/properties_serial
+f1d044f85000-f1d044f88000 rw-p 00000000 00:00 0                          [anon:linker_alloc]
+f1d044f96000-f1d044f97000 r--p 00000000 00:00 0                          [anon:linker_alloc]
+f1d044fa6000-f1d044fa7000 r--p 00000000 00:00 0                          [anon:linker_alloc]
+f1d044fca000-f1d044fcb000 r--p 00000000 00:00 0                          [anon:linker_alloc]
+f1d044fcb000-f1d044fcc000 rw-p 00000000 00:00 0                          [anon:linker_alloc]
+f1d044fd8000-f1d044fd9000 r--p 00000000 00:00 0                          [anon:linker_alloc]
+f1d045018000-f1d045019000 rw-p 00000000 00:00 0                          [anon:linker_alloc]
+f1d045022000-f1d045023000 r--p 00000000 00:00 0                          [anon:linker_alloc]
+f1d04502c000-f1d04502d000 r--p 00000000 00:00 0                          [anon:linker_alloc]
+f1d04505a000-f1d04505c000 r--p 00000000 00:00 0                          [anon:atexit handlers]
+f1d04505c000-f1d04505d000 rw-p 00000000 00:00 0                          [anon:arc4random data]
+f1d04505d000-f1d04505e000 rw-p 00000000 00:00 0                          [anon:linker_alloc]
+f1d04507d000-f1d04507e000 r--p 00000000 00:00 0                          [anon:linker_alloc]
+f1d04508e000-f1d045090000 rw-p 00000000 00:00 0                          [anon:linker_alloc_vector]
+f1d045091000-f1d045092000 r--p 00000000 00:00 0                          [anon:linker_alloc]
+f1d0450b1000-f1d0450b2000 rw-p 00000000 00:00 0                          [anon:linker_alloc]
+f1d0450bf000-f1d0450c0000 r--p 00000000 00:00 0                          [anon:linker_alloc]
+f1d0450d2000-f1d0450d3000 rw-p 00000000 00:00 0                          [anon:linker_alloc_small_objects]
+f1d0450e9000-f1d0450ea000 rw-p 00000000 00:00 0                          [anon:linker_alloc]
+f1d0450f5000-f1d0450f6000 r--p 00000000 00:00 0                          [anon:linker_alloc]
+f1d045100000-f1d045101000 r--p 00000000 00:00 0                          [anon:linker_alloc]
+f1d045122000-f1d045123000 rw-p 00000000 00:00 0                          [anon:linker_alloc]
+f1d045179000-f1d04517a000 r--p 00000000 00:00 0                          [anon:linker_alloc]
+f1d04517a000-f1d04517b000 rw-p 00000000 00:00 0                          [anon:linker_alloc]
+f1d0451bc000-f1d0451bd000 rw-p 00000000 00:00 0                          [anon:linker_alloc]
+f1d0451cf000-f1d0451d0000 r--p 00000000 00:00 0                          [anon:linker_alloc]
+f1d0451fc000-f1d0451fd000 rw-p 00000000 00:00 0                          [anon:linker_alloc_small_objects]
+f1d0451fe000-f1d0451ff000 rw-p 00000000 00:00 0                          [anon:linker_alloc]
+f1d045245000-f1d045246000 r--p 00000000 00:00 0                          [anon:linker_alloc]
+f1d045263000-f1d045266000 r--p 00000000 b3:03 1337                       /system/bin/mediaextractor
+f1d045266000-f1d04527f000 r--p 00000000 b3:03 644                        /system/lib64/liblog.so
+f1d04527f000-f1d045280000 rw-p 00000000 00:00 0                          [anon:linker_alloc_vector]
+f1d045282000-f1d045283000 rw-p 00000000 00:00 0                          [anon:linker_alloc_vector]
+f1d045284000-f1d045285000 rw-p 00000000 00:00 0                          [anon:linker_alloc_lob]
+f1d045285000-f1d045292000 rw-p 00000000 00:00 0 
+f1d045292000-f1d045293000 rw-p 00000000 00:00 0                          [anon:linker_alloc]
+f1d04529a000-f1d04529b000 rw-p 00000000 00:00 0                          [anon:linker_alloc_vector]
+f1d04529c000-f1d0452a0000 rw-p 00000000 00:00 0                          [anon:linker_alloc_lob]
+f1d0452a0000-f1d0452a1000 rw-p 00000000 00:00 0                          [anon:linker_alloc_vector]
+f1d0452a1000-f1d0452a3000 rw-p 00000000 00:00 0                          [anon:linker_alloc_lob]
+f1d0452a3000-f1d0452a4000 rw-p 00000000 00:00 0                          [anon:linker_alloc_vector]
+f1d0452a4000-f1d0452a5000 rw-p 00000000 00:00 0 
+f1d0452a5000-f1d0452ad000 rw-p 00000000 00:00 0                          [anon:linker_alloc_lob]
+f1d0452ad000-f1d0452b0000 rw-p 00000000 00:00 0 
+f1d0452b0000-f1d0452d0000 r--s 00000000 00:12 2240                       /dev/__properties__/u:object_r:fingerprint_prop:s0
+f1d0452d0000-f1d0452d1000 r--p 00000000 00:00 0                          [anon:linker_alloc]
+f1d0452d1000-f1d0452d2000 rw-p 00000000 00:00 0                          [anon:linker_alloc]
+f1d0452d2000-f1d0452d5000 rw-p 00000000 00:00 0                          [anon:linker_alloc_small_objects]
+f1d0452d5000-f1d0452f5000 r--s 00000000 00:12 2256                       /dev/__properties__/u:object_r:log_tag_prop:s0
+f1d0452f5000-f1d045315000 r--s 00000000 00:12 2247                       /dev/__properties__/u:object_r:logd_prop:s0
+f1d045315000-f1d045335000 r--s 00000000 00:12 2230                       /dev/__properties__/u:object_r:default_prop:s0
+f1d045335000-f1d045336000 r--p 00000000 00:00 0                          [anon:linker_alloc]
+f1d045336000-f1d04533c000 rw-p 00000000 00:00 0 
+f1d04533c000-f1d04533d000 rw-p 00000000 00:00 0                          [anon:linker_alloc_small_objects]
+f1d04533d000-f1d04533e000 r--p 00000000 00:00 0                          [anon:linker_alloc]
+f1d04533e000-f1d045345000 rw-p 00000000 00:00 0 
+f1d045345000-f1d045346000 rw-p 00000000 00:00 0                          [anon:linker_alloc_small_objects]
+f1d045346000-f1d045347000 rw-p 00000000 00:00 0                          [anon:linker_alloc_vector]
+f1d045347000-f1d045355000 rw-p 00000000 00:00 0 
+f1d045355000-f1d045375000 r--s 00000000 00:12 2256                       /dev/__properties__/u:object_r:log_tag_prop:s0
+f1d045375000-f1d045376000 rw-p 00000000 00:00 0                          [anon:linker_alloc]
+f1d045376000-f1d045378000 rw-p 00000000 00:00 0                          [anon:linker_alloc_small_objects]
+f1d045378000-f1d045379000 rw-p 00000000 00:00 0 
+f1d045379000-f1d04537a000 rw-p 00000000 00:00 0                          [anon:linker_alloc_small_objects]
+f1d04537a000-f1d04537b000 rw-p 00000000 00:00 0                          [anon:linker_alloc_vector]
+f1d04537b000-f1d04537c000 rw-p 00000000 00:00 0                          [anon:linker_alloc_small_objects]
+f1d04537c000-f1d04537e000 rw-p 00000000 00:00 0                          [anon:linker_alloc_lob]
+f1d04537e000-f1d04537f000 rw-p 00000000 00:00 0                          [anon:linker_alloc_vector]
+f1d04537f000-f1d04539f000 r--s 00000000 00:12 2247                       /dev/__properties__/u:object_r:logd_prop:s0
+f1d04539f000-f1d0453a0000 rw-p 00000000 00:00 0                          [anon:linker_alloc]
+f1d0453a0000-f1d0453a1000 r--p 00000000 00:00 0                          [anon:linker_alloc]
+f1d0453a1000-f1d0453a3000 rw-p 00000000 00:00 0                          [anon:linker_alloc_small_objects]
+f1d0453a3000-f1d0453a4000 rw-p 00000000 00:00 0                          [anon:linker_alloc_vector]
+f1d0453a4000-f1d0453a6000 rw-p 00000000 00:00 0                          [anon:linker_alloc_small_objects]
+f1d0453a6000-f1d0453a7000 rw-p 00000000 00:00 0 
+f1d0453a7000-f1d0453a8000 rw-p 00000000 00:00 0                          [anon:linker_alloc_small_objects]
+f1d0453a8000-f1d0453a9000 rw-p 00000000 00:00 0                          [anon:linker_alloc_vector]
+f1d0453a9000-f1d0453aa000 rw-p 00000000 00:00 0                          [anon:linker_alloc_small_objects]
+f1d0453aa000-f1d0453ca000 r--s 00000000 00:12 2265                       /dev/__properties__/u:object_r:debug_prop:s0
+f1d0453ca000-f1d0453ea000 r--s 00000000 00:12 2270                       /dev/__properties__/properties_serial
+f1d0453ea000-f1d0453eb000 rw-p 00000000 00:00 0                          [anon:linker_alloc_vector]
+f1d0453eb000-f1d0453ee000 rw-p 00000000 00:00 0                          [anon:linker_alloc_small_objects]
+f1d0453ee000-f1d0453ef000 r--p 00000000 00:00 0                          [anon:linker_alloc]
+f1d0453ef000-f1d0453f0000 ---p 00000000 00:00 0 
+f1d0453f0000-f1d0453f1000 rw-p 00000000 00:00 0 
+f1d0453f1000-f1d0453f2000 ---p 00000000 00:00 0 
+f1d0453f2000-f1d0453f3000 rw-p 00000000 00:00 0                          [anon:linker_alloc_lob]
+f1d0453f3000-f1d0453f4000 r--p 00000000 00:00 0                          [anon:linker_alloc]
+f1d0453f4000-f1d0453f5000 rw-p 00000000 00:00 0                          [anon:linker_alloc_vector]
+f1d0453f5000-f1d0453f6000 rw-p 00000000 00:00 0                          [anon:linker_alloc_small_objects]
+f1d0453f6000-f1d0453f7000 r--p 00000000 00:00 0                          [anon:linker_alloc]
+f1d0453f7000-f1d0453f8000 rw-p 00000000 00:00 0                          [anon:linker_alloc_small_objects]
+f1d0453f8000-f1d0453f9000 r--p 00000000 00:00 0                          [anon:atexit handlers]
+f1d0453f9000-f1d0453fa000 ---p 00000000 00:00 0                          [anon:thread signal stack guard page]
+f1d0453fa000-f1d0453fe000 rw-p 00000000 00:00 0                          [anon:thread signal stack]
+f1d0453fe000-f1d0453ff000 ---p 00000000 00:00 0                          [anon:bionic TLS guard]
+f1d0453ff000-f1d045402000 rw-p 00000000 00:00 0                          [anon:bionic TLS]
+f1d045402000-f1d045403000 ---p 00000000 00:00 0                          [anon:bionic TLS guard]
+f1d045403000-f1d045404000 r--p 00000000 00:00 0                          [vvar]
+f1d045404000-f1d045405000 r-xp 00000000 00:00 0                          [vdso]
+f1d045405000-f1d0454f9000 r-xp 00000000 b3:03 1303                       /system/bin/linker64
+f1d0454f9000-f1d0454fa000 rw-p 00000000 00:00 0                          [anon:arc4random data]
+f1d0454fa000-f1d0454fe000 r--p 000f4000 b3:03 1303                       /system/bin/linker64
+f1d0454fe000-f1d0454ff000 rw-p 000f8000 b3:03 1303                       /system/bin/linker64
+f1d0454ff000-f1d04556b000 rw-p 00000000 00:00 0 
+f1d04556b000-f1d04556c000 r--p 00000000 00:00 0 
+f1d04556c000-f1d045573000 rw-p 00000000 00:00 0 
+ffffe3e2c000-ffffe3e4d000 rw-p 00000000 00:00 0                          [stack]

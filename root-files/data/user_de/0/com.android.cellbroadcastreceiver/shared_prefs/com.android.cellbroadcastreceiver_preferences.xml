@@ -1,0 +1,15 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <boolean name="enable_alert_vibrate" value="true" />
+    <boolean name="enable_cmas_test_alerts" value="false" />
+    <boolean name="enable_etws_test_alerts" value="false" />
+    <boolean name="enable_cmas_amber_alerts" value="true" />
+    <boolean name="enable_cmas_extreme_threat_alerts" value="true" />
+    <boolean name="enable_emergency_alerts" value="true" />
+    <boolean name="enable_area_update_info_alerts" value="true" />
+    <boolean name="enable_alert_speech" value="true" />
+    <boolean name="show_cmas_opt_out_dialog" value="true" />
+    <string name="alert_reminder_interval">0</string>
+    <boolean name="use_full_volume" value="false" />
+    <boolean name="enable_cmas_severe_threat_alerts" value="true" />
+</map>

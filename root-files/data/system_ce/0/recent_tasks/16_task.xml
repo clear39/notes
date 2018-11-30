@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<task task_id="16" real_activity="com.freescale.cactusplayer/.VideoMenu" real_activity_suspended="false" affinity="com.freescale.cactusplayer" root_has_reset="true" auto_remove_recents="false" asked_compat_mode="false" user_id="0" user_setup_complete="true" effective_uid="10058" task_type="0" first_active_time="1543401186193" last_active_time="1543401217799" last_time_moved="1543401219747" never_relinquish_identity="true" task_description_color="ff222222" task_description_colorBackground="ff000000" task_thumbnailinfo_task_width="0" task_thumbnailinfo_task_height="0" task_thumbnailinfo_screen_orientation="0" task_affiliation_color="-14540254" task_affiliation="16" prev_affiliation="-1" next_affiliation="-1" calling_uid="10023" calling_package="com.android.launcher3" resize_mode="1" supports_picture_in_picture="false" privileged="false" min_width="-1" min_height="-1" persist_task_version="1">
+<intent action="android.intent.action.MAIN" component="com.freescale.cactusplayer/.VideoMenu" flags="10200000">
+<categories category="android.intent.category.LAUNCHER" />
+</intent>
+</task>
+

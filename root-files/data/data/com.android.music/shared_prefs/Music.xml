@@ -1,0 +1,9 @@
+<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
+<map>
+    <int name="curpos" value="0" />
+    <int name="shufflemode" value="0" />
+    <int name="cardid" value="-1" />
+    <int name="repeatmode" value="0" />
+    <long name="seekpos" value="0" />
+    <string name="queue">17;</string>
+</map>

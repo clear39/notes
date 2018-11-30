@@ -1,0 +1,867 @@
+*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***
+Build fingerprint: 'Android/autolink_8qxp/autolink_8qxp:8.1.0/1.2.0-beta2-rc3/20180724:eng/dev-keys'
+Revision: '0'
+ABI: 'arm'
+pid: 3179, tid: 3179, name: cameraserver  >>> /system/bin/cameraserver <<<
+signal 6 (SIGABRT), code -6 (SI_TKILL), fault addr --------
+Abort message: 'terminating with uncaught exception of type std::__1::system_error: condition_variable timed_wait failed: Invalid argument'
+    r0 00000000  r1 00000c6b  r2 00000006  r3 00000008
+    r4 00000c6b  r5 00000c6b  r6 ffd5d604  r7 0000010c
+    r8 00000000  r9 e5a14b00  sl ffd5db08  fp 3b9aca00
+    ip f9819844  sp ffd5d5f0  lr e72a8c7b  pc e72a26ac  cpsr 20010030
+    d0  0000000000000000  d1  0000000000000000
+    d2  00000000bf000000  d3  00000000bd13f7cf
+    d4  2e31406575657571  d5  70617247493a3a30
+    d6  6566667542636968  d7  656375646f725072
+    d8  41cdcd605c800000  d9  0000000000000000
+    d10 0000000000000000  d11 0000000000000000
+    d12 0000000000000000  d13 0000000000000000
+    d14 0000000000000000  d15 0000000000000000
+    d16 0000000000000000  d17 0000000000000000
+    d18 c2fa993632838b80  d19 0000018000000180
+    d20 0000000800000008  d21 0000000800000008
+    d22 0000000400000004  d23 0000000400000004
+    d24 0000218100000181  d25 0000618100004181
+    d26 0000218000000180  d27 0000618000004180
+    d28 0000000000000000  d29 0000000000000000
+    d30 0000000000000000  d31 0000000000000000
+    scr 20000010
+
+backtrace:
+    #00 pc 0001a6ac  /system/lib/libc.so (abort+63)
+    #01 pc 00032a8d  /system/lib/libc++.so (abort_message+84)
+    #02 pc 00032c23  /system/lib/libc++.so (demangling_terminate_handler()+178)
+    #03 pc 00045a77  /system/lib/libc++.so (_ZSt11__terminatePFvvE+2)
+    #04 pc 00045b35  /system/lib/libc++.so (_ZSt9terminatev+54)
+    #05 pc 00045afb  /system/lib/libc++.so (__clang_call_terminate+6)
+
+stack:
+         ffd5d5b0  e5a131fa  [anon:libc_malloc]
+         ffd5d5b4  00000000
+         ffd5d5b8  00000005
+         ffd5d5bc  ffff4208
+         ffd5d5c0  00000000
+         ffd5d5c4  0000007f
+         ffd5d5c8  00000022
+         ffd5d5cc  00000000
+         ffd5d5d0  00000000
+         ffd5d5d4  00000000
+         ffd5d5d8  ffffffdf
+         ffd5d5dc  00000000
+         ffd5d5e0  00000c6b
+         ffd5d5e4  e5eeb2f6  /system/lib/libcamera_client.so (android::CameraBase<android::Camera, android::CameraTraits<android::Camera>>::getCameraService()+629)
+         ffd5d5e8  00000c6b
+         ffd5d5ec  e72a26a1  /system/lib/libc.so (abort+52)
+    #00  ffd5d5f0  f9819844
+         ffd5d5f4  ffd5db10  [stack]
+         ffd5d5f8  e5a14b00  [anon:libc_malloc]
+         ffd5d5fc  ffd5db08  [stack]
+         ffd5d600  3b9aca00
+         ffd5d604  ffffffdf
+         ffd5d608  e605aca4  /system/lib/libc++.so (demangling_terminate_handler()+307)
+         ffd5d60c  ffd5d63c  [stack]
+         ffd5d610  e731a828  /system/lib/libc.so
+         ffd5d614  f9819844
+         ffd5d618  ffd5db10  [stack]
+         ffd5d61c  e605aa91  /system/lib/libc++.so (abort_message+88)
+    #01  ffd5d620  ffd5d63c  [stack]
+         ffd5d624  e5a13180  [anon:libc_malloc]
+         ffd5d628  ffd5d63c  [stack]
+         ffd5d62c  ffd5d650  [stack]
+         ffd5d630  e60b046c  /system/lib/libc++.so
+         ffd5d634  e67d31f9
+         ffd5d638  e605ac27  /system/lib/libc++.so (demangling_terminate_handler()+182)
+         ffd5d63c  e60b046c  /system/lib/libc++.so
+         ffd5d640  ffd5d650  [stack]
+         ffd5d644  e5a2ddcc  [anon:libc_malloc]
+    #02  ffd5d648  00000000
+         ffd5d64c  00000400
+         ffd5d650  3a647473
+         ffd5d654  315f5f3a
+         ffd5d658  79733a3a
+         ffd5d65c  6d657473
+         ffd5d660  7272655f
+         ffd5d664  e500726f
+         ffd5d668  ffd5db08  [stack]
+         ffd5d66c  3b9aca00
+         ffd5d670  e60b80c4  /system/lib/libc++.so
+         ffd5d674  ffd5d1b8  [stack]
+         ffd5d678  e609f8f3  /system/lib/libc++.so (_Unwind_RaiseException+30)
+         ffd5d67c  e609f8f3  /system/lib/libc++.so (_Unwind_RaiseException+30)
+         ffd5d680  00000007
+         ffd5d684  e72a9e6f  /system/lib/libc.so (map_prop_area(char const*)+66)
+         ........  ........
+    #03  ffd5da68  e5a14b00  [anon:libc_malloc]
+         ffd5da6c  e606db39  /system/lib/libc++.so (_ZSt9terminatev+58)
+    #04  ffd5da70  f9819844
+         ffd5da74  e606daff  /system/lib/libc++.so (_ZSt9terminatev)
+    #05  ffd5da78  f9819844
+         ffd5da7c  e6074051  /system/lib/libc++.so (_ZNSt3__118condition_variable15__do_timed_waitERNS_11unique_lockINS_5mutexEEENS_6chrono10time_pointINS5_12system_clockENS5_8durationIxNS_5ratioILx1ELx1000000000EEEEEEE+180)
+         ffd5da80  e41c0628
+         ffd5da84  dd91a1f9
+         ffd5da88  e5eeb2f6  /system/lib/libcamera_client.so (android::CameraBase<android::Camera, android::CameraTraits<android::Camera>>::getCameraService()+629)
+         ffd5da8c  fffe566c
+         ffd5da90  00000000
+         ffd5da94  9cd7c748
+         ffd5da98  3b9ac0b9
+         ffd5da9c  e68a89f1  /system/lib/libhidltransport.so (_ZNSt3__118condition_variable10wait_untilINS_6chrono12steady_clockENS2_8durationIxNS_5ratioILx1ELx1000000000EEEEEEENS_9cv_statusERNS_11unique_lockINS_5mutexEEERKNS2_10time_pointIT_T0_EE+160)
+         ffd5daa0  77b6025e
+         ffd5daa4  00000003
+         ffd5daa8  e5a39000  [anon:libc_malloc]
+         ffd5daac  00000000
+         ffd5dab0  9cd7c748
+         ffd5dab4  fffe566c
+
+memory near r6:
+    ffd5d5e4 e5eeb2f6 00000c6b e72a26a1 f9819844  ....k....&*.D...
+    ffd5d5f4 ffd5db10 e5a14b00 ffd5db08 3b9aca00  .....K.........;
+    ffd5d604 ffffffdf e605aca4 ffd5d63c e731a828  ........<...(.1.
+    ffd5d614 f9819844 ffd5db10 e605aa91 ffd5d63c  D...........<...
+    ffd5d624 e5a13180 ffd5d63c ffd5d650 e60b046c  .1..<...P...l...
+    ffd5d634 e67d31f9 e605ac27 e60b046c ffd5d650  .1}.'...l...P...
+    ffd5d644 e5a2ddcc 00000000 00000400 3a647473  ............std:
+    ffd5d654 315f5f3a 79733a3a 6d657473 7272655f  :__1::system_err
+    ffd5d664 e500726f ffd5db08 3b9aca00 e60b80c4  or.........;....
+    ffd5d674 ffd5d1b8 e609f8f3 e609f8f3 00000007  ................
+    ffd5d684 e72a9e6f 00000007 00000000 00000012  o.*.............
+    ffd5d694 00000000 00000000 0000230a 00008124  .........#..$...
+    ffd5d6a4 00000001 00000000 00000000 00000000  ................
+    ffd5d6b4 00000000 00000000 00000000 00020000  ................
+    ffd5d6c4 00000000 00001000 00000000 00000008  ................
+    ffd5d6d4 00000000 e41c0623 0d1cef00 e41c061c  ....#...........
+
+memory near r9:
+    e5a14ae0 00000000 00000000 00000000 e5a14ae0  .............J..
+    e5a14af0 e5a14ae0 00000000 e68d26f0 00000001  .J.......&......
+    e5a14b00 00000000 00000000 e68d2744 e5a17920  ........D'.. y..
+    e5a14b10 0000002c 00000000 00000054 00000000  ,.......T.......
+    e5a14b20 0000007c 00000000 00000000 00000000  |...............
+    e5a14b30 00000000 e5a14b28 e5a14b28 00000000  ....(K..(K......
+    e5a14b40 00000000 00000000 00000000 e5a14b40  ............@K..
+    e5a14b50 e5a14b40 00000000 00000000 00000000  @K..............
+    e5a14b60 00000000 e5a14b58 e5a14b58 00000000  ....XK..XK......
+    e5a14b70 00000000 00000000 00000000 e5a14b70  ............pK..
+    e5a14b80 e5a14b70 00000000 00000000 00000000  pK..............
+    e5a14b90 00000000 e5a14b88 e5a14b88 00000000  .....K...K......
+    e5a14ba0 00000000 00000000 00000000 e5a14ba0  .............K..
+    e5a14bb0 e5a14ba0 00000000 00000000 00000000  .K..............
+    e5a14bc0 00000000 e5a14bb8 e5a14bb8 00000000  .....K...K......
+    e5a14bd0 00000000 00000000 00000000 e5a14bd0  .............K..
+
+memory near sl:
+    ffd5dae8 ffd5db00 e68a5b8f 00000000 e5a25ea8  .....[.......^..
+    ffd5daf8 e5a13200 e5a13208 77b5f917 00000003  .2...2.....w....
+    ffd5db08 b350c317 00000003 e5a14afc e5a22e01  ..P......J......
+    ffd5db18 e5eeb2f6 00000000 ffd5dc58 e5a22ea0  ........X.......
+    ffd5db28 ffd5db68 ffd5dc58 e6f67ff0 e64af050  h...X.......P.J.
+    ffd5db38 00000035 e68a57df ffd5db58 fffffffc  5....W..X.......
+    ffd5db48 e5a808c8 00000000 e5a14af8 e5a22ea0  .........J......
+    ffd5db58 e5a14af8 e5a13208 e6f67ff0 00000001  .J...2..........
+    ffd5db68 e6624915 00000000 00000000 00000000  .Ib.............
+    ffd5db78 e5a030c8 e5a13200 e6624915 00000000  .0...2...Ib.....
+    ffd5db88 00000000 ffd5db00 00000001 00000000  ................
+    ffd5db98 00000000 00000000 00000000 00000000  ................
+    ffd5dba8 00000101 e5eeb2f6 e5a2c900 ffd5dc58  ............X...
+    ffd5dbb8 ffd5dc28 00000001 ffd5dc58 e6f67ff0  (.......X.......
+    ffd5dbc8 00000001 e6f5b9bf 00000000 e58c8000  ................
+    ffd5dbd8 00000000 00000000 ffd5dc59 ffd5dcc8  ........Y.......
+
+memory near fp:
+    3b9ac9e0 -------- -------- -------- --------  ................
+    3b9ac9f0 -------- -------- -------- --------  ................
+    3b9aca00 -------- -------- -------- --------  ................
+    3b9aca10 -------- -------- -------- --------  ................
+    3b9aca20 -------- -------- -------- --------  ................
+    3b9aca30 -------- -------- -------- --------  ................
+    3b9aca40 -------- -------- -------- --------  ................
+    3b9aca50 -------- -------- -------- --------  ................
+    3b9aca60 -------- -------- -------- --------  ................
+    3b9aca70 -------- -------- -------- --------  ................
+    3b9aca80 -------- -------- -------- --------  ................
+    3b9aca90 -------- -------- -------- --------  ................
+    3b9acaa0 -------- -------- -------- --------  ................
+    3b9acab0 -------- -------- -------- --------  ................
+    3b9acac0 -------- -------- -------- --------  ................
+    3b9acad0 -------- -------- -------- --------  ................
+
+memory near ip:
+    f9819824 -------- -------- -------- --------  ................
+    f9819834 -------- -------- -------- --------  ................
+    f9819844 -------- -------- -------- --------  ................
+    f9819854 -------- -------- -------- --------  ................
+    f9819864 -------- -------- -------- --------  ................
+    f9819874 -------- -------- -------- --------  ................
+    f9819884 -------- -------- -------- --------  ................
+    f9819894 -------- -------- -------- --------  ................
+    f98198a4 -------- -------- -------- --------  ................
+    f98198b4 -------- -------- -------- --------  ................
+    f98198c4 -------- -------- -------- --------  ................
+    f98198d4 -------- -------- -------- --------  ................
+    f98198e4 -------- -------- -------- --------  ................
+    f98198f4 -------- -------- -------- --------  ................
+    f9819904 -------- -------- -------- --------  ................
+    f9819914 -------- -------- -------- --------  ................
+
+memory near sp:
+    ffd5d5d0 00000000 00000000 ffffffdf 00000000  ................
+    ffd5d5e0 00000c6b e5eeb2f6 00000c6b e72a26a1  k.......k....&*.
+    ffd5d5f0 f9819844 ffd5db10 e5a14b00 ffd5db08  D........K......
+    ffd5d600 3b9aca00 ffffffdf e605aca4 ffd5d63c  ...;........<...
+    ffd5d610 e731a828 f9819844 ffd5db10 e605aa91  (.1.D...........
+    ffd5d620 ffd5d63c e5a13180 ffd5d63c ffd5d650  <....1..<...P...
+    ffd5d630 e60b046c e67d31f9 e605ac27 e60b046c  l....1}.'...l...
+    ffd5d640 ffd5d650 e5a2ddcc 00000000 00000400  P...............
+    ffd5d650 3a647473 315f5f3a 79733a3a 6d657473  std::__1::system
+    ffd5d660 7272655f e500726f ffd5db08 3b9aca00  _error.........;
+    ffd5d670 e60b80c4 ffd5d1b8 e609f8f3 e609f8f3  ................
+    ffd5d680 00000007 e72a9e6f 00000007 00000000  ....o.*.........
+    ffd5d690 00000012 00000000 00000000 0000230a  .............#..
+    ffd5d6a0 00008124 00000001 00000000 00000000  $...............
+    ffd5d6b0 00000000 00000000 00000000 00000000  ................
+    ffd5d6c0 00020000 00000000 00001000 00000000  ................
+
+code around pc:
+    e72a268c f7fb2106 2002e8d6 22004631 0800f04f  .!..... 1F."O...
+    e72a269c e89ef7fb 46294620 f44f2206 df007786  .... F)F."O..w..
+    e72a26ac f04faf01 90035080 f8cd1d38 f7fb8004  ..O..P..8.......
+    e72a26bc 2006e8c6 463a4639 e8c6f7fb 46312002  ... 9F:F..... 1F
+    e72a26cc f7fb2200 4620e886 22064629 7786f44f  .".... F)F."O..w
+    e72a26dc 207fdf00 e8bef7fb f0622300 0000bd9f  ... .....#b.....
+    e72a26ec c008f8df f8dc44fc 4760c000 00076a4c  .....D....`GLj..
+    e72a26fc 4601460a 0063f06f f0622300 0000bd97  .F.Fo.c..#b.....
+    e72a270c b082b580 4479490c 68096809 46699101  .....IyD.h.h..iF
+    e72a271c e8b2f7fb 48092800 44789900 f04fbf08  .....(.H..xD..O.
+    e72a272c 9a0131ff 68006800 bf021a80 b002ba08  .1...h.h........
+    e72a273c f7fabd80 bf00ed90 00075cbe 00075caa  .........\...\..
+    e72a274c b082b580 4479490c 68096809 46699101  .....IyD.h.h..iF
+    e72a275c e892f7fb 29004601 98004908 bf084479  .....F.).I..yD..
+    e72a276c 30fff04f 68099a01 1a896809 b002bf04  O..0...h.h......
+    e72a277c f7fabd80 bf00ed70 00075c7e 00075c68  ....p...~\..h\..
+
+code around lr:
+    e72a8c58 f04f9205 e9cd0200 d0032202 91026809  ..O......"...h..
+    e72a8c68 e000a902 e9cd2100 466a2200 f7f52308  .....!..."jF.#..
+    e72a8c78 3001e94e b10cd004 60209800 e0012000  N..0...... `. ..
+    e72a8c88 30fff04f 9a054906 68094479 1a896809  O..0.I..yD.h.h..
+    e72a8c98 b006bf04 f7f4bd10 bf00eae0 0006f77e  ............~...
+    e72a8ca8 0006f740 b0a1b5f0 48134606 460d466f  @........F.HoF.F
+    e72a8cb8 217c4478 68004614 90206800 f7f51d38  xD|!.F.h.h .8...
+    e72a8cc8 f04fea76 900230ff f7f49500 9003ee0e  v.O..0..........
+    e72a8cd8 e856f7f5 0404e9cd 46294630 f028463a  ..V.....0F)F:F(.
+    e72a8ce8 4906eb3a 44799a20 68096809 bf041a89  :..I .yD.h.h....
+    e72a8cf8 bdf0b021 eab0f7f4 0006f718 0006f6e2  !...............
+    e72a8d08 b082b510 48114604 68004478 90016800  .....F.HxD.h.h..
+    e72a8d18 f7f44668 3001ed96 4668d00b f7f54621  hF.....0..hF!F..
+    e72a8d28 3001e944 4669d005 22002001 ed52f7f4  D..0..iF. ."..R.
+    e72a8d38 f04fe001 490630ff 44799a01 68096809  ..O..0.I..yD.h.h
+    e72a8d48 bf041a89 bd10b002 ea86f7f4 0006f6c0  ................
+
+memory map (333 entries):
+    b004b000-b004dfff r-x         0      3000  /system/bin/cameraserver (BuildId: 6d1106f3528d10bbb98be1cac451e623)
+    b004e000-b004efff r--      2000      1000  /system/bin/cameraserver
+    b004f000-b004ffff rw-         0      1000
+    e5503000-e5503fff ---         0      1000  [anon:thread stack guard page]
+    e5504000-e55fffff rw-         0     fc000
+    e5600000-e567ffff rw-         0     80000  [anon:libc_malloc]
+    e56cd000-e56cdfff ---         0      1000  [anon:thread stack guard page]
+    e56ce000-e57c9fff rw-         0     fc000
+    e57ca000-e58c7fff r--         0     fe000  /dev/binder
+    e58c8000-e59c5fff r--         0     fe000  /dev/hwbinder
+    e59c6000-e59c9fff r-x         0      4000  /system/lib/libnetd_client.so (BuildId: 2fae1e61a725826a29ab761503614d32)
+    e59ca000-e59cafff r--      3000      1000  /system/lib/libnetd_client.so
+    e59cb000-e59cbfff rw-      4000      1000  /system/lib/libnetd_client.so
+    e5a00000-e5afffff rw-         0    100000  [anon:libc_malloc]
+    e5b40000-e5baafff r-x         0     6b000  /system/lib/libmedia.so (BuildId: 8542ca6895a16a0ebba0e84bf5794202) (load bias 0xe000)
+    e5bab000-e5bbbfff r--     6a000     11000  /system/lib/libmedia.so
+    e5bbc000-e5bbcfff rw-     7b000      1000  /system/lib/libmedia.so
+    e5bc6000-e5bf3fff r-x         0     2e000  /system/lib/libprotobuf-cpp-lite.so (BuildId: ba67cbac7b17c946fb33d536733d0da2)
+    e5bf4000-e5bf4fff ---         0      1000
+    e5bf5000-e5bf5fff r--     2e000      1000  /system/lib/libprotobuf-cpp-lite.so
+    e5bf6000-e5bf6fff rw-     2f000      1000  /system/lib/libprotobuf-cpp-lite.so
+    e5c1b000-e5c38fff r-x         0     1e000  /system/lib/android.hardware.configstore@1.0.so (BuildId: 215ef20964338229f8c8745fcfa20a40)
+    e5c39000-e5c3afff r--     1d000      2000  /system/lib/android.hardware.configstore@1.0.so
+    e5c3b000-e5c3bfff rw-     1f000      1000  /system/lib/android.hardware.configstore@1.0.so
+    e5c41000-e5c55fff r-x         0     15000  /system/lib/libutils.so (BuildId: 61bda7cec9bc60a0140bddca94634fbe)
+    e5c56000-e5c56fff ---         0      1000
+    e5c57000-e5c57fff r--     15000      1000  /system/lib/libutils.so
+    e5c58000-e5c58fff rw-     16000      1000  /system/lib/libutils.so
+    e5c9f000-e5ca1fff r-x         0      3000  /system/lib/libdl.so (BuildId: 602d47ff935568924b0d6bc8927004a3)
+    e5ca2000-e5ca2fff r--      2000      1000  /system/lib/libdl.so
+    e5ca3000-e5ca3fff rw-      3000      1000  /system/lib/libdl.so
+    e5ca4000-e5ca4fff rw-         0      1000  [anon:.bss]
+    e5cc0000-e5d02fff r-x         0     43000  /system/lib/libjpeg.so (BuildId: f02ed08c784efe910a202ad2c769cc37)
+    e5d03000-e5d03fff ---         0      1000
+    e5d04000-e5d04fff r--     43000      1000  /system/lib/libjpeg.so
+    e5d05000-e5d05fff rw-     44000      1000  /system/lib/libjpeg.so
+    e5d5d000-e5d71fff r-x         0     15000  /system/lib/android.hidl.token@1.0.so (BuildId: bda35505eccc213a77c4fd2e209c1ff1)
+    e5d72000-e5d72fff ---         0      1000
+    e5d73000-e5d73fff r--     15000      1000  /system/lib/android.hidl.token@1.0.so
+    e5d74000-e5d74fff rw-     16000      1000  /system/lib/android.hidl.token@1.0.so
+    e5d8f000-e5d96fff r-x         0      8000  /system/lib/android.hardware.camera.common@1.0.so (BuildId: 6c399b8318fd317003fc4decdde9f3a5)
+    e5d97000-e5d97fff r--      7000      1000  /system/lib/android.hardware.camera.common@1.0.so
+    e5d98000-e5d98fff rw-      8000      1000  /system/lib/android.hardware.camera.common@1.0.so
+    e5ddb000-e5df3fff r-x         0     19000  /system/lib/android.hardware.graphics.mapper@2.0.so (BuildId: 12912816eed6720e39ddaabd96331c36)
+    e5df4000-e5df5fff r--     18000      2000  /system/lib/android.hardware.graphics.mapper@2.0.so
+    e5df6000-e5df6fff rw-     1a000      1000  /system/lib/android.hardware.graphics.mapper@2.0.so
+    e5e0a000-e5e1dfff r-x         0     14000  /system/lib/libunwind.so (BuildId: ae251eec014d5e256aec3e8dec3a7f00)
+    e5e1e000-e5e1efff ---         0      1000
+    e5e1f000-e5e1ffff r--     14000      1000  /system/lib/libunwind.so
+    e5e20000-e5e20fff rw-     15000      1000  /system/lib/libunwind.so
+    e5e21000-e5e66fff rw-         0     46000  [anon:.bss]
+    e5eac000-e5eaffff r-x         0      4000  /system/lib/android.hidl.token@1.0-utils.so (BuildId: d9989fda43157fb3aa7a5eeeae889d15)
+    e5eb0000-e5eb0fff r--      3000      1000  /system/lib/android.hidl.token@1.0-utils.so
+    e5eb1000-e5eb1fff rw-      4000      1000  /system/lib/android.hidl.token@1.0-utils.so
+    e5ec1000-e5ef2fff r-x         0     32000  /system/lib/libcamera_client.so (BuildId: 55fcdd64204eb5f3bd1de8f3d8d3eb40) (load bias 0x4000)
+    e5ef3000-e5ef3fff ---         0      1000
+    e5ef4000-e5ef9fff r--     32000      6000  /system/lib/libcamera_client.so
+    e5efa000-e5efafff rw-     38000      1000  /system/lib/libcamera_client.so
+    e5f2e000-e5f38fff r-x         0      b000  /system/lib/libmediautils.so (BuildId: e038a420cb057490218f780f19a15cef)
+    e5f39000-e5f39fff ---         0      1000
+    e5f3a000-e5f3afff r--      b000      1000  /system/lib/libmediautils.so
+    e5f3b000-e5f3bfff rw-      c000      1000  /system/lib/libmediautils.so
+    e5f57000-e5f77fff r-x         0     21000  /system/lib/libstagefright_foundation.so (BuildId: 1a3db557b92d9b879fd32c7d778ed9f4)
+    e5f78000-e5f78fff ---         0      1000
+    e5f79000-e5f79fff r--     21000      1000  /system/lib/libstagefright_foundation.so
+    e5f7a000-e5f7afff rw-     22000      1000  /system/lib/libstagefright_foundation.so
+    e5fa0000-e5fb4fff r-x         0     15000  /system/lib/libexpat.so (BuildId: 62c6277ccac34a8f346f720071e2e21e)
+    e5fb5000-e5fb6fff r--     14000      2000  /system/lib/libexpat.so
+    e5fb7000-e5fb7fff rw-     16000      1000  /system/lib/libexpat.so
+    e5fe2000-e5fe5fff r-x         0      4000  /system/lib/libhidlmemory.so (BuildId: f4ab8afb138c1d20902a15ac78a3e634)
+    e5fe6000-e5fe6fff ---         0      1000
+    e5fe7000-e5fe7fff r--      4000      1000  /system/lib/libhidlmemory.so
+    e5fe8000-e5fe8fff rw-      5000      1000  /system/lib/libhidlmemory.so
+    e602a000-e60b3fff r-x         0     8a000  /system/lib/libc++.so (BuildId: 0f555109dac16de2ba199331d4830a1e) (load bias 0x2000)
+    e60b4000-e60b4fff ---         0      1000
+    e60b5000-e60b8fff r--     8a000      4000  /system/lib/libc++.so
+    e60b9000-e60b9fff rw-     8e000      1000  /system/lib/libc++.so
+    e60ba000-e60bafff rw-         0      1000  [anon:.bss]
+    e60ca000-e611dfff r-x         0     54000  /system/lib/android.hardware.drm@1.0.so (BuildId: 9358ddc222f082c59a790dd0298bd494) (load bias 0x3000)
+    e611e000-e6122fff r--     53000      5000  /system/lib/android.hardware.drm@1.0.so
+    e6123000-e6123fff rw-     58000      1000  /system/lib/android.hardware.drm@1.0.so
+    e6174000-e6176fff r-x         0      3000  /system/lib/libhardware.so (BuildId: dc049b33da221960315e6b3ad5977922)
+    e6177000-e6177fff r--      2000      1000  /system/lib/libhardware.so
+    e6178000-e6178fff rw-      3000      1000  /system/lib/libhardware.so
+    e6183000-e61a3fff r-x         0     21000  /system/lib/libmediadrm.so (BuildId: 7ad344a542a4dc4e9cee0e72fc5fc6e3) (load bias 0x2000)
+    e61a4000-e61a4fff ---         0      1000
+    e61a5000-e61a8fff r--     21000      4000  /system/lib/libmediadrm.so
+    e61a9000-e61a9fff rw-     25000      1000  /system/lib/libmediadrm.so
+    e61d9000-e61ddfff r-x         0      5000  /system/lib/libspeexresampler.so (BuildId: 7e56d270564be912230b6b1dadc954a2)
+    e61de000-e61defff r--      4000      1000  /system/lib/libspeexresampler.so
+    e61df000-e61dffff rw-      5000      1000  /system/lib/libspeexresampler.so
+    e621b000-e621efff r-x         0      4000  /system/lib/libfmq.so (BuildId: 33840afb2fb9c6e1ecc0c0a47aeba8b1)
+    e621f000-e621ffff r--      3000      1000  /system/lib/libfmq.so
+    e6220000-e6220fff rw-      4000      1000  /system/lib/libfmq.so
+    e625f000-e627bfff r-x         0     1d000  /system/lib/libmemunreachable.so (BuildId: 4b5bea073ba9cec0fdf12836708299c9)
+    e627c000-e627cfff ---         0      1000
+    e627d000-e627dfff r--     1d000      1000  /system/lib/libmemunreachable.so
+    e627e000-e627efff rw-     1e000      1000  /system/lib/libmemunreachable.so
+    e6295000-e62dafff r-x         0     46000  /system/lib/libaudioclient.so (BuildId: c762ae143a94760c8fbd283d69ae3cc6) (load bias 0x5000)
+    e62db000-e62dbfff ---         0      1000
+    e62dc000-e62e2fff r--     46000      7000  /system/lib/libaudioclient.so
+    e62e3000-e62e3fff rw-     4d000      1000  /system/lib/libaudioclient.so
+    e6301000-e6334fff r-x         0     34000  /system/lib/android.hardware.camera.device@3.2.so (BuildId: 9a3d39565b33634f90c38e1a6655c2df) (load bias 0x1000)
+    e6335000-e6335fff ---         0      1000
+    e6336000-e6338fff r--     34000      3000  /system/lib/android.hardware.camera.device@3.2.so
+    e6339000-e6339fff rw-     37000      1000  /system/lib/android.hardware.camera.device@3.2.so
+    e6347000-e6352fff r-x         0      c000  /system/lib/libcutils.so (BuildId: c0b7db9612ce233571b56e9a59540558)
+    e6353000-e6353fff ---         0      1000
+    e6354000-e6354fff r--      c000      1000  /system/lib/libcutils.so
+    e6355000-e6355fff rw-      d000      1000  /system/lib/libcutils.so
+    e63aa000-e63acfff r-x         0      3000  /system/lib/libgraphicsenv.so (BuildId: f03b756535dd794e35b8ccdbe5f8f9ff)
+    e63ad000-e63adfff r--      2000      1000  /system/lib/libgraphicsenv.so
+    e63ae000-e63aefff rw-      3000      1000  /system/lib/libgraphicsenv.so
+    e63d2000-e649ffff r-x         0     ce000  /system/lib/libcameraservice.so (BuildId: 15c338672a718f5d209d4336c3ca11df) (load bias 0x9000)
+    e64a0000-e64aefff r--     cd000      f000  /system/lib/libcameraservice.so
+    e64af000-e64affff rw-     dc000      1000  /system/lib/libcameraservice.so
+    e64ce000-e64ddfff r-x         0     10000  /system/lib/libGLESv2.so (BuildId: 2268c414489246a91488baa7576ed97e)
+    e64de000-e64defff r--      f000      1000  /system/lib/libGLESv2.so
+    e64df000-e64dffff rw-     10000      1000  /system/lib/libGLESv2.so
+    e6511000-e6565fff r-x         0     55000  /system/lib/libsonivox.so (BuildId: 3a258d099d31106ed11dd76c3bd64362)
+    e6566000-e6566fff r--     54000      1000  /system/lib/libsonivox.so
+    e6567000-e6567fff rw-     55000      1000  /system/lib/libsonivox.so
+    e6568000-e656cfff rw-         0      5000  [anon:.bss]
+    e6590000-e6598fff r-x         0      9000  /system/lib/android.hardware.graphics.common@1.0.so (BuildId: 73e898e04b982f60b9b1fabb47a0a0ed)
+    e6599000-e6599fff r--      8000      1000  /system/lib/android.hardware.graphics.common@1.0.so
+    e659a000-e659afff rw-      9000      1000  /system/lib/android.hardware.graphics.common@1.0.so
+    e65c4000-e65f6fff r-x         0     33000  /system/lib/android.hardware.graphics.bufferqueue@1.0.so (BuildId: dd1a7338d68c92057b5a649b4f2ec558) (load bias 0x1000)
+    e65f7000-e65f7fff ---         0      1000
+    e65f8000-e65fafff r--     33000      3000  /system/lib/android.hardware.graphics.bufferqueue@1.0.so
+    e65fb000-e65fbfff rw-     36000      1000  /system/lib/android.hardware.graphics.bufferqueue@1.0.so
+    e660b000-e6624fff r-x         0     1a000  /system/lib/libhidlbase.so (BuildId: 2d2923c4099587fbdd7b16530bc8d8bd)
+    e6625000-e6625fff ---         0      1000
+    e6626000-e6626fff r--     1a000      1000  /system/lib/libhidlbase.so
+    e6627000-e6627fff rw-     1b000      1000  /system/lib/libhidlbase.so
+    e6654000-e66b0fff r-x         0     5d000  /system/lib/libbinder.so (BuildId: a0e68dc29d543608f4f662e12a22383c) (load bias 0x5000)
+    e66b1000-e66b8fff r--     5c000      8000  /system/lib/libbinder.so
+    e66b9000-e66b9fff rw-     64000      1000  /system/lib/libbinder.so
+    e66d7000-e66e4fff r-x         0      e000  /system/lib/libbase.so (BuildId: 20eb9e2ba577a06d0e7a68f6f57838d3)
+    e66e5000-e66e5fff r--      d000      1000  /system/lib/libbase.so
+    e66e6000-e66e6fff rw-      e000      1000  /system/lib/libbase.so
+    e6712000-e672dfff r-x         0     1c000  /system/lib/android.hidl.memory@1.0.so (BuildId: 6bd6735d641c98af81e80add0e83fcb9) (load bias 0x1000)
+    e672e000-e672efff ---         0      1000
+    e672f000-e6730fff r--     1c000      2000  /system/lib/android.hidl.memory@1.0.so
+    e6731000-e6731fff rw-     1e000      1000  /system/lib/android.hidl.memory@1.0.so
+    e6776000-e677afff r-x         0      5000  /system/lib/libnativeloader.so (BuildId: 96ce194abcbd7d9fed8fdec2c63165bf)
+    e677b000-e677bfff ---         0      1000
+    e677c000-e677cfff r--      5000      1000  /system/lib/libnativeloader.so
+    e677d000-e677dfff rw-      6000      1000  /system/lib/libnativeloader.so
+    e679c000-e67b5fff r-x         0     1a000  /system/lib/libEGL.so (BuildId: abe0b198729892fb0793cee221901fa3) (load bias 0x2000)
+    e67b6000-e67b7fff r--     19000      2000  /system/lib/libEGL.so
+    e67b8000-e67b8fff rw-     1b000      1000  /system/lib/libEGL.so
+    e67b9000-e67bbfff rw-         0      3000  [anon:.bss]
+    e67eb000-e67edfff r-x         0      3000  /system/lib/libvndksupport.so (BuildId: 82c658d9a8436618e717055dbac8db4d)
+    e67ee000-e67eefff r--      2000      1000  /system/lib/libvndksupport.so
+    e67ef000-e67effff rw-      3000      1000  /system/lib/libvndksupport.so
+    e6818000-e681ffff r-x         0      8000  /system/lib/libcamera_metadata.so (BuildId: a80da994a6fe22694cb0edbec91c7fdd)
+    e6820000-e6820fff ---         0      1000
+    e6821000-e6821fff r--      8000      1000  /system/lib/libcamera_metadata.so
+    e6822000-e6822fff rw-      9000      1000  /system/lib/libcamera_metadata.so
+    e6842000-e6844fff r-x         0      3000  /system/lib/android.hardware.configstore-utils.so (BuildId: 4290b12574a1171da12ef98eef06d608)
+    e6845000-e6845fff r--      2000      1000  /system/lib/android.hardware.configstore-utils.so
+    e6846000-e6846fff rw-      3000      1000  /system/lib/android.hardware.configstore-utils.so
+    e6884000-e68d0fff r-x         0     4d000  /system/lib/libhidltransport.so (BuildId: e0862418c6e9b66c92b5cd8df54dc853) (load bias 0x2000)
+    e68d1000-e68d1fff ---         0      1000
+    e68d2000-e68d5fff r--     4d000      4000  /system/lib/libhidltransport.so
+    e68d6000-e68d6fff rw-     51000      1000  /system/lib/libhidltransport.so
+    e690e000-e6925fff r-x         0     18000  /system/lib/libui.so (BuildId: fb78188c731b28e0de630ad2696b6305)
+    e6926000-e6926fff ---         0      1000
+    e6927000-e6927fff r--     18000      1000  /system/lib/libui.so
+    e6928000-e6928fff rw-     19000      1000  /system/lib/libui.so
+    e6954000-e6a67fff r-x         0    114000  /system/lib/libicuuc.so (BuildId: 43009aa9449028329498b7a2fb6f2084) (load bias 0x8000)
+    e6a68000-e6a68fff ---         0      1000
+    e6a69000-e6a73fff r--    114000      b000  /system/lib/libicuuc.so
+    e6a74000-e6a74fff rw-    11f000      1000  /system/lib/libicuuc.so
+    e6a75000-e6a75fff rw-         0      1000  [anon:.bss]
+    e6a8b000-e6a8efff r-x         0      4000  /system/lib/libpowermanager.so (BuildId: ff8a91db35744e998a77f14fef5a9648)
+    e6a8f000-e6a8ffff ---         0      1000
+    e6a90000-e6a90fff r--      4000      1000  /system/lib/libpowermanager.so
+    e6a91000-e6a91fff rw-      5000      1000  /system/lib/libpowermanager.so
+    e6acc000-e6ad0fff r-x         0      5000  /system/lib/libnativewindow.so (BuildId: 978bfb573bfcd5b796139894d0680d59)
+    e6ad1000-e6ad1fff r--      4000      1000  /system/lib/libnativewindow.so
+    e6ad2000-e6ad2fff rw-      5000      1000  /system/lib/libnativewindow.so
+    e6b0b000-e6b13fff r-x         0      9000  /system/lib/libmediametrics.so (BuildId: cc5a7db665f7204c694593ef25d9d77d)
+    e6b14000-e6b14fff ---         0      1000
+    e6b15000-e6b15fff r--      9000      1000  /system/lib/libmediametrics.so
+    e6b16000-e6b16fff rw-      a000      1000  /system/lib/libmediametrics.so
+    e6b4a000-e6b4dfff r-x         0      4000  /system/lib/libstdc++.so (BuildId: 3bb858a1073e9ad3d22e361ed6defce6)
+    e6b4e000-e6b4efff r--      3000      1000  /system/lib/libstdc++.so
+    e6b4f000-e6b4ffff rw-      4000      1000  /system/lib/libstdc++.so
+    e6b8a000-e6b9bfff r-x         0     12000  /system/lib/liblog.so (BuildId: 7d3900c1dde4357b40f2b893cfad5542)
+    e6b9c000-e6b9cfff r--     11000      1000  /system/lib/liblog.so
+    e6b9d000-e6b9dfff rw-     12000      1000  /system/lib/liblog.so
+    e6bd3000-e6be2fff r-x         0     10000  /system/lib/libmedia_helper.so (BuildId: b9a3dc8b61df5adab86ae70ddf3550cf)
+    e6be3000-e6be3fff ---         0      1000
+    e6be4000-e6be4fff r--     10000      1000  /system/lib/libmedia_helper.so
+    e6be5000-e6be5fff rw-     11000      1000  /system/lib/libmedia_helper.so
+    e6c10000-e6c30fff r-x         0     21000  /system/lib/libm.so (BuildId: b2d331af89b0191793fca76b95d89629)
+    e6c31000-e6c31fff r--     20000      1000  /system/lib/libm.so
+    e6c32000-e6c32fff rw-     21000      1000  /system/lib/libm.so
+    e6c60000-e6c62fff r-x         0      3000  /system/lib/libsync.so (BuildId: cd421e899f3960c7bf7b19786308fd92)
+    e6c63000-e6c63fff r--      2000      1000  /system/lib/libsync.so
+    e6c64000-e6c64fff rw-      3000      1000  /system/lib/libsync.so
+    e6c93000-e6c98fff r-x         0      6000  /system/lib/libnativehelper.so (BuildId: 2846bc53d0dc5710a095934f8fe8b670)
+    e6c99000-e6c99fff r--      5000      1000  /system/lib/libnativehelper.so
+    e6c9a000-e6c9afff rw-      6000      1000  /system/lib/libnativehelper.so
+    e6cc3000-e6cc9fff r-x         0      7000  /system/lib/libaudiomanager.so (BuildId: 5bef7c8af24c1e8e9d935078a477b1e6)
+    e6cca000-e6ccafff ---         0      1000
+    e6ccb000-e6ccbfff r--      7000      1000  /system/lib/libaudiomanager.so
+    e6ccc000-e6cccfff rw-      8000      1000  /system/lib/libaudiomanager.so
+    e6d0f000-e6d21fff r-x         0     13000  /system/lib/libbacktrace.so (BuildId: e0f27c375dc527bb83e82f24c8f793a1)
+    e6d22000-e6d22fff ---         0      1000
+    e6d23000-e6d23fff r--     13000      1000  /system/lib/libbacktrace.so
+    e6d24000-e6d24fff rw-     14000      1000  /system/lib/libbacktrace.so
+    e6d42000-e6d9ffff r-x         0     5e000  /system/lib/android.hardware.media.omx@1.0.so (BuildId: 328372afd63cb64f1800844a19d39eb9) (load bias 0x3000)
+    e6da0000-e6da4fff r--     5d000      5000  /system/lib/android.hardware.media.omx@1.0.so
+    e6da5000-e6da5fff rw-     62000      1000  /system/lib/android.hardware.media.omx@1.0.so
+    e6dcb000-e6dd0fff r-x         0      6000  /system/lib/android.hardware.media@1.0.so (BuildId: 77abde9b013d0e77a70405669939c521)
+    e6dd1000-e6dd1fff r--      5000      1000  /system/lib/android.hardware.media@1.0.so
+    e6dd2000-e6dd2fff rw-      6000      1000  /system/lib/android.hardware.media@1.0.so
+    e6e08000-e6e1ffff r-x         0     18000  /system/lib/android.hardware.camera.device@3.3.so (BuildId: 9e855c6a8c1036569fb50668a0b2a9bd)
+    e6e20000-e6e21fff r--     17000      2000  /system/lib/android.hardware.camera.device@3.3.so
+    e6e22000-e6e22fff rw-     19000      1000  /system/lib/android.hardware.camera.device@3.3.so
+    e6e52000-e6e6cfff r-x         0     1b000  /system/lib/libhwbinder.so (BuildId: 943dd3d2305addb21374a8be52f9de5e)
+    e6e6d000-e6e6efff r--     1a000      2000  /system/lib/libhwbinder.so
+    e6e6f000-e6e6ffff rw-     1c000      1000  /system/lib/libhwbinder.so
+    e6e8f000-e6eedfff r-x         0     5f000  /system/lib/libgui.so (BuildId: fc7251209a31cdce87173fff42b829db) (load bias 0x7000)
+    e6eee000-e6ef7fff r--     5e000      a000  /system/lib/libgui.so
+    e6ef8000-e6ef8fff rw-     68000      1000  /system/lib/libgui.so
+    e6f0b000-e6f20fff r-x         0     16000  /system/lib/liblzma.so (BuildId: ea987be811126d8521429166ebe6e14b)
+    e6f21000-e6f21fff ---         0      1000
+    e6f22000-e6f22fff r--     16000      1000  /system/lib/liblzma.so
+    e6f23000-e6f23fff rw-     17000      1000  /system/lib/liblzma.so
+    e6f24000-e6f29fff rw-         0      6000  [anon:.bss]
+    e6f48000-e6f68fff r-x         0     21000  /system/lib/android.hardware.camera.provider@2.4.so (BuildId: 74290267e6bdb7dc8eed20bab35eab5a) (load bias 0x1000)
+    e6f69000-e6f69fff ---         0      1000
+    e6f6a000-e6f6bfff r--     21000      2000  /system/lib/android.hardware.camera.provider@2.4.so
+    e6f6c000-e6f6cfff rw-     23000      1000  /system/lib/android.hardware.camera.provider@2.4.so
+    e6fa1000-e6faefff r-x         0      e000  /system/lib/libaudioutils.so (BuildId: c05fa4eba7481af4af57a0620f2bae8a)
+    e6faf000-e6faffff r--      d000      1000  /system/lib/libaudioutils.so
+    e6fb0000-e6fb0fff rw-      e000      1000  /system/lib/libaudioutils.so
+    e6fc5000-e6fd8fff r-x         0     14000  /system/lib/android.hardware.graphics.allocator@2.0.so (BuildId: 3d2f9a0393196a70d82a3150f0ef83e9)
+    e6fd9000-e6fd9fff ---         0      1000
+    e6fda000-e6fdafff r--     14000      1000  /system/lib/android.hardware.graphics.allocator@2.0.so
+    e6fdb000-e6fdbfff rw-     15000      1000  /system/lib/android.hardware.graphics.allocator@2.0.so
+    e7018000-e7192fff r-x         0    17b000  /system/lib/libicui18n.so (BuildId: 22fe6fa72915bba76a9809d354977013) (load bias 0x6000)
+    e7193000-e719cfff r--    17a000      a000  /system/lib/libicui18n.so
+    e719d000-e719dfff rw-    184000      1000  /system/lib/libicui18n.so
+    e71d7000-e721afff r-x         0     44000  /system/lib/android.hardware.camera.device@1.0.so (BuildId: d626591ece9756658760643e80250f6d) (load bias 0x2000)
+    e721b000-e721dfff r--     43000      3000  /system/lib/android.hardware.camera.device@1.0.so
+    e721e000-e721efff rw-     46000      1000  /system/lib/android.hardware.camera.device@1.0.so
+    e724c000-e726bfff r--         0     20000  /dev/__properties__/u:object_r:default_prop:s0
+    e726c000-e726ffff r-x         0      4000  /system/lib/libnativebridge.so (BuildId: 25fba577c6825261d90ed4bea6ce9f9e)
+    e7270000-e7270fff r--      3000      1000  /system/lib/libnativebridge.so
+    e7271000-e7271fff rw-      4000      1000  /system/lib/libnativebridge.so
+    e7288000-e7314fff r-x         0     8d000  /system/lib/libc.so (BuildId: 9b23063c7f47ca55d26254403abdd65c)
+    e7315000-e7318fff r--     8c000      4000  /system/lib/libc.so
+    e7319000-e731afff rw-     90000      2000  /system/lib/libc.so
+    e731b000-e731bfff rw-         0      1000  [anon:.bss]
+    e731c000-e731cfff r--         0      1000  [anon:.bss]
+    e731d000-e7322fff rw-         0      6000  [anon:.bss]
+    e7341000-e7360fff r--         0     20000  /dev/__properties__/properties_serial
+    e7361000-e7361fff rw-         0      1000  [anon:linker_alloc]
+    e7362000-e7362fff r--         0      1000  [anon:linker_alloc]
+    e7363000-e7364fff rw-         0      2000  [anon:linker_alloc]
+    e73a9000-e73aafff r--         0      2000  [anon:linker_alloc]
+    e73d2000-e73d2fff rw-         0      1000  [anon:linker_alloc_vector]
+    e73d4000-e73d4fff r--         0      1000  [anon:linker_alloc]
+    e73e2000-e73e2fff r--         0      1000  [anon:linker_alloc]
+    e73f0000-e73f0fff r--         0      1000  [anon:atexit handlers]
+    e73f1000-e73f1fff rw-         0      1000  [anon:arc4random data]
+    e73f2000-e73f2fff rw-         0      1000  [anon:linker_alloc]
+    e73fa000-e73fafff r--         0      1000  [anon:linker_alloc]
+    e74b1000-e74b1fff r--         0      1000  [anon:linker_alloc]
+    e74b2000-e74b2fff rw-         0      1000  [anon:linker_alloc]
+    e74e5000-e74e5fff r--         0      1000  [anon:linker_alloc]
+    e7512000-e7512fff rw-         0      1000  [anon:linker_alloc]
+    e751b000-e751bfff r--         0      1000  [anon:linker_alloc]
+    e7585000-e7585fff rw-         0      1000  [anon:linker_alloc]
+    e75db000-e75dbfff r--         0      1000  [anon:linker_alloc]
+    e75dc000-e75dcfff rw-         0      1000  [anon:linker_alloc]
+    e7667000-e7667fff rw-         0      1000  [anon:linker_alloc_vector]
+    e7668000-e7668fff r--         0      1000  [anon:linker_alloc]
+    e7679000-e7679fff r--         0      1000  [anon:linker_alloc]
+    e76b0000-e76b0fff ---         0      1000  [anon:thread signal stack guard page]
+    e76b1000-e76b4fff rw-         0      4000  [anon:thread signal stack]
+    e76b5000-e76b5fff ---         0      1000  [anon:bionic TLS guard]
+    e76b6000-e76b8fff rw-         0      3000  [anon:bionic TLS]
+    e76b9000-e76b9fff ---         0      1000  [anon:bionic TLS guard]
+    e76ba000-e76bafff ---         0      1000  [anon:thread signal stack guard page]
+    e76bb000-e76befff rw-         0      4000  [anon:thread signal stack]
+    e76bf000-e76bffff ---         0      1000  [anon:bionic TLS guard]
+    e76c0000-e76c2fff rw-         0      3000  [anon:bionic TLS]
+    e76c3000-e76c3fff ---         0      1000  [anon:bionic TLS guard]
+    e76c4000-e76c4fff rw-         0      1000  [anon:linker_alloc]
+    e76c7000-e76e6fff r--         0     20000  /dev/__properties__/u:object_r:debug_prop:s0
+    e76e7000-e7706fff r--         0     20000  /dev/__properties__/u:object_r:hwservicemanager_prop:s0
+    e7707000-e7726fff r--         0     20000  /dev/__properties__/u:object_r:log_tag_prop:s0
+    e7727000-e7746fff r--         0     20000  /dev/__properties__/u:object_r:logd_prop:s0
+    e7747000-e7747fff rw-         0      1000  [anon:linker_alloc]
+    e7748000-e7748fff r--         0      1000  [anon:linker_alloc]
+    e7749000-e774afff rw-         0      2000  [anon:linker_alloc_vector]
+    e774b000-e774efff rw-         0      4000  [anon:linker_alloc_small_objects]
+    e774f000-e774ffff r--         0      1000  [anon:linker_alloc]
+    e7750000-e7750fff rw-         0      1000
+    e7751000-e7751fff rw-         0      1000  [anon:linker_alloc_vector]
+    e7752000-e7752fff rw-         0      1000  [anon:linker_alloc_small_objects]
+    e7753000-e7753fff r--         0      1000  [anon:linker_alloc]
+    e7754000-e7773fff r--         0     20000  /dev/__properties__/u:object_r:debug_prop:s0
+    e7774000-e7793fff r--         0     20000  /dev/__properties__/properties_serial
+    e7794000-e7795fff rw-         0      2000  [anon:linker_alloc_small_objects]
+    e7796000-e7796fff rw-         0      1000  [anon:linker_alloc_vector]
+    e7797000-e7797fff ---         0      1000
+    e7798000-e7798fff rw-         0      1000
+    e7799000-e7799fff ---         0      1000
+    e779a000-e779afff rw-         0      1000  [anon:linker_alloc_lob]
+    e779b000-e779bfff r--         0      1000  [anon:linker_alloc]
+    e779c000-e779cfff rw-         0      1000  [anon:linker_alloc_vector]
+    e779d000-e779ffff rw-         0      3000  [anon:linker_alloc_small_objects]
+    e77a0000-e77a0fff r--         0      1000  [anon:atexit handlers]
+    e77a1000-e77a1fff ---         0      1000  [anon:thread signal stack guard page]
+    e77a2000-e77a5fff rw-         0      4000  [anon:thread signal stack]
+    e77a6000-e77a6fff rw-         0      1000  [anon:arc4random data]
+    e77a7000-e77a7fff ---         0      1000  [anon:bionic TLS guard]
+    e77a8000-e77aafff rw-         0      3000  [anon:bionic TLS]
+    e77ab000-e77abfff ---         0      1000  [anon:bionic TLS guard]
+    e77ac000-e7834fff r-x         0     89000  /system/bin/linker (BuildId: 9a5187ac03ab926ee251020ba07b20c4)
+    e7835000-e7836fff r--     88000      2000  /system/bin/linker
+    e7837000-e7837fff rw-     8a000      1000  /system/bin/linker
+    e7838000-e787ffff rw-         0     48000
+    e7880000-e7880fff r--         0      1000
+    e7881000-e7886fff rw-         0      6000
+    ffd3e000-ffd5efff rw-         0     21000  [stack]
+    ffff0000-ffff0fff r-x         0      1000  [vectors]
+--------- tail end of log main
+03-05 04:42:14.412  3179  3179 I CameraService: CameraService started (pid=3179)
+03-05 04:42:14.412  3179  3179 I CameraService: CameraService process starting
+03-05 04:42:14.413  3179  3179 W BatteryNotifier: batterystats service unavailable!
+03-05 04:42:14.413  3179  3179 W BatteryNotifier: batterystats service unavailable!
+03-05 04:42:14.422  3179  3179 E libc++abi: terminating with uncaught exception of type std::__1::system_error: condition_variable timed_wait failed: Invalid argument
+--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+pid: 3179, tid: 3554, name: HwBinder:3179_1  >>> /system/bin/cameraserver <<<
+signal 5 (SIGTRAP), code -32763 (PTRACE_EVENT_STOP), fault addr 0xde2
+    r0 00000003  r1 c0306201  r2 e57c9888  r3 e57c987c
+    r4 c0306201  r5 e57c9888  r6 e5603000  r7 00000036
+    r8 00000000  r9 e5603030  sl e57c98a8  fp e57c9890
+    ip 00000000  sp e57c9868  lr e72a6103  pc e72d1574  cpsr 20010010
+    d0  4242424242424242  d1  4242424242424242
+    d2  ffffffffffffffff  d3  ffffffffffffffff
+    d4  2e31406575657571  d5  70617247493a3a30
+    d6  6566667542636968  d7  656375646f725072
+    d8  0000000000000000  d9  0000000000000000
+    d10 0000000000000000  d11 0000000000000000
+    d12 0000000000000000  d13 0000000000000000
+    d14 0000000000000000  d15 0000000000000000
+    d16 e550300000000001  d17 00001000000fc970
+    d18 0000000000000000  d19 000001c0000001c0
+    d20 0000000800000008  d21 0000000800000008
+    d22 0000000400000004  d23 0000000400000004
+    d24 000021c1000001c1  d25 000061c1000041c1
+    d26 000021c0000001c0  d27 000061c0000041c0
+    d28 0000000000000000  d29 0000000000000000
+    d30 0000000000000000  d31 0000000000000000
+    scr 20000010
+
+backtrace:
+    #00 pc 00049574  /system/lib/libc.so (__ioctl+8)
+    #01 pc 0001e0ff  /system/lib/libc.so (ioctl+38)
+    #02 pc 00010111  /system/lib/libhwbinder.so (android::hardware::IPCThreadState::talkWithDriver(bool)+204)
+    #03 pc 0001021d  /system/lib/libhwbinder.so (android::hardware::IPCThreadState::getAndExecuteCommand()+8)
+    #04 pc 0001083f  /system/lib/libhwbinder.so (android::hardware::IPCThreadState::joinThreadPool(bool)+38)
+    #05 pc 00017629  /system/lib/libhwbinder.so (android::hardware::PoolThread::threadLoop()+12)
+    #06 pc 0000d22d  /system/lib/libutils.so (android::Thread::_threadLoop(void*)+144)
+    #07 pc 00047e23  /system/lib/libc.so (__pthread_start(void*)+22)
+    #08 pc 0001b287  /system/lib/libc.so (__start_thread+32)
+
+stack:
+         e57c9828  e7321cd4  [anon:.bss]
+         e57c982c  00000069
+         e57c9830  e5a8de00  [anon:libc_malloc]
+         e57c9834  e5a13288  [anon:libc_malloc]
+         e57c9838  00000004
+         e57c983c  e5a8e8f0  [anon:libc_malloc]
+         e57c9840  e731a881  /system/lib/libc.so
+         e57c9844  fffffffc
+         e57c9848  e5eeb2f6  /system/lib/libcamera_client.so (android::CameraBase<android::Camera, android::CameraTraits<android::Camera>>::getCameraService()+629)
+         e57c984c  00000004
+         e57c9850  e5603030  [anon:libc_malloc]
+         e57c9854  e5603074  [anon:libc_malloc]
+         e57c9858  00000000
+         e57c985c  00000000
+         e57c9860  e5603030  [anon:libc_malloc]
+         e57c9864  e57c98a8
+    #00  e57c9868  e57c987c
+         ........  ........
+    #01  e57c9868  e57c987c
+         e57c986c  e5eeb2f6  /system/lib/libcamera_client.so (android::CameraBase<android::Camera, android::CameraTraits<android::Camera>>::getCameraService()+629)
+         e57c9870  00000000
+         e57c9874  e6e62115  /system/lib/libhwbinder.so (android::hardware::IPCThreadState::talkWithDriver(bool)+208)
+         e57c9878  e57c9888
+         e57c987c  00000000
+    #02  e57c9880  0000000f
+         e57c9884  e5603074  [anon:libc_malloc]
+         e57c9888  00000000
+         e57c988c  00000000
+         e57c9890  00000000
+         e57c9894  00000000
+         e57c9898  e560a100  [anon:libc_malloc]
+         e57c989c  00000000
+         e57c98a0  00000100
+         e57c98a4  00000000
+         e57c98a8  00000000
+         e57c98ac  00000000
+         e57c98b0  e560a000  [anon:libc_malloc]
+         e57c98b4  00000000
+         e57c98b8  e5eeb2f6  /system/lib/libcamera_client.so (android::CameraBase<android::Camera, android::CameraTraits<android::Camera>>::getCameraService()+629)
+         e57c98bc  e5603000  [anon:libc_malloc]
+         ........  ........
+    #03  e57c98e0  e5603030  [anon:libc_malloc]
+         e57c98e4  e5603074  [anon:libc_malloc]
+         e57c98e8  00000000
+         e57c98ec  e5603000  [anon:libc_malloc]
+         e57c98f0  00000001
+         e57c98f4  e5603074  [anon:libc_malloc]
+         e57c98f8  00000000
+         e57c98fc  e6e62843  /system/lib/libhwbinder.so (android::hardware::IPCThreadState::joinThreadPool(bool)+42)
+    #04  e57c9900  e5a1f810  [anon:libc_malloc]
+         e57c9904  00000000
+         e57c9908  e5a1f810  [anon:libc_malloc]
+         e57c990c  00000000
+         e57c9910  e57c9970
+         e57c9914  e6e6962d  /system/lib/libhwbinder.so (android::hardware::PoolThread::threadLoop()+16)
+    #05  e57c9918  e5a1f810  [anon:libc_malloc]
+         e57c991c  e5c4e22f  /system/lib/libutils.so (android::Thread::_threadLoop(void*)+146)
+    #06  e57c9920  e5a1f810  [anon:libc_malloc]
+         e57c9924  e5a17910  [anon:libc_malloc]
+         e57c9928  e5a1f810  [anon:libc_malloc]
+         e57c992c  e5a178f0  [anon:libc_malloc]
+         e57c9930  e5a1f810  [anon:libc_malloc]
+         e57c9934  e5eeb2f6  /system/lib/libcamera_client.so (android::CameraBase<android::Camera, android::CameraTraits<android::Camera>>::getCameraService()+629)
+         e57c9938  e57c9970
+         e57c993c  e57c9970
+         e57c9940  e57c9970
+         e57c9944  00000078
+         e57c9948  00000c6b
+         e57c994c  00000c6b
+         e57c9950  e5c4de69  /system/lib/libutils.so (thread_data_t::trampoline(thread_data_t const*))
+         e57c9954  e72cfe25  /system/lib/libc.so (__pthread_start(void*)+24)
+    #07  e57c9958  e72cfe0d  /system/lib/libc.so (__pthread_start(void*))
+         e57c995c  e72a3289  /system/lib/libc.so (__start_thread+34)
+    #08  e57c9960  e57c9978
+         e57c9964  e72cfe0d  /system/lib/libc.so (__pthread_start(void*))
+         e57c9968  e57c9970
+         e57c996c  00000000
+         e57c9970  e78814a4
+         e57c9974  e55ff970
+         e57c9978  00000de2
+         e57c997c  00000c6b
+         e57c9980  00000001
+         e57c9984  e56cd000  [anon:thread stack guard page]
+         e57c9988  000fc970
+         e57c998c  00001000
+         e57c9990  00000000
+         e57c9994  00000000
+         e57c9998  00000003
+         e57c999c  00000000
+--- --- --- --- --- --- --- --- --- --- --- --- --- --- --- ---
+pid: 3179, tid: 3561, name: HwBinder:3179_2  >>> /system/bin/cameraserver <<<
+signal 5 (SIGTRAP), code -32763 (PTRACE_EVENT_STOP), fault addr 0xde9
+    r0 00000003  r1 c0306201  r2 e55ff888  r3 e55ff87c
+    r4 c0306201  r5 e55ff888  r6 e5a39380  r7 00000036
+    r8 00000000  r9 e5a393b0  sl e55ff8a8  fp e55ff890
+    ip 00000000  sp e55ff868  lr e72a6103  pc e72d1574  cpsr 20010010
+    d0  ffffffffffffffff  d1  ffffffffffffffff
+    d2  ffffffffffffffff  d3  ffffffffffffffff
+    d4  2e31406575657571  d5  70617247493a3a30
+    d6  6566667542636968  d7  656375646f725072
+    d8  0000000000000000  d9  0000000000000000
+    d10 0000000000000000  d11 0000000000000000
+    d12 0000000000000000  d13 0000000000000000
+    d14 0000000000000000  d15 0000000000000000
+    d16 0000000000000000  d17 0000000000000000
+    d18 0000000000000000  d19 0000000000000000
+    d20 0000000000000000  d21 0000000000000000
+    d22 0000000000000002  d23 0000000000000000
+    d24 000021c1000001c1  d25 000061c1000041c1
+    d26 000021c0000001c0  d27 000061c0000041c0
+    d28 0000000000000000  d29 0000000000000000
+    d30 0000000000000000  d31 0000000000000000
+    scr 20000010
+
+backtrace:
+    #00 pc 00049574  /system/lib/libc.so (__ioctl+8)
+    #01 pc 0001e0ff  /system/lib/libc.so (ioctl+38)
+    #02 pc 00010111  /system/lib/libhwbinder.so (android::hardware::IPCThreadState::talkWithDriver(bool)+204)
+    #03 pc 0001021d  /system/lib/libhwbinder.so (android::hardware::IPCThreadState::getAndExecuteCommand()+8)
+    #04 pc 0001083f  /system/lib/libhwbinder.so (android::hardware::IPCThreadState::joinThreadPool(bool)+38)
+    #05 pc 00017629  /system/lib/libhwbinder.so (android::hardware::PoolThread::threadLoop()+12)
+    #06 pc 0000d22d  /system/lib/libutils.so (android::Thread::_threadLoop(void*)+144)
+    #07 pc 00047e23  /system/lib/libc.so (__pthread_start(void*)+22)
+    #08 pc 0001b287  /system/lib/libc.so (__start_thread+32)
+
+stack:
+         e55ff828  e7321cd4  [anon:.bss]
+         e55ff82c  00000069
+         e55ff830  e5a80100  [anon:libc_malloc]
+         e55ff834  e5a13308  [anon:libc_malloc]
+         e55ff838  00000004
+         e55ff83c  e5a80bf0  [anon:libc_malloc]
+         e55ff840  e731a881  /system/lib/libc.so
+         e55ff844  fffffffc
+         e55ff848  e5eeb2f6  /system/lib/libcamera_client.so (android::CameraBase<android::Camera, android::CameraTraits<android::Camera>>::getCameraService()+629)
+         e55ff84c  00000004
+         e55ff850  e5a393b0  [anon:libc_malloc]
+         e55ff854  e5a393f4  [anon:libc_malloc]
+         e55ff858  00000000
+         e55ff85c  00000000
+         e55ff860  e5a393b0  [anon:libc_malloc]
+         e55ff864  e55ff8a8
+    #00  e55ff868  e55ff87c
+         ........  ........
+    #01  e55ff868  e55ff87c
+         e55ff86c  e5eeb2f6  /system/lib/libcamera_client.so (android::CameraBase<android::Camera, android::CameraTraits<android::Camera>>::getCameraService()+629)
+         e55ff870  00000000
+         e55ff874  e6e62115  /system/lib/libhwbinder.so (android::hardware::IPCThreadState::talkWithDriver(bool)+208)
+         e55ff878  e55ff888
+         e55ff87c  00000000
+    #02  e55ff880  0000000f
+         e55ff884  e5a393f4  [anon:libc_malloc]
+         e55ff888  00000000
+         e55ff88c  00000000
+         e55ff890  00000000
+         e55ff894  00000000
+         e55ff898  e5a52900  [anon:libc_malloc]
+         e55ff89c  00000000
+         e55ff8a0  00000100
+         e55ff8a4  00000000
+         e55ff8a8  00000000
+         e55ff8ac  00000000
+         e55ff8b0  e5a52800  [anon:libc_malloc]
+         e55ff8b4  00000000
+         e55ff8b8  e5eeb2f6  /system/lib/libcamera_client.so (android::CameraBase<android::Camera, android::CameraTraits<android::Camera>>::getCameraService()+629)
+         e55ff8bc  e5a39380  [anon:libc_malloc]
+         ........  ........
+    #03  e55ff8e0  e5a393b0  [anon:libc_malloc]
+         e55ff8e4  e5a393f4  [anon:libc_malloc]
+         e55ff8e8  00000000
+         e55ff8ec  e5a39380  [anon:libc_malloc]
+         e55ff8f0  00000000
+         e55ff8f4  e5a393f4  [anon:libc_malloc]
+         e55ff8f8  00000000
+         e55ff8fc  e6e62843  /system/lib/libhwbinder.so (android::hardware::IPCThreadState::joinThreadPool(bool)+42)
+    #04  e55ff900  e560c000  [anon:libc_malloc]
+         e55ff904  00000000
+         e55ff908  e560c000  [anon:libc_malloc]
+         e55ff90c  00000000
+         e55ff910  e55ff970
+         e55ff914  e6e6962d  /system/lib/libhwbinder.so (android::hardware::PoolThread::threadLoop()+16)
+    #05  e55ff918  e560c000  [anon:libc_malloc]
+         e55ff91c  e5c4e22f  /system/lib/libutils.so (android::Thread::_threadLoop(void*)+146)
+    #06  e55ff920  e560c000  [anon:libc_malloc]
+         e55ff924  e560f020  [anon:libc_malloc]
+         e55ff928  e560c000  [anon:libc_malloc]
+         e55ff92c  e560f000  [anon:libc_malloc]
+         e55ff930  e560c000  [anon:libc_malloc]
+         e55ff934  e5eeb2f6  /system/lib/libcamera_client.so (android::CameraBase<android::Camera, android::CameraTraits<android::Camera>>::getCameraService()+629)
+         e55ff938  e55ff970
+         e55ff93c  e55ff970
+         e55ff940  e55ff970
+         e55ff944  00000078
+         e55ff948  00000c6b
+         e55ff94c  00000de2
+         e55ff950  e5c4de69  /system/lib/libutils.so (thread_data_t::trampoline(thread_data_t const*))
+         e55ff954  e72cfe25  /system/lib/libc.so (__pthread_start(void*)+24)
+    #07  e55ff958  e72cfe0d  /system/lib/libc.so (__pthread_start(void*))
+         e55ff95c  e72a3289  /system/lib/libc.so (__start_thread+34)
+    #08  e55ff960  e55ff978
+         e55ff964  e72cfe0d  /system/lib/libc.so (__pthread_start(void*))
+         e55ff968  e55ff970
+         e55ff96c  00000000
+         e55ff970  e57c9970
+         e55ff974  00000000
+         e55ff978  00000de9
+         e55ff97c  00000c6b
+         e55ff980  00000001
+         e55ff984  e5503000  [anon:thread stack guard page]
+         e55ff988  000fc970
+         e55ff98c  00001000
+         e55ff990  00000000
+         e55ff994  00000000
+         e55ff998  00000003
+         e55ff99c  00000000
+
+open files:
+    fd 0: /dev/null
+    fd 1: /dev/null
+    fd 2: /dev/null
+    fd 3: /dev/hwbinder
+    fd 4: /dev/binder
+    fd 5: socket:[13789]
+    fd 6: /dev/pmsg0
+    fd 7: /sys/kernel/debug/tracing/trace_marker
+--------- log main
+03-05 04:42:14.409  3179  3179 I cameraserver: ServiceManager: 0xe5a18520
+03-05 04:42:14.412  3179  3179 I CameraService: CameraService started (pid=3179)
+03-05 04:42:14.412  3179  3179 I CameraService: CameraService process starting
+03-05 04:42:14.413  3179  3179 W BatteryNotifier: batterystats service unavailable!
+03-05 04:42:14.413  3179  3179 W BatteryNotifier: batterystats service unavailable!
+03-05 04:42:14.422  3179  3179 E libc++abi: terminating with uncaught exception of type std::__1::system_error: condition_variable timed_wait failed: Invalid argument

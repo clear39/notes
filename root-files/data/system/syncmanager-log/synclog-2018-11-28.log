@@ -1,0 +1,20 @@
+2018-11-28 09:41:25.439 3579 Sync manager initialized: Android/autolink_8qxp/autolink_8qxp:8.1.0/1.2.0-beta2-rc3/20180724:eng/dev-keys
+2018-11-28 09:41:26.153 3579 onStartUser: user=0
+2018-11-28 09:41:31.344 3612 onUnlockUser: user=0
+2018-11-28 09:41:32.222 3579 Loaded persisted syncs: 0 periodic syncs, 0 oneshot syncs, 7 total system server jobs, JobStats: FirstLoad: 0/0/0 LastSave: -1/-1/-1
+2018-11-28 09:41:32.785 3611 updateRunningAccountsH: []
+2018-11-28 09:41:23.987 3611 Sync manager initialized: Android/autolink_8qxp/autolink_8qxp:8.1.0/1.2.0-beta2-rc3/20180724:eng/dev-keys
+2018-11-28 09:41:24.722 3611 onStartUser: user=0
+2018-11-28 09:41:29.845 3644 onUnlockUser: user=0
+2018-11-28 09:41:31.036 3611 Loaded persisted syncs: 0 periodic syncs, 0 oneshot syncs, 7 total system server jobs, JobStats: FirstLoad: 0/0/0 LastSave: -1/-1/-1
+2018-11-28 09:41:31.291 3643 updateRunningAccountsH: []
+2018-11-28 09:41:23.981 3581 Sync manager initialized: Android/autolink_8qxp/autolink_8qxp:8.1.0/1.2.0-beta2-rc3/20180724:eng/dev-keys
+2018-11-28 09:41:24.700 3581 onStartUser: user=0
+2018-11-28 09:41:29.578 3614 onUnlockUser: user=0
+2018-11-28 09:41:30.596 3581 Loaded persisted syncs: 0 periodic syncs, 0 oneshot syncs, 7 total system server jobs, JobStats: FirstLoad: 0/0/0 LastSave: -1/-1/-1
+2018-11-28 09:41:31.296 3613 updateRunningAccountsH: []
+2018-11-28 10:34:47.983 3624 Sync manager initialized: Android/autolink_8qxp/autolink_8qxp:8.1.0/1.2.0-beta2-rc3/20180724:eng/dev-keys
+2018-11-28 10:34:48.824 3624 onStartUser: user=0
+2018-11-28 10:34:54.122 3657 onUnlockUser: user=0
+2018-11-28 10:34:55.206 3624 Loaded persisted syncs: 0 periodic syncs, 0 oneshot syncs, 7 total system server jobs, JobStats: FirstLoad: 0/0/0 LastSave: -1/-1/-1
+2018-11-28 10:34:55.543 3656 updateRunningAccountsH: []
