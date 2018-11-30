@@ -1,6 +1,0 @@
-<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
-<map>
-    <boolean name="migratedToNewBlocking" value="true" />
-    <boolean name="checkedAutoMigrate" value="true" />
-    <int name="persistent_long_next_file_index_plain_text" value="1" />
-</map>

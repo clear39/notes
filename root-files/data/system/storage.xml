@@ -1,6 +1,0 @@
-<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
-<volumes version="3" forceAdoptable="false">
-<volume type="0" fsUuid="0BB5-3C92" userFlags="0" createdMillis="3085926462142" lastTrimMillis="0" lastBenchMillis="0" />
-<volume type="0" fsUuid="5243-5977" userFlags="0" createdMillis="1542957294365" lastTrimMillis="0" lastBenchMillis="0" />
-<volume type="0" fsUuid="B4FE-5315" userFlags="0" createdMillis="3085926417655" lastTrimMillis="0" lastBenchMillis="0" />
-</volumes>

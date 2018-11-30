@@ -1,5 +1,0 @@
-2044-05-14 11:06:25.849 3607 Sync manager initialized: Android/autolink_8qxp/autolink_8qxp:8.1.0/1.2.0-beta2-rc3/20180724:eng/dev-keys
-2044-05-14 11:06:26.507 3607 onStartUser: user=0
-2044-05-14 11:06:31.374 3640 onUnlockUser: user=0
-2044-05-14 11:06:31.972 3607 Loaded persisted syncs: 0 periodic syncs, 0 oneshot syncs, 7 total system server jobs, JobStats: FirstLoad: 0/0/0 LastSave: -1/-1/-1
-2044-05-14 11:06:37.252 3639 updateRunningAccountsH: []

@@ -1,4 +1,0 @@
-<?xml version='1.0' encoding='utf-8' standalone='yes' ?>
-<services>
-    <service uid="10032" authority="com.android.email.provider" accountType="com.android.email" />
-</services>
