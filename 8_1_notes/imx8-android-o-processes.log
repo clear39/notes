@@ -67,3 +67,12 @@ u0_a12        5346  2801 1 03:16:43 ?     00:00:01 com.android.documentsui
 u0_a19        5380  2801 0 03:16:44 ?     00:00:00 com.android.externalstorage
 u0_a11        5417  2801 0 03:16:44 ?     00:00:00 android.process.media
 u0_a11        5446  2801 0 03:16:44 ?     00:00:00 com.android.mtp
+
+
+
+
+autolink_8qxp:/ # cat /proc/cmdline                                            
+console=ttyLP0,115200 earlycon=lpuart32,0x5a060000,115200,115200 init=/init androidboot.console=ttyLP0 consoleblank=0 androidboot.hardware=freescale androidboot.fbTileSupport=enable cma=928M@0x960M-0xe00M o
+ot.soc_type=imx8qxp androidboot.storage_type=emmc androidboot.boottime=1BLL:0,1BLE:6231,KL:0,KD:0,AVB:1830,ODT:0,SW:0 androidboot.verifiedbootstate=orange androidboot.slot_suffix=_a root=PARTUUID=1aa38f77-f
+507-4beb-8bd0-6b49d0e9e8aa androidboot.vbmeta.device=PARTUUID=b91da057-d6f2-47fc-b838-09330020245c androidboot.vbmeta.avb_version=1.0 androidboot.vbmeta.device_state=unlocked androidboot.vbmeta.hash_alg=shb
+meta.size=3008 androidboot.vbmeta.digest=c22e7cf87ce2897e2d9da46bb5523da28703ed4a8432a9be1e1dc92e76764158 androidboot.veritymode=disabled androidboot.avb=disabled skip_initramfs rootwait
