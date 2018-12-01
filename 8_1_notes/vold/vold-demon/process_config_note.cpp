@@ -1,4 +1,8 @@
-//	@system/core/fs_mgr/include_fstab/fstab/fstab.h
+
+/////////////////////////////////////////////////////////////////
+
+
+//  @system/core/fs_mgr/include_fstab/fstab/fstab.h
 struct fstab {
     int num_entries;
     struct fstab_rec* recs;
@@ -29,8 +33,9 @@ struct fstab_rec {
 };
 
 
+
 static int process_config(VolumeManager *vm, bool* has_adoptable, bool* has_quota) {
-    fstab = fs_mgr_read_fstab_default();//	@system/core/fs_mgr/fs_mgr_fstab.cpp:727
+    fstab = fs_mgr_read_fstab_default();
     if (!fstab) {
         PLOG(ERROR) << "Failed to open default fstab";
         return -1;
@@ -58,21 +63,18 @@ static int process_config(VolumeManager *vm, bool* has_adoptable, bool* has_quot
                 flags |= android::vold::Disk::Flags::kAdoptable;
                 *has_adoptable = true;
             }
-            if (fs_mgr_is_noemulatedsd(&fstab->recs[i])
-                    || property_get_bool("vold.debug.default_primary", false)) {
+            if (fs_mgr_is_noemulatedsd(&fstab->recs[i]) || property_get_bool("vold.debug.default_primary", false)) {
                 flags |= android::vold::Disk::Flags::kDefaultPrimary;
             }
 
-            vm->addDiskSource(std::shared_ptr<VolumeManager::DiskSource>(
-                    new VolumeManager::DiskSource(sysPattern, nickname, flags)));
+            vm->addDiskSource(std::shared_ptr<VolumeManager::DiskSource>(new VolumeManager::DiskSource(sysPattern, nickname, flags)));
         }
     }
     return 0;
 }
 
 
-
-
+//	@system/core/fs_mgr/fs_mgr_fstab.cpp
 /*
  * tries to load default fstab.<hardware> file from /odm/etc, /vendor/etc
  * or /. loads the first one found and also combines fstab entries passed
@@ -84,11 +86,13 @@ struct fstab *fs_mgr_read_fstab_default()
     std::string default_fstab;
 
     // Use different fstab paths for normal boot and recovery boot, respectively
-    if (access("/sbin/recovery", F_OK) == 0) {
+    if (access("/sbin/recovery", F_OK) == 0) {	 // 本系统/sbin/recovery 不存在
         default_fstab = "/etc/recovery.fstab";
-    } else if (fs_mgr_get_boot_config("hardware", &hw)) {  // normal boot
+
+        //fs_mgr_get_boot_config 获取 ro.boot.hardware 的系统属性值  这里为 freescale
+    } else if (fs_mgr_get_boot_config("hardware", &hw)) {  // normal boot   //	fs_mgr_get_boot_config	@system/core/fs_mgr/fs_mgr_boot_config.cpp
         for (const char *prefix : {"/odm/etc/fstab.","/vendor/etc/fstab.", "/fstab."}) {
-            default_fstab = prefix + hw;
+            default_fstab = prefix + hw;	//	/fstab.freescale   在源码device/autolink/autolink_8qxp/fstab.freescale路劲下
             if (access(default_fstab.c_str(), F_OK) == 0) break;
         }
     } else {
@@ -97,35 +101,38 @@ struct fstab *fs_mgr_read_fstab_default()
 
     // combines fstab entries passed in from device tree with
     // the ones found from default_fstab file
-    struct fstab *fstab_dt = fs_mgr_read_fstab_dt();//	@system/core/fs_mgr/fs_mgr_fstab.cpp:697
-    struct fstab *fstab = fs_mgr_read_fstab(default_fstab.c_str());//	@system/core/fs_mgr/fs_mgr_fstab.cpp:672
+    struct fstab *fstab_dt = fs_mgr_read_fstab_dt();
+    struct fstab *fstab = fs_mgr_read_fstab(default_fstab.c_str());  //	default_fstab == "/fstab.freescale"
 
     return in_place_merge(fstab_dt, fstab);
 }
 
 
+
+
+
+
+//	@system/core/fs_mgr/fs_mgr_fstab.cpp
 /* Returns fstab entries parsed from the device tree if they
  * exist
  */
 struct fstab *fs_mgr_read_fstab_dt()
 {
-    std::string fstab_buf = read_fstab_from_dt();//	@system/core/fs_mgr/fs_mgr_fstab.cpp:414:
+    std::string fstab_buf = read_fstab_from_dt();//	@system/core/fs_mgr/fs_mgr_fstab.cpp
     if (fstab_buf.empty()) {
         LINFO << __FUNCTION__ << "(): failed to read fstab from dt";
         return nullptr;
     }
 
-    //fmemopen 系统 api
     std::unique_ptr<FILE, decltype(&fclose)> fstab_file(fmemopen(static_cast<void*>(const_cast<char*>(fstab_buf.c_str())),fstab_buf.length(), "r"), fclose);
     if (!fstab_file) {
         PERROR << __FUNCTION__ << "(): failed to create a file stream for fstab dt";
         return nullptr;
     }
 
-    struct fstab *fstab = fs_mgr_read_fstab_file(fstab_file.get());//	@system/core/fs_mgr/fs_mgr_fstab.cpp:499
+    struct fstab *fstab = fs_mgr_read_fstab_file(fstab_file.get());
     if (!fstab) {
-        LERROR << __FUNCTION__ << "(): failed to load fstab from kernel:"
-               << std::endl << fstab_buf;
+        LERROR << __FUNCTION__ << "(): failed to load fstab from kernel:" << std::endl << fstab_buf;
     }
 
     return fstab;
@@ -134,11 +141,19 @@ struct fstab *fs_mgr_read_fstab_dt()
 
 static std::string read_fstab_from_dt() {
     std::string fstab;
+    //	is_dt_compatible 返回 true
+    //	is_dt_fstab_compatible 返回 true
     if (!is_dt_compatible() || !is_dt_fstab_compatible()) {
         return fstab;
     }
 
-    std::string fstabdir_name = get_android_dt_dir() + "/fstab";
+    /* ls -al /proc/device-tree/firmware/android/fstab
+    -r--r--r-- 1 root root 14 2098-05-03 03:02 compatible
+    -r--r--r-- 1 root root  6 2098-05-03 03:02 name
+    drwxr-xr-x 2 root root  0 2098-05-03 03:02 vendor
+    */
+
+    std::string fstabdir_name = get_android_dt_dir() + "/fstab"; //	/proc/device-tree/firmware/android/fstab  这个是一个目录
     std::unique_ptr<DIR, int (*)(DIR*)> fstabdir(opendir(fstabdir_name.c_str()), closedir);
     if (!fstabdir) return fstab;
 
@@ -152,7 +167,9 @@ static std::string read_fstab_from_dt() {
         std::string file_name;
         std::string value;
         // skip a partition entry if the status property is present and not set to ok
-        file_name = android::base::StringPrintf("%s/%s/status", fstabdir_name.c_str(), dp->d_name);
+        file_name = android::base::StringPrintf("%s/%s/status", fstabdir_name.c_str(), dp->d_name);// /proc/device-tree/firmware/android/fstab/vendor/status 
+
+        // read_dt_file @system/core/fs_mgr/fs_mgr_fstab.cpp:183
         if (read_dt_file(file_name, &value)) {
             if (value != "okay" && value != "ok") {
                 LINFO << "dt_fstab: Skip disabled entry for partition " << dp->d_name;
@@ -160,45 +177,57 @@ static std::string read_fstab_from_dt() {
             }
         }
 
-        file_name = android::base::StringPrintf("%s/%s/dev", fstabdir_name.c_str(), dp->d_name);
+        /*  ls -al /proc/device-tree/firmware/android/fstab/vendor
+        drwxr-xr-x 3 root root  0 2098-05-03 03:02 ..
+        -r--r--r-- 1 root root 15 2098-05-03 03:06 compatible
+        -r--r--r-- 1 root root 50 2098-05-03 03:06 dev_emmc
+        -r--r--r-- 1 root root 50 2098-05-03 03:06 dev_sd
+        -r--r--r-- 1 root root 20 2098-05-03 03:06 fsmgr_flags
+        -r--r--r-- 1 root root 36 2098-05-03 03:06 mnt_flags
+        -r--r--r-- 1 root root  7 2098-05-03 03:06 name
+        -r--r--r-- 1 root root  5 2098-05-03 03:06 type
+        */
+
+        file_name = android::base::StringPrintf("%s/%s/dev", fstabdir_name.c_str(), dp->d_name);// /proc/device-tree/firmware/android/fstab/vendor/dev 
         if (!read_dt_file(file_name, &value)) {
             std::string boot_type;
-            boot_type = read_boot_type_from_cmdline();
-            file_name = android::base::StringPrintf("%s/%s/dev_%s", fstabdir_name.c_str(), dp->d_name, boot_type.c_str());
-            if (!read_dt_file(file_name, &value)) {
+            boot_type = read_boot_type_from_cmdline();//  @system/core/fs_mgr/fs_mgr_fstab.cpp:389
+            file_name = android::base::StringPrintf("%s/%s/dev_%s", fstabdir_name.c_str(), dp->d_name, boot_type.c_str()); // /proc/device-tree/firmware/android/fstab/vendor/dev_emmc 
+            if (!read_dt_file(file_name, &value)) {// /dev/block/platform/5b010000.usdhc/by-name/vendor
                 LERROR << "dt_fstab: Failed to find device for partition " << dp->d_name;
                 fstab.clear();
                 break;
             }
         }
-        fstab_entry.push_back(value);
-        fstab_entry.push_back(android::base::StringPrintf("/%s", dp->d_name));
+        fstab_entry.push_back(value); // 这里将/dev/block/platform/5b010000.usdhc/by-name/vendor 压入集合
+        fstab_entry.push_back(android::base::StringPrintf("/%s", dp->d_name));   // 这里将 /vendor 压入集合
 
-        file_name = android::base::StringPrintf("%s/%s/type", fstabdir_name.c_str(), dp->d_name);
-        if (!read_dt_file(file_name, &value)) {
+        file_name = android::base::StringPrintf("%s/%s/type", fstabdir_name.c_str(), dp->d_name);// /proc/device-tree/firmware/android/fstab/vendor/type 
+        if (!read_dt_file(file_name, &value)) {// ext4
             LERROR << "dt_fstab: Failed to find type for partition " << dp->d_name;
             fstab.clear();
             break;
         }
-        fstab_entry.push_back(value);
+        fstab_entry.push_back(value); // 这里将 ext4 压入集合
 
-        file_name = android::base::StringPrintf("%s/%s/mnt_flags", fstabdir_name.c_str(), dp->d_name);
-        if (!read_dt_file(file_name, &value)) {
+        file_name = android::base::StringPrintf("%s/%s/mnt_flags", fstabdir_name.c_str(), dp->d_name);// /proc/device-tree/firmware/android/fstab/vendor/mnt_flags 
+        if (!read_dt_file(file_name, &value)) { //  ro,barrier=1,inode_readahead_blks=8
             LERROR << "dt_fstab: Failed to find type for partition " << dp->d_name;
             fstab.clear();
             break;
         }
-        fstab_entry.push_back(value);
+        fstab_entry.push_back(value);// 这里将 ro,barrier=1,inode_readahead_blks=8 压入集合
 
-        file_name = android::base::StringPrintf("%s/%s/fsmgr_flags", fstabdir_name.c_str(), dp->d_name);
-        if (!read_dt_file(file_name, &value)) {
+        file_name = android::base::StringPrintf("%s/%s/fsmgr_flags", fstabdir_name.c_str(), dp->d_name);// /proc/device-tree/firmware/android/fstab/vendor/fsmgr_flags 
+        if (!read_dt_file(file_name, &value)) {       //  wait,slotselect,avb
             LERROR << "dt_fstab: Failed to find type for partition " << dp->d_name;
             fstab.clear();
             break;
         }
-        fstab_entry.push_back(value);
+        fstab_entry.push_back(value);// 这里将 wait,slotselect,avb 压入集合
 
-        fstab += android::base::Join(fstab_entry, " ");
+        //fstab为 /dev/block/platform/5b010000.usdhc/by-name/vendor  /vendor ext4 ro,barrier=1,inode_readahead_blks=8 wait,slotselect,avb
+        fstab += android::base::Join(fstab_entry, " "); 
         fstab += '\n';
     }
 
@@ -206,7 +235,20 @@ static std::string read_fstab_from_dt() {
 }
 
 
+#define STORAGE_TYPE_FILTER "androidboot.storage_type="
 
+static std::string read_boot_type_from_cmdline() {
+    std::string cmdline;
+    std::string storageFilter;
+    android::base::ReadFileToString("/proc/cmdline", &cmdline);
+    const char* storageType = strstr(cmdline.c_str(), STORAGE_TYPE_FILTER);
+    if (!storageType)
+        return storageFilter;
+    const char* p = storageType + strlen(STORAGE_TYPE_FILTER);   //androidboot.storage_type=emmc
+    const char* q = strpbrk(p, " \t\n\r");
+    storageFilter = std::string(p, q);
+    return storageFilter;
+}
 
 
 struct fstab *fs_mgr_read_fstab(const char *fstab_path)
@@ -220,7 +262,7 @@ struct fstab *fs_mgr_read_fstab(const char *fstab_path)
         return nullptr;
     }
 
-    fstab = fs_mgr_read_fstab_file(fstab_file);//	@system/core/fs_mgr/fs_mgr_fstab.cpp:499
+    fstab = fs_mgr_read_fstab_file(fstab_file);//   @system/core/fs_mgr/fs_mgr_fstab.cpp:499
     if (fstab) {
         fstab->fstab_filename = strdup(fstab_path);
     } else {
@@ -372,7 +414,7 @@ static struct fstab *fs_mgr_read_fstab_file(FILE *fstab_file)
         cnt++;
     }
     /* If an A/B partition, modify block device to be the real block device */
-    if (!fs_mgr_update_for_slotselect(fstab)) {//	@system/core/fs_mgr/fs_mgr_slotselect.cpp:41
+    if (!fs_mgr_update_for_slotselect(fstab)) {//   @system/core/fs_mgr/fs_mgr_slotselect.cpp:41
         LERROR << "Error updating for slotselect";
         goto err;
     }
@@ -635,4 +677,3 @@ static struct fstab *in_place_merge(struct fstab *a, struct fstab *b)
     a->num_entries = total_entries;
     return a;
 }
-
