@@ -63,7 +63,7 @@ extern "C" jint JNI_CreateJavaVM(JavaVM** p_vm, JNIEnv** p_env, void* vm_args) {
   // Initialize native loader. This step makes sure we have
   // everything set up before we start using JNI.
   //  system/core/libnativeloader/native_loader.cpp 
-  android::InitializeNativeLoader();//这里是加载基本的so文件,这里目前只配置了("/system/etc/public.libraries.txt";)
+  android::InitializeNativeLoader();//这里将一些so保存到变量中,这里目前只配置了("/system/etc/public.libraries.txt";)
 
   Runtime* runtime = Runtime::Current();
   bool started = runtime->Start();                  //Runtime启动
@@ -80,9 +80,9 @@ extern "C" jint JNI_CreateJavaVM(JavaVM** p_vm, JNIEnv** p_env, void* vm_args) {
 }
 
 
-  JavaVMExt* GetJavaVM() const {
-    return java_vm_.get();
-  }
+JavaVMExt* GetJavaVM() const {
+  return java_vm_.get();
+}
 
 
 extern "C" jint JNI_GetCreatedJavaVMs(JavaVM** vms_buf, jsize buf_len, jsize* vm_count) {
