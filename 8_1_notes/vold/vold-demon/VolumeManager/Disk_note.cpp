@@ -2,9 +2,9 @@ Disk::Disk(const std::string& eventPath, dev_t device,
         const std::string& nickname, int flags) :
         mDevice(device), mSize(-1), mNickname(nickname), mFlags(flags), mCreated(false), mJustPartitioned(false) {
     mId = StringPrintf("disk:%u,%u", major(device), minor(device));
-    mEventPath = eventPath;
-    mSysPath = StringPrintf("/sys/%s", eventPath.c_str());
-    mDevPath = StringPrintf("/dev/block/vold/%s", mId.c_str());
+    mEventPath = eventPath;//       /devices/platform/5b110000.cdns3/xhci-cdns3/usb1/1-1/1-1.3/1-1.3:1.0/host0/target0:0:0/0:0:0:0/block/sda
+    mSysPath = StringPrintf("/sys/%s", eventPath.c_str());//    /sys//devices/platform/5b110000.cdns3/xhci-cdns3/usb1/1-1/1-1.3/1-1.3:1.0/host0/target0:0:0/0:0:0:0/block/sda
+    mDevPath = StringPrintf("/dev/block/vold/%s", mId.c_str()); //  /dev/block/vold/disk:8,0
     CreateDeviceNode(mDevPath, mDevice);//	@system/vold/Utils.cpp
 }
 
@@ -22,7 +22,7 @@ status_t CreateDeviceNode(const std::string& path, dev_t dev) {
     }
 
     mode_t mode = 0660 | S_IFBLK;
-    if (mknod(cpath, mode, dev) < 0) {
+    if (mknod(cpath, mode, dev) < 0) {//    cpath = "/dev/block/vold/disk:8,0"
         if (errno != EEXIST) {
             PLOG(ERROR) << "Failed to create device node for " << major(dev) << ":" << minor(dev) << " at " << path;
             res = -errno;
@@ -43,7 +43,7 @@ status_t CreateDeviceNode(const std::string& path, dev_t dev) {
 status_t Disk::create() {
     CHECK(!mCreated);
     mCreated = true;
-    notifyEvent(ResponseCode::DiskCreated, StringPrintf("%d", mFlags));
+    notifyEvent(ResponseCode::DiskCreated, StringPrintf("%d", mFlags));//   system/vold/ResponseCode.h:69:    static const int DiskCreated = 640;
     readMetadata();
     readPartitions();
     return OK;
@@ -56,31 +56,33 @@ status_t Disk::readMetadata() {
     mSize = -1;
     mLabel.clear();
 
-    int fd = open(mDevPath.c_str(), O_RDONLY | O_CLOEXEC);
+    
+    int fd = open(mDevPath.c_str(), O_RDONLY | O_CLOEXEC);//  /dev/block/vold/disk:8,0
     if (fd != -1) {
-        if (ioctl(fd, BLKGETSIZE64, &mSize)) {
+        if (ioctl(fd, BLKGETSIZE64, &mSize)) {//获取大小
             mSize = -1;
         }
         close(fd);
     }
 
-    unsigned int majorId = major(mDevice);
+    unsigned int majorId = major(mDevice);//    8
     switch (majorId) {
     case kMajorBlockLoop: {
         mLabel = "Virtual";
         break;
     }
+    //  system/vold/Disk.cpp:56:static const unsigned int kMajorBlockScsiA = 8;
     case kMajorBlockScsiA: case kMajorBlockScsiB: case kMajorBlockScsiC: case kMajorBlockScsiD:
     case kMajorBlockScsiE: case kMajorBlockScsiF: case kMajorBlockScsiG: case kMajorBlockScsiH:
     case kMajorBlockScsiI: case kMajorBlockScsiJ: case kMajorBlockScsiK: case kMajorBlockScsiL:
     case kMajorBlockScsiM: case kMajorBlockScsiN: case kMajorBlockScsiO: case kMajorBlockScsiP: {
-        std::string path(mSysPath + "/device/vendor");
+        std::string path(mSysPath + "/device/vendor");//    /sys/devices/platform/5b110000.cdns3/xhci-cdns3/usb1/1-1/1-1.3/1-1.3:1.0/host0/target0:0:0/0:0:0:0/block/sda
         std::string tmp;
         if (!ReadFileToString(path, &tmp)) {
             PLOG(WARNING) << "Failed to read vendor from " << path;
             return -errno;
         }
-        mLabel = tmp;
+        mLabel = tmp;// General
         break;
     }
     case kMajorBlockMmc: {
@@ -114,6 +116,9 @@ status_t Disk::readMetadata() {
     }
     }
 
+    /*
+    通知信息更新
+    */
     notifyEvent(ResponseCode::DiskSizeChanged, StringPrintf("%" PRIu64, mSize));
     notifyEvent(ResponseCode::DiskLabelChanged, mLabel);
     notifyEvent(ResponseCode::DiskSysPathChanged, mSysPath);
@@ -133,9 +138,9 @@ status_t Disk::readPartitions() {
     // Parse partition table
 
     std::vector<std::string> cmd;
-    cmd.push_back(kSgdiskPath);
+    cmd.push_back(kSgdiskPath); //  system/vold/Disk.cpp:49:static const char* kSgdiskPath = "/system/bin/sgdisk";
     cmd.push_back("--android-dump");
-    cmd.push_back(mDevPath);
+    cmd.push_back(mDevPath);    //  /dev/block/vold/disk:8,0
 
     std::vector<std::string> output;
     status_t res = ForkExecvp(cmd, output);

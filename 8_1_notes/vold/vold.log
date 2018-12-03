@@ -1,0 +1,816 @@
+
+
+
+
+
+
+
+12-19 22:07:10.933  4902  4902 I vold    : Vold 3.0 (the awakening) firing up
+12-19 22:07:10.933  4902  4902 V vold    : Detected support for: ext4 vfat
+12-19 22:07:10.928  4902  4902 W Vold    : Tearing down stale mount /mnt/runtime/write/emulated
+12-19 22:07:10.911  4902  4902 W Vold    : Tearing down stale mount /mnt/runtime/read/emulated
+12-19 22:07:10.895  4902  4902 W Vold    : Tearing down stale mount /storage/emulated
+12-19 22:07:10.879  4902  4902 W Vold    : Tearing down stale mount /mnt/runtime/default/emulated
+12-19 22:07:10.845  4902  4915 V vold    : ----------------
+12-19 22:07:10.844  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.844  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram11'
+12-19 22:07:10.844  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'
+12-19 22:07:10.844  4902  4915 D NetlinkEvent: NL param 'MINOR=11'
+12-19 22:07:10.844  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram11'
+12-19 22:07:10.844  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.844  4902  4915 V vold    : ----------------
+12-19 22:07:10.844  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.844  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram2'
+12-19 22:07:10.844  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'
+12-19 22:07:10.844  4902  4915 D NetlinkEvent: NL param 'MINOR=2'
+12-19 22:07:10.844  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram2'
+12-19 22:07:10.844  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.843  4902  4915 V vold    : ----------------
+12-19 22:07:10.843  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.843  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/loop1'
+12-19 22:07:10.843  4902  4915 D NetlinkEvent: NL param 'MAJOR=7'
+12-19 22:07:10.843  4902  4915 D NetlinkEvent: NL param 'MINOR=1'
+12-19 22:07:10.843  4902  4915 D NetlinkEvent: NL param 'DEVNAME=loop1'
+12-19 22:07:10.843  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.843  4902  4915 V vold    : ----------------
+12-19 22:07:10.842  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.842  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd3'
+12-19 22:07:10.842  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'
+12-19 22:07:10.842  4902  4915 D NetlinkEvent: NL param 'MINOR=3'
+12-19 22:07:10.842  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd3'
+12-19 22:07:10.842  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.841  4902  4915 V vold    : ----------------
+12-19 22:07:10.841  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.841  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram0'
+12-19 22:07:10.840  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'
+12-19 22:07:10.840  4902  4915 D NetlinkEvent: NL param 'MINOR=0'
+12-19 22:07:10.840  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram0'
+12-19 22:07:10.840  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.840  4902  4915 V vold    : ----------------
+12-19 22:07:10.840  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.840  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0rpmb'
+12-19 22:07:10.840  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'
+12-19 22:07:10.840  4902  4915 D NetlinkEvent: NL param 'MINOR=96'
+12-19 22:07:10.840  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0rpmb'
+12-19 22:07:10.839  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.839  4902  4915 V vold    : ----------------
+12-19 22:07:10.838  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd15'
+12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'
+12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'MINOR=15'
+12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd15'
+12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.838  4902  4915 V vold    : ----------------
+12-19 22:07:10.838  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd1'
+12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'
+12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'MINOR=1'
+12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd1'
+12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.838  4902  4915 V vold    : ----------------
+12-19 22:07:10.838  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram9'
+12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'
+12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'MINOR=9'
+12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram9'
+12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.838  4902  4915 V vold    : ----------------
+12-19 22:07:10.838  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd13'
+12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'
+12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'MINOR=13'
+12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd13'
+12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.837  4902  4915 V vold    : ----------------
+12-19 22:07:10.837  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram7'
+12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'
+12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'MINOR=7'
+12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram7'
+12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.837  4902  4915 V vold    : ----------------
+12-19 22:07:10.837  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/loop6'
+12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'MAJOR=7'
+12-19 22:07:10.836  4902  4915 D NetlinkEvent: NL param 'MINOR=6'
+12-19 22:07:10.836  4902  4915 D NetlinkEvent: NL param 'DEVNAME=loop6'
+12-19 22:07:10.836  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.836  4902  4915 V vold    : ----------------
+12-19 22:07:10.836  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.836  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd8'
+12-19 22:07:10.836  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'
+12-19 22:07:10.836  4902  4915 D NetlinkEvent: NL param 'MINOR=8'
+12-19 22:07:10.836  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd8'
+12-19 22:07:10.836  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.835  4902  4915 V vold    : ----------------
+12-19 22:07:10.835  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.835  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd11'
+12-19 22:07:10.835  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'
+12-19 22:07:10.835  4902  4915 D NetlinkEvent: NL param 'MINOR=11'
+12-19 22:07:10.835  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd11'
+12-19 22:07:10.835  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.834  4902  4915 V vold    : ----------------
+12-19 22:07:10.834  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.834  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram14'
+12-19 22:07:10.834  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'
+12-19 22:07:10.834  4902  4915 D NetlinkEvent: NL param 'MINOR=14'
+12-19 22:07:10.834  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram14'
+12-19 22:07:10.834  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.833  4902  4915 V vold    : ----------------
+12-19 22:07:10.833  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.833  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram5'
+12-19 22:07:10.833  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'
+12-19 22:07:10.833  4902  4915 D NetlinkEvent: NL param 'MINOR=5'
+12-19 22:07:10.833  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram5'
+12-19 22:07:10.833  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.833  4902  4915 V vold    : ----------------
+12-19 22:07:10.833  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.833  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/loop4'
+12-19 22:07:10.833  4902  4915 D NetlinkEvent: NL param 'MAJOR=7'
+12-19 22:07:10.833  4902  4915 D NetlinkEvent: NL param 'MINOR=4'
+12-19 22:07:10.833  4902  4915 D NetlinkEvent: NL param 'DEVNAME=loop4'
+12-19 22:07:10.833  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.832  4902  4915 V vold    : ----------------
+12-19 22:07:10.832  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.832  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd6'
+12-19 22:07:10.832  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'
+12-19 22:07:10.832  4902  4915 D NetlinkEvent: NL param 'MINOR=6'
+12-19 22:07:10.832  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd6'
+12-19 22:07:10.832  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.831  4902  4915 V vold    : ----------------
+12-19 22:07:10.831  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.831  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0boot0'
+12-19 22:07:10.831  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'
+12-19 22:07:10.831  4902  4915 D NetlinkEvent: NL param 'MINOR=32'
+12-19 22:07:10.831  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0boot0'
+12-19 22:07:10.831  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.830  4902  4915 V vold    : ----------------
+12-19 22:07:10.830  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.830  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram12'
+12-19 22:07:10.830  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'
+12-19 22:07:10.830  4902  4915 D NetlinkEvent: NL param 'MINOR=12'
+12-19 22:07:10.830  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram12'
+12-19 22:07:10.830  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.830  4902  4915 V vold    : ----------------
+12-19 22:07:10.830  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.830  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram3'
+12-19 22:07:10.830  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'
+12-19 22:07:10.830  4902  4915 D NetlinkEvent: NL param 'MINOR=3'
+12-19 22:07:10.830  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram3'
+12-19 22:07:10.830  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.829  4902  4915 V vold    : ----------------
+12-19 22:07:10.829  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.829  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/loop2'
+12-19 22:07:10.829  4902  4915 D NetlinkEvent: NL param 'MAJOR=7'
+12-19 22:07:10.829  4902  4915 D NetlinkEvent: NL param 'MINOR=2'
+12-19 22:07:10.829  4902  4915 D NetlinkEvent: NL param 'DEVNAME=loop2'
+12-19 22:07:10.829  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.828  4902  4915 V vold    : ----------------
+12-19 22:07:10.828  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.828  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd4'
+12-19 22:07:10.828  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'
+12-19 22:07:10.828  4902  4915 D NetlinkEvent: NL param 'MINOR=4'
+12-19 22:07:10.828  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd4'
+12-19 22:07:10.828  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.828  4902  4915 V vold    : ----------------
+12-19 22:07:10.828  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.828  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram10'
+12-19 22:07:10.827  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'
+12-19 22:07:10.827  4902  4915 D NetlinkEvent: NL param 'MINOR=10'
+12-19 22:07:10.827  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram10'
+12-19 22:07:10.827  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.827  4902  4915 V vold    : ----------------
+12-19 22:07:10.827  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.827  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram1'
+12-19 22:07:10.827  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'
+12-19 22:07:10.827  4902  4915 D NetlinkEvent: NL param 'MINOR=1'
+12-19 22:07:10.827  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram1'
+12-19 22:07:10.827  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.827  4902  4915 V vold    : ----------------
+12-19 22:07:10.826  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.826  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/loop0'
+12-19 22:07:10.826  4902  4915 D NetlinkEvent: NL param 'MAJOR=7'
+12-19 22:07:10.826  4902  4915 D NetlinkEvent: NL param 'MINOR=0'
+12-19 22:07:10.826  4902  4915 D NetlinkEvent: NL param 'DEVNAME=loop0'
+12-19 22:07:10.826  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.826  4902  4915 V vold    : ----------------
+12-19 22:07:10.826  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.826  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd2'
+12-19 22:07:10.826  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'
+12-19 22:07:10.825  4902  4915 D NetlinkEvent: NL param 'MINOR=2'
+12-19 22:07:10.825  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd2'
+12-19 22:07:10.825  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.825  4902  4915 V vold    : ----------------
+12-19 22:07:10.825  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.825  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd14'
+12-19 22:07:10.825  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'
+12-19 22:07:10.825  4902  4915 D NetlinkEvent: NL param 'MINOR=14'
+12-19 22:07:10.825  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd14'
+12-19 22:07:10.825  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.824  4902  4915 V vold    : ----------------
+12-19 22:07:10.824  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.824  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd0'
+12-19 22:07:10.824  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'
+12-19 22:07:10.824  4902  4915 D NetlinkEvent: NL param 'MINOR=0'
+12-19 22:07:10.824  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd0'
+12-19 22:07:10.824  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.823  4902  4915 V vold    : ----------------
+12-19 22:07:10.823  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.823  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram8'
+12-19 22:07:10.823  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'
+12-19 22:07:10.823  4902  4915 D NetlinkEvent: NL param 'MINOR=8'
+12-19 22:07:10.823  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram8'
+12-19 22:07:10.823  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.823  4902  4915 V vold    : ----------------
+12-19 22:07:10.823  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.823  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/loop7'
+12-19 22:07:10.823  4902  4915 D NetlinkEvent: NL param 'MAJOR=7'
+12-19 22:07:10.823  4902  4915 D NetlinkEvent: NL param 'MINOR=7'
+12-19 22:07:10.823  4902  4915 D NetlinkEvent: NL param 'DEVNAME=loop7'
+12-19 22:07:10.823  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.822  4902  4915 V vold    : ----------------
+12-19 22:07:10.822  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.822  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd9'
+12-19 22:07:10.822  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'
+12-19 22:07:10.822  4902  4915 D NetlinkEvent: NL param 'MINOR=9'
+12-19 22:07:10.822  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd9'
+12-19 22:07:10.822  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.821  4902  4915 V vold    : ----------------
+12-19 22:07:10.821  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.821  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd12'
+12-19 22:07:10.821  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'
+12-19 22:07:10.821  4902  4915 D NetlinkEvent: NL param 'MINOR=12'
+12-19 22:07:10.821  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd12'
+12-19 22:07:10.821  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.821  4902  4915 V vold    : ----------------
+12-19 22:07:10.820  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.820  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram15'
+12-19 22:07:10.820  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'
+12-19 22:07:10.820  4902  4915 D NetlinkEvent: NL param 'MINOR=15'
+12-19 22:07:10.820  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram15'
+12-19 22:07:10.820  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.820  4902  4915 V vold    : ----------------
+12-19 22:07:10.820  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.820  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram6'
+12-19 22:07:10.820  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'
+12-19 22:07:10.820  4902  4915 D NetlinkEvent: NL param 'MINOR=6'
+12-19 22:07:10.820  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram6'
+12-19 22:07:10.820  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.819  4902  4915 V vold    : ----------------
+12-19 22:07:10.819  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.819  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/zram0'
+12-19 22:07:10.819  4902  4915 D NetlinkEvent: NL param 'MAJOR=253'
+12-19 22:07:10.819  4902  4915 D NetlinkEvent: NL param 'MINOR=0'
+12-19 22:07:10.819  4902  4915 D NetlinkEvent: NL param 'DEVNAME=zram0'
+12-19 22:07:10.819  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.819  4902  4915 V vold    : ----------------
+12-19 22:07:10.819  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.819  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/loop5'
+12-19 22:07:10.819  4902  4915 D NetlinkEvent: NL param 'MAJOR=7'
+12-19 22:07:10.819  4902  4915 D NetlinkEvent: NL param 'MINOR=5'
+12-19 22:07:10.819  4902  4915 D NetlinkEvent: NL param 'DEVNAME=loop5'
+12-19 22:07:10.819  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.818  4902  4915 V vold    : ----------------
+12-19 22:07:10.818  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.818  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd7'
+12-19 22:07:10.818  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'
+12-19 22:07:10.818  4902  4915 D NetlinkEvent: NL param 'MINOR=7'
+12-19 22:07:10.818  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd7'
+12-19 22:07:10.818  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.817  4902  4915 V vold    : ----------------
+12-19 22:07:10.817  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.817  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0boot1'
+12-19 22:07:10.817  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'
+12-19 22:07:10.817  4902  4915 D NetlinkEvent: NL param 'MINOR=64'
+12-19 22:07:10.817  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0boot1'
+12-19 22:07:10.817  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.817  4902  4915 V vold    : ----------------
+12-19 22:07:10.817  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.817  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd10'
+12-19 22:07:10.817  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'
+12-19 22:07:10.817  4902  4915 D NetlinkEvent: NL param 'MINOR=10'
+12-19 22:07:10.817  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd10'
+12-19 22:07:10.817  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.816  4902  4915 V vold    : ----------------
+12-19 22:07:10.816  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0'
+12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'
+12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'MINOR=0'
+12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0'
+12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.816  4902  4915 V vold    : ----------------
+12-19 22:07:10.816  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p4'
+12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'
+12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'MINOR=4'
+12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p4'
+12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'
+12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'PARTN=4'
+12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'PARTNAME=system_b'
+12-19 22:07:10.815  4902  4915 V vold    : ----------------
+12-19 22:07:10.815  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p12'
+12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'
+12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'MINOR=12'
+12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p12'
+12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'
+12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'PARTN=12'
+12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'PARTNAME=voicerecognition'
+12-19 22:07:10.815  4902  4915 V vold    : ----------------
+12-19 22:07:10.815  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p2'
+12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'
+12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'MINOR=2'
+12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p2'
+12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'
+12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'PARTN=2'
+12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'PARTNAME=boot_b'
+12-19 22:07:10.814  4902  4915 V vold    : ----------------
+12-19 22:07:10.814  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p10'
+12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'
+12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'MINOR=10'
+12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p10'
+12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'
+12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'PARTN=10'
+12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'PARTNAME=userdata'
+12-19 22:07:10.814  4902  4915 V vold    : ----------------
+12-19 22:07:10.814  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0rpmb'
+12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'
+12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'MINOR=96'
+12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0rpmb'
+12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.814  4902  4915 V vold    : ----------------
+12-19 22:07:10.814  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p9'
+12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'
+12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'MINOR=9'
+12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p9'
+12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'
+12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'PARTN=9'
+12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'PARTNAME=vendor_b'
+12-19 22:07:10.813  4902  4915 V vold    : ----------------
+12-19 22:07:10.813  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p7'
+12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'
+12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'MINOR=7'
+12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p7'
+12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'
+12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'PARTN=7'
+12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'PARTNAME=presistdata'
+12-19 22:07:10.813  4902  4915 V vold    : ----------------
+12-19 22:07:10.813  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p15'
+12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'
+12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'MINOR=15'
+12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p15'
+12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'
+12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'PARTN=15'
+12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'PARTNAME=vbmeta_a'
+12-19 22:07:10.813  4902  4915 V vold    : ----------------
+12-19 22:07:10.813  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0boot0'
+12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'
+12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'MINOR=32'
+12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0boot0'
+12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.812  4902  4915 V vold    : ----------------
+12-19 22:07:10.812  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p5'
+12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'
+12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'MINOR=5'
+12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p5'
+12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'
+12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'PARTN=5'
+12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'PARTNAME=misc'
+12-19 22:07:10.812  4902  4915 V vold    : ----------------
+12-19 22:07:10.812  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p13'
+12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'
+12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'MINOR=13'
+12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p13'
+12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'
+12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'PARTN=13'
+12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'PARTNAME=m4'
+12-19 22:07:10.812  4902  4915 V vold    : ----------------
+12-19 22:07:10.812  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p3'
+12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'
+12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'MINOR=3'
+12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p3'
+12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'
+12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'PARTN=3'
+12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'PARTNAME=system_a'
+12-19 22:07:10.812  4902  4915 V vold    : ----------------
+12-19 22:07:10.812  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p11'
+12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'
+12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'MINOR=11'
+12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p11'
+12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'
+12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'PARTN=11'
+12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'PARTNAME=navidata'
+12-19 22:07:10.811  4902  4915 V vold    : ----------------
+12-19 22:07:10.811  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p1'
+12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'
+12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'MINOR=1'
+12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p1'
+12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'
+12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'PARTN=1'
+12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'PARTNAME=boot_a'
+12-19 22:07:10.811  4902  4915 V vold    : ----------------
+12-19 22:07:10.811  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p8'
+12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'
+12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'MINOR=8'
+12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p8'
+12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'
+12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'PARTN=8'
+12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'PARTNAME=vendor_a'
+12-19 22:07:10.810  4902  4915 V vold    : ----------------
+12-19 22:07:10.810  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p16'
+12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'
+12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'MINOR=16'
+12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p16'
+12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'
+12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'PARTN=16'
+12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'PARTNAME=vbmeta_b'
+12-19 22:07:10.810  4902  4915 V vold    : ----------------
+12-19 22:07:10.810  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0boot1'
+12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'
+12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'MINOR=64'
+12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0boot1'
+12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.810  4902  4915 V vold    : ----------------
+12-19 22:07:10.810  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p6'
+12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'
+12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'MINOR=6'
+12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p6'
+12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'
+12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'PARTN=6'
+12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'PARTNAME=metadata'
+12-19 22:07:10.810  4902  4915 V vold    : ----------------
+12-19 22:07:10.810  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p14'
+12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'
+12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'MINOR=14'
+12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p14'
+12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'
+12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'PARTN=14'
+12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'PARTNAME=fbmisc'
+12-19 22:07:10.809  4902  4915 V vold    : ----------------
+12-19 22:07:10.809  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram13'
+12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'
+12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'MINOR=13'
+12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram13'
+12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.809  4902  4915 V vold    : ----------------
+12-19 22:07:10.809  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram4'
+12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'
+12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'MINOR=4'
+12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram4'
+12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.809  4902  4915 V vold    : ----------------
+12-19 22:07:10.809  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/loop3'
+12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'MAJOR=7'
+12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'MINOR=3'
+12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVNAME=loop3'
+12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:10.808  4902  4915 V vold    : ----------------
+12-19 22:07:10.808  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:10.808  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd5'
+12-19 22:07:10.808  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'
+12-19 22:07:10.808  4902  4915 D NetlinkEvent: NL param 'MINOR=5'
+12-19 22:07:10.808  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd5'
+12-19 22:07:10.808  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+12-19 22:07:14.039  3588  3725 D StorageManagerService: Thinking about init, mSystemReady=true, mDaemonConnected=true
+12-19 22:07:14.039  3588  3725 D StorageManagerService: Thinking about reset, mSystemReady=true, mDaemonConnected=true
+12-19 22:07:14.039  3588  3725 D VoldConnector: SND -> {19 volume reset}
+12-19 22:07:14.038  3588  3621 I ActivityManager: Force stopping com.android.providers.media appid=10011 user=-1: vold reset
+12-19 22:07:14.038  3588  3621 I ActivityManager: Killing 4857:com.android.providers.media/u0a11 (adj 900): stop com.android.providers.media
+12-19 22:07:14.037  3588  3726 D VoldConnector: RCV <- {651 emulated 7}
+--------- beginning of main
+12-19 22:07:14.037  3588  3623 W zygote64: kill(-4857, 9) failed: No such process
+12-19 22:07:14.037  3588  3726 D VoldConnector: RCV <- {659 emulated}
+12-19 22:07:14.036  3588  3726 D VoldConnector: RCV <- {650 emulated 2 "" ""}
+12-19 22:07:14.035  3588  3726 D VoldConnector: RCV <- {651 emulated 0}
+12-19 22:07:14.035  3588  3726 D VoldConnector: RCV <- {200 19 Command succeeded}
+12-19 22:07:14.035  3588  3636 V StorageManagerService: Found primary storage at VolumeInfo{emulated}:
+12-19 22:07:14.035  3588  3636 V StorageManagerService:     type=EMULATED diskId=null partGuid=null mountFlags=0 mountUserId=-1 
+12-19 22:07:14.035  3588  3636 V StorageManagerService:     state=UNMOUNTED 
+12-19 22:07:14.035  3588  3636 V StorageManagerService:     fsType=null fsUuid=null fsLabel=null 
+12-19 22:07:14.035  3588  3636 V StorageManagerService:     path=null internalPath=null 
+12-19 22:07:14.033  3588  3725 D VoldConnector: SND -> {20 volume user_added 0 0}
+12-19 22:07:14.032  3588  3726 D VoldConnector: RCV <- {200 20 Command succeeded}
+12-19 22:07:14.031  3588  3725 D VoldConnector: SND -> {21 volume user_started 0}
+12-19 22:07:14.029  3588  3726 D VoldConnector: RCV <- {200 21 Command succeeded}
+12-19 22:07:14.028  3588  3725 D CryptdConnector: SND -> {8 cryptfs getfield SystemLocale}
+12-19 22:07:14.027  4902  4921 E Cryptfs : Cannot get field when file encrypted
+12-19 22:07:14.027  3588  3727 D CryptdConnector: RCV <- {200 8 -1}
+12-19 22:07:14.025  3588  3725 W StorageManagerService: No primary storage mounted!
+12-19 22:07:14.025  3588  3725 D VoldConnector: SND -> {22 asec list}
+12-19 22:07:14.023  3588  3726 D VoldConnector: RCV <- {200 22 asec operation succeeded}
+12-19 22:07:14.022  3588  3725 I PackageManager: No secure containers found
+12-19 22:07:15.994  3588  3623 W zygote64: kill(-4857, 9) failed: No such process
+12-19 22:07:15.950  3588  3623 W zygote64: kill(-4857, 9) failed: No such process
+12-19 22:07:15.950  3588  3623 I zygote64: Successfully killed process cgroup uid 10011 pid 4857 in 87ms
+12-19 22:07:15.945  3588  3725 W StorageManagerService: No primary storage mounted!
+12-19 22:07:15.945  3588  3725 D VoldConnector: SND -> {23 asec list}
+12-19 22:07:15.944  3588  3726 D VoldConnector: RCV <- {200 23 asec operation succeeded}
+12-19 22:07:15.943  3588  3725 D StorageManagerService: Thinking about init, mSystemReady=true, mDaemonConnected=true
+12-19 22:07:15.943  3588  3725 D StorageManagerService: Thinking about reset, mSystemReady=true, mDaemonConnected=true
+12-19 22:07:15.943  3588  3725 D VoldConnector: SND -> {24 volume reset}
+12-19 22:07:15.943  3588  3621 I ActivityManager: Force stopping com.android.providers.media appid=10011 user=-1: vold reset
+12-19 22:07:15.942  3588  3726 D VoldConnector: RCV <- {651 emulated 7}
+12-19 22:07:15.941  3588  3726 D VoldConnector: RCV <- {659 emulated}
+12-19 22:07:15.941  3588  3726 D VoldConnector: RCV <- {650 emulated 2 "" ""}
+12-19 22:07:15.940  3588  3726 D VoldConnector: RCV <- {651 emulated 0}
+12-19 22:07:15.940  3588  3726 D VoldConnector: RCV <- {200 24 Command succeeded}
+12-19 22:07:15.939  3588  3725 D VoldConnector: SND -> {25 volume user_added 0 0}
+12-19 22:07:15.939  3588  3636 V StorageManagerService: Found primary storage at VolumeInfo{emulated}:
+12-19 22:07:15.939  3588  3636 V StorageManagerService:     type=EMULATED diskId=null partGuid=null mountFlags=0 mountUserId=-1 
+12-19 22:07:15.939  3588  3636 V StorageManagerService:     state=UNMOUNTED 
+12-19 22:07:15.939  3588  3636 V StorageManagerService:     fsType=null fsUuid=null fsLabel=null 
+12-19 22:07:15.939  3588  3636 V StorageManagerService:     path=null internalPath=null 
+12-19 22:07:15.939  3588  3726 D VoldConnector: RCV <- {200 25 Command succeeded}
+12-19 22:07:15.938  3588  3725 D VoldConnector: SND -> {26 volume user_started 0}
+12-19 22:07:15.937  3588  3726 D VoldConnector: RCV <- {200 26 Command succeeded}
+12-19 22:07:15.937  3588  3725 D CryptdConnector: SND -> {9 cryptfs getfield SystemLocale}
+12-19 22:07:15.936  4902  4921 E Cryptfs : Cannot get field when file encrypted
+12-19 22:07:15.936  3588  3727 D CryptdConnector: RCV <- {200 9 -1}
+12-19 22:07:15.935  3588  3725 W StorageManagerService: No primary storage mounted!
+12-19 22:07:15.935  3588  3725 D VoldConnector: SND -> {27 asec list}
+12-19 22:07:15.934  3588  3726 D VoldConnector: RCV <- {200 27 asec operation succeeded}
+12-19 22:07:15.933  3588  3725 I PackageManager: No secure containers found
+12-19 22:07:15.855  3588  3725 W StorageManagerService: No primary storage mounted!
+12-19 22:07:15.855  3588  3725 D VoldConnector: SND -> {28 asec list}
+12-19 22:07:15.853  3588  3726 D VoldConnector: RCV <- {200 28 asec operation succeeded}
+12-19 22:07:15.853  3588  3725 D VoldConnector: SND -> {29 volume mount emulated 3 -1}
+12-19 22:07:15.852  3588  3726 D VoldConnector: RCV <- {651 emulated 1}
+12-19 22:07:15.850  3588  3726 D VoldConnector: RCV <- {656 emulated /data/media}
+12-19 22:07:15.849  3588  3726 D VoldConnector: RCV <- {655 emulated /storage/emulated}
+12-19 22:07:15.844  4902  4917 V vold    : Waiting for FUSE to spin up...
+12-19 22:07:15.824  4989  4989 W /system/bin/sdcard: Device explicitly enabled sdcardfs
+12-19 22:07:15.793  4902  4917 V vold    : Waiting for FUSE to spin up...
+12-19 22:07:15.783  3588  3615 I zygote64: Background concurrent copying GC freed 58905(3MB) AllocSpace objects, 22(936KB) LOS objects, 42% free, 5MB/10MB, paused 178us total 101.895ms
+12-19 22:07:15.743  3588  3726 D VoldConnector: RCV <- {651 emulated 2}
+12-19 22:07:15.742  4902  4917 D vold    : Linking /storage/emulated/0 to /mnt/user/0/primary
+12-19 22:07:15.742  3588  3726 D VoldConnector: RCV <- {200 29 Command succeeded}
+12-19 22:07:15.740  3588  3725 D VoldConnector: SND -> {30 volume mount emulated 3 -1}
+12-19 22:07:15.740  3164  3164 D installd: Found quota mount /dev/block/by-name/userdata at /data
+12-19 22:07:15.739  3588  3621 D ActivityManager: checkAllowBackground: uid=10025 pkg=com.android.externalstorage rec=UidRecord{d40adb8 u0a25 CEM  idle change:cached procs:1 seq(0,0,0)} always=true idle=true
+12-19 22:07:15.739  3164  3164 E installd: Failed to enable USRQUOTA on /dev/block/by-name/userdata: File exists
+12-19 22:07:15.739  3588  3621 I ActivityManager: App 10025/com.android.externalstorage targets O+, restricted
+12-19 22:07:15.739  3164  3164 E installd: Failed to enable GRPQUOTA on /dev/block/by-name/userdata: File exists
+12-19 22:07:15.739  3588  3621 D ActivityManager: checkAllowBackground: uid=10025 pkg=com.android.externalstorage startMode=2 onwhitelist=false
+12-19 22:07:15.739  3164  3164 D installd: Found storage mount /data/media at /mnt/runtime/default/emulated
+12-19 22:07:15.739  4902  4917 W vold    : emulated flags change requires state unmounted or unmountable
+12-19 22:07:15.739  4902  4917 W vold    : emulated user change requires state unmounted or unmountable
+12-19 22:07:15.739  4902  4917 W vold    : emulated mount requires state unmounted or unmountable
+12-19 22:07:15.739  4902  4917 D vold    : Linking /storage/emulated/0 to /mnt/user/0/primary
+12-19 22:07:15.738  3588  3726 D VoldConnector: RCV <- {400 30 Command failed}
+12-19 22:07:15.736  3588  3725 D StorageManagerService: Volume emulated broadcasting checking to UserHandle{0}
+12-19 22:07:15.734  3588  3725 D StorageManagerService: Volume emulated broadcasting mounted to UserHandle{0}
+12-19 22:07:15.734  4827  4827 D ExternalStorage: After updating volumes, found 2 active roots
+12-19 22:07:15.731  3588  3643 D ActivityManager: checkAllowBackground: uid=10025 pkg=com.android.externalstorage rec=UidRecord{d40adb8 u0a25 RCVR idle change:uncached procs:1 seq(0,0,0)} always=true idle=true
+12-19 22:07:15.731  3588  3643 I ActivityManager: App 10025/com.android.externalstorage targets O+, restricted
+12-19 22:07:15.731  3588  3643 D ActivityManager: checkAllowBackground: uid=10025 pkg=com.android.externalstorage startMode=2 onwhitelist=false
+12-19 22:07:15.726  4827  4827 I chatty  : uid=10025(com.android.externalstorage) identical 1 line
+12-19 22:07:15.724  3588  3643 D ActivityManager: checkAllowBackground: uid=10025 pkg=com.android.externalstorage rec=UidRecord{d40adb8 u0a25 RCVR idle change:uncached procs:1 seq(0,0,0)} always=true idle=true
+12-19 22:07:15.724  3588  3643 I ActivityManager: App 10025/com.android.externalstorage targets O+, restricted
+12-19 22:07:15.724  3588  3643 D ActivityManager: checkAllowBackground: uid=10025 pkg=com.android.externalstorage startMode=2 onwhitelist=false
+12-19 22:07:15.720  4827  4827 D ExternalStorage: After updating volumes, found 2 active roots
+12-19 22:07:15.718  3588  3643 D ActivityManager: checkAllowBackground: uid=10011 pkg=com.android.providers.downloads rec=UidRecord{caecc1d u0a11 CEM  bg:+3m22s70ms idle change:cached procs:1 seq(0,0,0)} always=true idle=true
+12-19 22:07:15.718  3588  3643 I ActivityManager: App 10011/com.android.providers.downloads targets O+, restricted
+12-19 22:07:15.718  3588  3643 D ActivityManager: checkAllowBackground: uid=10011 pkg=com.android.providers.downloads startMode=2 onwhitelist=true
+12-19 22:07:15.687  3588  3643 D ActivityManager: checkAllowBackground: uid=10011 pkg=com.android.providers.media rec=UidRecord{caecc1d u0a11 RCVR bg:+3m22s101ms idle change:uncached procs:1 seq(0,0,0)} always=true idle=true
+12-19 22:07:15.686  3588  3643 I ActivityManager: App 10011/com.android.providers.media targets O+, restricted
+12-19 22:07:15.686  3588  3643 D ActivityManager: checkAllowBackground: uid=10011 pkg=com.android.providers.media startMode=2 onwhitelist=true
+12-19 22:07:15.669  3588  3643 I ActivityManager: Start proc 5007:com.android.providers.media/u0a11 for broadcast com.android.providers.media/.MediaScannerReceiver
+12-19 22:07:15.537  5007  5007 D MediaProviderApp: onCreate
+12-19 22:07:15.536  5007  5007 D AutoLinkMediaScanner: <init>
+12-19 22:07:15.526  5007  5007 D MediaScannerReceiver: onReceive action: android.intent.action.MEDIA_MOUNTED
+12-19 22:07:15.523  5007  5007 D MediaScannerReceiver: action: android.intent.action.MEDIA_MOUNTED path: /storage/emulated/0
+12-19 22:07:15.521  3588  3643 V ActivityManager: *** startService: Intent { cmp=com.android.providers.media/.MediaScannerService (has extras) } type=null fg=false
+12-19 22:07:15.521  3588  3643 V ActivityManager: startService: Intent { cmp=com.android.providers.media/.MediaScannerService (has extras) } type=null args=Bundle[mParcelledData.dataSize=116]
+12-19 22:07:15.521  3588  3643 V ActivityManager: retrieveServiceLocked: Intent { cmp=com.android.providers.media/.MediaScannerService (has extras) } type=null callingUid=10011
+12-19 22:07:15.521  3588  3643 V ActivityManager: Retrieve created new service: ServiceRecord{d6eb539 u0 com.android.providers.media/.MediaScannerService}
+12-19 22:07:15.521  3588  3643 D ActivityManager: checkAllowBackground: uid=10011 pkg=com.android.providers.media rec=UidRecord{caecc1d u0a11 RCVR bg:+3m22s268ms idle change:uncached procs:2 seq(0,0,0)} always=false idle=true
+12-19 22:07:15.520  3588  3643 I ActivityManager: App 10011/com.android.providers.media on idle whitelist; not restricted in background
+12-19 22:07:15.520  3588  3643 D ActivityManager: checkAllowBackground: uid=10011 pkg=com.android.providers.media startMode=0 onwhitelist=true
+12-19 22:07:15.520  3588  3643 V ActivityManager: Not delaying, but counting as bg: ServiceRecord{d6eb539 u0 com.android.providers.media/.MediaScannerService}
+12-19 22:07:15.520  3588  3643 V ActivityManager: Bringing up ServiceRecord{d6eb539 u0 com.android.providers.media/.MediaScannerService} android.content.Intent$FilterComparison@5e49f425 fg=false
+12-19 22:07:15.520  3588  3643 V ActivityManager: >>> EXECUTING create of ServiceRecord{d6eb539 u0 com.android.providers.media/.MediaScannerService} in app ProcessRecord{670b77e 5007:com.android.providers.media/u0a11}
+12-19 22:07:15.519  3588  3643 V ActivityManager: Sending arguments to: ServiceRecord{d6eb539 u0 com.android.providers.media/.MediaScannerService} android.content.Intent$FilterComparison@5e49f425 args=Intent { cmp=com.android.providers.media/.MediaScannerService (has extras) }
+12-19 22:07:15.519  3588  3643 V ActivityManager: >>> EXECUTING start of ServiceRecord{d6eb539 u0 com.android.providers.media/.MediaScannerService} in app ProcessRecord{670b77e 5007:com.android.providers.media/u0a11}
+12-19 22:07:15.518  3588  3643 V ActivityManager: Starting background (first=true): ServiceRecord{d6eb539 u0 com.android.providers.media/.MediaScannerService}
+12-19 22:07:15.518  3588  3643 V ActivityManager: java.lang.RuntimeException: here
+12-19 22:07:15.518  3588  3643 V ActivityManager: 	at com.android.server.am.ActiveServices.startServiceInnerLocked(ActiveServices.java:547)
+12-19 22:07:15.518  3588  3643 V ActivityManager: 	at com.android.server.am.ActiveServices.startServiceLocked(ActiveServices.java:478)
+12-19 22:07:15.518  3588  3643 V ActivityManager: 	at com.android.server.am.ActivityManagerService.startService(ActivityManagerService.java:18278)
+12-19 22:07:15.518  3588  3643 V ActivityManager: 	at android.app.IActivityManager$Stub.onTransact(IActivityManager.java:528)
+12-19 22:07:15.518  3588  3643 V ActivityManager: 	at com.android.server.am.ActivityManagerService.onTransact(ActivityManagerService.java:2919)
+12-19 22:07:15.518  3588  3643 V ActivityManager: 	at android.os.Binder.execTransact(Binder.java:697)
+12-19 22:07:15.518  3588  3643 V ActivityManager: Top bg start is ServiceRecord{d6eb539 u0 com.android.providers.media/.MediaScannerService}, can delay others up to 256896
+12-19 22:07:15.512  3588  3643 V ActivityManager: <<< DONE EXECUTING ServiceRecord{d6eb539 u0 com.android.providers.media/.MediaScannerService}: nesting=2, inDestroying=false, app=ProcessRecord{670b77e 5007:com.android.providers.media/u0a11}
+12-19 22:07:15.372  5007  5007 D AutoLinkMediaScanner: sendMessage volume:external,path:/storage/emulated/0
+12-19 22:07:15.371  5007  5060 D AutoLinkMediaScanner: start scanning volume external: [/storage/emulated/0]
+12-19 22:07:15.370  3588  3871 V ActivityManager: <<< DONE EXECUTING ServiceRecord{d6eb539 u0 com.android.providers.media/.MediaScannerService}: nesting=1, inDestroying=false, app=ProcessRecord{670b77e 5007:com.android.providers.media/u0a11}
+12-19 22:07:15.370  3588  3871 V ActivityManager: Nesting at 0 of com.android.providers.media/.MediaScannerService
+12-19 22:07:15.370  3588  3871 V ActivityManager: No more executingServices of com.android.providers.media/.MediaScannerService
+12-19 22:07:15.360  5007  5060 W MediaScanner: <fastProcessDirectory> path : /storage/emulated/0
+12-19 22:07:15.360  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/
+12-19 22:07:15.360  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/
+12-19 22:07:15.360  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/Pictures/
+12-19 22:07:15.359  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Pictures/
+12-19 22:07:15.359  5007  5060 I chatty  : uid=10011(com.android.providers.media) AutoLinkMediaSc identical 2 lines
+12-19 22:07:15.359  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Pictures/
+12-19 22:07:15.359  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/Download/
+12-19 22:07:15.359  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Download/
+12-19 22:07:15.359  5007  5060 I chatty  : uid=10011(com.android.providers.media) AutoLinkMediaSc identical 1 line
+12-19 22:07:15.359  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Download/
+12-19 22:07:15.359  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/Movies/
+12-19 22:07:15.359  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Movies/
+12-19 22:07:15.359  5007  5060 I chatty  : uid=10011(com.android.providers.media) AutoLinkMediaSc identical 1 line
+12-19 22:07:15.359  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Movies/
+12-19 22:07:15.359  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/DCIM/
+12-19 22:07:15.359  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/DCIM/
+12-19 22:07:15.359  5007  5060 I chatty  : uid=10011(com.android.providers.media) AutoLinkMediaSc identical 1 line
+12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/DCIM/
+12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/Android/
+12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Android/
+12-19 22:07:15.358  5007  5060 I chatty  : uid=10011(com.android.providers.media) AutoLinkMediaSc identical 1 line
+12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Android/
+12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/Android/data/
+12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Android/data/.nomedia
+12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Android/data/.nomedia
+12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/Ringtones/
+12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Ringtones/
+12-19 22:07:15.358  5007  5060 I chatty  : uid=10011(com.android.providers.media) AutoLinkMediaSc identical 1 line
+12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Ringtones/
+12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/Podcasts/
+12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Podcasts/
+12-19 22:07:15.358  5007  5060 I chatty  : uid=10011(com.android.providers.media) AutoLinkMediaSc identical 1 line
+12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Podcasts/
+12-19 22:07:15.357  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/Music/
+12-19 22:07:15.357  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Music/
+12-19 22:07:15.357  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Music/
+12-19 22:07:15.351  5007  5060 I AutoLinkMediaScanner: FastScan addMediaFile type:1,path:/storage/emulated/0/Music/Beyond - 1991-life.mp3,size:1
+12-19 22:07:15.351  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Music/Beyond - 1991-life.mp3
+12-19 22:07:15.351  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Music/Beyond - 1991-life.mp3
+12-19 22:07:15.351  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/Notifications/
+12-19 22:07:15.351  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Notifications/
+12-19 22:07:15.351  5007  5060 I chatty  : uid=10011(com.android.providers.media) AutoLinkMediaSc identical 1 line
+12-19 22:07:15.351  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Notifications/
+12-19 22:07:15.351  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/Alarms/
+12-19 22:07:15.350  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Alarms/
+12-19 22:07:15.350  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Alarms/
+12-19 22:07:15.349  5007  5060 D MediaScanner:  fast scan: 13ms
+12-19 22:07:15.348  5007  5060 W MediaScanner: <clearCancelScan>
+12-19 22:07:15.347  5007  5060 D AutoLinkMediaScanner: done scanning volume external
+12-19 22:07:15.330  5007  5061 V MediaScanner: scanFile: /storage/emulated/0/Android/data/.nomedia took 3
+12-19 22:07:15.328  5007  5061 V MediaScanner: scanFile: /storage/emulated/0/Music/Beyond - 1991-life.mp3 took 1
+12-19 22:07:15.321  5007  5061 V MediaScanner: pruneDeadThumbnailFiles... android.content.ContentProviderClient$CursorWrapperInner@b66ab4d
+12-19 22:07:15.320  5007  5061 V MediaScanner: /pruneDeadThumbnailFiles... android.content.ContentProviderClient$CursorWrapperInner@b66ab4d
+12-19 22:07:15.319  5007  5061 W MediaScanner: <clearCancelScan>
+[  270.883836] sd 0:0:0:0: [sda] Attached SCSI removable disk
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+12-19 22:07:44.651  4902  4915 V vold    : ----------------
+12-19 22:07:44.650  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:44.650  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b110000.cdns3/xhci-cdns3/usb1/1-1/1-1.3/1-1.3:1.0/host0/target0:0:0/0:0:0:0/block/sda'
+12-19 22:07:44.650  4902  4915 D NetlinkEvent: NL param 'MAJOR=8'
+12-19 22:07:44.650  4902  4915 D NetlinkEvent: NL param 'MINOR=0'
+12-19 22:07:44.650  4902  4915 D NetlinkEvent: NL param 'DEVNAME=sda'
+12-19 22:07:44.650  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'
+
+12-19 22:07:44.643  4902  4915 V vold    : /system/bin/sgdisk
+12-19 22:07:44.643  4902  4915 V vold    :     --android-dump
+12-19 22:07:44.643  4902  4915 V vold    :     /dev/block/vold/disk:8,0
+12-19 22:07:44.599  4902  4915 V vold    : DISK mbr
+12-19 22:07:44.599  4902  4915 V vold    : 
+12-19 22:07:44.599  4902  4915 V vold    : PART 1 c
+12-19 22:07:44.599  4902  4915 V vold    : 
+
+12-19 22:07:44.646  3588  3726 D VoldConnector: RCV <- {640 disk:8,0 8}
+12-19 22:07:44.643  3588  3726 D VoldConnector: RCV <- {641 disk:8,0 16025387008}
+12-19 22:07:44.642  3588  3726 D VoldConnector: RCV <- {642 disk:8,0 General }
+12-19 22:07:44.641  3588  3726 D VoldConnector: RCV <- {644 disk:8,0 /sys//devices/platform/5b110000.cdns3/xhci-cdns3/usb1/1-1/1-1.3/1-1.3:1.0/host0/target0:0:0/0:0:0:0/block/sda}
+12-19 22:07:44.596  3588  3726 D VoldConnector: RCV <- {650 public:8,1 0 "disk:8,0" ""}
+
+
+
+
+
+
+12-19 22:07:44.596  4902  4915 V vold    : ----------------
+12-19 22:07:44.596  4902  4915 V vold    : handleBlockEvent with action 1
+12-19 22:07:44.596  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b110000.cdns3/xhci-cdns3/usb1/1-1/1-1.3/1-1.3:1.0/host0/target0:0:0/0:0:0:0/block/sda/sda1'
+12-19 22:07:44.596  4902  4915 D NetlinkEvent: NL param 'MAJOR=8'
+12-19 22:07:44.596  4902  4915 D NetlinkEvent: NL param 'MINOR=1'
+12-19 22:07:44.596  4902  4915 D NetlinkEvent: NL param 'DEVNAME=sda1'
+12-19 22:07:44.595  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'
+12-19 22:07:44.595  4902  4915 D NetlinkEvent: NL param 'PARTN=1'
+
+12-19 22:07:44.595  3588  3726 D VoldConnector: RCV <- {651 public:8,1 0}
+
+12-19 22:07:44.594  3588  3725 D VoldConnector: SND -> {31 volume mount public:8,1 2 0}
+
+12-19 22:07:44.594  3588  3726 D VoldConnector: RCV <- {643 disk:8,0}
+12-19 22:07:44.594  4902  4917 V vold    : /system/bin/blkid
+12-19 22:07:44.594  4902  4917 V vold    :     -c
+12-19 22:07:44.594  4902  4917 V vold    :     /dev/null
+12-19 22:07:44.594  3588  3726 D VoldConnector: RCV <- {651 public:8,1 1}
+12-19 22:07:44.594  4902  4917 V vold    :     -s
+12-19 22:07:44.594  4902  4917 V vold    :     TYPE
+12-19 22:07:44.594  4902  4917 V vold    :     -s
+12-19 22:07:44.594  4902  4917 V vold    :     UUID
+12-19 22:07:44.594  4902  4917 V vold    :     -s
+12-19 22:07:44.594  4902  4917 V vold    :     LABEL
+12-19 22:07:44.594  4902  4917 V vold    :     /dev/block/vold/public:8,1
+12-19 22:07:44.965  3830  3944 W zygote64: Checksum mismatch for dex SystemUI.apk
+12-19 22:07:44.592  3830  3830 D StorageNotification: Notifying about public volume: VolumeInfo{public:8,1}:
+12-19 22:07:44.592  3830  3830 D StorageNotification:     type=PUBLIC diskId=disk:8,0 partGuid=null mountFlags=VISIBLE mountUserId=0 
+12-19 22:07:44.592  3830  3830 D StorageNotification:     state=UNMOUNTED 
+12-19 22:07:44.592  3830  3830 D StorageNotification:     fsType=null fsUuid=null fsLabel=null 
+12-19 22:07:44.592  3830  3830 D StorageNotification:     path=null internalPath=null 
+12-19 22:07:44.589  3830  3830 D StorageNotification: Notifying about public volume: VolumeInfo{public:8,1}:
+12-19 22:07:44.589  3830  3830 D StorageNotification:     type=PUBLIC diskId=disk:8,0 partGuid=null mountFlags=VISIBLE mountUserId=0 
+12-19 22:07:44.589  3830  3830 D StorageNotification:     state=CHECKING 
+12-19 22:07:44.589  3830  3830 D StorageNotification:     fsType=null fsUuid=null fsLabel=null 
+12-19 22:07:44.589  3830  3830 D StorageNotification:     path=null internalPath=null 
+12-19 22:07:44.535  3588  3744 D NotificationSQLiteLog: Pruned event entries: 4
+12-19 22:07:44.524  4902  4917 V vold    : /dev/block/vold/public:8,1: UUID="5243-5977" TYPE="vfat" 
+12-19 22:07:44.524  4902  4917 V vold    : 
+12-19 22:07:44.522  3588  3726 D VoldConnector: RCV <- {652 public:8,1 vfat}
+12-19 22:07:44.521  4902  4917 V vold    : /system/bin/fsck_msdos
+12-19 22:07:44.521  4902  4917 V vold    :     -p
+12-19 22:07:44.521  4902  4917 V vold    :     -f
+12-19 22:07:44.521  4902  4917 V vold    :     /dev/block/vold/public:8,1
+12-19 22:07:44.521  3588  3726 D VoldConnector: RCV <- {653 public:8,1 5243-5977}
+12-19 22:07:44.521  3588  3726 D VoldConnector: RCV <- {654 public:8,1 }
+12-19 22:07:44.495  4902  4917 I fsck_msdos: ** /dev/block/vold/public:8,1
+12-19 22:07:44.492  4902  4917 I fsck_msdos: ** Phase 1 - Read FAT (compare skipped)
+12-19 22:07:44.492  4902  4917 I fsck_msdos: Attempting to allocate 7633 KB for FAT
+12-19 22:07:44.164  3830  3830 I zygote64: Deoptimizing void com.android.systemui.statusbar.stack.StackScrollState.resetViewState(com.android.systemui.statusbar.ExpandableView) due to JIT same target
+12-19 22:07:44.152  3830  3830 I zygote64: Deoptimizing void com.android.systemui.statusbar.stack.NotificationStackScrollLayout.updateViewShadows() due to JIT inline cache
+12-19 22:07:44.128  4902  4917 I fsck_msdos: ** Phase 2 - Check Cluster Chains
+12-19 22:07:44.047  4902  4917 I fsck_msdos: ** Phase 3 - Checking Directories
+12-19 22:07:45.503  3830  3830 I zygote64: Deoptimizing void com.android.systemui.statusbar.stack.ViewState.applyToView(android.view.View) due to JIT inline cache
+12-19 22:07:45.501  3830  3830 I zygote64: Deoptimizing void com.android.systemui.statusbar.stack.NotificationStackScrollLayout.updateViewShadows() due to JIT inline cache
+12-19 22:07:45.304  4902  4917 I fsck_msdos: ** Phase 4 - Checking for Lost Files
+12-19 22:07:45.283  4902  4917 I fsck_msdos: 1625 files, 1906472 free (1811173 clusters)
+12-19 22:07:45.272  4902  4917 I Vold    : Filesystem check completed OK
+12-19 22:07:45.271  3588  3726 D VoldConnector: RCV <- [  272.267658] FAT-fs (sda1): Volume was not properly unmounted. Some data may be corrupt. Please run fsck.
+{656 public:8,1 /mnt/media_rw/5243-5977}
+12-19 22:07:45.270  3588  3726 D VoldConnector: RCV <- {655 public:8,1 /storage/5243-5977}
+12-19 22:07:45.239  4902  4917 V vold    : Waiting for FUSE to spin up...
+12-19 22:07:45.219  5131  5131 W /system/bin/sdcard: Device expli[  272.313952] sdcardfs version 2.0
+citly enabled sdcardfs
+[  272.322828] sdcardfs: dev_name -> /mnt/media_rw/5243-5977
+[  272.330302] sdcardfs: options -> fsuid=1023,fsgid=1023,mask=6,userid=0,gid=1015
+[  272.337633] sdcardfs: mnt -> ffff800071f9a3a0
+[  272.342160] sdcardfs: mounted on top of /mnt/media_rw/5243-5977 type vfat
+[  272.349861] Remount options were mask=18,gid=9997 for vfsmnt ffff80001f2008e0.
+[  272.357128] sdcardfs : options - debug:1
+[  272.361072] sdcardfs : options - gid:9997
+[  272.365100] sdcardfs : options - mask:18
+[  272.369404] Remount options were mask=18,gid=9997 for vfsmnt ffff80001f1b1520.
+[  272.376660] sdcardfs : options - debug:1
+[  272.380609] sdcardfs : options - gid:9997
+[  272.384640] sdcardfs : options - mask:18
+12-19 22:07:45.189  4902  4917 V vold    : Waiting for FUSE to spin up...
+12-19 22:07:45.138  3588  3726 D VoldConnector: RCV <- {651 public:8,1 2}
+12-19 22:07:45.137  3588  3726 D VoldConnector: RCV <- {200 31 Command succeeded}
+12-19 22:07:45.137  3588  3725 E VoldConnector: NDC Command {31 volume mount public:8,1 2 0} took too long (1457ms)
