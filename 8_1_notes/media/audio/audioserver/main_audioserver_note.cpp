@@ -1,5 +1,4 @@
 //	@frameworks/av/media/audioserver/audioserver.rc
-
 service audioserver /system/bin/audioserver
     class main
     user audioserver
@@ -111,10 +110,10 @@ int main(int argc __unused, char **argv)
         // AAudioService should only be used in OC-MR1 and later.
         // And only enable the AAudioService if the system MMAP policy explicitly allows it.
         // This prevents a client from misusing AAudioService when it is not supported.
-        aaudio_policy_t mmapPolicy = property_get_int32(AAUDIO_PROP_MMAP_POLICY,
-                                                        AAUDIO_POLICY_NEVER);
+        //  @frameworks/av/media/libaaudio/src/utility/AAudioUtilities.h:178:#define AAUDIO_PROP_MMAP_POLICY           "aaudio.mmap_policy"     //此平台没有定义
+        aaudio_policy_t mmapPolicy = property_get_int32(AAUDIO_PROP_MMAP_POLICY,AAUDIO_POLICY_NEVER);
         if (mmapPolicy == AAUDIO_POLICY_AUTO || mmapPolicy == AAUDIO_POLICY_ALWAYS) {
-            AAudioService::instantiate();
+            AAudioService::instantiate();//所以该服务没有启动
         }
 
         SoundTriggerHwService::instantiate();

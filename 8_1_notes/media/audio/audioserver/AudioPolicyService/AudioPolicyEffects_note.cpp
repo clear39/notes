@@ -36,8 +36,7 @@ status_t AudioPolicyEffects::loadAudioEffectXmlConfig() {
         for (auto& stream : processingChain) {
             auto effectDescs = std::make_unique<EffectDescVector>();
             for (auto& effect : stream.effects) {
-                effectDescs->mEffects.add(
-                        new EffectDesc{effect.get().name.c_str(), effect.get().uuid});
+                effectDescs->mEffects.add(new EffectDesc{effect.get().name.c_str(), effect.get().uuid});
             }
             streams.add(stream.type, effectDescs.release());
         }

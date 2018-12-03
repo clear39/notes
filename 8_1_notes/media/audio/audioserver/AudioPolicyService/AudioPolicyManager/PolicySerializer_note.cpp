@@ -1,75 +1,3 @@
-<audioPolicyConfiguration version="1.0" xmlns:xi="http://www.w3.org/2001/XInclude">
-    <globalConfiguration speaker_drc_enabled="true"/>
-
-    <modules>
-        <module name="primary" halVersion="2.0">
-            <attachedDevices>
-                <item>Speaker</item>
-                <item>Built-In Mic</item>
-            </attachedDevices>
-            <defaultOutputDevice>Speaker</defaultOutputDevice>
-            <mixPorts>
-                <mixPort name="primary output" role="source" flags="AUDIO_OUTPUT_FLAG_PRIMARY">
-                    <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
-                             samplingRates="48000" channelMasks="AUDIO_CHANNEL_OUT_STEREO"/>
-                </mixPort>
-                <mixPort name="esai output" role="source" flags="AUDIO_OUTPUT_FLAG_DIRECT">
-                    <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
-                             samplingRates="48000" channelMasks="AUDIO_CHANNEL_OUT_5POINT1,AUDIO_CHANNEL_OUT_7POINT1"/>
-                </mixPort>
-                <mixPort name="primary input" role="sink">
-                    <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
-                             samplingRates="8000,11025,16000,22050,24000,32000,44100,48000"
-                             channelMasks="AUDIO_CHANNEL_IN_MONO,AUDIO_CHANNEL_IN_STEREO"/>
-                </mixPort>
-            </mixPorts>
-            <devicePorts>
-                <devicePort tagName="Speaker" type="AUDIO_DEVICE_OUT_SPEAKER" role="sink" >
-                </devicePort>
-                <devicePort tagName="Wired Headset" type="AUDIO_DEVICE_OUT_WIRED_HEADSET" role="sink">
-                </devicePort>
-                <devicePort tagName="Wired Headphones" type="AUDIO_DEVICE_OUT_WIRED_HEADPHONE" role="sink">
-                </devicePort>
-
-                <devicePort tagName="Built-In Mic" type="AUDIO_DEVICE_IN_BUILTIN_MIC" role="source">
-                </devicePort>
-                <devicePort tagName="Wired Headset Mic" type="AUDIO_DEVICE_IN_WIRED_HEADSET" role="source">
-                </devicePort>
-                <devicePort tagName="Spdif-In" type="AUDIO_DEVICE_IN_AUX_DIGITAL" role="source">
-                </devicePort>
-            </devicePorts>
-            <routes>
-                <route type="mix" sink="Speaker"
-                       sources="esai output,primary output"/>
-                <route type="mix" sink="Wired Headset"
-                       sources="primary output"/>
-                <route type="mix" sink="Wired Headphones"
-                       sources="primary output"/>
-
-                <route type="mix" sink="primary input"
-                       sources="Built-In Mic,Wired Headset Mic,Spdif-In"/>
-            </routes>
-        </module>
-
-        <!-- A2dp Audio HAL -->
-        <xi:include href="a2dp_audio_policy_configuration.xml"/>		//	out/target/product/autolink_8qxp/vendor/etc/a2dp_audio_policy_configuration.xml
-
-        <!-- Usb Audio HAL -->
-        <xi:include href="usb_audio_policy_configuration.xml"/>			//	out/target/product/autolink_8qxp/vendor/etc/usb_audio_policy_configuration.xml
-
-        <!-- Remote Submix Audio HAL -->
-        <xi:include href="r_submix_audio_policy_configuration.xml"/>	//	out/target/product/autolink_8qxp/vendor/etc/r_submix_audio_policy_configuration.xml
-
-    </modules>
-
-    <!-- Volume section -->
-    <xi:include href="audio_policy_volumes.xml"/>		//	out/target/product/autolink_8qxp/vendor/etc/audio_policy_volumes.xml
-    <xi:include href="default_volume_tables.xml"/>		//	out/target/product/autolink_8qxp/vendor/etc/default_volume_tables.xml
-
-</audioPolicyConfiguration>
-
-
-
 //	@frameworks/av/services/audiopolicy/common/managerdefinitions/src/Serializer.cpp
 status_t PolicySerializer::deserialize(const char *configFile, AudioPolicyConfig &config)
 {
@@ -126,7 +54,7 @@ status_t PolicySerializer::deserialize(const char *configFile, AudioPolicyConfig
 
 
 /***
-    ModuleTraits::Collection modules;
+    ModuleTraits::Collection modules;									//	typedef HwModuleCollection Collection;
     deserializeCollection<ModuleTraits>(doc, cur, modules, &config);
     config.setHwModules(modules);
 */
@@ -146,8 +74,8 @@ static status_t deserializeCollection(_xmlDoc *doc, const _xmlNode *cur,typename
             child = child->xmlChildrenNode;
         }
         while (child != NULL) {
-            if (!xmlStrcmp(child->name, (const xmlChar *)Trait::tag)) {//const char *const ModuleTraits::tag = "module
-                typename Trait::PtrElement element;
+            if (!xmlStrcmp(child->name, (const xmlChar *)Trait::tag)) {//const char *const ModuleTraits::tag = "module"
+                typename Trait::PtrElement element;							//	 typedef HwModule Element; 		typedef sp<Element> PtrElement;
                 status_t status = Trait::deserialize(doc, child, element, serializingContext);
                 if (status != NO_ERROR) {
                     return status;
@@ -167,7 +95,7 @@ static status_t deserializeCollection(_xmlDoc *doc, const _xmlNode *cur,typename
 }
 
 
-
+//	typedef sp<Element> PtrElement;
 status_t ModuleTraits::deserialize(xmlDocPtr doc, const xmlNode *root, PtrElement &module,PtrSerializingCtx ctx)
 {
     string name = getXmlAttribute(root, Attributes::name);//	const char ModuleTraits::Attributes::name[] = "name";
@@ -184,7 +112,7 @@ status_t ModuleTraits::deserialize(xmlDocPtr doc, const xmlNode *root, PtrElemen
 
     ALOGV("%s: %s %s=%s", __FUNCTION__, tag, Attributes::name, name.c_str());
 
-    module = new Element(name.c_str(), versionMajor, versionMinor);
+    module = new Element(name.c_str(), versionMajor, versionMinor);//	typedef HwModule Element;
 
     // Deserialize childrens: Audio Mix Port, Audio Device Ports (Source/Sink), Audio Routes
     MixPortTraits::Collection mixPorts;
@@ -240,6 +168,10 @@ status_t ModuleTraits::deserialize(xmlDocPtr doc, const xmlNode *root, PtrElemen
 
 
 
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /***
     VolumeTraits::Collection volumes;
     deserializeCollection<VolumeTraits>(doc, cur, volumes, &config);

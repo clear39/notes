@@ -1,4 +1,4 @@
-autolink_8qxp:/ $ dumpsys media.audio_policy                                   
+autolink_8qxp:/ $ dumpsys media.audio_policy
 AudioPolicyManager: 0xeb5bd200
 Command Thread: 0xeb5aeb40
 Tones Thread: 0xeb5aea20
@@ -29,8 +29,8 @@ AudioPolicyManager Dump: 0xeb5bd200
   Device 1:
   - id:  1
   - tag name: Remote Submix In
-  - type: AUDIO_DEVICE_IN_REMOTE_SUBMIX                   
-  - address: 0                               
+  - type: AUDIO_DEVICE_IN_REMOTE_SUBMIX
+  - address: 0
   - Profiles:
       Profile 0:
           - format: AUDIO_FORMAT_PCM_16_BIT
@@ -358,8 +358,8 @@ HW Modules dump:
     - Supported devices:
       Device 1:
       - tag name: Remote Submix Out
-      - type: AUDIO_DEVICE_OUT_REMOTE_SUBMIX                  
-      - address: 0                               
+      - type: AUDIO_DEVICE_OUT_REMOTE_SUBMIX
+      - address: 0
   - inputs:
     input 0:
     - name: r_submix input
@@ -373,8 +373,8 @@ HW Modules dump:
       Device 1:
       - id:  1
       - tag name: Remote Submix In
-      - type: AUDIO_DEVICE_IN_REMOTE_SUBMIX                   
-      - address: 0                               
+      - type: AUDIO_DEVICE_IN_REMOTE_SUBMIX
+      - address: 0
   - Declared devices:
     Device 1:
     - tag name: Remote Submix Out
@@ -516,4 +516,3 @@ Registered effects:
 Audio Patches:
 
 Audio Policy Mix:
-autolink_8qxp:/ $ 

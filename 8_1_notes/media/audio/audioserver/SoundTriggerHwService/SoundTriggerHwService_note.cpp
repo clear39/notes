@@ -1,3 +1,7 @@
+/*
+语音识别架构，由于本平台在manifest.xml文件中没有配置，所以此功能暂时没有作用 
+*/
+
 //	@frameworks/av/services/soundtrigger/SoundTriggerHwService.h
 class SoundTriggerHwService :public BinderService<SoundTriggerHwService>,public BnSoundTriggerHwService{
 	static char const* getServiceName() { return "media.sound_trigger_hw"; }

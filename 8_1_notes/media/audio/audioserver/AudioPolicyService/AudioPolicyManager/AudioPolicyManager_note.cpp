@@ -183,16 +183,14 @@ AudioPolicyManager::AudioPolicyManager(AudioPolicyClientInterface *clientInterfa
             if ((profileType & inputDeviceTypes) == 0) {
                 continue;
             }
-            sp<AudioInputDescriptor> inputDesc =
-                    new AudioInputDescriptor(inProfile);
+            sp<AudioInputDescriptor> inputDesc = new AudioInputDescriptor(inProfile);
 
             inputDesc->mDevice = profileType;
 
             // find the address
             DeviceVector inputDevices = mAvailableInputDevices.getDevicesFromType(profileType);
             //   the inputs vector must be of size 1, but we don't want to crash here
-            String8 address = inputDevices.size() > 0 ? inputDevices.itemAt(0)->mAddress
-                    : String8("");
+            String8 address = inputDevices.size() > 0 ? inputDevices.itemAt(0)->mAddress : String8("");
             ALOGV("  for input device 0x%x using address %s", profileType, address.string());
             ALOGE_IF(inputDevices.size() == 0, "Input device list is empty!");
 
@@ -224,9 +222,7 @@ AudioPolicyManager::AudioPolicyManager(AudioPolicyClientInterface *clientInterfa
                 }
                 mpClientInterface->closeInput(input);
             } else {
-                ALOGW("Cannot open input stream for device %08x on hw module %s",
-                      inputDesc->mDevice,
-                      mHwModules[i]->getName());
+                ALOGW("Cannot open input stream for device %08x on hw module %s", inputDesc->mDevice, mHwModules[i]->getName());
             }
         }
     }
@@ -238,8 +234,7 @@ AudioPolicyManager::AudioPolicyManager(AudioPolicyClientInterface *clientInterfa
             continue;
         }
         // The device is now validated and can be appended to the available devices of the engine
-        mEngine->setDeviceConnectionState(mAvailableOutputDevices[i],
-                                          AUDIO_POLICY_DEVICE_STATE_AVAILABLE);
+        mEngine->setDeviceConnectionState(mAvailableOutputDevices[i], AUDIO_POLICY_DEVICE_STATE_AVAILABLE);
         i++;
     }
     for (size_t i = 0; i  < mAvailableInputDevices.size();) {

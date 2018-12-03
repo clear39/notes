@@ -33,7 +33,7 @@ AudioFlinger::AudioFlinger()
     // in bad state, reset the state upon service start.
     BatteryNotifier::getInstance().noteResetAudio();
 
-    mDevicesFactoryHal = DevicesFactoryHalInterface::create();
+    mDevicesFactoryHal = DevicesFactoryHalInterface::create();  //  @frameworks/av/media/libaudiohal/DevicesFactoryHalHybrid.cpp
     mEffectsFactoryHal = EffectsFactoryHalInterface::create();
 
     mMediaLogNotifier->run("MediaLogNotifier");
@@ -151,14 +151,12 @@ audio_module_handle_t AudioFlinger::loadHwModule_l(const char *name)
 
         mHardwareStatus = AUDIO_HW_SET_MASTER_VOLUME;
         if (OK == dev->setMasterVolume(mMasterVolume)) {
-            flags = static_cast<AudioHwDevice::Flags>(flags |
-                    AudioHwDevice::AHWD_CAN_SET_MASTER_VOLUME);
+            flags = static_cast<AudioHwDevice::Flags>(flags | AudioHwDevice::AHWD_CAN_SET_MASTER_VOLUME);
         }
 
         mHardwareStatus = AUDIO_HW_SET_MASTER_MUTE;
         if (OK == dev->setMasterMute(mMasterMute)) {
-            flags = static_cast<AudioHwDevice::Flags>(flags |
-                    AudioHwDevice::AHWD_CAN_SET_MASTER_MUTE);
+            flags = static_cast<AudioHwDevice::Flags>(flags | AudioHwDevice::AHWD_CAN_SET_MASTER_MUTE);
         }
 
         mHardwareStatus = AUDIO_HW_IDLE;
