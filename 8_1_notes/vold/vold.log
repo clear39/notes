@@ -727,7 +727,15 @@
 12-19 22:07:44.643  3588  3726 D VoldConnector: RCV <- {641 disk:8,0 16025387008}
 12-19 22:07:44.642  3588  3726 D VoldConnector: RCV <- {642 disk:8,0 General }
 12-19 22:07:44.641  3588  3726 D VoldConnector: RCV <- {644 disk:8,0 /sys//devices/platform/5b110000.cdns3/xhci-cdns3/usb1/1-1/1-1.3/1-1.3:1.0/host0/target0:0:0/0:0:0:0/block/sda}
-12-19 22:07:44.596  3588  3726 D VoldConnector: RCV <- {650 public:8,1 0 "disk:8,0" ""}
+
+
+
+
+
+
+
+
+
 
 
 
@@ -743,11 +751,18 @@
 12-19 22:07:44.595  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'
 12-19 22:07:44.595  4902  4915 D NetlinkEvent: NL param 'PARTN=1'
 
+
+12-19 22:07:44.596  3588  3726 D VoldConnector: RCV <- {650 public:8,1 0 "disk:8,0" ""}	//这里触发SND
 12-19 22:07:44.595  3588  3726 D VoldConnector: RCV <- {651 public:8,1 0}
 
 12-19 22:07:44.594  3588  3725 D VoldConnector: SND -> {31 volume mount public:8,1 2 0}
 
 12-19 22:07:44.594  3588  3726 D VoldConnector: RCV <- {643 disk:8,0}
+
+
+
+
+
 12-19 22:07:44.594  4902  4917 V vold    : /system/bin/blkid
 12-19 22:07:44.594  4902  4917 V vold    :     -c
 12-19 22:07:44.594  4902  4917 V vold    :     /dev/null
@@ -759,17 +774,6 @@
 12-19 22:07:44.594  4902  4917 V vold    :     -s
 12-19 22:07:44.594  4902  4917 V vold    :     LABEL
 12-19 22:07:44.594  4902  4917 V vold    :     /dev/block/vold/public:8,1
-12-19 22:07:44.965  3830  3944 W zygote64: Checksum mismatch for dex SystemUI.apk
-12-19 22:07:44.592  3830  3830 D StorageNotification: Notifying about public volume: VolumeInfo{public:8,1}:
-12-19 22:07:44.592  3830  3830 D StorageNotification:     type=PUBLIC diskId=disk:8,0 partGuid=null mountFlags=VISIBLE mountUserId=0 
-12-19 22:07:44.592  3830  3830 D StorageNotification:     state=UNMOUNTED 
-12-19 22:07:44.592  3830  3830 D StorageNotification:     fsType=null fsUuid=null fsLabel=null 
-12-19 22:07:44.592  3830  3830 D StorageNotification:     path=null internalPath=null 
-12-19 22:07:44.589  3830  3830 D StorageNotification: Notifying about public volume: VolumeInfo{public:8,1}:
-12-19 22:07:44.589  3830  3830 D StorageNotification:     type=PUBLIC diskId=disk:8,0 partGuid=null mountFlags=VISIBLE mountUserId=0 
-12-19 22:07:44.589  3830  3830 D StorageNotification:     state=CHECKING 
-12-19 22:07:44.589  3830  3830 D StorageNotification:     fsType=null fsUuid=null fsLabel=null 
-12-19 22:07:44.589  3830  3830 D StorageNotification:     path=null internalPath=null 
 12-19 22:07:44.535  3588  3744 D NotificationSQLiteLog: Pruned event entries: 4
 12-19 22:07:44.524  4902  4917 V vold    : /dev/block/vold/public:8,1: UUID="5243-5977" TYPE="vfat" 
 12-19 22:07:44.524  4902  4917 V vold    : 
@@ -792,12 +796,17 @@
 12-19 22:07:45.304  4902  4917 I fsck_msdos: ** Phase 4 - Checking for Lost Files
 12-19 22:07:45.283  4902  4917 I fsck_msdos: 1625 files, 1906472 free (1811173 clusters)
 12-19 22:07:45.272  4902  4917 I Vold    : Filesystem check completed OK
-12-19 22:07:45.271  3588  3726 D VoldConnector: RCV <- [  272.267658] FAT-fs (sda1): Volume was not properly unmounted. Some data may be corrupt. Please run fsck.
-{656 public:8,1 /mnt/media_rw/5243-5977}
+12-19 22:07:45.271  3588  3726 D VoldConnector: RCV <- {656 public:8,1 /mnt/media_rw/5243-5977}
 12-19 22:07:45.270  3588  3726 D VoldConnector: RCV <- {655 public:8,1 /storage/5243-5977}
 12-19 22:07:45.239  4902  4917 V vold    : Waiting for FUSE to spin up...
-12-19 22:07:45.219  5131  5131 W /system/bin/sdcard: Device expli[  272.313952] sdcardfs version 2.0
-citly enabled sdcardfs
+12-19 22:07:45.219  5131  5131 W /system/bin/sdcard: Device explicitly enabled sdcardfs
+12-19 22:07:45.189  4902  4917 V vold    : Waiting for FUSE to spin up...
+12-19 22:07:45.138  3588  3726 D VoldConnector: RCV <- {651 public:8,1 2}
+12-19 22:07:45.137  3588  3726 D VoldConnector: RCV <- {200 31 Command succeeded}
+12-19 22:07:45.137  3588  3725 E VoldConnector: NDC Command {31 volume mount public:8,1 2 0} took too long (1457ms)
+
+[  272.267658] FAT-fs (sda1): Volume was not properly unmounted. Some data may be corrupt. Please run fsck.
+[  272.313952] sdcardfs version 2.0
 [  272.322828] sdcardfs: dev_name -> /mnt/media_rw/5243-5977
 [  272.330302] sdcardfs: options -> fsuid=1023,fsgid=1023,mask=6,userid=0,gid=1015
 [  272.337633] sdcardfs: mnt -> ffff800071f9a3a0
@@ -810,7 +819,3 @@ citly enabled sdcardfs
 [  272.376660] sdcardfs : options - debug:1
 [  272.380609] sdcardfs : options - gid:9997
 [  272.384640] sdcardfs : options - mask:18
-12-19 22:07:45.189  4902  4917 V vold    : Waiting for FUSE to spin up...
-12-19 22:07:45.138  3588  3726 D VoldConnector: RCV <- {651 public:8,1 2}
-12-19 22:07:45.137  3588  3726 D VoldConnector: RCV <- {200 31 Command succeeded}
-12-19 22:07:45.137  3588  3725 E VoldConnector: NDC Command {31 volume mount public:8,1 2 0} took too long (1457ms)

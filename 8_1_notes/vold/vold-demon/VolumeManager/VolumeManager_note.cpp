@@ -176,8 +176,8 @@ void VolumeManager::handleBlockEvent(NetlinkEvent *evt) {
 
 
 
-
-std::shared_ptr<android::vold::VolumeBase> VolumeManager::findVolume(const std::string& id) {
+//接收到 StorageManagerService 发送过来的 D VoldConnector: SND -> {31 volume mount public:8,1 2 0}
+std::shared_ptr<android::vold::VolumeBase> VolumeManager::findVolume(const std::string& id) {// id = "public:8,1"
     // Vold could receive "mount" after "shutdown" command in the extreme case.
     // If this happens, mInternalEmulated will equal nullptr and
     // we need to deal with it in order to avoid null pointer crash.

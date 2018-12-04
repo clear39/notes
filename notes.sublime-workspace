@@ -8,144 +8,49 @@
 	"buffers":
 	[
 		{
-			"file": "8_1_notes/audio/audioserver/AudioPolicyService/AudioPolicyService_note.h",
+			"contents": "\n\n\n\n\n\n\n12-19 22:07:10.933  4902  4902 I vold    : Vold 3.0 (the awakening) firing up\n12-19 22:07:10.933  4902  4902 V vold    : Detected support for: ext4 vfat\n12-19 22:07:10.928  4902  4902 W Vold    : Tearing down stale mount /mnt/runtime/write/emulated\n12-19 22:07:10.911  4902  4902 W Vold    : Tearing down stale mount /mnt/runtime/read/emulated\n12-19 22:07:10.895  4902  4902 W Vold    : Tearing down stale mount /storage/emulated\n12-19 22:07:10.879  4902  4902 W Vold    : Tearing down stale mount /mnt/runtime/default/emulated\n12-19 22:07:10.845  4902  4915 V vold    : ----------------\n12-19 22:07:10.844  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.844  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram11'\n12-19 22:07:10.844  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.844  4902  4915 D NetlinkEvent: NL param 'MINOR=11'\n12-19 22:07:10.844  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram11'\n12-19 22:07:10.844  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.844  4902  4915 V vold    : ----------------\n12-19 22:07:10.844  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.844  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram2'\n12-19 22:07:10.844  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.844  4902  4915 D NetlinkEvent: NL param 'MINOR=2'\n12-19 22:07:10.844  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram2'\n12-19 22:07:10.844  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.843  4902  4915 V vold    : ----------------\n12-19 22:07:10.843  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.843  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/loop1'\n12-19 22:07:10.843  4902  4915 D NetlinkEvent: NL param 'MAJOR=7'\n12-19 22:07:10.843  4902  4915 D NetlinkEvent: NL param 'MINOR=1'\n12-19 22:07:10.843  4902  4915 D NetlinkEvent: NL param 'DEVNAME=loop1'\n12-19 22:07:10.843  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.843  4902  4915 V vold    : ----------------\n12-19 22:07:10.842  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.842  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd3'\n12-19 22:07:10.842  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.842  4902  4915 D NetlinkEvent: NL param 'MINOR=3'\n12-19 22:07:10.842  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd3'\n12-19 22:07:10.842  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.841  4902  4915 V vold    : ----------------\n12-19 22:07:10.841  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.841  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram0'\n12-19 22:07:10.840  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.840  4902  4915 D NetlinkEvent: NL param 'MINOR=0'\n12-19 22:07:10.840  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram0'\n12-19 22:07:10.840  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.840  4902  4915 V vold    : ----------------\n12-19 22:07:10.840  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.840  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0rpmb'\n12-19 22:07:10.840  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.840  4902  4915 D NetlinkEvent: NL param 'MINOR=96'\n12-19 22:07:10.840  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0rpmb'\n12-19 22:07:10.839  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.839  4902  4915 V vold    : ----------------\n12-19 22:07:10.838  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd15'\n12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'MINOR=15'\n12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd15'\n12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.838  4902  4915 V vold    : ----------------\n12-19 22:07:10.838  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd1'\n12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'MINOR=1'\n12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd1'\n12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.838  4902  4915 V vold    : ----------------\n12-19 22:07:10.838  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram9'\n12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'MINOR=9'\n12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram9'\n12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.838  4902  4915 V vold    : ----------------\n12-19 22:07:10.838  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd13'\n12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'MINOR=13'\n12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd13'\n12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.837  4902  4915 V vold    : ----------------\n12-19 22:07:10.837  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram7'\n12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'MINOR=7'\n12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram7'\n12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.837  4902  4915 V vold    : ----------------\n12-19 22:07:10.837  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/loop6'\n12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'MAJOR=7'\n12-19 22:07:10.836  4902  4915 D NetlinkEvent: NL param 'MINOR=6'\n12-19 22:07:10.836  4902  4915 D NetlinkEvent: NL param 'DEVNAME=loop6'\n12-19 22:07:10.836  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.836  4902  4915 V vold    : ----------------\n12-19 22:07:10.836  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.836  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd8'\n12-19 22:07:10.836  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.836  4902  4915 D NetlinkEvent: NL param 'MINOR=8'\n12-19 22:07:10.836  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd8'\n12-19 22:07:10.836  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.835  4902  4915 V vold    : ----------------\n12-19 22:07:10.835  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.835  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd11'\n12-19 22:07:10.835  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.835  4902  4915 D NetlinkEvent: NL param 'MINOR=11'\n12-19 22:07:10.835  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd11'\n12-19 22:07:10.835  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.834  4902  4915 V vold    : ----------------\n12-19 22:07:10.834  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.834  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram14'\n12-19 22:07:10.834  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.834  4902  4915 D NetlinkEvent: NL param 'MINOR=14'\n12-19 22:07:10.834  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram14'\n12-19 22:07:10.834  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.833  4902  4915 V vold    : ----------------\n12-19 22:07:10.833  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.833  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram5'\n12-19 22:07:10.833  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.833  4902  4915 D NetlinkEvent: NL param 'MINOR=5'\n12-19 22:07:10.833  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram5'\n12-19 22:07:10.833  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.833  4902  4915 V vold    : ----------------\n12-19 22:07:10.833  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.833  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/loop4'\n12-19 22:07:10.833  4902  4915 D NetlinkEvent: NL param 'MAJOR=7'\n12-19 22:07:10.833  4902  4915 D NetlinkEvent: NL param 'MINOR=4'\n12-19 22:07:10.833  4902  4915 D NetlinkEvent: NL param 'DEVNAME=loop4'\n12-19 22:07:10.833  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.832  4902  4915 V vold    : ----------------\n12-19 22:07:10.832  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.832  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd6'\n12-19 22:07:10.832  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.832  4902  4915 D NetlinkEvent: NL param 'MINOR=6'\n12-19 22:07:10.832  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd6'\n12-19 22:07:10.832  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.831  4902  4915 V vold    : ----------------\n12-19 22:07:10.831  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.831  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0boot0'\n12-19 22:07:10.831  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.831  4902  4915 D NetlinkEvent: NL param 'MINOR=32'\n12-19 22:07:10.831  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0boot0'\n12-19 22:07:10.831  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.830  4902  4915 V vold    : ----------------\n12-19 22:07:10.830  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.830  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram12'\n12-19 22:07:10.830  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.830  4902  4915 D NetlinkEvent: NL param 'MINOR=12'\n12-19 22:07:10.830  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram12'\n12-19 22:07:10.830  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.830  4902  4915 V vold    : ----------------\n12-19 22:07:10.830  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.830  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram3'\n12-19 22:07:10.830  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.830  4902  4915 D NetlinkEvent: NL param 'MINOR=3'\n12-19 22:07:10.830  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram3'\n12-19 22:07:10.830  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.829  4902  4915 V vold    : ----------------\n12-19 22:07:10.829  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.829  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/loop2'\n12-19 22:07:10.829  4902  4915 D NetlinkEvent: NL param 'MAJOR=7'\n12-19 22:07:10.829  4902  4915 D NetlinkEvent: NL param 'MINOR=2'\n12-19 22:07:10.829  4902  4915 D NetlinkEvent: NL param 'DEVNAME=loop2'\n12-19 22:07:10.829  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.828  4902  4915 V vold    : ----------------\n12-19 22:07:10.828  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.828  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd4'\n12-19 22:07:10.828  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.828  4902  4915 D NetlinkEvent: NL param 'MINOR=4'\n12-19 22:07:10.828  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd4'\n12-19 22:07:10.828  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.828  4902  4915 V vold    : ----------------\n12-19 22:07:10.828  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.828  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram10'\n12-19 22:07:10.827  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.827  4902  4915 D NetlinkEvent: NL param 'MINOR=10'\n12-19 22:07:10.827  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram10'\n12-19 22:07:10.827  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.827  4902  4915 V vold    : ----------------\n12-19 22:07:10.827  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.827  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram1'\n12-19 22:07:10.827  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.827  4902  4915 D NetlinkEvent: NL param 'MINOR=1'\n12-19 22:07:10.827  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram1'\n12-19 22:07:10.827  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.827  4902  4915 V vold    : ----------------\n12-19 22:07:10.826  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.826  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/loop0'\n12-19 22:07:10.826  4902  4915 D NetlinkEvent: NL param 'MAJOR=7'\n12-19 22:07:10.826  4902  4915 D NetlinkEvent: NL param 'MINOR=0'\n12-19 22:07:10.826  4902  4915 D NetlinkEvent: NL param 'DEVNAME=loop0'\n12-19 22:07:10.826  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.826  4902  4915 V vold    : ----------------\n12-19 22:07:10.826  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.826  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd2'\n12-19 22:07:10.826  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.825  4902  4915 D NetlinkEvent: NL param 'MINOR=2'\n12-19 22:07:10.825  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd2'\n12-19 22:07:10.825  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.825  4902  4915 V vold    : ----------------\n12-19 22:07:10.825  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.825  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd14'\n12-19 22:07:10.825  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.825  4902  4915 D NetlinkEvent: NL param 'MINOR=14'\n12-19 22:07:10.825  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd14'\n12-19 22:07:10.825  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.824  4902  4915 V vold    : ----------------\n12-19 22:07:10.824  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.824  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd0'\n12-19 22:07:10.824  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.824  4902  4915 D NetlinkEvent: NL param 'MINOR=0'\n12-19 22:07:10.824  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd0'\n12-19 22:07:10.824  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.823  4902  4915 V vold    : ----------------\n12-19 22:07:10.823  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.823  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram8'\n12-19 22:07:10.823  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.823  4902  4915 D NetlinkEvent: NL param 'MINOR=8'\n12-19 22:07:10.823  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram8'\n12-19 22:07:10.823  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.823  4902  4915 V vold    : ----------------\n12-19 22:07:10.823  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.823  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/loop7'\n12-19 22:07:10.823  4902  4915 D NetlinkEvent: NL param 'MAJOR=7'\n12-19 22:07:10.823  4902  4915 D NetlinkEvent: NL param 'MINOR=7'\n12-19 22:07:10.823  4902  4915 D NetlinkEvent: NL param 'DEVNAME=loop7'\n12-19 22:07:10.823  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.822  4902  4915 V vold    : ----------------\n12-19 22:07:10.822  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.822  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd9'\n12-19 22:07:10.822  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.822  4902  4915 D NetlinkEvent: NL param 'MINOR=9'\n12-19 22:07:10.822  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd9'\n12-19 22:07:10.822  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.821  4902  4915 V vold    : ----------------\n12-19 22:07:10.821  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.821  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd12'\n12-19 22:07:10.821  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.821  4902  4915 D NetlinkEvent: NL param 'MINOR=12'\n12-19 22:07:10.821  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd12'\n12-19 22:07:10.821  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.821  4902  4915 V vold    : ----------------\n12-19 22:07:10.820  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.820  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram15'\n12-19 22:07:10.820  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.820  4902  4915 D NetlinkEvent: NL param 'MINOR=15'\n12-19 22:07:10.820  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram15'\n12-19 22:07:10.820  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.820  4902  4915 V vold    : ----------------\n12-19 22:07:10.820  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.820  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram6'\n12-19 22:07:10.820  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.820  4902  4915 D NetlinkEvent: NL param 'MINOR=6'\n12-19 22:07:10.820  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram6'\n12-19 22:07:10.820  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.819  4902  4915 V vold    : ----------------\n12-19 22:07:10.819  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.819  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/zram0'\n12-19 22:07:10.819  4902  4915 D NetlinkEvent: NL param 'MAJOR=253'\n12-19 22:07:10.819  4902  4915 D NetlinkEvent: NL param 'MINOR=0'\n12-19 22:07:10.819  4902  4915 D NetlinkEvent: NL param 'DEVNAME=zram0'\n12-19 22:07:10.819  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.819  4902  4915 V vold    : ----------------\n12-19 22:07:10.819  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.819  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/loop5'\n12-19 22:07:10.819  4902  4915 D NetlinkEvent: NL param 'MAJOR=7'\n12-19 22:07:10.819  4902  4915 D NetlinkEvent: NL param 'MINOR=5'\n12-19 22:07:10.819  4902  4915 D NetlinkEvent: NL param 'DEVNAME=loop5'\n12-19 22:07:10.819  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.818  4902  4915 V vold    : ----------------\n12-19 22:07:10.818  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.818  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd7'\n12-19 22:07:10.818  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.818  4902  4915 D NetlinkEvent: NL param 'MINOR=7'\n12-19 22:07:10.818  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd7'\n12-19 22:07:10.818  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.817  4902  4915 V vold    : ----------------\n12-19 22:07:10.817  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.817  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0boot1'\n12-19 22:07:10.817  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.817  4902  4915 D NetlinkEvent: NL param 'MINOR=64'\n12-19 22:07:10.817  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0boot1'\n12-19 22:07:10.817  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.817  4902  4915 V vold    : ----------------\n12-19 22:07:10.817  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.817  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd10'\n12-19 22:07:10.817  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.817  4902  4915 D NetlinkEvent: NL param 'MINOR=10'\n12-19 22:07:10.817  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd10'\n12-19 22:07:10.817  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.816  4902  4915 V vold    : ----------------\n12-19 22:07:10.816  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0'\n12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'MINOR=0'\n12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0'\n12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.816  4902  4915 V vold    : ----------------\n12-19 22:07:10.816  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p4'\n12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'MINOR=4'\n12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p4'\n12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'PARTN=4'\n12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'PARTNAME=system_b'\n12-19 22:07:10.815  4902  4915 V vold    : ----------------\n12-19 22:07:10.815  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p12'\n12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'MINOR=12'\n12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p12'\n12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'PARTN=12'\n12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'PARTNAME=voicerecognition'\n12-19 22:07:10.815  4902  4915 V vold    : ----------------\n12-19 22:07:10.815  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p2'\n12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'MINOR=2'\n12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p2'\n12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'PARTN=2'\n12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'PARTNAME=boot_b'\n12-19 22:07:10.814  4902  4915 V vold    : ----------------\n12-19 22:07:10.814  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p10'\n12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'MINOR=10'\n12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p10'\n12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'PARTN=10'\n12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'PARTNAME=userdata'\n12-19 22:07:10.814  4902  4915 V vold    : ----------------\n12-19 22:07:10.814  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0rpmb'\n12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'MINOR=96'\n12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0rpmb'\n12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.814  4902  4915 V vold    : ----------------\n12-19 22:07:10.814  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p9'\n12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'MINOR=9'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p9'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'PARTN=9'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'PARTNAME=vendor_b'\n12-19 22:07:10.813  4902  4915 V vold    : ----------------\n12-19 22:07:10.813  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p7'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'MINOR=7'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p7'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'PARTN=7'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'PARTNAME=presistdata'\n12-19 22:07:10.813  4902  4915 V vold    : ----------------\n12-19 22:07:10.813  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p15'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'MINOR=15'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p15'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'PARTN=15'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'PARTNAME=vbmeta_a'\n12-19 22:07:10.813  4902  4915 V vold    : ----------------\n12-19 22:07:10.813  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0boot0'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'MINOR=32'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0boot0'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.812  4902  4915 V vold    : ----------------\n12-19 22:07:10.812  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p5'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'MINOR=5'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p5'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'PARTN=5'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'PARTNAME=misc'\n12-19 22:07:10.812  4902  4915 V vold    : ----------------\n12-19 22:07:10.812  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p13'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'MINOR=13'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p13'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'PARTN=13'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'PARTNAME=m4'\n12-19 22:07:10.812  4902  4915 V vold    : ----------------\n12-19 22:07:10.812  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p3'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'MINOR=3'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p3'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'PARTN=3'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'PARTNAME=system_a'\n12-19 22:07:10.812  4902  4915 V vold    : ----------------\n12-19 22:07:10.812  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p11'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'MINOR=11'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p11'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'PARTN=11'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'PARTNAME=navidata'\n12-19 22:07:10.811  4902  4915 V vold    : ----------------\n12-19 22:07:10.811  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p1'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'MINOR=1'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p1'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'PARTN=1'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'PARTNAME=boot_a'\n12-19 22:07:10.811  4902  4915 V vold    : ----------------\n12-19 22:07:10.811  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p8'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'MINOR=8'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p8'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'PARTN=8'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'PARTNAME=vendor_a'\n12-19 22:07:10.810  4902  4915 V vold    : ----------------\n12-19 22:07:10.810  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p16'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'MINOR=16'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p16'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'PARTN=16'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'PARTNAME=vbmeta_b'\n12-19 22:07:10.810  4902  4915 V vold    : ----------------\n12-19 22:07:10.810  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0boot1'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'MINOR=64'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0boot1'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.810  4902  4915 V vold    : ----------------\n12-19 22:07:10.810  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p6'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'MINOR=6'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p6'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'PARTN=6'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'PARTNAME=metadata'\n12-19 22:07:10.810  4902  4915 V vold    : ----------------\n12-19 22:07:10.810  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p14'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'MINOR=14'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p14'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'PARTN=14'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'PARTNAME=fbmisc'\n12-19 22:07:10.809  4902  4915 V vold    : ----------------\n12-19 22:07:10.809  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram13'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'MINOR=13'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram13'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.809  4902  4915 V vold    : ----------------\n12-19 22:07:10.809  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram4'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'MINOR=4'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram4'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.809  4902  4915 V vold    : ----------------\n12-19 22:07:10.809  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/loop3'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'MAJOR=7'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'MINOR=3'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVNAME=loop3'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.808  4902  4915 V vold    : ----------------\n12-19 22:07:10.808  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.808  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd5'\n12-19 22:07:10.808  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.808  4902  4915 D NetlinkEvent: NL param 'MINOR=5'\n12-19 22:07:10.808  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd5'\n12-19 22:07:10.808  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:14.039  3588  3725 D StorageManagerService: Thinking about init, mSystemReady=true, mDaemonConnected=true\n12-19 22:07:14.039  3588  3725 D StorageManagerService: Thinking about reset, mSystemReady=true, mDaemonConnected=true\n12-19 22:07:14.039  3588  3725 D VoldConnector: SND -> {19 volume reset}\n12-19 22:07:14.038  3588  3621 I ActivityManager: Force stopping com.android.providers.media appid=10011 user=-1: vold reset\n12-19 22:07:14.038  3588  3621 I ActivityManager: Killing 4857:com.android.providers.media/u0a11 (adj 900): stop com.android.providers.media\n12-19 22:07:14.037  3588  3726 D VoldConnector: RCV <- {651 emulated 7}\n--------- beginning of main\n12-19 22:07:14.037  3588  3623 W zygote64: kill(-4857, 9) failed: No such process\n12-19 22:07:14.037  3588  3726 D VoldConnector: RCV <- {659 emulated}\n12-19 22:07:14.036  3588  3726 D VoldConnector: RCV <- {650 emulated 2 \"\" \"\"}\n12-19 22:07:14.035  3588  3726 D VoldConnector: RCV <- {651 emulated 0}\n12-19 22:07:14.035  3588  3726 D VoldConnector: RCV <- {200 19 Command succeeded}\n12-19 22:07:14.035  3588  3636 V StorageManagerService: Found primary storage at VolumeInfo{emulated}:\n12-19 22:07:14.035  3588  3636 V StorageManagerService:     type=EMULATED diskId=null partGuid=null mountFlags=0 mountUserId=-1 \n12-19 22:07:14.035  3588  3636 V StorageManagerService:     state=UNMOUNTED \n12-19 22:07:14.035  3588  3636 V StorageManagerService:     fsType=null fsUuid=null fsLabel=null \n12-19 22:07:14.035  3588  3636 V StorageManagerService:     path=null internalPath=null \n12-19 22:07:14.033  3588  3725 D VoldConnector: SND -> {20 volume user_added 0 0}\n12-19 22:07:14.032  3588  3726 D VoldConnector: RCV <- {200 20 Command succeeded}\n12-19 22:07:14.031  3588  3725 D VoldConnector: SND -> {21 volume user_started 0}\n12-19 22:07:14.029  3588  3726 D VoldConnector: RCV <- {200 21 Command succeeded}\n12-19 22:07:14.028  3588  3725 D CryptdConnector: SND -> {8 cryptfs getfield SystemLocale}\n12-19 22:07:14.027  4902  4921 E Cryptfs : Cannot get field when file encrypted\n12-19 22:07:14.027  3588  3727 D CryptdConnector: RCV <- {200 8 -1}\n12-19 22:07:14.025  3588  3725 W StorageManagerService: No primary storage mounted!\n12-19 22:07:14.025  3588  3725 D VoldConnector: SND -> {22 asec list}\n12-19 22:07:14.023  3588  3726 D VoldConnector: RCV <- {200 22 asec operation succeeded}\n12-19 22:07:14.022  3588  3725 I PackageManager: No secure containers found\n12-19 22:07:15.994  3588  3623 W zygote64: kill(-4857, 9) failed: No such process\n12-19 22:07:15.950  3588  3623 W zygote64: kill(-4857, 9) failed: No such process\n12-19 22:07:15.950  3588  3623 I zygote64: Successfully killed process cgroup uid 10011 pid 4857 in 87ms\n12-19 22:07:15.945  3588  3725 W StorageManagerService: No primary storage mounted!\n12-19 22:07:15.945  3588  3725 D VoldConnector: SND -> {23 asec list}\n12-19 22:07:15.944  3588  3726 D VoldConnector: RCV <- {200 23 asec operation succeeded}\n12-19 22:07:15.943  3588  3725 D StorageManagerService: Thinking about init, mSystemReady=true, mDaemonConnected=true\n12-19 22:07:15.943  3588  3725 D StorageManagerService: Thinking about reset, mSystemReady=true, mDaemonConnected=true\n12-19 22:07:15.943  3588  3725 D VoldConnector: SND -> {24 volume reset}\n12-19 22:07:15.943  3588  3621 I ActivityManager: Force stopping com.android.providers.media appid=10011 user=-1: vold reset\n12-19 22:07:15.942  3588  3726 D VoldConnector: RCV <- {651 emulated 7}\n12-19 22:07:15.941  3588  3726 D VoldConnector: RCV <- {659 emulated}\n12-19 22:07:15.941  3588  3726 D VoldConnector: RCV <- {650 emulated 2 \"\" \"\"}\n12-19 22:07:15.940  3588  3726 D VoldConnector: RCV <- {651 emulated 0}\n12-19 22:07:15.940  3588  3726 D VoldConnector: RCV <- {200 24 Command succeeded}\n12-19 22:07:15.939  3588  3725 D VoldConnector: SND -> {25 volume user_added 0 0}\n12-19 22:07:15.939  3588  3636 V StorageManagerService: Found primary storage at VolumeInfo{emulated}:\n12-19 22:07:15.939  3588  3636 V StorageManagerService:     type=EMULATED diskId=null partGuid=null mountFlags=0 mountUserId=-1 \n12-19 22:07:15.939  3588  3636 V StorageManagerService:     state=UNMOUNTED \n12-19 22:07:15.939  3588  3636 V StorageManagerService:     fsType=null fsUuid=null fsLabel=null \n12-19 22:07:15.939  3588  3636 V StorageManagerService:     path=null internalPath=null \n12-19 22:07:15.939  3588  3726 D VoldConnector: RCV <- {200 25 Command succeeded}\n12-19 22:07:15.938  3588  3725 D VoldConnector: SND -> {26 volume user_started 0}\n12-19 22:07:15.937  3588  3726 D VoldConnector: RCV <- {200 26 Command succeeded}\n12-19 22:07:15.937  3588  3725 D CryptdConnector: SND -> {9 cryptfs getfield SystemLocale}\n12-19 22:07:15.936  4902  4921 E Cryptfs : Cannot get field when file encrypted\n12-19 22:07:15.936  3588  3727 D CryptdConnector: RCV <- {200 9 -1}\n12-19 22:07:15.935  3588  3725 W StorageManagerService: No primary storage mounted!\n12-19 22:07:15.935  3588  3725 D VoldConnector: SND -> {27 asec list}\n12-19 22:07:15.934  3588  3726 D VoldConnector: RCV <- {200 27 asec operation succeeded}\n12-19 22:07:15.933  3588  3725 I PackageManager: No secure containers found\n12-19 22:07:15.855  3588  3725 W StorageManagerService: No primary storage mounted!\n12-19 22:07:15.855  3588  3725 D VoldConnector: SND -> {28 asec list}\n12-19 22:07:15.853  3588  3726 D VoldConnector: RCV <- {200 28 asec operation succeeded}\n12-19 22:07:15.853  3588  3725 D VoldConnector: SND -> {29 volume mount emulated 3 -1}\n12-19 22:07:15.852  3588  3726 D VoldConnector: RCV <- {651 emulated 1}\n12-19 22:07:15.850  3588  3726 D VoldConnector: RCV <- {656 emulated /data/media}\n12-19 22:07:15.849  3588  3726 D VoldConnector: RCV <- {655 emulated /storage/emulated}\n12-19 22:07:15.844  4902  4917 V vold    : Waiting for FUSE to spin up...\n12-19 22:07:15.824  4989  4989 W /system/bin/sdcard: Device explicitly enabled sdcardfs\n12-19 22:07:15.793  4902  4917 V vold    : Waiting for FUSE to spin up...\n12-19 22:07:15.783  3588  3615 I zygote64: Background concurrent copying GC freed 58905(3MB) AllocSpace objects, 22(936KB) LOS objects, 42% free, 5MB/10MB, paused 178us total 101.895ms\n12-19 22:07:15.743  3588  3726 D VoldConnector: RCV <- {651 emulated 2}\n12-19 22:07:15.742  4902  4917 D vold    : Linking /storage/emulated/0 to /mnt/user/0/primary\n12-19 22:07:15.742  3588  3726 D VoldConnector: RCV <- {200 29 Command succeeded}\n12-19 22:07:15.740  3588  3725 D VoldConnector: SND -> {30 volume mount emulated 3 -1}\n12-19 22:07:15.740  3164  3164 D installd: Found quota mount /dev/block/by-name/userdata at /data\n12-19 22:07:15.739  3588  3621 D ActivityManager: checkAllowBackground: uid=10025 pkg=com.android.externalstorage rec=UidRecord{d40adb8 u0a25 CEM  idle change:cached procs:1 seq(0,0,0)} always=true idle=true\n12-19 22:07:15.739  3164  3164 E installd: Failed to enable USRQUOTA on /dev/block/by-name/userdata: File exists\n12-19 22:07:15.739  3588  3621 I ActivityManager: App 10025/com.android.externalstorage targets O+, restricted\n12-19 22:07:15.739  3164  3164 E installd: Failed to enable GRPQUOTA on /dev/block/by-name/userdata: File exists\n12-19 22:07:15.739  3588  3621 D ActivityManager: checkAllowBackground: uid=10025 pkg=com.android.externalstorage startMode=2 onwhitelist=false\n12-19 22:07:15.739  3164  3164 D installd: Found storage mount /data/media at /mnt/runtime/default/emulated\n12-19 22:07:15.739  4902  4917 W vold    : emulated flags change requires state unmounted or unmountable\n12-19 22:07:15.739  4902  4917 W vold    : emulated user change requires state unmounted or unmountable\n12-19 22:07:15.739  4902  4917 W vold    : emulated mount requires state unmounted or unmountable\n12-19 22:07:15.739  4902  4917 D vold    : Linking /storage/emulated/0 to /mnt/user/0/primary\n12-19 22:07:15.738  3588  3726 D VoldConnector: RCV <- {400 30 Command failed}\n12-19 22:07:15.736  3588  3725 D StorageManagerService: Volume emulated broadcasting checking to UserHandle{0}\n12-19 22:07:15.734  3588  3725 D StorageManagerService: Volume emulated broadcasting mounted to UserHandle{0}\n12-19 22:07:15.734  4827  4827 D ExternalStorage: After updating volumes, found 2 active roots\n12-19 22:07:15.731  3588  3643 D ActivityManager: checkAllowBackground: uid=10025 pkg=com.android.externalstorage rec=UidRecord{d40adb8 u0a25 RCVR idle change:uncached procs:1 seq(0,0,0)} always=true idle=true\n12-19 22:07:15.731  3588  3643 I ActivityManager: App 10025/com.android.externalstorage targets O+, restricted\n12-19 22:07:15.731  3588  3643 D ActivityManager: checkAllowBackground: uid=10025 pkg=com.android.externalstorage startMode=2 onwhitelist=false\n12-19 22:07:15.726  4827  4827 I chatty  : uid=10025(com.android.externalstorage) identical 1 line\n12-19 22:07:15.724  3588  3643 D ActivityManager: checkAllowBackground: uid=10025 pkg=com.android.externalstorage rec=UidRecord{d40adb8 u0a25 RCVR idle change:uncached procs:1 seq(0,0,0)} always=true idle=true\n12-19 22:07:15.724  3588  3643 I ActivityManager: App 10025/com.android.externalstorage targets O+, restricted\n12-19 22:07:15.724  3588  3643 D ActivityManager: checkAllowBackground: uid=10025 pkg=com.android.externalstorage startMode=2 onwhitelist=false\n12-19 22:07:15.720  4827  4827 D ExternalStorage: After updating volumes, found 2 active roots\n12-19 22:07:15.718  3588  3643 D ActivityManager: checkAllowBackground: uid=10011 pkg=com.android.providers.downloads rec=UidRecord{caecc1d u0a11 CEM  bg:+3m22s70ms idle change:cached procs:1 seq(0,0,0)} always=true idle=true\n12-19 22:07:15.718  3588  3643 I ActivityManager: App 10011/com.android.providers.downloads targets O+, restricted\n12-19 22:07:15.718  3588  3643 D ActivityManager: checkAllowBackground: uid=10011 pkg=com.android.providers.downloads startMode=2 onwhitelist=true\n12-19 22:07:15.687  3588  3643 D ActivityManager: checkAllowBackground: uid=10011 pkg=com.android.providers.media rec=UidRecord{caecc1d u0a11 RCVR bg:+3m22s101ms idle change:uncached procs:1 seq(0,0,0)} always=true idle=true\n12-19 22:07:15.686  3588  3643 I ActivityManager: App 10011/com.android.providers.media targets O+, restricted\n12-19 22:07:15.686  3588  3643 D ActivityManager: checkAllowBackground: uid=10011 pkg=com.android.providers.media startMode=2 onwhitelist=true\n12-19 22:07:15.669  3588  3643 I ActivityManager: Start proc 5007:com.android.providers.media/u0a11 for broadcast com.android.providers.media/.MediaScannerReceiver\n12-19 22:07:15.537  5007  5007 D MediaProviderApp: onCreate\n12-19 22:07:15.536  5007  5007 D AutoLinkMediaScanner: <init>\n12-19 22:07:15.526  5007  5007 D MediaScannerReceiver: onReceive action: android.intent.action.MEDIA_MOUNTED\n12-19 22:07:15.523  5007  5007 D MediaScannerReceiver: action: android.intent.action.MEDIA_MOUNTED path: /storage/emulated/0\n12-19 22:07:15.521  3588  3643 V ActivityManager: *** startService: Intent { cmp=com.android.providers.media/.MediaScannerService (has extras) } type=null fg=false\n12-19 22:07:15.521  3588  3643 V ActivityManager: startService: Intent { cmp=com.android.providers.media/.MediaScannerService (has extras) } type=null args=Bundle[mParcelledData.dataSize=116]\n12-19 22:07:15.521  3588  3643 V ActivityManager: retrieveServiceLocked: Intent { cmp=com.android.providers.media/.MediaScannerService (has extras) } type=null callingUid=10011\n12-19 22:07:15.521  3588  3643 V ActivityManager: Retrieve created new service: ServiceRecord{d6eb539 u0 com.android.providers.media/.MediaScannerService}\n12-19 22:07:15.521  3588  3643 D ActivityManager: checkAllowBackground: uid=10011 pkg=com.android.providers.media rec=UidRecord{caecc1d u0a11 RCVR bg:+3m22s268ms idle change:uncached procs:2 seq(0,0,0)} always=false idle=true\n12-19 22:07:15.520  3588  3643 I ActivityManager: App 10011/com.android.providers.media on idle whitelist; not restricted in background\n12-19 22:07:15.520  3588  3643 D ActivityManager: checkAllowBackground: uid=10011 pkg=com.android.providers.media startMode=0 onwhitelist=true\n12-19 22:07:15.520  3588  3643 V ActivityManager: Not delaying, but counting as bg: ServiceRecord{d6eb539 u0 com.android.providers.media/.MediaScannerService}\n12-19 22:07:15.520  3588  3643 V ActivityManager: Bringing up ServiceRecord{d6eb539 u0 com.android.providers.media/.MediaScannerService} android.content.Intent$FilterComparison@5e49f425 fg=false\n12-19 22:07:15.520  3588  3643 V ActivityManager: >>> EXECUTING create of ServiceRecord{d6eb539 u0 com.android.providers.media/.MediaScannerService} in app ProcessRecord{670b77e 5007:com.android.providers.media/u0a11}\n12-19 22:07:15.519  3588  3643 V ActivityManager: Sending arguments to: ServiceRecord{d6eb539 u0 com.android.providers.media/.MediaScannerService} android.content.Intent$FilterComparison@5e49f425 args=Intent { cmp=com.android.providers.media/.MediaScannerService (has extras) }\n12-19 22:07:15.519  3588  3643 V ActivityManager: >>> EXECUTING start of ServiceRecord{d6eb539 u0 com.android.providers.media/.MediaScannerService} in app ProcessRecord{670b77e 5007:com.android.providers.media/u0a11}\n12-19 22:07:15.518  3588  3643 V ActivityManager: Starting background (first=true): ServiceRecord{d6eb539 u0 com.android.providers.media/.MediaScannerService}\n12-19 22:07:15.518  3588  3643 V ActivityManager: java.lang.RuntimeException: here\n12-19 22:07:15.518  3588  3643 V ActivityManager: \tat com.android.server.am.ActiveServices.startServiceInnerLocked(ActiveServices.java:547)\n12-19 22:07:15.518  3588  3643 V ActivityManager: \tat com.android.server.am.ActiveServices.startServiceLocked(ActiveServices.java:478)\n12-19 22:07:15.518  3588  3643 V ActivityManager: \tat com.android.server.am.ActivityManagerService.startService(ActivityManagerService.java:18278)\n12-19 22:07:15.518  3588  3643 V ActivityManager: \tat android.app.IActivityManager$Stub.onTransact(IActivityManager.java:528)\n12-19 22:07:15.518  3588  3643 V ActivityManager: \tat com.android.server.am.ActivityManagerService.onTransact(ActivityManagerService.java:2919)\n12-19 22:07:15.518  3588  3643 V ActivityManager: \tat android.os.Binder.execTransact(Binder.java:697)\n12-19 22:07:15.518  3588  3643 V ActivityManager: Top bg start is ServiceRecord{d6eb539 u0 com.android.providers.media/.MediaScannerService}, can delay others up to 256896\n12-19 22:07:15.512  3588  3643 V ActivityManager: <<< DONE EXECUTING ServiceRecord{d6eb539 u0 com.android.providers.media/.MediaScannerService}: nesting=2, inDestroying=false, app=ProcessRecord{670b77e 5007:com.android.providers.media/u0a11}\n12-19 22:07:15.372  5007  5007 D AutoLinkMediaScanner: sendMessage volume:external,path:/storage/emulated/0\n12-19 22:07:15.371  5007  5060 D AutoLinkMediaScanner: start scanning volume external: [/storage/emulated/0]\n12-19 22:07:15.370  3588  3871 V ActivityManager: <<< DONE EXECUTING ServiceRecord{d6eb539 u0 com.android.providers.media/.MediaScannerService}: nesting=1, inDestroying=false, app=ProcessRecord{670b77e 5007:com.android.providers.media/u0a11}\n12-19 22:07:15.370  3588  3871 V ActivityManager: Nesting at 0 of com.android.providers.media/.MediaScannerService\n12-19 22:07:15.370  3588  3871 V ActivityManager: No more executingServices of com.android.providers.media/.MediaScannerService\n12-19 22:07:15.360  5007  5060 W MediaScanner: <fastProcessDirectory> path : /storage/emulated/0\n12-19 22:07:15.360  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/\n12-19 22:07:15.360  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/\n12-19 22:07:15.360  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/Pictures/\n12-19 22:07:15.359  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Pictures/\n12-19 22:07:15.359  5007  5060 I chatty  : uid=10011(com.android.providers.media) AutoLinkMediaSc identical 2 lines\n12-19 22:07:15.359  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Pictures/\n12-19 22:07:15.359  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/Download/\n12-19 22:07:15.359  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Download/\n12-19 22:07:15.359  5007  5060 I chatty  : uid=10011(com.android.providers.media) AutoLinkMediaSc identical 1 line\n12-19 22:07:15.359  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Download/\n12-19 22:07:15.359  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/Movies/\n12-19 22:07:15.359  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Movies/\n12-19 22:07:15.359  5007  5060 I chatty  : uid=10011(com.android.providers.media) AutoLinkMediaSc identical 1 line\n12-19 22:07:15.359  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Movies/\n12-19 22:07:15.359  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/DCIM/\n12-19 22:07:15.359  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/DCIM/\n12-19 22:07:15.359  5007  5060 I chatty  : uid=10011(com.android.providers.media) AutoLinkMediaSc identical 1 line\n12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/DCIM/\n12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/Android/\n12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Android/\n12-19 22:07:15.358  5007  5060 I chatty  : uid=10011(com.android.providers.media) AutoLinkMediaSc identical 1 line\n12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Android/\n12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/Android/data/\n12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Android/data/.nomedia\n12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Android/data/.nomedia\n12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/Ringtones/\n12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Ringtones/\n12-19 22:07:15.358  5007  5060 I chatty  : uid=10011(com.android.providers.media) AutoLinkMediaSc identical 1 line\n12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Ringtones/\n12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/Podcasts/\n12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Podcasts/\n12-19 22:07:15.358  5007  5060 I chatty  : uid=10011(com.android.providers.media) AutoLinkMediaSc identical 1 line\n12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Podcasts/\n12-19 22:07:15.357  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/Music/\n12-19 22:07:15.357  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Music/\n12-19 22:07:15.357  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Music/\n12-19 22:07:15.351  5007  5060 I AutoLinkMediaScanner: FastScan addMediaFile type:1,path:/storage/emulated/0/Music/Beyond - 1991-life.mp3,size:1\n12-19 22:07:15.351  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Music/Beyond - 1991-life.mp3\n12-19 22:07:15.351  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Music/Beyond - 1991-life.mp3\n12-19 22:07:15.351  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/Notifications/\n12-19 22:07:15.351  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Notifications/\n12-19 22:07:15.351  5007  5060 I chatty  : uid=10011(com.android.providers.media) AutoLinkMediaSc identical 1 line\n12-19 22:07:15.351  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Notifications/\n12-19 22:07:15.351  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/Alarms/\n12-19 22:07:15.350  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Alarms/\n12-19 22:07:15.350  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Alarms/\n12-19 22:07:15.349  5007  5060 D MediaScanner:  fast scan: 13ms\n12-19 22:07:15.348  5007  5060 W MediaScanner: <clearCancelScan>\n12-19 22:07:15.347  5007  5060 D AutoLinkMediaScanner: done scanning volume external\n12-19 22:07:15.330  5007  5061 V MediaScanner: scanFile: /storage/emulated/0/Android/data/.nomedia took 3\n12-19 22:07:15.328  5007  5061 V MediaScanner: scanFile: /storage/emulated/0/Music/Beyond - 1991-life.mp3 took 1\n12-19 22:07:15.321  5007  5061 V MediaScanner: pruneDeadThumbnailFiles... android.content.ContentProviderClient$CursorWrapperInner@b66ab4d\n12-19 22:07:15.320  5007  5061 V MediaScanner: /pruneDeadThumbnailFiles... android.content.ContentProviderClient$CursorWrapperInner@b66ab4d\n12-19 22:07:15.319  5007  5061 W MediaScanner: <clearCancelScan>\n[  270.883836] sd 0:0:0:0: [sda] Attached SCSI removable disk\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n12-19 22:07:44.651  4902  4915 V vold    : ----------------\n12-19 22:07:44.650  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:44.650  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b110000.cdns3/xhci-cdns3/usb1/1-1/1-1.3/1-1.3:1.0/host0/target0:0:0/0:0:0:0/block/sda'\n12-19 22:07:44.650  4902  4915 D NetlinkEvent: NL param 'MAJOR=8'\n12-19 22:07:44.650  4902  4915 D NetlinkEvent: NL param 'MINOR=0'\n12-19 22:07:44.650  4902  4915 D NetlinkEvent: NL param 'DEVNAME=sda'\n12-19 22:07:44.650  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n\n12-19 22:07:44.643  4902  4915 V vold    : /system/bin/sgdisk\n12-19 22:07:44.643  4902  4915 V vold    :     --android-dump\n12-19 22:07:44.643  4902  4915 V vold    :     /dev/block/vold/disk:8,0\n12-19 22:07:44.599  4902  4915 V vold    : DISK mbr\n12-19 22:07:44.599  4902  4915 V vold    : \n12-19 22:07:44.599  4902  4915 V vold    : PART 1 c\n12-19 22:07:44.599  4902  4915 V vold    : \n\n12-19 22:07:44.646  3588  3726 D VoldConnector: RCV <- {640 disk:8,0 8}\n12-19 22:07:44.643  3588  3726 D VoldConnector: RCV <- {641 disk:8,0 16025387008}\n12-19 22:07:44.642  3588  3726 D VoldConnector: RCV <- {642 disk:8,0 General }\n12-19 22:07:44.641  3588  3726 D VoldConnector: RCV <- {644 disk:8,0 /sys//devices/platform/5b110000.cdns3/xhci-cdns3/usb1/1-1/1-1.3/1-1.3:1.0/host0/target0:0:0/0:0:0:0/block/sda}\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n12-19 22:07:44.596  4902  4915 V vold    : ----------------\n12-19 22:07:44.596  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:44.596  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b110000.cdns3/xhci-cdns3/usb1/1-1/1-1.3/1-1.3:1.0/host0/target0:0:0/0:0:0:0/block/sda/sda1'\n12-19 22:07:44.596  4902  4915 D NetlinkEvent: NL param 'MAJOR=8'\n12-19 22:07:44.596  4902  4915 D NetlinkEvent: NL param 'MINOR=1'\n12-19 22:07:44.596  4902  4915 D NetlinkEvent: NL param 'DEVNAME=sda1'\n12-19 22:07:44.595  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:44.595  4902  4915 D NetlinkEvent: NL param 'PARTN=1'\n\n\n12-19 22:07:44.596  3588  3726 D VoldConnector: RCV <- {650 public:8,1 0 \"disk:8,0\" \"\"}\t//这里触发SND\n12-19 22:07:44.595  3588  3726 D VoldConnector: RCV <- {651 public:8,1 0}\n12-19 22:07:44.594  3588  3725 D VoldConnector: SND -> {31 volume mount public:8,1 2 0}\n\n12-19 22:07:44.594  3588  3726 D VoldConnector: RCV <- {643 disk:8,0}\n\n\n\n\n\n12-19 22:07:44.594  4902  4917 V vold    : /system/bin/blkid\n12-19 22:07:44.594  4902  4917 V vold    :     -c\n12-19 22:07:44.594  4902  4917 V vold    :     /dev/null\n12-19 22:07:44.594  3588  3726 D VoldConnector: RCV <- {651 public:8,1 1}\n12-19 22:07:44.594  4902  4917 V vold    :     -s\n12-19 22:07:44.594  4902  4917 V vold    :     TYPE\n12-19 22:07:44.594  4902  4917 V vold    :     -s\n12-19 22:07:44.594  4902  4917 V vold    :     UUID\n12-19 22:07:44.594  4902  4917 V vold    :     -s\n12-19 22:07:44.594  4902  4917 V vold    :     LABEL\n12-19 22:07:44.594  4902  4917 V vold    :     /dev/block/vold/public:8,1\n12-19 22:07:44.535  3588  3744 D NotificationSQLiteLog: Pruned event entries: 4\n12-19 22:07:44.524  4902  4917 V vold    : /dev/block/vold/public:8,1: UUID=\"5243-5977\" TYPE=\"vfat\" \n12-19 22:07:44.524  4902  4917 V vold    : \n12-19 22:07:44.522  3588  3726 D VoldConnector: RCV <- {652 public:8,1 vfat}\n12-19 22:07:44.521  4902  4917 V vold    : /system/bin/fsck_msdos\n12-19 22:07:44.521  4902  4917 V vold    :     -p\n12-19 22:07:44.521  4902  4917 V vold    :     -f\n12-19 22:07:44.521  4902  4917 V vold    :     /dev/block/vold/public:8,1\n12-19 22:07:44.521  3588  3726 D VoldConnector: RCV <- {653 public:8,1 5243-5977}\n12-19 22:07:44.521  3588  3726 D VoldConnector: RCV <- {654 public:8,1 }\n12-19 22:07:44.495  4902  4917 I fsck_msdos: ** /dev/block/vold/public:8,1\n12-19 22:07:44.492  4902  4917 I fsck_msdos: ** Phase 1 - Read FAT (compare skipped)\n12-19 22:07:44.492  4902  4917 I fsck_msdos: Attempting to allocate 7633 KB for FAT\n12-19 22:07:44.164  3830  3830 I zygote64: Deoptimizing void com.android.systemui.statusbar.stack.StackScrollState.resetViewState(com.android.systemui.statusbar.ExpandableView) due to JIT same target\n12-19 22:07:44.152  3830  3830 I zygote64: Deoptimizing void com.android.systemui.statusbar.stack.NotificationStackScrollLayout.updateViewShadows() due to JIT inline cache\n12-19 22:07:44.128  4902  4917 I fsck_msdos: ** Phase 2 - Check Cluster Chains\n12-19 22:07:44.047  4902  4917 I fsck_msdos: ** Phase 3 - Checking Directories\n12-19 22:07:45.503  3830  3830 I zygote64: Deoptimizing void com.android.systemui.statusbar.stack.ViewState.applyToView(android.view.View) due to JIT inline cache\n12-19 22:07:45.501  3830  3830 I zygote64: Deoptimizing void com.android.systemui.statusbar.stack.NotificationStackScrollLayout.updateViewShadows() due to JIT inline cache\n12-19 22:07:45.304  4902  4917 I fsck_msdos: ** Phase 4 - Checking for Lost Files\n12-19 22:07:45.283  4902  4917 I fsck_msdos: 1625 files, 1906472 free (1811173 clusters)\n12-19 22:07:45.272  4902  4917 I Vold    : Filesystem check completed OK\n12-19 22:07:45.271  3588  3726 D VoldConnector: RCV <- {656 public:8,1 /mnt/media_rw/5243-5977}\n12-19 22:07:45.270  3588  3726 D VoldConnector: RCV <- {655 public:8,1 /storage/5243-5977}\n12-19 22:07:45.239  4902  4917 V vold    : Waiting for FUSE to spin up...\n12-19 22:07:45.219  5131  5131 W /system/bin/sdcard: Device explicitly enabled sdcardfs\n12-19 22:07:45.189  4902  4917 V vold    : Waiting for FUSE to spin up...\n12-19 22:07:45.138  3588  3726 D VoldConnector: RCV <- {651 public:8,1 2}\n12-19 22:07:45.137  3588  3726 D VoldConnector: RCV <- {200 31 Command succeeded}\n12-19 22:07:45.137  3588  3725 E VoldConnector: NDC Command {31 volume mount public:8,1 2 0} took too long (1457ms)\n\n[  272.267658] FAT-fs (sda1): Volume was not properly unmounted. Some data may be corrupt. Please run fsck.\n[  272.313952] sdcardfs version 2.0\n[  272.322828] sdcardfs: dev_name -> /mnt/media_rw/5243-5977\n[  272.330302] sdcardfs: options -> fsuid=1023,fsgid=1023,mask=6,userid=0,gid=1015\n[  272.337633] sdcardfs: mnt -> ffff800071f9a3a0\n[  272.342160] sdcardfs: mounted on top of /mnt/media_rw/5243-5977 type vfat\n[  272.349861] Remount options were mask=18,gid=9997 for vfsmnt ffff80001f2008e0.\n[  272.357128] sdcardfs : options - debug:1\n[  272.361072] sdcardfs : options - gid:9997\n[  272.365100] sdcardfs : options - mask:18\n[  272.369404] Remount options were mask=18,gid=9997 for vfsmnt ffff80001f1b1520.\n[  272.376660] sdcardfs : options - debug:1\n[  272.380609] sdcardfs : options - gid:9997\n[  272.384640] sdcardfs : options - mask:18",
+			"file": "8_1_notes/vold/vold.log",
+			"file_size": 64528,
+			"file_write_time": 131883252412026539,
 			"settings":
 			{
-				"buffer_size": 8344,
+				"buffer_size": 64519,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "8_1_notes/audio/audioserver/AudioPolicyService/AudioPolicyService_note.cpp",
+			"file": "8_1_notes/vold/StorageManagerService/StorageManagerService_note.java",
 			"settings":
 			{
-				"buffer_size": 1481,
+				"buffer_size": 28172,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"contents": "//\t@frameworks/av/services/audiopolicy/service/AudioPolicyEffects.h\nclass AudioPolicyEffects : public RefBase\n{}\n\n\n\n\n\n//\t@frameworks/av/services/audiopolicy/service/AudioPolicyEffects.cpp\nAudioPolicyEffects::AudioPolicyEffects()\n{\n    status_t loadResult = loadAudioEffectXmlConfig();\n    if (loadResult < 0) {\n        ALOGW(\"Failed to load XML effect configuration, fallback to .conf\");\n        // load automatic audio effect modules\n        if (access(AUDIO_EFFECT_VENDOR_CONFIG_FILE, R_OK) == 0) {\n            loadAudioEffectConfig(AUDIO_EFFECT_VENDOR_CONFIG_FILE);\n        } else if (access(AUDIO_EFFECT_DEFAULT_CONFIG_FILE, R_OK) == 0) {\n            loadAudioEffectConfig(AUDIO_EFFECT_DEFAULT_CONFIG_FILE);\n        }\n    } else if (loadResult > 0) {\n        ALOGE(\"Effect config is partially invalid, skipped %d elements\", loadResult);\n    }\n}\n\n\n\n\nstatus_t AudioPolicyEffects::loadAudioEffectXmlConfig() {\n    auto result = effectsConfig::parse();\n    if (result.parsedConfig == nullptr) {\n        return -ENOENT;\n    }\n\n    auto loadProcessingChain = [](auto& processingChain, auto& streams) {\n        for (auto& stream : processingChain) {\n            auto effectDescs = std::make_unique<EffectDescVector>();\n            for (auto& effect : stream.effects) {\n                effectDescs->mEffects.add(new EffectDesc{effect.get().name.c_str(), effect.get().uuid});\n            }\n            streams.add(stream.type, effectDescs.release());\n        }\n    };\n    loadProcessingChain(result.parsedConfig->preprocess, mInputSources);\n    loadProcessingChain(result.parsedConfig->postprocess, mOutputStreams);\n    // Casting from ssize_t to status_t is probably safe, there should not be more than 2^31 errors\n    return result.nbSkippedElement;\n}",
-			"file": "8_1_notes/audio/audioserver/AudioPolicyService/AudioPolicyEffects_note.cpp",
-			"file_size": 1773,
-			"file_write_time": 131882300076325298,
+			"file": "8_1_notes/vold/vold-demon/VolumeManager/Disk_note.cpp",
 			"settings":
 			{
-				"buffer_size": 1748,
+				"buffer_size": 11171,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"contents": "//\t@frameworks/av/services/audiopolicy/AudioPolicyInterface.h\nclass AudioPolicyClientInterface{}\n\n//\t@frameworks/av/services/audiopolicy/service/AudioPolicyService.cpp\nclass AudioPolicyClient : public AudioPolicyClientInterface{\n\npublic:\n    explicit AudioPolicyClient(AudioPolicyService *service) : mAudioPolicyService(service) {}\n\n}\n\n\n\n",
-			"file": "8_1_notes/audio/audioserver/AudioPolicyService/AudioPolicyClient_note.cpp",
-			"file_size": 343,
-			"file_write_time": 131882293703897022,
+			"file": "8_1_notes/vold/vold-demon/VolumeManager/VolumeManager_note.cpp",
 			"settings":
 			{
-				"buffer_size": 338,
+				"buffer_size": 6740,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"contents": "//\t@frameworks/av/services/audiopolicy/AudioPolicyInterface.h\nclass AudioPolicyInterface{}\n\n\n\n//\t@frameworks/av/services/audiopolicy/managerdefault/AudioPolicyManager.cpp\nclass AudioPolicyManager : public AudioPolicyInterface, public AudioPolicyManagerObserver\n\n#ifdef AUDIO_POLICY_TEST\n    , public Thread\n#endif //AUDIO_POLICY_TEST\n{}\n\n\n\n\n\n\nAudioPolicyManager::AudioPolicyManager(AudioPolicyClientInterface *clientInterface)\n    :\n#ifdef AUDIO_POLICY_TEST\n    Thread(false),\n#endif //AUDIO_POLICY_TEST\n    mLimitRingtoneVolume(false), mLastVoiceVolume(-1.0f),\n    mA2dpSuspended(false),\n    mAudioPortGeneration(1),\n    mBeaconMuteRefCount(0),\n    mBeaconPlayingRefCount(0),\n    mBeaconMuted(false),\n    mTtsOutputAvailable(false),\n    mMasterMono(false),\n    mMusicEffectOutput(AUDIO_IO_HANDLE_NONE),\n    mHasComputedSoundTriggerSupportsConcurrentCapture(false)\n{\n    mUidCached = getuid();\n    mpClientInterface = clientInterface;\n\n    // TODO: remove when legacy conf file is removed. true on devices that use DRC on the\n    // DEVICE_CATEGORY_SPEAKER path to boost soft sounds, used to adjust volume curves accordingly.\n    // Note: remove also speaker_drc_enabled from global configuration of XML config file.\n    bool speakerDrcEnabled = false;\n\n#ifdef USE_XML_AUDIO_POLICY_CONF\t\t\t//\tdevice/autolink/imx8/autolink_8qxp.mk:35:USE_XML_AUDIO_POLICY_CONF := 1\n    mVolumeCurves = new VolumeCurvesCollection();\n    AudioPolicyConfig config(mHwModules, mAvailableOutputDevices, mAvailableInputDevices,mDefaultOutputDevice, speakerDrcEnabled,static_cast<VolumeCurvesCollection *>(mVolumeCurves));\n    // frameworks/av/services/audiopolicy/managerdefault/AudioPolicyManager.cpp:28:#define AUDIO_POLICY_XML_CONFIG_FILE_NAME \"audio_policy_configuration.xml\"\n    //\tout/target/product/autolink_8qxp/vendor/etc/audio_policy_configuration.xml\n    if (deserializeAudioPolicyXmlConfig(config) != NO_ERROR) {\n#else\n    mVolumeCurves = new StreamDescriptorCollection();\n    AudioPolicyConfig config(mHwModules, mAvailableOutputDevices, mAvailableInputDevices,mDefaultOutputDevice, speakerDrcEnabled);\n    //\tframeworks/av/services/audiopolicy/common/managerdefinitions/include/audio_policy_conf.h:27:#define AUDIO_POLICY_VENDOR_CONFIG_FILE \"/vendor/etc/audio_policy.conf\"\n    //\tframeworks/av/services/audiopolicy/common/managerdefinitions/include/audio_policy_conf.h:26:#define AUDIO_POLICY_CONFIG_FILE \"/system/etc/audio_policy.conf\"\n    if ((ConfigParsingUtils::loadConfig(AUDIO_POLICY_VENDOR_CONFIG_FILE, config) != NO_ERROR) &&  (ConfigParsingUtils::loadConfig(AUDIO_POLICY_CONFIG_FILE, config) != NO_ERROR)) {\n#endif\n        ALOGE(\"could not load audio policy configuration file, setting defaults\");\n        config.setDefault();\n    }\n    // must be done after reading the policy (since conditionned by Speaker Drc Enabling)\n    mVolumeCurves->initializeVolumeCurves(speakerDrcEnabled);\n\n    // Once policy config has been parsed, retrieve an instance of the engine and initialize it.\n    audio_policy::EngineInstance *engineInstance = audio_policy::EngineInstance::getInstance();\n    if (!engineInstance) {\n        ALOGE(\"%s:  Could not get an instance of policy engine\", __FUNCTION__);\n        return;\n    }\n    // Retrieve the Policy Manager Interface\n    mEngine = engineInstance->queryInterface<AudioPolicyManagerInterface>();\n    if (mEngine == NULL) {\n        ALOGE(\"%s: Failed to get Policy Engine Interface\", __FUNCTION__);\n        return;\n    }\n    mEngine->setObserver(this);\n    status_t status = mEngine->initCheck();\n    (void) status;\n    ALOG_ASSERT(status == NO_ERROR, \"Policy engine not initialized(err=%d)\", status);\n\n    // mAvailableOutputDevices and mAvailableInputDevices now contain all attached devices\n    // open all output streams needed to access attached devices\n    audio_devices_t outputDeviceTypes = mAvailableOutputDevices.types();\n    audio_devices_t inputDeviceTypes = mAvailableInputDevices.types() & ~AUDIO_DEVICE_BIT_IN;\n    for (size_t i = 0; i < mHwModules.size(); i++) {\n        mHwModules[i]->mHandle = mpClientInterface->loadHwModule(mHwModules[i]->getName());\n        if (mHwModules[i]->mHandle == 0) {\n            ALOGW(\"could not open HW module %s\", mHwModules[i]->getName());\n            continue;\n        }\n        // open all output streams needed to access attached devices\n        // except for direct output streams that are only opened when they are actually\n        // required by an app.\n        // This also validates mAvailableOutputDevices list\n        for (size_t j = 0; j < mHwModules[i]->mOutputProfiles.size(); j++)\n        {\n            const sp<IOProfile> outProfile = mHwModules[i]->mOutputProfiles[j];\n\n            if (!outProfile->hasSupportedDevices()) {\n                ALOGW(\"Output profile contains no device on module %s\", mHwModules[i]->getName());\n                continue;\n            }\n            if ((outProfile->getFlags() & AUDIO_OUTPUT_FLAG_TTS) != 0) {\n                mTtsOutputAvailable = true;\n            }\n\n            if ((outProfile->getFlags() & AUDIO_OUTPUT_FLAG_DIRECT) != 0) {\n                continue;\n            }\n            audio_devices_t profileType = outProfile->getSupportedDevicesType();\n            if ((profileType & mDefaultOutputDevice->type()) != AUDIO_DEVICE_NONE) {\n                profileType = mDefaultOutputDevice->type();\n            } else {\n                // chose first device present in profile's SupportedDevices also part of\n                // outputDeviceTypes\n                profileType = outProfile->getSupportedDeviceForType(outputDeviceTypes);\n            }\n            if ((profileType & outputDeviceTypes) == 0) {\n                continue;\n            }\n            sp<SwAudioOutputDescriptor> outputDesc = new SwAudioOutputDescriptor(outProfile,\n                                                                                 mpClientInterface);\n            const DeviceVector &supportedDevices = outProfile->getSupportedDevices();\n            const DeviceVector &devicesForType = supportedDevices.getDevicesFromType(profileType);\n            String8 address = devicesForType.size() > 0 ? devicesForType.itemAt(0)->mAddress\n                    : String8(\"\");\n\n            outputDesc->mDevice = profileType;\n            audio_config_t config = AUDIO_CONFIG_INITIALIZER;\n            config.sample_rate = outputDesc->mSamplingRate;\n            config.channel_mask = outputDesc->mChannelMask;\n            config.format = outputDesc->mFormat;\n            audio_io_handle_t output = AUDIO_IO_HANDLE_NONE;\n            status_t status = mpClientInterface->openOutput(outProfile->getModuleHandle(),\n                                                            &output,\n                                                            &config,\n                                                            &outputDesc->mDevice,\n                                                            address,\n                                                            &outputDesc->mLatency,\n                                                            outputDesc->mFlags);\n\n            if (status != NO_ERROR) {\n                ALOGW(\"Cannot open output stream for device %08x on hw module %s\",\n                      outputDesc->mDevice,\n                      mHwModules[i]->getName());\n            } else {\n                outputDesc->mSamplingRate = config.sample_rate;\n                outputDesc->mChannelMask = config.channel_mask;\n                outputDesc->mFormat = config.format;\n\n                for (size_t k = 0; k  < supportedDevices.size(); k++) {\n                    ssize_t index = mAvailableOutputDevices.indexOf(supportedDevices[k]);\n                    // give a valid ID to an attached device once confirmed it is reachable\n                    if (index >= 0 && !mAvailableOutputDevices[index]->isAttached()) {\n                        mAvailableOutputDevices[index]->attach(mHwModules[i]);\n                    }\n                }\n                if (mPrimaryOutput == 0 &&\n                        outProfile->getFlags() & AUDIO_OUTPUT_FLAG_PRIMARY) {\n                    mPrimaryOutput = outputDesc;\n                }\n                addOutput(output, outputDesc);\n                setOutputDevice(outputDesc,\n                                outputDesc->mDevice,\n                                true,\n                                0,\n                                NULL,\n                                address.string());\n            }\n        }\n        // open input streams needed to access attached devices to validate\n        // mAvailableInputDevices list\n        for (size_t j = 0; j < mHwModules[i]->mInputProfiles.size(); j++)\n        {\n            const sp<IOProfile> inProfile = mHwModules[i]->mInputProfiles[j];\n\n            if (!inProfile->hasSupportedDevices()) {\n                ALOGW(\"Input profile contains no device on module %s\", mHwModules[i]->getName());\n                continue;\n            }\n            // chose first device present in profile's SupportedDevices also part of\n            // inputDeviceTypes\n            audio_devices_t profileType = inProfile->getSupportedDeviceForType(inputDeviceTypes);\n\n            if ((profileType & inputDeviceTypes) == 0) {\n                continue;\n            }\n            sp<AudioInputDescriptor> inputDesc = new AudioInputDescriptor(inProfile);\n\n            inputDesc->mDevice = profileType;\n\n            // find the address\n            DeviceVector inputDevices = mAvailableInputDevices.getDevicesFromType(profileType);\n            //   the inputs vector must be of size 1, but we don't want to crash here\n            String8 address = inputDevices.size() > 0 ? inputDevices.itemAt(0)->mAddress : String8(\"\");\n            ALOGV(\"  for input device 0x%x using address %s\", profileType, address.string());\n            ALOGE_IF(inputDevices.size() == 0, \"Input device list is empty!\");\n\n            audio_config_t config = AUDIO_CONFIG_INITIALIZER;\n            config.sample_rate = inputDesc->mSamplingRate;\n            config.channel_mask = inputDesc->mChannelMask;\n            config.format = inputDesc->mFormat;\n            audio_io_handle_t input = AUDIO_IO_HANDLE_NONE;\n            status_t status = mpClientInterface->openInput(inProfile->getModuleHandle(),\n                                                           &input,\n                                                           &config,\n                                                           &inputDesc->mDevice,\n                                                           address,\n                                                           AUDIO_SOURCE_MIC,\n                                                           AUDIO_INPUT_FLAG_NONE);\n\n            if (status == NO_ERROR) {\n                const DeviceVector &supportedDevices = inProfile->getSupportedDevices();\n                for (size_t k = 0; k  < supportedDevices.size(); k++) {\n                    ssize_t index =  mAvailableInputDevices.indexOf(supportedDevices[k]);\n                    // give a valid ID to an attached device once confirmed it is reachable\n                    if (index >= 0) {\n                        sp<DeviceDescriptor> devDesc = mAvailableInputDevices[index];\n                        if (!devDesc->isAttached()) {\n                            devDesc->attach(mHwModules[i]);\n                            devDesc->importAudioPort(inProfile, true);\n                        }\n                    }\n                }\n                mpClientInterface->closeInput(input);\n            } else {\n                ALOGW(\"Cannot open input stream for device %08x on hw module %s\", inputDesc->mDevice, mHwModules[i]->getName());\n            }\n        }\n    }\n    // make sure all attached devices have been allocated a unique ID\n    for (size_t i = 0; i  < mAvailableOutputDevices.size();) {\n        if (!mAvailableOutputDevices[i]->isAttached()) {\n            ALOGW(\"Output device %08x unreachable\", mAvailableOutputDevices[i]->type());\n            mAvailableOutputDevices.remove(mAvailableOutputDevices[i]);\n            continue;\n        }\n        // The device is now validated and can be appended to the available devices of the engine\n        mEngine->setDeviceConnectionState(mAvailableOutputDevices[i], AUDIO_POLICY_DEVICE_STATE_AVAILABLE);\n        i++;\n    }\n    for (size_t i = 0; i  < mAvailableInputDevices.size();) {\n        if (!mAvailableInputDevices[i]->isAttached()) {\n            ALOGW(\"Input device %08x unreachable\", mAvailableInputDevices[i]->type());\n            mAvailableInputDevices.remove(mAvailableInputDevices[i]);\n            continue;\n        }\n        // The device is now validated and can be appended to the available devices of the engine\n        mEngine->setDeviceConnectionState(mAvailableInputDevices[i],\n                                          AUDIO_POLICY_DEVICE_STATE_AVAILABLE);\n        i++;\n    }\n    // make sure default device is reachable\n    if (mDefaultOutputDevice == 0 || mAvailableOutputDevices.indexOf(mDefaultOutputDevice) < 0) {\n        ALOGE(\"Default device %08x is unreachable\", mDefaultOutputDevice->type());\n    }\n\n    ALOGE_IF((mPrimaryOutput == 0), \"Failed to open primary output\");\n\n    updateDevicesAndOutputs();\n\n#ifdef AUDIO_POLICY_TEST\n    if (mPrimaryOutput != 0) {\n        AudioParameter outputCmd = AudioParameter();\n        outputCmd.addInt(String8(\"set_id\"), 0);\n        mpClientInterface->setParameters(mPrimaryOutput->mIoHandle, outputCmd.toString());\n\n        mTestDevice = AUDIO_DEVICE_OUT_SPEAKER;\n        mTestSamplingRate = 44100;\n        mTestFormat = AUDIO_FORMAT_PCM_16_BIT;\n        mTestChannels =  AUDIO_CHANNEL_OUT_STEREO;\n        mTestLatencyMs = 0;\n        mCurOutput = 0;\n        mDirectOutput = false;\n        for (int i = 0; i < NUM_TEST_OUTPUTS; i++) {\n            mTestOutputs[i] = 0;\n        }\n\n        const size_t SIZE = 256;\n        char buffer[SIZE];\n        snprintf(buffer, SIZE, \"AudioPolicyManagerTest\");\n        run(buffer, ANDROID_PRIORITY_AUDIO);\n    }\n#endif //AUDIO_POLICY_TEST\n}\n\n\n\n\n\n//\t这里系统目前只有/vendor/etc/audio_policy_configuration.xml\nstatic status_t deserializeAudioPolicyXmlConfig(AudioPolicyConfig &config) {\n    char audioPolicyXmlConfigFile[AUDIO_POLICY_XML_CONFIG_FILE_PATH_MAX_LENGTH];\n    status_t ret;\n\n    for (int i = 0; i < kConfigLocationListSize; i++) {\n        PolicySerializer serializer;\n        snprintf(audioPolicyXmlConfigFile,\n                 sizeof(audioPolicyXmlConfigFile),\n                 \"%s/%s\",\n                 kConfigLocationList[i],\n                 AUDIO_POLICY_XML_CONFIG_FILE_NAME);\n        ret = serializer.deserialize(audioPolicyXmlConfigFile, config);\n        if (ret == NO_ERROR) {\n            break;\n        }\n    }\n    return ret;\n}",
-			"file": "8_1_notes/audio/audioserver/AudioPolicyService/AudioPolicyManager/AudioPolicyManager_note.cpp",
-			"file_size": 14851,
-			"file_write_time": 131882341478507675,
+			"file": "8_1_notes/vold/vold-demon/CommandListener/CommandListener_note.cpp",
 			"settings":
 			{
-				"buffer_size": 14709,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "8_1_notes/audio/audioserver/AudioPolicyService/AudioPolicyManager/AudioPolicyConfig_note.cpp",
-			"settings":
-			{
-				"buffer_size": 3887,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "8_1_notes/audio/audioserver/AudioPolicyService/AudioPolicyManager/PolicySerializer_note.cpp",
-			"settings":
-			{
-				"buffer_size": 15373,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/work/workcodes/imx8-android-o/out/target/product/autolink_8qxp/vendor/etc/audio_policy_volumes.xml",
-			"settings":
-			{
-				"buffer_size": 10431,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "/work/workcodes/imx8-android-o/out/target/product/autolink_8qxp/vendor/etc/default_volume_tables.xml",
-			"settings":
-			{
-				"buffer_size": 2617,
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "8_1_notes/audio/audioserver/AudioPolicyService/AudioCommandThread_note.h",
-			"settings":
-			{
-				"buffer_size": 505,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "8_1_notes/audio/audioserver/AudioPolicyService/AudioCommandThread_note.cpp",
-			"settings":
-			{
-				"buffer_size": 2465,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "8_1_notes/audio/audioserver/AudioFlinger/AudioFlinger_note.h",
-			"settings":
-			{
-				"buffer_size": 10661,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "8_1_notes/audio/audioserver/AudioFlinger/AudioFlinger_note.cpp",
-			"settings":
-			{
-				"buffer_size": 5606,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "8_1_notes/audio/audioserver/SoundTriggerHwService/SoundTriggerHwService_note.cpp",
-			"settings":
-			{
-				"buffer_size": 1830,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "8_1_notes/audio/audioserver/MediaLogService/MediaLogService_note.cpp",
-			"settings":
-			{
-				"buffer_size": 1965,
+				"buffer_size": 5406,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
@@ -191,17 +96,52 @@
 	[
 		"/home/xqli/work/notes",
 		"/home/xqli/work/notes/8_1_notes",
-		"/home/xqli/work/notes/8_1_notes/audio",
-		"/home/xqli/work/notes/8_1_notes/audio/audioserver",
-		"/home/xqli/work/notes/8_1_notes/audio/audioserver/AudioFlinger",
-		"/home/xqli/work/notes/8_1_notes/audio/audioserver/AudioPolicyService",
-		"/home/xqli/work/notes/8_1_notes/audio/audioserver/AudioPolicyService/AudioPolicyManager"
+		"/home/xqli/work/notes/8_1_notes/vold",
+		"/home/xqli/work/notes/8_1_notes/vold/StorageManagerService",
+		"/home/xqli/work/notes/8_1_notes/vold/vold-demon",
+		"/home/xqli/work/notes/8_1_notes/vold/vold-demon/CommandListener",
+		"/home/xqli/work/notes/8_1_notes/vold/vold-demon/NetlinkManager",
+		"/home/xqli/work/notes/8_1_notes/vold/vold-demon/VolumeManager"
 	],
 	"file_history":
 	[
+		"/home/xqli/work/notes/8_1_notes/vold/vold-demon/VolumeManager /Disk_note.cpp",
+		"/home/xqli/.bashrc",
+		"/home/xqli/work/notes/8_1_notes/media/audio/android.hardware.audio@2.0-service/service_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/media/mediaplayer/mediaserver/main_mediaserver_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/media/mediaplayer/mediaserver/MediaPlayerService/MediaPlayerService_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/audio/audioserver/AudioFlinger/DevicesFactoryHalHybrid_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/audio/audioserver/AudioFlinger/AudioFlinger_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/audio/audioserver/AAudioService/AAudioService_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/audio/audioserver/AudioFlinger/DevicesFactoryHalHidl_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/audio/audioserver/AudioFlinger/DeviceHalHidl_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/audio/audioserver/AudioFlinger/DevicesFactoryHalLocal_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/audio/audioserver/main_audioserver_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/audio/audioserver/SoundTriggerHwService/SoundTriggerHwService_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/audio/audioserver/AAudioService/IAAudioService_note.h",
+		"/home/xqli/Downloads/Huawei(1).log",
+		"/home/xqli/.vimrc",
+		"/home/xqli/work/notes/8_1_notes/audio/audioserver/AudioPolicyService/AudioPolicyService_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/audio/audioserver/AudioPolicyService/AudioPolicyManager/PolicySerializer_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/audio/audioserver/AudioPolicyService/AudioPolicyService_note.h",
+		"/home/xqli/work/notes/8_1_notes/audio/audioserver/dumpsys-media.audio_policy.log",
+		"/home/xqli/work/notes/8_1_notes/audio/audioserver/AudioFlinger/DeviceHalInterface_note.h",
+		"/home/xqli/work/notes/8_1_notes/audio/audioserver/AudioPolicyService/AudioPolicyManager/AudioPolicyConfig_note.h",
+		"/home/xqli/work/notes/8_1_notes/audio/audioserver/AudioPolicyService/AudioPolicyManager/HwModule_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/audio/audioserver/AudioPolicyService/config-files/audio_policy_configuration.xml",
+		"/home/xqli/work/notes/8_1_notes/audio/audioserver/AudioPolicyService/config-files/a2dp_audio_policy_configuration.xml",
+		"/home/xqli/work/notes/8_1_notes/audio/audioserver/AudioPolicyService/config-files/usb_audio_policy_configuration.xml",
+		"/home/xqli/work/notes/8_1_notes/audio/audioserver/AudioPolicyService/config-files/audio_policy_volumes.xml",
+		"/home/xqli/work/notes/8_1_notes/audio/audioserver/AudioPolicyService/AudioPolicyEffects_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/audio/audioserver/AudioPolicyService/AudioPolicyClient_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/audio/audioserver/AudioPolicyService/AudioPolicyManager/AudioPolicyManager_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/audio/audioserver/AudioPolicyService/AudioPolicyManager/AudioPolicyConfig_note.cpp",
 		"/work/workcodes/imx8-android-o/out/target/product/autolink_8qxp/vendor/etc/audio_policy_volumes.xml",
 		"/work/workcodes/imx8-android-o/out/target/product/autolink_8qxp/vendor/etc/default_volume_tables.xml",
-		"/home/xqli/work/notes/8_1_notes/audio/audioserver/main_audioserver_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/audio/audioserver/AudioPolicyService/AudioCommandThread_note.h",
+		"/home/xqli/work/notes/8_1_notes/audio/audioserver/AudioPolicyService/AudioCommandThread_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/audio/audioserver/AudioFlinger/AudioFlinger_note.h",
+		"/home/xqli/work/notes/8_1_notes/audio/audioserver/MediaLogService/MediaLogService_note.cpp",
 		"/work/workcodes/imx8-android-o/out/target/product/autolink_8qxp/vendor/etc/audio_policy_configuration.xml",
 		"/home/xqli/work/notes/8_1_notes/audio/audioserver/main_note.cpp",
 		"/home/xqli/work/notes/8_1_notes/app_process/art/art_init/Runtime创建/Heap初始化/image_space_note.cc",
@@ -241,6 +181,11 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"651",
+			"CarLife",
+			"close",
+			"close vm area",
+			"mouse",
 			"DEFAULT_SYSTEM_VOLUME_CURVE",
 			"image_instruction_set"
 		],
@@ -254,30 +199,30 @@
 		"reverse": false,
 		"show_context": true,
 		"use_buffer2": true,
-		"whole_word": false,
+		"whole_word": true,
 		"wrap": true
 	},
 	"groups":
 	[
 		{
-			"selected": 6,
+			"selected": 4,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "8_1_notes/audio/audioserver/AudioPolicyService/AudioPolicyService_note.h",
+					"file": "8_1_notes/vold/vold.log",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 8344,
+						"buffer_size": 64519,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								0,
-								0
+								60230,
+								60230
 							]
 						],
 						"settings":
@@ -301,61 +246,61 @@
 							},
 							"bracket_highlighter.clone_regions":
 							[
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
 								"bh_double_quote_close",
 								"bh_double_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
 								"bh_c_define_close",
 								"bh_c_define_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
 								"bh_curly",
 								"bh_curly_center",
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
 								"bh_single_quote",
 								"bh_single_quote_center",
 								"bh_single_quote_open",
 								"bh_single_quote_close",
 								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content"
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
 							],
 							"bracket_highlighter.locations":
 							{
@@ -374,864 +319,87 @@
 							},
 							"bracket_highlighter.regions":
 							[
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content"
-							],
-							"is_init_dirty_state": false,
-							"open_with_edit": true,
-							"origin_encoding": "UTF-8",
-							"syntax": "Packages/C++/C++.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 7,
-					"type": "text"
-				},
-				{
-					"buffer": 1,
-					"file": "8_1_notes/audio/audioserver/AudioPolicyService/AudioPolicyService_note.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1481,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1376,
-								1376
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.clone": -1,
-							"bracket_highlighter.clone_locations":
-							{
-								"close":
-								{
-									"1":
-									[
-										962,
-										963
-									]
-								},
-								"icon":
-								{
-									"1":
-									[
-										"Packages/BracketHighlighter/icons/curly_bracket.png",
-										"region.purplish"
-									]
-								},
-								"open":
-								{
-									"1":
-									[
-										326,
-										327
-									]
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.clone_regions":
-							[
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
 								"bh_double_quote_close",
 								"bh_double_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content"
-							],
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-								},
-								"icon":
-								{
-								},
-								"open":
-								{
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.regions":
-							[
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
 								"bh_angle",
 								"bh_angle_center",
 								"bh_angle_open",
 								"bh_angle_close",
 								"bh_angle_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
 								"bh_c_define_close",
 								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content"
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
 							],
-							"is_init_dirty_state": false,
-							"open_with_edit": true,
-							"syntax": "Packages/C++/C++.sublime-syntax"
+							"origin_encoding": "ASCII",
+							"syntax": "Packages/Text/Plain text.tmLanguage"
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 5,
-					"type": "text"
-				},
-				{
-					"buffer": 2,
-					"file": "8_1_notes/audio/audioserver/AudioPolicyService/AudioPolicyEffects_note.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1748,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								926,
-								926
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.clone": -1,
-							"bracket_highlighter.clone_locations":
-							{
-								"close":
-								{
-								},
-								"icon":
-								{
-								},
-								"open":
-								{
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.clone_regions":
-							[
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content"
-							],
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-									"1":
-									[
-										1747,
-										1748
-									]
-								},
-								"icon":
-								{
-									"1":
-									[
-										"Packages/BracketHighlighter/icons/curly_bracket.png",
-										"region.purplish"
-									]
-								},
-								"open":
-								{
-									"1":
-									[
-										909,
-										910
-									]
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.regions":
-							[
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content"
-							],
-							"open_with_edit": true,
-							"syntax": "Packages/C++/C++.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 9,
-					"type": "text"
-				},
-				{
-					"buffer": 3,
-					"file": "8_1_notes/audio/audioserver/AudioPolicyService/AudioPolicyClient_note.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 338,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								335,
-								335
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.clone": -1,
-							"bracket_highlighter.clone_locations":
-							{
-								"close":
-								{
-									"1":
-									[
-										255,
-										256
-									]
-								},
-								"icon":
-								{
-									"1":
-									[
-										"Packages/BracketHighlighter/icons/curly_bracket.png",
-										"region.purplish"
-									]
-								},
-								"open":
-								{
-									"1":
-									[
-										165,
-										166
-									]
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.clone_regions":
-							[
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content"
-							],
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-								},
-								"icon":
-								{
-								},
-								"open":
-								{
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.regions":
-							[
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content"
-							],
-							"is_init_dirty_state": false,
-							"open_with_edit": true,
-							"syntax": "Packages/C++/C++.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 8,
-					"type": "text"
-				},
-				{
-					"buffer": 4,
-					"file": "8_1_notes/audio/audioserver/AudioPolicyService/AudioPolicyManager/AudioPolicyManager_note.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 14709,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1435,
-								1435
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.clone": -1,
-							"bracket_highlighter.clone_locations":
-							{
-								"close":
-								{
-									"1":
-									[
-										4251,
-										4252
-									]
-								},
-								"icon":
-								{
-									"1":
-									[
-										"Packages/BracketHighlighter/icons/curly_bracket.png",
-										"region.purplish"
-									]
-								},
-								"open":
-								{
-									"1":
-									[
-										4143,
-										4144
-									]
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.clone_regions":
-							[
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content"
-							],
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-								},
-								"icon":
-								{
-								},
-								"open":
-								{
-								},
-								"unmatched":
-								{
-									"1":
-									[
-										1255,
-										1260
-									]
-								}
-							},
-							"bracket_highlighter.regions":
-							[
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content"
-							],
-							"open_with_edit": true,
-							"syntax": "Packages/C++/C++.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 270.0,
+						"translation.y": 9751.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 4,
 					"type": "text"
 				},
 				{
-					"buffer": 5,
-					"file": "8_1_notes/audio/audioserver/AudioPolicyService/AudioPolicyManager/AudioPolicyConfig_note.cpp",
+					"buffer": 1,
+					"file": "8_1_notes/vold/StorageManagerService/StorageManagerService_note.java",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 3887,
+						"buffer_size": 28172,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3563,
-								3563
+								101,
+								101
 							]
 						],
 						"settings":
@@ -1255,87 +423,72 @@
 							},
 							"bracket_highlighter.clone_regions":
 							[
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content"
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
 							],
 							"bracket_highlighter.locations":
 							{
 								"close":
 								{
-									"1":
-									[
-										3568,
-										3569
-									]
 								},
 								"icon":
 								{
-									"1":
-									[
-										"Packages/BracketHighlighter/icons/curly_bracket.png",
-										"region.purplish"
-									]
 								},
 								"open":
 								{
-									"1":
-									[
-										2365,
-										2366
-									]
 								},
 								"unmatched":
 								{
@@ -1343,87 +496,88 @@
 							},
 							"bracket_highlighter.regions":
 							[
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content"
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
 							],
-							"open_with_edit": true,
-							"syntax": "Packages/C++/C++.sublime-syntax"
+							"syntax": "Packages/Java/Java.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 810.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 3,
 					"type": "text"
 				},
 				{
-					"buffer": 6,
-					"file": "8_1_notes/audio/audioserver/AudioPolicyService/AudioPolicyManager/PolicySerializer_note.cpp",
+					"buffer": 2,
+					"file": "8_1_notes/vold/vold-demon/VolumeManager/Disk_note.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 15373,
+						"buffer_size": 11171,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								15305,
-								15305
+								10729,
+								10729
 							]
 						],
 						"settings":
@@ -1434,27 +588,12 @@
 							{
 								"close":
 								{
-									"1":
-									[
-										15116,
-										15117
-									]
 								},
 								"icon":
 								{
-									"1":
-									[
-										"Packages/BracketHighlighter/icons/curly_bracket.png",
-										"region.purplish"
-									]
 								},
 								"open":
 								{
-									"1":
-									[
-										12797,
-										12798
-									]
 								},
 								"unmatched":
 								{
@@ -1462,87 +601,72 @@
 							},
 							"bracket_highlighter.clone_regions":
 							[
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content"
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
 							],
 							"bracket_highlighter.locations":
 							{
 								"close":
 								{
-									"1":
-									[
-										15314,
-										15315
-									]
 								},
 								"icon":
 								{
-									"1":
-									[
-										"Packages/BracketHighlighter/icons/curly_bracket.png",
-										"region.purplish"
-									]
 								},
 								"open":
 								{
-									"1":
-									[
-										14557,
-										14558
-									]
 								},
 								"unmatched":
 								{
@@ -1550,328 +674,88 @@
 							},
 							"bracket_highlighter.regions":
 							[
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content"
-							],
-							"open_with_edit": true,
-							"syntax": "Packages/C++/C++.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 4205.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				},
-				{
-					"buffer": 7,
-					"file": "/work/workcodes/imx8-android-o/out/target/product/autolink_8qxp/vendor/etc/audio_policy_volumes.xml",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 10431,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								7525,
-								7525
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.clone": -1,
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-									"1":
-									[
-										7525,
-										7526
-									]
-								},
-								"icon":
-								{
-									"1":
-									[
-										"Packages/BracketHighlighter/icons/double_quote.png",
-										"region.greenish"
-									]
-								},
-								"open":
-								{
-									"1":
-									[
-										7497,
-										7498
-									]
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.regions":
-							[
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
 								"bh_square_close",
 								"bh_square_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
 								"bh_angle",
 								"bh_angle_center",
 								"bh_angle_open",
 								"bh_angle_close",
 								"bh_angle_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
 								"bh_c_define_close",
 								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
 								"bh_round",
 								"bh_round_center",
 								"bh_round_open",
 								"bh_round_close",
 								"bh_round_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content"
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
 							],
-							"syntax": "Packages/XML/XML.sublime-syntax",
+							"syntax": "Packages/C++/C++.sublime-syntax",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1806.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 1,
-					"type": "text"
-				},
-				{
-					"buffer": 8,
-					"file": "/work/workcodes/imx8-android-o/out/target/product/autolink_8qxp/vendor/etc/default_volume_tables.xml",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2617,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1126,
-								1126
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.clone": -1,
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-									"1":
-									[
-										1153,
-										1154
-									]
-								},
-								"icon":
-								{
-									"1":
-									[
-										"Packages/BracketHighlighter/icons/double_quote.png",
-										"region.greenish"
-									]
-								},
-								"open":
-								{
-									"1":
-									[
-										1125,
-										1126
-									]
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.regions":
-							[
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content"
-							],
-							"origin_encoding": "ASCII",
-							"syntax": "Packages/XML/XML.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 3471.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 2,
 					"type": "text"
 				},
 				{
-					"buffer": 9,
-					"file": "8_1_notes/audio/audioserver/AudioPolicyService/AudioCommandThread_note.h",
+					"buffer": 3,
+					"file": "8_1_notes/vold/vold-demon/VolumeManager/VolumeManager_note.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 505,
+						"buffer_size": 6740,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								502,
-								502
+								6033,
+								6033
 							]
 						],
 						"settings":
@@ -1895,239 +779,61 @@
 							},
 							"bracket_highlighter.clone_regions":
 							[
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
 								"bh_square_close",
 								"bh_square_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content"
-							],
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-								},
-								"icon":
-								{
-								},
-								"open":
-								{
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.regions":
-							[
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
 								"bh_angle",
 								"bh_angle_center",
 								"bh_angle_open",
 								"bh_angle_close",
 								"bh_angle_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
 								"bh_c_define",
 								"bh_c_define_center",
 								"bh_c_define_open",
 								"bh_c_define_close",
 								"bh_c_define_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content"
-							],
-							"is_init_dirty_state": false,
-							"open_with_edit": true,
-							"syntax": "Packages/C++/C++.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 6,
-					"type": "text"
-				},
-				{
-					"buffer": 10,
-					"file": "8_1_notes/audio/audioserver/AudioPolicyService/AudioCommandThread_note.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 2465,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								2465,
-								2465
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.clone": -1,
-							"bracket_highlighter.clone_locations":
-							{
-								"close":
-								{
-								},
-								"icon":
-								{
-								},
-								"open":
-								{
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.clone_regions":
-							[
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
 								"bh_curly",
 								"bh_curly_center",
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
 								"bh_single_quote",
 								"bh_single_quote_center",
 								"bh_single_quote_open",
 								"bh_single_quote_close",
 								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content"
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
 							],
 							"bracket_highlighter.locations":
 							{
@@ -2146,90 +852,88 @@
 							},
 							"bracket_highlighter.regions":
 							[
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
 								"bh_square_close",
 								"bh_square_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
 								"bh_single_quote",
 								"bh_single_quote_center",
 								"bh_single_quote_open",
 								"bh_single_quote_close",
 								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content"
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
 							],
-							"is_init_dirty_state": false,
-							"open_with_edit": true,
 							"syntax": "Packages/C++/C++.sublime-syntax",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 0.0,
+						"translation.y": 1563.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 10,
+					"stack_index": 1,
 					"type": "text"
 				},
 				{
-					"buffer": 11,
-					"file": "8_1_notes/audio/audioserver/AudioFlinger/AudioFlinger_note.h",
+					"buffer": 4,
+					"file": "8_1_notes/vold/vold-demon/CommandListener/CommandListener_note.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 10661,
+						"buffer_size": 5406,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								351,
-								351
+								3710,
+								3710
 							]
 						],
 						"settings":
@@ -2240,195 +944,10 @@
 							{
 								"close":
 								{
-								},
-								"icon":
-								{
-								},
-								"open":
-								{
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.clone_regions":
-							[
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content"
-							],
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-								},
-								"icon":
-								{
-								},
-								"open":
-								{
-								},
-								"unmatched":
-								{
 									"1":
 									[
-										342,
-										343
-									]
-								}
-							},
-							"bracket_highlighter.regions":
-							[
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content"
-							],
-							"is_init_dirty_state": false,
-							"open_with_edit": true,
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 12,
-					"type": "text"
-				},
-				{
-					"buffer": 12,
-					"file": "8_1_notes/audio/audioserver/AudioFlinger/AudioFlinger_note.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 5606,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								5606,
-								5606
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.clone": 38,
-							"bracket_highlighter.clone_locations":
-							{
-								"close":
-								{
-									"1":
-									[
-										5605,
-										5606
+										3293,
+										3294
 									]
 								},
 								"icon":
@@ -2443,8 +962,8 @@
 								{
 									"1":
 									[
-										3236,
-										3237
+										2639,
+										2640
 									]
 								},
 								"unmatched":
@@ -2453,175 +972,70 @@
 							},
 							"bracket_highlighter.clone_regions":
 							[
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
 								"bh_square_close",
 								"bh_square_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
 								"bh_single_quote",
 								"bh_single_quote_center",
 								"bh_single_quote_open",
 								"bh_single_quote_close",
 								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content"
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
 							],
 							"bracket_highlighter.locations":
 							{
 								"close":
 								{
-								},
-								"icon":
-								{
-								},
-								"open":
-								{
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.regions":
-							[
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content"
-							],
-							"is_init_dirty_state": false,
-							"open_with_edit": true,
-							"syntax": "Packages/C++/C++.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 755.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 11,
-					"type": "text"
-				},
-				{
-					"buffer": 13,
-					"file": "8_1_notes/audio/audioserver/SoundTriggerHwService/SoundTriggerHwService_note.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1830,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								1030,
-								1030
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.clone": -1,
-							"bracket_highlighter.clone_locations":
-							{
-								"close":
-								{
 									"1":
 									[
-										1902,
-										1903
+										3716,
+										3717
 									]
 								},
 								"icon":
@@ -2636,332 +1050,82 @@
 								{
 									"1":
 									[
-										1045,
-										1046
+										3422,
+										3423
 									]
 								},
 								"unmatched":
 								{
 								}
 							},
-							"bracket_highlighter.clone_regions":
-							[
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content"
-							],
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-								},
-								"icon":
-								{
-								},
-								"open":
-								{
-								},
-								"unmatched":
-								{
-								}
-							},
 							"bracket_highlighter.regions":
 							[
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
 								"bh_default",
 								"bh_default_center",
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
 								"bh_square_close",
 								"bh_square_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
 								"bh_single_quote",
 								"bh_single_quote_center",
 								"bh_single_quote_open",
 								"bh_single_quote_close",
 								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content"
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content"
 							],
-							"is_init_dirty_state": false,
-							"open_with_edit": true,
-							"syntax": "Packages/C++/C++.sublime-syntax"
+							"origin_encoding": "ASCII",
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 90.0,
+						"translation.y": 585.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 13,
-					"type": "text"
-				},
-				{
-					"buffer": 14,
-					"file": "8_1_notes/audio/audioserver/MediaLogService/MediaLogService_note.cpp",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 1965,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								366,
-								366
-							]
-						],
-						"settings":
-						{
-							"bracket_highlighter.busy": false,
-							"bracket_highlighter.clone": -1,
-							"bracket_highlighter.clone_locations":
-							{
-								"close":
-								{
-								},
-								"icon":
-								{
-								},
-								"open":
-								{
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.clone_regions":
-							[
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content"
-							],
-							"bracket_highlighter.locations":
-							{
-								"close":
-								{
-								},
-								"icon":
-								{
-								},
-								"open":
-								{
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.regions":
-							[
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content"
-							],
-							"is_init_dirty_state": false,
-							"open_with_edit": true,
-							"syntax": "Packages/C++/C++.sublime-syntax"
-						},
-						"translation.x": 0.0,
-						"translation.y": 135.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 14,
+					"stack_index": 0,
 					"type": "text"
 				}
 			]
@@ -2969,7 +1133,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 24.0
+		"height": 22.0
 	},
 	"input":
 	{
@@ -3006,7 +1170,7 @@
 	"project": "notes.sublime-project",
 	"replace":
 	{
-		"height": 44.0
+		"height": 40.0
 	},
 	"save_all_on_build": false,
 	"select_file":
@@ -3029,12 +1193,12 @@
 	},
 	"select_symbol":
 	{
-		"height": 0.0,
+		"height": 35.0,
 		"last_filter": "",
 		"selected_items":
 		[
 		],
-		"width": 0.0
+		"width": 592.0
 	},
 	"selected_group": 0,
 	"settings":
@@ -3044,7 +1208,7 @@
 	"show_open_files": true,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 341.0,
+	"side_bar_width": 401.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

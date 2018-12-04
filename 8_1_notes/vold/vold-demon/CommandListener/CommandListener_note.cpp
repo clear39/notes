@@ -70,7 +70,7 @@ int CommandListener::VolumeCmd::runCommand(SocketClient *cli,
         // user_stopped [user]
         return sendGenericOkFail(cli, vm->onUserStopped(atoi(argv[2])));
 
-    } else if (cmd == "mount" && argc > 2) {
+    } else if (cmd == "mount" && argc > 2) {//接收到 StorageManagerService 发送过来的 D VoldConnector: SND -> {31 volume mount public:8,1 2 0}
         // mount [volId] [flags] [user]
         std::string id(argv[2]);
         auto vol = vm->findVolume(id);

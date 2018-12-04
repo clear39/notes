@@ -43,6 +43,7 @@ status_t CreateDeviceNode(const std::string& path, dev_t dev) {
 status_t Disk::create() {
     CHECK(!mCreated);
     mCreated = true;
+    //  D VoldConnector: RCV <- {640 disk:8,0 8}
     notifyEvent(ResponseCode::DiskCreated, StringPrintf("%d", mFlags));//   system/vold/ResponseCode.h:69:    static const int DiskCreated = 640;
     readMetadata();
     readPartitions();
@@ -76,7 +77,7 @@ status_t Disk::readMetadata() {
     case kMajorBlockScsiE: case kMajorBlockScsiF: case kMajorBlockScsiG: case kMajorBlockScsiH:
     case kMajorBlockScsiI: case kMajorBlockScsiJ: case kMajorBlockScsiK: case kMajorBlockScsiL:
     case kMajorBlockScsiM: case kMajorBlockScsiN: case kMajorBlockScsiO: case kMajorBlockScsiP: {
-        std::string path(mSysPath + "/device/vendor");//    /sys/devices/platform/5b110000.cdns3/xhci-cdns3/usb1/1-1/1-1.3/1-1.3:1.0/host0/target0:0:0/0:0:0:0/block/sda
+        std::string path(mSysPath + "/device/vendor");//    /sys/devices/platform/5b110000.cdns3/xhci-cdns3/usb1/1-1/1-1.3/1-1.3:1.0/host0/target0:0:0/0:0:0:0/block/sda/device/vendor
         std::string tmp;
         if (!ReadFileToString(path, &tmp)) {
             PLOG(WARNING) << "Failed to read vendor from " << path;
@@ -119,8 +120,12 @@ status_t Disk::readMetadata() {
     /*
     通知信息更新
     */
+    //  VoldConnector: RCV <- {641 disk:8,0 16025387008}
     notifyEvent(ResponseCode::DiskSizeChanged, StringPrintf("%" PRIu64, mSize));
+    //  VoldConnector: RCV <- {642 disk:8,0 General }
     notifyEvent(ResponseCode::DiskLabelChanged, mLabel);
+
+    //  VoldConnector: RCV <- {644 disk:8,0 /sys//devices/platform/5b110000.cdns3/xhci-cdns3/usb1/1-1/1-1.3/1-1.3:1.0/host0/target0:0:0/0:0:0:0/block/sda}
     notifyEvent(ResponseCode::DiskSysPathChanged, mSysPath);
     return OK;
 }
@@ -169,8 +174,7 @@ status_t Disk::readPartitions() {
             foundParts = true;
             int i = strtol(strtok(nullptr, kSgdiskToken), nullptr, 10);
             if (i <= 0 || i > maxMinors) {
-                LOG(WARNING) << mId << " is ignoring partition " << i
-                        << " beyond max supported devices";
+                LOG(WARNING) << mId << " is ignoring partition " << i << " beyond max supported devices";
                 continue;
             }
             dev_t partDevice = makedev(major(mDevice), minor(mDevice) + i);
@@ -212,7 +216,8 @@ status_t Disk::readPartitions() {
         }
     }
 
-    notifyEvent(ResponseCode::DiskScanned);
+    //system/vold/ResponseCode.h:72:    static const int DiskScanned = 643;
+    notifyEvent(ResponseCode::DiskScanned);//   D VoldConnector: RCV <- {643 disk:8,0}
     mJustPartitioned = false;
     return OK;
 }
@@ -223,8 +228,7 @@ status_t ForkExecvp(const std::vector<std::string>& args,std::vector<std::string
     return ForkExecvp(args, output, nullptr);
 }
 
-status_t ForkExecvp(const std::vector<std::string>& args,
-        std::vector<std::string>& output, security_context_t context) {
+status_t ForkExecvp(const std::vector<std::string>& args, std::vector<std::string>& output, security_context_t context) {
     std::string cmd;
     for (size_t i = 0; i < args.size(); i++) {
         cmd += args[i] + " ";
@@ -266,8 +270,56 @@ status_t ForkExecvp(const std::vector<std::string>& args,
 
 
 
+void Disk::createPublicVolume(dev_t device) {
+    auto vol = std::shared_ptr<VolumeBase>(new PublicVolume(device));
+    if (mJustPartitioned) {// false
+        LOG(DEBUG) << "Device just partitioned; silently formatting";
+        vol->setSilent(true);
+        vol->create();
+        vol->format("auto");
+        vol->destroy();
+        vol->setSilent(false);
+    }
 
-std::shared_ptr<VolumeBase> Disk::findVolume(const std::string& id) {
+    mVolumes.push_back(vol);
+    vol->setDiskId(getId());
+    vol->create();
+}
+
+//  @system/vold/PublicVolume.cpp
+PublicVolume::PublicVolume(dev_t device) :VolumeBase(Type::kPublic), mDevice(device), mFusePid(0) {
+    setId(StringPrintf("public:%u,%u", major(device), minor(device)));//    public:8,1
+    mDevPath = StringPrintf("/dev/block/vold/%s", getId().c_str());//   /dev/block/vold/public:8,1
+}
+
+
+status_t PublicVolume::doCreate() {
+    return CreateDeviceNode(mDevPath, mDevice);
+}
+
+
+status_t VolumeBase::create() {
+    CHECK(!mCreated);
+
+    mCreated = true;
+    status_t res = doCreate();
+    //  D VoldConnector: RCV <- {650 public:8,1 0 "disk:8,0" ""}    //这里触发SND
+    notifyEvent(ResponseCode::VolumeCreated,StringPrintf("%d \"%s\" \"%s\"", mType, mDiskId.c_str(), mPartGuid.c_str()));
+    setState(State::kUnmounted);
+    return res;
+}
+
+
+void VolumeBase::setState(State state) {
+    mState = state;
+    notifyEvent(ResponseCode::VolumeStateChanged, StringPrintf("%d", mState));//  D VoldConnector: RCV <- {651 public:8,1 0}
+}
+
+//到这里，创建Disk 和 PublicVolume 已经完成
+//////////////////////////////////////////////////////////////////////////////
+
+//接收到 StorageManagerService 发送过来的 D VoldConnector: SND -> {31 volume mount public:8,1 2 0}
+std::shared_ptr<VolumeBase> Disk::findVolume(const std::string& id) { //        id = "public:8,1"
     for (auto vol : mVolumes) {
         if (vol->getId() == id) {
             return vol;
