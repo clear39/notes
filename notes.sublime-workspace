@@ -8,50 +8,61 @@
 	"buffers":
 	[
 		{
-			"contents": "\n\n\n\n\n\n\n12-19 22:07:10.933  4902  4902 I vold    : Vold 3.0 (the awakening) firing up\n12-19 22:07:10.933  4902  4902 V vold    : Detected support for: ext4 vfat\n12-19 22:07:10.928  4902  4902 W Vold    : Tearing down stale mount /mnt/runtime/write/emulated\n12-19 22:07:10.911  4902  4902 W Vold    : Tearing down stale mount /mnt/runtime/read/emulated\n12-19 22:07:10.895  4902  4902 W Vold    : Tearing down stale mount /storage/emulated\n12-19 22:07:10.879  4902  4902 W Vold    : Tearing down stale mount /mnt/runtime/default/emulated\n12-19 22:07:10.845  4902  4915 V vold    : ----------------\n12-19 22:07:10.844  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.844  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram11'\n12-19 22:07:10.844  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.844  4902  4915 D NetlinkEvent: NL param 'MINOR=11'\n12-19 22:07:10.844  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram11'\n12-19 22:07:10.844  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.844  4902  4915 V vold    : ----------------\n12-19 22:07:10.844  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.844  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram2'\n12-19 22:07:10.844  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.844  4902  4915 D NetlinkEvent: NL param 'MINOR=2'\n12-19 22:07:10.844  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram2'\n12-19 22:07:10.844  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.843  4902  4915 V vold    : ----------------\n12-19 22:07:10.843  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.843  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/loop1'\n12-19 22:07:10.843  4902  4915 D NetlinkEvent: NL param 'MAJOR=7'\n12-19 22:07:10.843  4902  4915 D NetlinkEvent: NL param 'MINOR=1'\n12-19 22:07:10.843  4902  4915 D NetlinkEvent: NL param 'DEVNAME=loop1'\n12-19 22:07:10.843  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.843  4902  4915 V vold    : ----------------\n12-19 22:07:10.842  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.842  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd3'\n12-19 22:07:10.842  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.842  4902  4915 D NetlinkEvent: NL param 'MINOR=3'\n12-19 22:07:10.842  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd3'\n12-19 22:07:10.842  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.841  4902  4915 V vold    : ----------------\n12-19 22:07:10.841  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.841  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram0'\n12-19 22:07:10.840  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.840  4902  4915 D NetlinkEvent: NL param 'MINOR=0'\n12-19 22:07:10.840  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram0'\n12-19 22:07:10.840  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.840  4902  4915 V vold    : ----------------\n12-19 22:07:10.840  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.840  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0rpmb'\n12-19 22:07:10.840  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.840  4902  4915 D NetlinkEvent: NL param 'MINOR=96'\n12-19 22:07:10.840  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0rpmb'\n12-19 22:07:10.839  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.839  4902  4915 V vold    : ----------------\n12-19 22:07:10.838  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd15'\n12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'MINOR=15'\n12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd15'\n12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.838  4902  4915 V vold    : ----------------\n12-19 22:07:10.838  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd1'\n12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'MINOR=1'\n12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd1'\n12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.838  4902  4915 V vold    : ----------------\n12-19 22:07:10.838  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram9'\n12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'MINOR=9'\n12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram9'\n12-19 22:07:10.838  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.838  4902  4915 V vold    : ----------------\n12-19 22:07:10.838  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd13'\n12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'MINOR=13'\n12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd13'\n12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.837  4902  4915 V vold    : ----------------\n12-19 22:07:10.837  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram7'\n12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'MINOR=7'\n12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram7'\n12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.837  4902  4915 V vold    : ----------------\n12-19 22:07:10.837  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/loop6'\n12-19 22:07:10.837  4902  4915 D NetlinkEvent: NL param 'MAJOR=7'\n12-19 22:07:10.836  4902  4915 D NetlinkEvent: NL param 'MINOR=6'\n12-19 22:07:10.836  4902  4915 D NetlinkEvent: NL param 'DEVNAME=loop6'\n12-19 22:07:10.836  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.836  4902  4915 V vold    : ----------------\n12-19 22:07:10.836  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.836  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd8'\n12-19 22:07:10.836  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.836  4902  4915 D NetlinkEvent: NL param 'MINOR=8'\n12-19 22:07:10.836  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd8'\n12-19 22:07:10.836  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.835  4902  4915 V vold    : ----------------\n12-19 22:07:10.835  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.835  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd11'\n12-19 22:07:10.835  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.835  4902  4915 D NetlinkEvent: NL param 'MINOR=11'\n12-19 22:07:10.835  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd11'\n12-19 22:07:10.835  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.834  4902  4915 V vold    : ----------------\n12-19 22:07:10.834  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.834  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram14'\n12-19 22:07:10.834  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.834  4902  4915 D NetlinkEvent: NL param 'MINOR=14'\n12-19 22:07:10.834  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram14'\n12-19 22:07:10.834  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.833  4902  4915 V vold    : ----------------\n12-19 22:07:10.833  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.833  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram5'\n12-19 22:07:10.833  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.833  4902  4915 D NetlinkEvent: NL param 'MINOR=5'\n12-19 22:07:10.833  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram5'\n12-19 22:07:10.833  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.833  4902  4915 V vold    : ----------------\n12-19 22:07:10.833  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.833  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/loop4'\n12-19 22:07:10.833  4902  4915 D NetlinkEvent: NL param 'MAJOR=7'\n12-19 22:07:10.833  4902  4915 D NetlinkEvent: NL param 'MINOR=4'\n12-19 22:07:10.833  4902  4915 D NetlinkEvent: NL param 'DEVNAME=loop4'\n12-19 22:07:10.833  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.832  4902  4915 V vold    : ----------------\n12-19 22:07:10.832  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.832  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd6'\n12-19 22:07:10.832  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.832  4902  4915 D NetlinkEvent: NL param 'MINOR=6'\n12-19 22:07:10.832  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd6'\n12-19 22:07:10.832  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.831  4902  4915 V vold    : ----------------\n12-19 22:07:10.831  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.831  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0boot0'\n12-19 22:07:10.831  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.831  4902  4915 D NetlinkEvent: NL param 'MINOR=32'\n12-19 22:07:10.831  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0boot0'\n12-19 22:07:10.831  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.830  4902  4915 V vold    : ----------------\n12-19 22:07:10.830  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.830  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram12'\n12-19 22:07:10.830  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.830  4902  4915 D NetlinkEvent: NL param 'MINOR=12'\n12-19 22:07:10.830  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram12'\n12-19 22:07:10.830  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.830  4902  4915 V vold    : ----------------\n12-19 22:07:10.830  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.830  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram3'\n12-19 22:07:10.830  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.830  4902  4915 D NetlinkEvent: NL param 'MINOR=3'\n12-19 22:07:10.830  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram3'\n12-19 22:07:10.830  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.829  4902  4915 V vold    : ----------------\n12-19 22:07:10.829  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.829  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/loop2'\n12-19 22:07:10.829  4902  4915 D NetlinkEvent: NL param 'MAJOR=7'\n12-19 22:07:10.829  4902  4915 D NetlinkEvent: NL param 'MINOR=2'\n12-19 22:07:10.829  4902  4915 D NetlinkEvent: NL param 'DEVNAME=loop2'\n12-19 22:07:10.829  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.828  4902  4915 V vold    : ----------------\n12-19 22:07:10.828  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.828  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd4'\n12-19 22:07:10.828  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.828  4902  4915 D NetlinkEvent: NL param 'MINOR=4'\n12-19 22:07:10.828  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd4'\n12-19 22:07:10.828  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.828  4902  4915 V vold    : ----------------\n12-19 22:07:10.828  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.828  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram10'\n12-19 22:07:10.827  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.827  4902  4915 D NetlinkEvent: NL param 'MINOR=10'\n12-19 22:07:10.827  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram10'\n12-19 22:07:10.827  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.827  4902  4915 V vold    : ----------------\n12-19 22:07:10.827  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.827  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram1'\n12-19 22:07:10.827  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.827  4902  4915 D NetlinkEvent: NL param 'MINOR=1'\n12-19 22:07:10.827  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram1'\n12-19 22:07:10.827  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.827  4902  4915 V vold    : ----------------\n12-19 22:07:10.826  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.826  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/loop0'\n12-19 22:07:10.826  4902  4915 D NetlinkEvent: NL param 'MAJOR=7'\n12-19 22:07:10.826  4902  4915 D NetlinkEvent: NL param 'MINOR=0'\n12-19 22:07:10.826  4902  4915 D NetlinkEvent: NL param 'DEVNAME=loop0'\n12-19 22:07:10.826  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.826  4902  4915 V vold    : ----------------\n12-19 22:07:10.826  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.826  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd2'\n12-19 22:07:10.826  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.825  4902  4915 D NetlinkEvent: NL param 'MINOR=2'\n12-19 22:07:10.825  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd2'\n12-19 22:07:10.825  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.825  4902  4915 V vold    : ----------------\n12-19 22:07:10.825  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.825  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd14'\n12-19 22:07:10.825  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.825  4902  4915 D NetlinkEvent: NL param 'MINOR=14'\n12-19 22:07:10.825  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd14'\n12-19 22:07:10.825  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.824  4902  4915 V vold    : ----------------\n12-19 22:07:10.824  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.824  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd0'\n12-19 22:07:10.824  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.824  4902  4915 D NetlinkEvent: NL param 'MINOR=0'\n12-19 22:07:10.824  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd0'\n12-19 22:07:10.824  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.823  4902  4915 V vold    : ----------------\n12-19 22:07:10.823  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.823  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram8'\n12-19 22:07:10.823  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.823  4902  4915 D NetlinkEvent: NL param 'MINOR=8'\n12-19 22:07:10.823  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram8'\n12-19 22:07:10.823  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.823  4902  4915 V vold    : ----------------\n12-19 22:07:10.823  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.823  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/loop7'\n12-19 22:07:10.823  4902  4915 D NetlinkEvent: NL param 'MAJOR=7'\n12-19 22:07:10.823  4902  4915 D NetlinkEvent: NL param 'MINOR=7'\n12-19 22:07:10.823  4902  4915 D NetlinkEvent: NL param 'DEVNAME=loop7'\n12-19 22:07:10.823  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.822  4902  4915 V vold    : ----------------\n12-19 22:07:10.822  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.822  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd9'\n12-19 22:07:10.822  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.822  4902  4915 D NetlinkEvent: NL param 'MINOR=9'\n12-19 22:07:10.822  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd9'\n12-19 22:07:10.822  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.821  4902  4915 V vold    : ----------------\n12-19 22:07:10.821  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.821  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd12'\n12-19 22:07:10.821  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.821  4902  4915 D NetlinkEvent: NL param 'MINOR=12'\n12-19 22:07:10.821  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd12'\n12-19 22:07:10.821  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.821  4902  4915 V vold    : ----------------\n12-19 22:07:10.820  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.820  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram15'\n12-19 22:07:10.820  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.820  4902  4915 D NetlinkEvent: NL param 'MINOR=15'\n12-19 22:07:10.820  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram15'\n12-19 22:07:10.820  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.820  4902  4915 V vold    : ----------------\n12-19 22:07:10.820  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.820  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram6'\n12-19 22:07:10.820  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.820  4902  4915 D NetlinkEvent: NL param 'MINOR=6'\n12-19 22:07:10.820  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram6'\n12-19 22:07:10.820  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.819  4902  4915 V vold    : ----------------\n12-19 22:07:10.819  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.819  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/zram0'\n12-19 22:07:10.819  4902  4915 D NetlinkEvent: NL param 'MAJOR=253'\n12-19 22:07:10.819  4902  4915 D NetlinkEvent: NL param 'MINOR=0'\n12-19 22:07:10.819  4902  4915 D NetlinkEvent: NL param 'DEVNAME=zram0'\n12-19 22:07:10.819  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.819  4902  4915 V vold    : ----------------\n12-19 22:07:10.819  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.819  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/loop5'\n12-19 22:07:10.819  4902  4915 D NetlinkEvent: NL param 'MAJOR=7'\n12-19 22:07:10.819  4902  4915 D NetlinkEvent: NL param 'MINOR=5'\n12-19 22:07:10.819  4902  4915 D NetlinkEvent: NL param 'DEVNAME=loop5'\n12-19 22:07:10.819  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.818  4902  4915 V vold    : ----------------\n12-19 22:07:10.818  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.818  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd7'\n12-19 22:07:10.818  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.818  4902  4915 D NetlinkEvent: NL param 'MINOR=7'\n12-19 22:07:10.818  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd7'\n12-19 22:07:10.818  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.817  4902  4915 V vold    : ----------------\n12-19 22:07:10.817  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.817  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0boot1'\n12-19 22:07:10.817  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.817  4902  4915 D NetlinkEvent: NL param 'MINOR=64'\n12-19 22:07:10.817  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0boot1'\n12-19 22:07:10.817  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.817  4902  4915 V vold    : ----------------\n12-19 22:07:10.817  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.817  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd10'\n12-19 22:07:10.817  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.817  4902  4915 D NetlinkEvent: NL param 'MINOR=10'\n12-19 22:07:10.817  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd10'\n12-19 22:07:10.817  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.816  4902  4915 V vold    : ----------------\n12-19 22:07:10.816  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0'\n12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'MINOR=0'\n12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0'\n12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.816  4902  4915 V vold    : ----------------\n12-19 22:07:10.816  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p4'\n12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'MINOR=4'\n12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p4'\n12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.816  4902  4915 D NetlinkEvent: NL param 'PARTN=4'\n12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'PARTNAME=system_b'\n12-19 22:07:10.815  4902  4915 V vold    : ----------------\n12-19 22:07:10.815  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p12'\n12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'MINOR=12'\n12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p12'\n12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'PARTN=12'\n12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'PARTNAME=voicerecognition'\n12-19 22:07:10.815  4902  4915 V vold    : ----------------\n12-19 22:07:10.815  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p2'\n12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'MINOR=2'\n12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p2'\n12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'PARTN=2'\n12-19 22:07:10.815  4902  4915 D NetlinkEvent: NL param 'PARTNAME=boot_b'\n12-19 22:07:10.814  4902  4915 V vold    : ----------------\n12-19 22:07:10.814  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p10'\n12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'MINOR=10'\n12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p10'\n12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'PARTN=10'\n12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'PARTNAME=userdata'\n12-19 22:07:10.814  4902  4915 V vold    : ----------------\n12-19 22:07:10.814  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0rpmb'\n12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'MINOR=96'\n12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0rpmb'\n12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.814  4902  4915 V vold    : ----------------\n12-19 22:07:10.814  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p9'\n12-19 22:07:10.814  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'MINOR=9'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p9'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'PARTN=9'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'PARTNAME=vendor_b'\n12-19 22:07:10.813  4902  4915 V vold    : ----------------\n12-19 22:07:10.813  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p7'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'MINOR=7'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p7'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'PARTN=7'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'PARTNAME=presistdata'\n12-19 22:07:10.813  4902  4915 V vold    : ----------------\n12-19 22:07:10.813  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p15'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'MINOR=15'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p15'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'PARTN=15'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'PARTNAME=vbmeta_a'\n12-19 22:07:10.813  4902  4915 V vold    : ----------------\n12-19 22:07:10.813  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0boot0'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'MINOR=32'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0boot0'\n12-19 22:07:10.813  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.812  4902  4915 V vold    : ----------------\n12-19 22:07:10.812  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p5'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'MINOR=5'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p5'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'PARTN=5'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'PARTNAME=misc'\n12-19 22:07:10.812  4902  4915 V vold    : ----------------\n12-19 22:07:10.812  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p13'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'MINOR=13'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p13'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'PARTN=13'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'PARTNAME=m4'\n12-19 22:07:10.812  4902  4915 V vold    : ----------------\n12-19 22:07:10.812  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p3'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'MINOR=3'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p3'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'PARTN=3'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'PARTNAME=system_a'\n12-19 22:07:10.812  4902  4915 V vold    : ----------------\n12-19 22:07:10.812  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p11'\n12-19 22:07:10.812  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'MINOR=11'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p11'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'PARTN=11'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'PARTNAME=navidata'\n12-19 22:07:10.811  4902  4915 V vold    : ----------------\n12-19 22:07:10.811  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p1'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'MINOR=1'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p1'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'PARTN=1'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'PARTNAME=boot_a'\n12-19 22:07:10.811  4902  4915 V vold    : ----------------\n12-19 22:07:10.811  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p8'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'MINOR=8'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p8'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'PARTN=8'\n12-19 22:07:10.811  4902  4915 D NetlinkEvent: NL param 'PARTNAME=vendor_a'\n12-19 22:07:10.810  4902  4915 V vold    : ----------------\n12-19 22:07:10.810  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p16'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'MINOR=16'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p16'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'PARTN=16'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'PARTNAME=vbmeta_b'\n12-19 22:07:10.810  4902  4915 V vold    : ----------------\n12-19 22:07:10.810  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0boot1'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'MINOR=64'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0boot1'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.810  4902  4915 V vold    : ----------------\n12-19 22:07:10.810  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p6'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'MINOR=6'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p6'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'PARTN=6'\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'PARTNAME=metadata'\n12-19 22:07:10.810  4902  4915 V vold    : ----------------\n12-19 22:07:10.810  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.810  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b010000.usdhc/mmc_host/mmc0/mmc0:0001/block/mmcblk0/mmcblk0p14'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'MAJOR=179'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'MINOR=14'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVNAME=mmcblk0p14'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'PARTN=14'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'PARTNAME=fbmisc'\n12-19 22:07:10.809  4902  4915 V vold    : ----------------\n12-19 22:07:10.809  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram13'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'MINOR=13'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram13'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.809  4902  4915 V vold    : ----------------\n12-19 22:07:10.809  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/ram4'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'MAJOR=1'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'MINOR=4'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVNAME=ram4'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.809  4902  4915 V vold    : ----------------\n12-19 22:07:10.809  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/loop3'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'MAJOR=7'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'MINOR=3'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVNAME=loop3'\n12-19 22:07:10.809  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:10.808  4902  4915 V vold    : ----------------\n12-19 22:07:10.808  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:10.808  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/virtual/block/nbd5'\n12-19 22:07:10.808  4902  4915 D NetlinkEvent: NL param 'MAJOR=43'\n12-19 22:07:10.808  4902  4915 D NetlinkEvent: NL param 'MINOR=5'\n12-19 22:07:10.808  4902  4915 D NetlinkEvent: NL param 'DEVNAME=nbd5'\n12-19 22:07:10.808  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n12-19 22:07:14.039  3588  3725 D StorageManagerService: Thinking about init, mSystemReady=true, mDaemonConnected=true\n12-19 22:07:14.039  3588  3725 D StorageManagerService: Thinking about reset, mSystemReady=true, mDaemonConnected=true\n12-19 22:07:14.039  3588  3725 D VoldConnector: SND -> {19 volume reset}\n12-19 22:07:14.038  3588  3621 I ActivityManager: Force stopping com.android.providers.media appid=10011 user=-1: vold reset\n12-19 22:07:14.038  3588  3621 I ActivityManager: Killing 4857:com.android.providers.media/u0a11 (adj 900): stop com.android.providers.media\n12-19 22:07:14.037  3588  3726 D VoldConnector: RCV <- {651 emulated 7}\n--------- beginning of main\n12-19 22:07:14.037  3588  3623 W zygote64: kill(-4857, 9) failed: No such process\n12-19 22:07:14.037  3588  3726 D VoldConnector: RCV <- {659 emulated}\n12-19 22:07:14.036  3588  3726 D VoldConnector: RCV <- {650 emulated 2 \"\" \"\"}\n12-19 22:07:14.035  3588  3726 D VoldConnector: RCV <- {651 emulated 0}\n12-19 22:07:14.035  3588  3726 D VoldConnector: RCV <- {200 19 Command succeeded}\n12-19 22:07:14.035  3588  3636 V StorageManagerService: Found primary storage at VolumeInfo{emulated}:\n12-19 22:07:14.035  3588  3636 V StorageManagerService:     type=EMULATED diskId=null partGuid=null mountFlags=0 mountUserId=-1 \n12-19 22:07:14.035  3588  3636 V StorageManagerService:     state=UNMOUNTED \n12-19 22:07:14.035  3588  3636 V StorageManagerService:     fsType=null fsUuid=null fsLabel=null \n12-19 22:07:14.035  3588  3636 V StorageManagerService:     path=null internalPath=null \n12-19 22:07:14.033  3588  3725 D VoldConnector: SND -> {20 volume user_added 0 0}\n12-19 22:07:14.032  3588  3726 D VoldConnector: RCV <- {200 20 Command succeeded}\n12-19 22:07:14.031  3588  3725 D VoldConnector: SND -> {21 volume user_started 0}\n12-19 22:07:14.029  3588  3726 D VoldConnector: RCV <- {200 21 Command succeeded}\n12-19 22:07:14.028  3588  3725 D CryptdConnector: SND -> {8 cryptfs getfield SystemLocale}\n12-19 22:07:14.027  4902  4921 E Cryptfs : Cannot get field when file encrypted\n12-19 22:07:14.027  3588  3727 D CryptdConnector: RCV <- {200 8 -1}\n12-19 22:07:14.025  3588  3725 W StorageManagerService: No primary storage mounted!\n12-19 22:07:14.025  3588  3725 D VoldConnector: SND -> {22 asec list}\n12-19 22:07:14.023  3588  3726 D VoldConnector: RCV <- {200 22 asec operation succeeded}\n12-19 22:07:14.022  3588  3725 I PackageManager: No secure containers found\n12-19 22:07:15.994  3588  3623 W zygote64: kill(-4857, 9) failed: No such process\n12-19 22:07:15.950  3588  3623 W zygote64: kill(-4857, 9) failed: No such process\n12-19 22:07:15.950  3588  3623 I zygote64: Successfully killed process cgroup uid 10011 pid 4857 in 87ms\n12-19 22:07:15.945  3588  3725 W StorageManagerService: No primary storage mounted!\n12-19 22:07:15.945  3588  3725 D VoldConnector: SND -> {23 asec list}\n12-19 22:07:15.944  3588  3726 D VoldConnector: RCV <- {200 23 asec operation succeeded}\n12-19 22:07:15.943  3588  3725 D StorageManagerService: Thinking about init, mSystemReady=true, mDaemonConnected=true\n12-19 22:07:15.943  3588  3725 D StorageManagerService: Thinking about reset, mSystemReady=true, mDaemonConnected=true\n12-19 22:07:15.943  3588  3725 D VoldConnector: SND -> {24 volume reset}\n12-19 22:07:15.943  3588  3621 I ActivityManager: Force stopping com.android.providers.media appid=10011 user=-1: vold reset\n12-19 22:07:15.942  3588  3726 D VoldConnector: RCV <- {651 emulated 7}\n12-19 22:07:15.941  3588  3726 D VoldConnector: RCV <- {659 emulated}\n12-19 22:07:15.941  3588  3726 D VoldConnector: RCV <- {650 emulated 2 \"\" \"\"}\n12-19 22:07:15.940  3588  3726 D VoldConnector: RCV <- {651 emulated 0}\n12-19 22:07:15.940  3588  3726 D VoldConnector: RCV <- {200 24 Command succeeded}\n12-19 22:07:15.939  3588  3725 D VoldConnector: SND -> {25 volume user_added 0 0}\n12-19 22:07:15.939  3588  3636 V StorageManagerService: Found primary storage at VolumeInfo{emulated}:\n12-19 22:07:15.939  3588  3636 V StorageManagerService:     type=EMULATED diskId=null partGuid=null mountFlags=0 mountUserId=-1 \n12-19 22:07:15.939  3588  3636 V StorageManagerService:     state=UNMOUNTED \n12-19 22:07:15.939  3588  3636 V StorageManagerService:     fsType=null fsUuid=null fsLabel=null \n12-19 22:07:15.939  3588  3636 V StorageManagerService:     path=null internalPath=null \n12-19 22:07:15.939  3588  3726 D VoldConnector: RCV <- {200 25 Command succeeded}\n12-19 22:07:15.938  3588  3725 D VoldConnector: SND -> {26 volume user_started 0}\n12-19 22:07:15.937  3588  3726 D VoldConnector: RCV <- {200 26 Command succeeded}\n12-19 22:07:15.937  3588  3725 D CryptdConnector: SND -> {9 cryptfs getfield SystemLocale}\n12-19 22:07:15.936  4902  4921 E Cryptfs : Cannot get field when file encrypted\n12-19 22:07:15.936  3588  3727 D CryptdConnector: RCV <- {200 9 -1}\n12-19 22:07:15.935  3588  3725 W StorageManagerService: No primary storage mounted!\n12-19 22:07:15.935  3588  3725 D VoldConnector: SND -> {27 asec list}\n12-19 22:07:15.934  3588  3726 D VoldConnector: RCV <- {200 27 asec operation succeeded}\n12-19 22:07:15.933  3588  3725 I PackageManager: No secure containers found\n12-19 22:07:15.855  3588  3725 W StorageManagerService: No primary storage mounted!\n12-19 22:07:15.855  3588  3725 D VoldConnector: SND -> {28 asec list}\n12-19 22:07:15.853  3588  3726 D VoldConnector: RCV <- {200 28 asec operation succeeded}\n12-19 22:07:15.853  3588  3725 D VoldConnector: SND -> {29 volume mount emulated 3 -1}\n12-19 22:07:15.852  3588  3726 D VoldConnector: RCV <- {651 emulated 1}\n12-19 22:07:15.850  3588  3726 D VoldConnector: RCV <- {656 emulated /data/media}\n12-19 22:07:15.849  3588  3726 D VoldConnector: RCV <- {655 emulated /storage/emulated}\n12-19 22:07:15.844  4902  4917 V vold    : Waiting for FUSE to spin up...\n12-19 22:07:15.824  4989  4989 W /system/bin/sdcard: Device explicitly enabled sdcardfs\n12-19 22:07:15.793  4902  4917 V vold    : Waiting for FUSE to spin up...\n12-19 22:07:15.783  3588  3615 I zygote64: Background concurrent copying GC freed 58905(3MB) AllocSpace objects, 22(936KB) LOS objects, 42% free, 5MB/10MB, paused 178us total 101.895ms\n12-19 22:07:15.743  3588  3726 D VoldConnector: RCV <- {651 emulated 2}\n12-19 22:07:15.742  4902  4917 D vold    : Linking /storage/emulated/0 to /mnt/user/0/primary\n12-19 22:07:15.742  3588  3726 D VoldConnector: RCV <- {200 29 Command succeeded}\n12-19 22:07:15.740  3588  3725 D VoldConnector: SND -> {30 volume mount emulated 3 -1}\n12-19 22:07:15.740  3164  3164 D installd: Found quota mount /dev/block/by-name/userdata at /data\n12-19 22:07:15.739  3588  3621 D ActivityManager: checkAllowBackground: uid=10025 pkg=com.android.externalstorage rec=UidRecord{d40adb8 u0a25 CEM  idle change:cached procs:1 seq(0,0,0)} always=true idle=true\n12-19 22:07:15.739  3164  3164 E installd: Failed to enable USRQUOTA on /dev/block/by-name/userdata: File exists\n12-19 22:07:15.739  3588  3621 I ActivityManager: App 10025/com.android.externalstorage targets O+, restricted\n12-19 22:07:15.739  3164  3164 E installd: Failed to enable GRPQUOTA on /dev/block/by-name/userdata: File exists\n12-19 22:07:15.739  3588  3621 D ActivityManager: checkAllowBackground: uid=10025 pkg=com.android.externalstorage startMode=2 onwhitelist=false\n12-19 22:07:15.739  3164  3164 D installd: Found storage mount /data/media at /mnt/runtime/default/emulated\n12-19 22:07:15.739  4902  4917 W vold    : emulated flags change requires state unmounted or unmountable\n12-19 22:07:15.739  4902  4917 W vold    : emulated user change requires state unmounted or unmountable\n12-19 22:07:15.739  4902  4917 W vold    : emulated mount requires state unmounted or unmountable\n12-19 22:07:15.739  4902  4917 D vold    : Linking /storage/emulated/0 to /mnt/user/0/primary\n12-19 22:07:15.738  3588  3726 D VoldConnector: RCV <- {400 30 Command failed}\n12-19 22:07:15.736  3588  3725 D StorageManagerService: Volume emulated broadcasting checking to UserHandle{0}\n12-19 22:07:15.734  3588  3725 D StorageManagerService: Volume emulated broadcasting mounted to UserHandle{0}\n12-19 22:07:15.734  4827  4827 D ExternalStorage: After updating volumes, found 2 active roots\n12-19 22:07:15.731  3588  3643 D ActivityManager: checkAllowBackground: uid=10025 pkg=com.android.externalstorage rec=UidRecord{d40adb8 u0a25 RCVR idle change:uncached procs:1 seq(0,0,0)} always=true idle=true\n12-19 22:07:15.731  3588  3643 I ActivityManager: App 10025/com.android.externalstorage targets O+, restricted\n12-19 22:07:15.731  3588  3643 D ActivityManager: checkAllowBackground: uid=10025 pkg=com.android.externalstorage startMode=2 onwhitelist=false\n12-19 22:07:15.726  4827  4827 I chatty  : uid=10025(com.android.externalstorage) identical 1 line\n12-19 22:07:15.724  3588  3643 D ActivityManager: checkAllowBackground: uid=10025 pkg=com.android.externalstorage rec=UidRecord{d40adb8 u0a25 RCVR idle change:uncached procs:1 seq(0,0,0)} always=true idle=true\n12-19 22:07:15.724  3588  3643 I ActivityManager: App 10025/com.android.externalstorage targets O+, restricted\n12-19 22:07:15.724  3588  3643 D ActivityManager: checkAllowBackground: uid=10025 pkg=com.android.externalstorage startMode=2 onwhitelist=false\n12-19 22:07:15.720  4827  4827 D ExternalStorage: After updating volumes, found 2 active roots\n12-19 22:07:15.718  3588  3643 D ActivityManager: checkAllowBackground: uid=10011 pkg=com.android.providers.downloads rec=UidRecord{caecc1d u0a11 CEM  bg:+3m22s70ms idle change:cached procs:1 seq(0,0,0)} always=true idle=true\n12-19 22:07:15.718  3588  3643 I ActivityManager: App 10011/com.android.providers.downloads targets O+, restricted\n12-19 22:07:15.718  3588  3643 D ActivityManager: checkAllowBackground: uid=10011 pkg=com.android.providers.downloads startMode=2 onwhitelist=true\n12-19 22:07:15.687  3588  3643 D ActivityManager: checkAllowBackground: uid=10011 pkg=com.android.providers.media rec=UidRecord{caecc1d u0a11 RCVR bg:+3m22s101ms idle change:uncached procs:1 seq(0,0,0)} always=true idle=true\n12-19 22:07:15.686  3588  3643 I ActivityManager: App 10011/com.android.providers.media targets O+, restricted\n12-19 22:07:15.686  3588  3643 D ActivityManager: checkAllowBackground: uid=10011 pkg=com.android.providers.media startMode=2 onwhitelist=true\n12-19 22:07:15.669  3588  3643 I ActivityManager: Start proc 5007:com.android.providers.media/u0a11 for broadcast com.android.providers.media/.MediaScannerReceiver\n12-19 22:07:15.537  5007  5007 D MediaProviderApp: onCreate\n12-19 22:07:15.536  5007  5007 D AutoLinkMediaScanner: <init>\n12-19 22:07:15.526  5007  5007 D MediaScannerReceiver: onReceive action: android.intent.action.MEDIA_MOUNTED\n12-19 22:07:15.523  5007  5007 D MediaScannerReceiver: action: android.intent.action.MEDIA_MOUNTED path: /storage/emulated/0\n12-19 22:07:15.521  3588  3643 V ActivityManager: *** startService: Intent { cmp=com.android.providers.media/.MediaScannerService (has extras) } type=null fg=false\n12-19 22:07:15.521  3588  3643 V ActivityManager: startService: Intent { cmp=com.android.providers.media/.MediaScannerService (has extras) } type=null args=Bundle[mParcelledData.dataSize=116]\n12-19 22:07:15.521  3588  3643 V ActivityManager: retrieveServiceLocked: Intent { cmp=com.android.providers.media/.MediaScannerService (has extras) } type=null callingUid=10011\n12-19 22:07:15.521  3588  3643 V ActivityManager: Retrieve created new service: ServiceRecord{d6eb539 u0 com.android.providers.media/.MediaScannerService}\n12-19 22:07:15.521  3588  3643 D ActivityManager: checkAllowBackground: uid=10011 pkg=com.android.providers.media rec=UidRecord{caecc1d u0a11 RCVR bg:+3m22s268ms idle change:uncached procs:2 seq(0,0,0)} always=false idle=true\n12-19 22:07:15.520  3588  3643 I ActivityManager: App 10011/com.android.providers.media on idle whitelist; not restricted in background\n12-19 22:07:15.520  3588  3643 D ActivityManager: checkAllowBackground: uid=10011 pkg=com.android.providers.media startMode=0 onwhitelist=true\n12-19 22:07:15.520  3588  3643 V ActivityManager: Not delaying, but counting as bg: ServiceRecord{d6eb539 u0 com.android.providers.media/.MediaScannerService}\n12-19 22:07:15.520  3588  3643 V ActivityManager: Bringing up ServiceRecord{d6eb539 u0 com.android.providers.media/.MediaScannerService} android.content.Intent$FilterComparison@5e49f425 fg=false\n12-19 22:07:15.520  3588  3643 V ActivityManager: >>> EXECUTING create of ServiceRecord{d6eb539 u0 com.android.providers.media/.MediaScannerService} in app ProcessRecord{670b77e 5007:com.android.providers.media/u0a11}\n12-19 22:07:15.519  3588  3643 V ActivityManager: Sending arguments to: ServiceRecord{d6eb539 u0 com.android.providers.media/.MediaScannerService} android.content.Intent$FilterComparison@5e49f425 args=Intent { cmp=com.android.providers.media/.MediaScannerService (has extras) }\n12-19 22:07:15.519  3588  3643 V ActivityManager: >>> EXECUTING start of ServiceRecord{d6eb539 u0 com.android.providers.media/.MediaScannerService} in app ProcessRecord{670b77e 5007:com.android.providers.media/u0a11}\n12-19 22:07:15.518  3588  3643 V ActivityManager: Starting background (first=true): ServiceRecord{d6eb539 u0 com.android.providers.media/.MediaScannerService}\n12-19 22:07:15.518  3588  3643 V ActivityManager: java.lang.RuntimeException: here\n12-19 22:07:15.518  3588  3643 V ActivityManager: \tat com.android.server.am.ActiveServices.startServiceInnerLocked(ActiveServices.java:547)\n12-19 22:07:15.518  3588  3643 V ActivityManager: \tat com.android.server.am.ActiveServices.startServiceLocked(ActiveServices.java:478)\n12-19 22:07:15.518  3588  3643 V ActivityManager: \tat com.android.server.am.ActivityManagerService.startService(ActivityManagerService.java:18278)\n12-19 22:07:15.518  3588  3643 V ActivityManager: \tat android.app.IActivityManager$Stub.onTransact(IActivityManager.java:528)\n12-19 22:07:15.518  3588  3643 V ActivityManager: \tat com.android.server.am.ActivityManagerService.onTransact(ActivityManagerService.java:2919)\n12-19 22:07:15.518  3588  3643 V ActivityManager: \tat android.os.Binder.execTransact(Binder.java:697)\n12-19 22:07:15.518  3588  3643 V ActivityManager: Top bg start is ServiceRecord{d6eb539 u0 com.android.providers.media/.MediaScannerService}, can delay others up to 256896\n12-19 22:07:15.512  3588  3643 V ActivityManager: <<< DONE EXECUTING ServiceRecord{d6eb539 u0 com.android.providers.media/.MediaScannerService}: nesting=2, inDestroying=false, app=ProcessRecord{670b77e 5007:com.android.providers.media/u0a11}\n12-19 22:07:15.372  5007  5007 D AutoLinkMediaScanner: sendMessage volume:external,path:/storage/emulated/0\n12-19 22:07:15.371  5007  5060 D AutoLinkMediaScanner: start scanning volume external: [/storage/emulated/0]\n12-19 22:07:15.370  3588  3871 V ActivityManager: <<< DONE EXECUTING ServiceRecord{d6eb539 u0 com.android.providers.media/.MediaScannerService}: nesting=1, inDestroying=false, app=ProcessRecord{670b77e 5007:com.android.providers.media/u0a11}\n12-19 22:07:15.370  3588  3871 V ActivityManager: Nesting at 0 of com.android.providers.media/.MediaScannerService\n12-19 22:07:15.370  3588  3871 V ActivityManager: No more executingServices of com.android.providers.media/.MediaScannerService\n12-19 22:07:15.360  5007  5060 W MediaScanner: <fastProcessDirectory> path : /storage/emulated/0\n12-19 22:07:15.360  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/\n12-19 22:07:15.360  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/\n12-19 22:07:15.360  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/Pictures/\n12-19 22:07:15.359  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Pictures/\n12-19 22:07:15.359  5007  5060 I chatty  : uid=10011(com.android.providers.media) AutoLinkMediaSc identical 2 lines\n12-19 22:07:15.359  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Pictures/\n12-19 22:07:15.359  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/Download/\n12-19 22:07:15.359  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Download/\n12-19 22:07:15.359  5007  5060 I chatty  : uid=10011(com.android.providers.media) AutoLinkMediaSc identical 1 line\n12-19 22:07:15.359  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Download/\n12-19 22:07:15.359  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/Movies/\n12-19 22:07:15.359  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Movies/\n12-19 22:07:15.359  5007  5060 I chatty  : uid=10011(com.android.providers.media) AutoLinkMediaSc identical 1 line\n12-19 22:07:15.359  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Movies/\n12-19 22:07:15.359  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/DCIM/\n12-19 22:07:15.359  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/DCIM/\n12-19 22:07:15.359  5007  5060 I chatty  : uid=10011(com.android.providers.media) AutoLinkMediaSc identical 1 line\n12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/DCIM/\n12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/Android/\n12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Android/\n12-19 22:07:15.358  5007  5060 I chatty  : uid=10011(com.android.providers.media) AutoLinkMediaSc identical 1 line\n12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Android/\n12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/Android/data/\n12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Android/data/.nomedia\n12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Android/data/.nomedia\n12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/Ringtones/\n12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Ringtones/\n12-19 22:07:15.358  5007  5060 I chatty  : uid=10011(com.android.providers.media) AutoLinkMediaSc identical 1 line\n12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Ringtones/\n12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/Podcasts/\n12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Podcasts/\n12-19 22:07:15.358  5007  5060 I chatty  : uid=10011(com.android.providers.media) AutoLinkMediaSc identical 1 line\n12-19 22:07:15.358  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Podcasts/\n12-19 22:07:15.357  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/Music/\n12-19 22:07:15.357  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Music/\n12-19 22:07:15.357  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Music/\n12-19 22:07:15.351  5007  5060 I AutoLinkMediaScanner: FastScan addMediaFile type:1,path:/storage/emulated/0/Music/Beyond - 1991-life.mp3,size:1\n12-19 22:07:15.351  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Music/Beyond - 1991-life.mp3\n12-19 22:07:15.351  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Music/Beyond - 1991-life.mp3\n12-19 22:07:15.351  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/Notifications/\n12-19 22:07:15.351  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Notifications/\n12-19 22:07:15.351  5007  5060 I chatty  : uid=10011(com.android.providers.media) AutoLinkMediaSc identical 1 line\n12-19 22:07:15.351  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Notifications/\n12-19 22:07:15.351  5007  5060 W MediaScanner: <doFastProcessDirectory> path : /storage/emulated/0/Alarms/\n12-19 22:07:15.350  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Alarms/\n12-19 22:07:15.350  5007  5060 W MediaScanner: <doFastProcessDirectoryEntry> path : /storage/emulated/0/Alarms/\n12-19 22:07:15.349  5007  5060 D MediaScanner:  fast scan: 13ms\n12-19 22:07:15.348  5007  5060 W MediaScanner: <clearCancelScan>\n12-19 22:07:15.347  5007  5060 D AutoLinkMediaScanner: done scanning volume external\n12-19 22:07:15.330  5007  5061 V MediaScanner: scanFile: /storage/emulated/0/Android/data/.nomedia took 3\n12-19 22:07:15.328  5007  5061 V MediaScanner: scanFile: /storage/emulated/0/Music/Beyond - 1991-life.mp3 took 1\n12-19 22:07:15.321  5007  5061 V MediaScanner: pruneDeadThumbnailFiles... android.content.ContentProviderClient$CursorWrapperInner@b66ab4d\n12-19 22:07:15.320  5007  5061 V MediaScanner: /pruneDeadThumbnailFiles... android.content.ContentProviderClient$CursorWrapperInner@b66ab4d\n12-19 22:07:15.319  5007  5061 W MediaScanner: <clearCancelScan>\n[  270.883836] sd 0:0:0:0: [sda] Attached SCSI removable disk\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n12-19 22:07:44.651  4902  4915 V vold    : ----------------\n12-19 22:07:44.650  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:44.650  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b110000.cdns3/xhci-cdns3/usb1/1-1/1-1.3/1-1.3:1.0/host0/target0:0:0/0:0:0:0/block/sda'\n12-19 22:07:44.650  4902  4915 D NetlinkEvent: NL param 'MAJOR=8'\n12-19 22:07:44.650  4902  4915 D NetlinkEvent: NL param 'MINOR=0'\n12-19 22:07:44.650  4902  4915 D NetlinkEvent: NL param 'DEVNAME=sda'\n12-19 22:07:44.650  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=disk'\n\n12-19 22:07:44.643  4902  4915 V vold    : /system/bin/sgdisk\n12-19 22:07:44.643  4902  4915 V vold    :     --android-dump\n12-19 22:07:44.643  4902  4915 V vold    :     /dev/block/vold/disk:8,0\n12-19 22:07:44.599  4902  4915 V vold    : DISK mbr\n12-19 22:07:44.599  4902  4915 V vold    : \n12-19 22:07:44.599  4902  4915 V vold    : PART 1 c\n12-19 22:07:44.599  4902  4915 V vold    : \n\n12-19 22:07:44.646  3588  3726 D VoldConnector: RCV <- {640 disk:8,0 8}\n12-19 22:07:44.643  3588  3726 D VoldConnector: RCV <- {641 disk:8,0 16025387008}\n12-19 22:07:44.642  3588  3726 D VoldConnector: RCV <- {642 disk:8,0 General }\n12-19 22:07:44.641  3588  3726 D VoldConnector: RCV <- {644 disk:8,0 /sys//devices/platform/5b110000.cdns3/xhci-cdns3/usb1/1-1/1-1.3/1-1.3:1.0/host0/target0:0:0/0:0:0:0/block/sda}\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n12-19 22:07:44.596  4902  4915 V vold    : ----------------\n12-19 22:07:44.596  4902  4915 V vold    : handleBlockEvent with action 1\n12-19 22:07:44.596  4902  4915 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b110000.cdns3/xhci-cdns3/usb1/1-1/1-1.3/1-1.3:1.0/host0/target0:0:0/0:0:0:0/block/sda/sda1'\n12-19 22:07:44.596  4902  4915 D NetlinkEvent: NL param 'MAJOR=8'\n12-19 22:07:44.596  4902  4915 D NetlinkEvent: NL param 'MINOR=1'\n12-19 22:07:44.596  4902  4915 D NetlinkEvent: NL param 'DEVNAME=sda1'\n12-19 22:07:44.595  4902  4915 D NetlinkEvent: NL param 'DEVTYPE=partition'\n12-19 22:07:44.595  4902  4915 D NetlinkEvent: NL param 'PARTN=1'\n\n\n12-19 22:07:44.596  3588  3726 D VoldConnector: RCV <- {650 public:8,1 0 \"disk:8,0\" \"\"}\t//这里触发SND\n12-19 22:07:44.595  3588  3726 D VoldConnector: RCV <- {651 public:8,1 0}\n12-19 22:07:44.594  3588  3725 D VoldConnector: SND -> {31 volume mount public:8,1 2 0}\n\n12-19 22:07:44.594  3588  3726 D VoldConnector: RCV <- {643 disk:8,0}\n\n\n\n\n\n12-19 22:07:44.594  4902  4917 V vold    : /system/bin/blkid\n12-19 22:07:44.594  4902  4917 V vold    :     -c\n12-19 22:07:44.594  4902  4917 V vold    :     /dev/null\n12-19 22:07:44.594  3588  3726 D VoldConnector: RCV <- {651 public:8,1 1}\n12-19 22:07:44.594  4902  4917 V vold    :     -s\n12-19 22:07:44.594  4902  4917 V vold    :     TYPE\n12-19 22:07:44.594  4902  4917 V vold    :     -s\n12-19 22:07:44.594  4902  4917 V vold    :     UUID\n12-19 22:07:44.594  4902  4917 V vold    :     -s\n12-19 22:07:44.594  4902  4917 V vold    :     LABEL\n12-19 22:07:44.594  4902  4917 V vold    :     /dev/block/vold/public:8,1\n12-19 22:07:44.535  3588  3744 D NotificationSQLiteLog: Pruned event entries: 4\n12-19 22:07:44.524  4902  4917 V vold    : /dev/block/vold/public:8,1: UUID=\"5243-5977\" TYPE=\"vfat\" \n12-19 22:07:44.524  4902  4917 V vold    : \n12-19 22:07:44.522  3588  3726 D VoldConnector: RCV <- {652 public:8,1 vfat}\n12-19 22:07:44.521  4902  4917 V vold    : /system/bin/fsck_msdos\n12-19 22:07:44.521  4902  4917 V vold    :     -p\n12-19 22:07:44.521  4902  4917 V vold    :     -f\n12-19 22:07:44.521  4902  4917 V vold    :     /dev/block/vold/public:8,1\n12-19 22:07:44.521  3588  3726 D VoldConnector: RCV <- {653 public:8,1 5243-5977}\n12-19 22:07:44.521  3588  3726 D VoldConnector: RCV <- {654 public:8,1 }\n12-19 22:07:44.495  4902  4917 I fsck_msdos: ** /dev/block/vold/public:8,1\n12-19 22:07:44.492  4902  4917 I fsck_msdos: ** Phase 1 - Read FAT (compare skipped)\n12-19 22:07:44.492  4902  4917 I fsck_msdos: Attempting to allocate 7633 KB for FAT\n12-19 22:07:44.164  3830  3830 I zygote64: Deoptimizing void com.android.systemui.statusbar.stack.StackScrollState.resetViewState(com.android.systemui.statusbar.ExpandableView) due to JIT same target\n12-19 22:07:44.152  3830  3830 I zygote64: Deoptimizing void com.android.systemui.statusbar.stack.NotificationStackScrollLayout.updateViewShadows() due to JIT inline cache\n12-19 22:07:44.128  4902  4917 I fsck_msdos: ** Phase 2 - Check Cluster Chains\n12-19 22:07:44.047  4902  4917 I fsck_msdos: ** Phase 3 - Checking Directories\n12-19 22:07:45.503  3830  3830 I zygote64: Deoptimizing void com.android.systemui.statusbar.stack.ViewState.applyToView(android.view.View) due to JIT inline cache\n12-19 22:07:45.501  3830  3830 I zygote64: Deoptimizing void com.android.systemui.statusbar.stack.NotificationStackScrollLayout.updateViewShadows() due to JIT inline cache\n12-19 22:07:45.304  4902  4917 I fsck_msdos: ** Phase 4 - Checking for Lost Files\n12-19 22:07:45.283  4902  4917 I fsck_msdos: 1625 files, 1906472 free (1811173 clusters)\n12-19 22:07:45.272  4902  4917 I Vold    : Filesystem check completed OK\n12-19 22:07:45.271  3588  3726 D VoldConnector: RCV <- {656 public:8,1 /mnt/media_rw/5243-5977}\n12-19 22:07:45.270  3588  3726 D VoldConnector: RCV <- {655 public:8,1 /storage/5243-5977}\n12-19 22:07:45.239  4902  4917 V vold    : Waiting for FUSE to spin up...\n12-19 22:07:45.219  5131  5131 W /system/bin/sdcard: Device explicitly enabled sdcardfs\n12-19 22:07:45.189  4902  4917 V vold    : Waiting for FUSE to spin up...\n12-19 22:07:45.138  3588  3726 D VoldConnector: RCV <- {651 public:8,1 2}\n12-19 22:07:45.137  3588  3726 D VoldConnector: RCV <- {200 31 Command succeeded}\n12-19 22:07:45.137  3588  3725 E VoldConnector: NDC Command {31 volume mount public:8,1 2 0} took too long (1457ms)\n\n[  272.267658] FAT-fs (sda1): Volume was not properly unmounted. Some data may be corrupt. Please run fsck.\n[  272.313952] sdcardfs version 2.0\n[  272.322828] sdcardfs: dev_name -> /mnt/media_rw/5243-5977\n[  272.330302] sdcardfs: options -> fsuid=1023,fsgid=1023,mask=6,userid=0,gid=1015\n[  272.337633] sdcardfs: mnt -> ffff800071f9a3a0\n[  272.342160] sdcardfs: mounted on top of /mnt/media_rw/5243-5977 type vfat\n[  272.349861] Remount options were mask=18,gid=9997 for vfsmnt ffff80001f2008e0.\n[  272.357128] sdcardfs : options - debug:1\n[  272.361072] sdcardfs : options - gid:9997\n[  272.365100] sdcardfs : options - mask:18\n[  272.369404] Remount options were mask=18,gid=9997 for vfsmnt ffff80001f1b1520.\n[  272.376660] sdcardfs : options - debug:1\n[  272.380609] sdcardfs : options - gid:9997\n[  272.384640] sdcardfs : options - mask:18",
-			"file": "8_1_notes/vold/vold.log",
-			"file_size": 64528,
-			"file_write_time": 131883252412026539,
+			"contents": "//@frameworks/av/services/oboeservice/AAudioService.cpp",
+			"file": "8_1_notes/media/audio/AAudioService_note.cpp",
+			"file_size": 55,
+			"file_write_time": 131882920978665576,
 			"settings":
 			{
-				"buffer_size": 64519,
+				"buffer_size": 55,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "//@frameworks/av/services/audioflinger/AudioFlinger.cpp\n",
+			"file": "8_1_notes/media/audio/AudioFlinger_note.cpp",
+			"file_size": 56,
+			"file_write_time": 131882920979025831,
+			"settings":
+			{
+				"buffer_size": 56,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "//\t@frameworks/av/services/audiopolicy/service/AudioPolicyService.cpp",
+			"file": "8_1_notes/media/audio/AudioPolicyService_note.cpp",
+			"file_size": 69,
+			"file_write_time": 131882920979025831,
+			"settings":
+			{
+				"buffer_size": 69,
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "8_1_notes/media/audio/audioserver/dumpsys-media.audio_policy.log",
+			"settings":
+			{
+				"buffer_size": 17713,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "8_1_notes/vold/StorageManagerService/StorageManagerService_note.java",
+			"file": "8_1_notes/media/audio/audioserver/AudioPolicyService/AudioPolicyManager/AudioPolicyManager_note.cpp",
 			"settings":
 			{
-				"buffer_size": 28172,
+				"buffer_size": 14709,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "8_1_notes/vold/vold-demon/VolumeManager/Disk_note.cpp",
+			"file": "8_1_notes/media/audio/audioserver/AAudioService/AAudioService_note.cpp",
 			"settings":
 			{
-				"buffer_size": 11171,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "8_1_notes/vold/vold-demon/VolumeManager/VolumeManager_note.cpp",
-			"settings":
-			{
-				"buffer_size": 6740,
-				"encoding": "UTF-8",
-				"line_ending": "Unix"
-			}
-		},
-		{
-			"file": "8_1_notes/vold/vold-demon/CommandListener/CommandListener_note.cpp",
-			"settings":
-			{
-				"buffer_size": 5406,
-				"encoding": "UTF-8",
+				"buffer_size": 467,
 				"line_ending": "Unix"
 			}
 		}
@@ -96,15 +107,25 @@
 	[
 		"/home/xqli/work/notes",
 		"/home/xqli/work/notes/8_1_notes",
-		"/home/xqli/work/notes/8_1_notes/vold",
-		"/home/xqli/work/notes/8_1_notes/vold/StorageManagerService",
-		"/home/xqli/work/notes/8_1_notes/vold/vold-demon",
-		"/home/xqli/work/notes/8_1_notes/vold/vold-demon/CommandListener",
-		"/home/xqli/work/notes/8_1_notes/vold/vold-demon/NetlinkManager",
-		"/home/xqli/work/notes/8_1_notes/vold/vold-demon/VolumeManager"
+		"/home/xqli/work/notes/8_1_notes/media",
+		"/home/xqli/work/notes/8_1_notes/media/audio",
+		"/home/xqli/work/notes/8_1_notes/media/audio/audioserver",
+		"/home/xqli/work/notes/8_1_notes/media/audio/audioserver/AudioFlinger",
+		"/home/xqli/work/notes/8_1_notes/media/audio/audioserver/AudioPolicyService",
+		"/home/xqli/work/notes/8_1_notes/media/audio/audioserver/AudioPolicyService/AudioPolicyManager",
+		"/home/xqli/work/notes/8_1_notes/vndbinder"
 	],
 	"file_history":
 	[
+		"/home/xqli/work/notes/8_1_notes/vold/vold.log",
+		"/home/xqli/work/notes/8_1_notes/vold/sdcard/sdcard_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/vold/StorageManagerService/StorageManagerService_note.java",
+		"/home/xqli/work/notes/8_1_notes/vold/vold-demon/CommandListener/CommandListener_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/vold/vold-demon/VolumeManager/VolumeManager_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/vold/vold-demon/VolumeManager/Disk_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/tools/strace/strace_note.c",
+		"/home/xqli/work/notes/8_1_notes/tools/strace/strace_help.txt",
+		"/home/xqli/work/notes/8_0_notes/app_process/Zygote/preload/Resources/AssetManager_note.java",
 		"/home/xqli/work/notes/8_1_notes/vold/vold-demon/VolumeManager /Disk_note.cpp",
 		"/home/xqli/.bashrc",
 		"/home/xqli/work/notes/8_1_notes/media/audio/android.hardware.audio@2.0-service/service_note.cpp",
@@ -181,6 +202,8 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"storage",
+			"655",
 			"651",
 			"CarLife",
 			"close",
@@ -210,98 +233,25 @@
 			[
 				{
 					"buffer": 0,
-					"file": "8_1_notes/vold/vold.log",
+					"file": "8_1_notes/media/audio/AAudioService_note.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 64519,
+						"buffer_size": 55,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								60230,
-								60230
+								0,
+								0
 							]
 						],
 						"settings":
 						{
 							"bracket_highlighter.busy": false,
 							"bracket_highlighter.clone": -1,
-							"bracket_highlighter.clone_locations":
-							{
-								"close":
-								{
-								},
-								"icon":
-								{
-								},
-								"open":
-								{
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.clone_regions":
-							[
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content"
-							],
 							"bracket_highlighter.locations":
 							{
 								"close":
@@ -324,62 +274,62 @@
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
 								"bh_double_quote_close",
 								"bh_double_quote_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
 								"bh_angle",
 								"bh_angle_center",
 								"bh_angle_open",
 								"bh_angle_close",
 								"bh_angle_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
 								"bh_curly",
 								"bh_curly_center",
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
 								"bh_unmatched",
 								"bh_unmatched_center",
 								"bh_unmatched_open",
 								"bh_unmatched_close",
 								"bh_unmatched_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
 								"bh_tag",
 								"bh_tag_center",
 								"bh_tag_open",
 								"bh_tag_close",
 								"bh_tag_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content"
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content"
 							],
 							"origin_encoding": "ASCII",
-							"syntax": "Packages/Text/Plain text.tmLanguage"
+							"syntax": "Packages/C++/C++.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 9751.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 4,
@@ -387,19 +337,19 @@
 				},
 				{
 					"buffer": 1,
-					"file": "8_1_notes/vold/StorageManagerService/StorageManagerService_note.java",
+					"file": "8_1_notes/media/audio/AudioFlinger_note.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 28172,
+						"buffer_size": 56,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								101,
-								101
+								0,
+								0
 							]
 						],
 						"settings":
@@ -428,56 +378,56 @@
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
 								"bh_double_quote_close",
 								"bh_double_quote_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
 								"bh_angle",
 								"bh_angle_center",
 								"bh_angle_open",
 								"bh_angle_close",
 								"bh_angle_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
 								"bh_curly",
 								"bh_curly_center",
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
 								"bh_unmatched",
 								"bh_unmatched_center",
 								"bh_unmatched_open",
 								"bh_unmatched_close",
 								"bh_unmatched_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
 								"bh_tag",
 								"bh_tag_center",
 								"bh_tag_open",
 								"bh_tag_close",
 								"bh_tag_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content"
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content"
 							],
 							"bracket_highlighter.locations":
 							{
@@ -501,60 +451,59 @@
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
 								"bh_double_quote_close",
 								"bh_double_quote_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
 								"bh_angle",
 								"bh_angle_center",
 								"bh_angle_open",
 								"bh_angle_close",
 								"bh_angle_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
 								"bh_curly",
 								"bh_curly_center",
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
 								"bh_unmatched",
 								"bh_unmatched_center",
 								"bh_unmatched_open",
 								"bh_unmatched_close",
 								"bh_unmatched_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
 								"bh_tag",
 								"bh_tag_center",
 								"bh_tag_open",
 								"bh_tag_close",
 								"bh_tag_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content"
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content"
 							],
-							"syntax": "Packages/Java/Java.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"origin_encoding": "ASCII",
+							"syntax": "Packages/C++/C++.sublime-syntax"
 						},
 						"translation.x": 0.0,
 						"translation.y": 0.0,
@@ -565,98 +514,25 @@
 				},
 				{
 					"buffer": 2,
-					"file": "8_1_notes/vold/vold-demon/VolumeManager/Disk_note.cpp",
+					"file": "8_1_notes/media/audio/AudioPolicyService_note.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 11171,
+						"buffer_size": 69,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								10729,
-								10729
+								0,
+								0
 							]
 						],
 						"settings":
 						{
 							"bracket_highlighter.busy": false,
 							"bracket_highlighter.clone": -1,
-							"bracket_highlighter.clone_locations":
-							{
-								"close":
-								{
-								},
-								"icon":
-								{
-								},
-								"open":
-								{
-								},
-								"unmatched":
-								{
-								}
-							},
-							"bracket_highlighter.clone_regions":
-							[
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
-								"bh_double_quote",
-								"bh_double_quote_center",
-								"bh_double_quote_open",
-								"bh_double_quote_close",
-								"bh_double_quote_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_curly",
-								"bh_curly_center",
-								"bh_curly_open",
-								"bh_curly_close",
-								"bh_curly_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content"
-							],
 							"bracket_highlighter.locations":
 							{
 								"close":
@@ -679,63 +555,62 @@
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
 								"bh_double_quote_close",
 								"bh_double_quote_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
 								"bh_angle",
 								"bh_angle_center",
 								"bh_angle_open",
 								"bh_angle_close",
 								"bh_angle_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
 								"bh_curly",
 								"bh_curly_center",
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
 								"bh_unmatched",
 								"bh_unmatched_center",
 								"bh_unmatched_open",
 								"bh_unmatched_close",
 								"bh_unmatched_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
 								"bh_tag",
 								"bh_tag_center",
 								"bh_tag_open",
 								"bh_tag_close",
 								"bh_tag_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content"
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content"
 							],
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
-							"translate_tabs_to_spaces": true
+							"origin_encoding": "ASCII",
+							"syntax": "Packages/C++/C++.sublime-syntax"
 						},
 						"translation.x": 0.0,
-						"translation.y": 3471.0,
+						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 2,
@@ -743,19 +618,19 @@
 				},
 				{
 					"buffer": 3,
-					"file": "8_1_notes/vold/vold-demon/VolumeManager/VolumeManager_note.cpp",
+					"file": "8_1_notes/media/audio/audioserver/dumpsys-media.audio_policy.log",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 6740,
+						"buffer_size": 17713,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								6033,
-								6033
+								2798,
+								2798
 							]
 						],
 						"settings":
@@ -784,56 +659,56 @@
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
 								"bh_double_quote_close",
 								"bh_double_quote_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
 								"bh_angle",
 								"bh_angle_center",
 								"bh_angle_open",
 								"bh_angle_close",
 								"bh_angle_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
 								"bh_curly",
 								"bh_curly_center",
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
 								"bh_unmatched",
 								"bh_unmatched_center",
 								"bh_unmatched_open",
 								"bh_unmatched_close",
 								"bh_unmatched_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
 								"bh_tag",
 								"bh_tag_center",
 								"bh_tag_open",
 								"bh_tag_close",
 								"bh_tag_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content"
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content"
 							],
 							"bracket_highlighter.locations":
 							{
@@ -857,63 +732,64 @@
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
 								"bh_double_quote_close",
 								"bh_double_quote_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
 								"bh_angle",
 								"bh_angle_center",
 								"bh_angle_open",
 								"bh_angle_close",
 								"bh_angle_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
 								"bh_curly",
 								"bh_curly_center",
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
 								"bh_unmatched",
 								"bh_unmatched_center",
 								"bh_unmatched_open",
 								"bh_unmatched_close",
 								"bh_unmatched_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
 								"bh_tag",
 								"bh_tag_center",
 								"bh_tag_open",
 								"bh_tag_close",
 								"bh_tag_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content"
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content"
 							],
-							"syntax": "Packages/C++/C++.sublime-syntax",
-							"tab_size": 4,
+							"origin_encoding": "ASCII",
+							"syntax": "Packages/Text/Plain text.tmLanguage",
+							"tab_size": 2,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 1563.0,
+						"translation.y": 702.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 1,
@@ -921,19 +797,19 @@
 				},
 				{
 					"buffer": 4,
-					"file": "8_1_notes/vold/vold-demon/CommandListener/CommandListener_note.cpp",
-					"semi_transient": false,
+					"file": "8_1_notes/media/audio/audioserver/AudioPolicyService/AudioPolicyManager/AudioPolicyManager_note.cpp",
+					"semi_transient": true,
 					"settings":
 					{
-						"buffer_size": 5406,
+						"buffer_size": 14709,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								3710,
-								3710
+								1552,
+								1552
 							]
 						],
 						"settings":
@@ -944,27 +820,12 @@
 							{
 								"close":
 								{
-									"1":
-									[
-										3293,
-										3294
-									]
 								},
 								"icon":
 								{
-									"1":
-									[
-										"Packages/BracketHighlighter/icons/curly_bracket.png",
-										"region.purplish"
-									]
 								},
 								"open":
 								{
-									"1":
-									[
-										2639,
-										2640
-									]
 								},
 								"unmatched":
 								{
@@ -977,56 +838,56 @@
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
 								"bh_double_quote_close",
 								"bh_double_quote_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
 								"bh_angle",
 								"bh_angle_center",
 								"bh_angle_open",
 								"bh_angle_close",
 								"bh_angle_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
 								"bh_curly",
 								"bh_curly_center",
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
 								"bh_unmatched",
 								"bh_unmatched_center",
 								"bh_unmatched_open",
 								"bh_unmatched_close",
 								"bh_unmatched_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
 								"bh_tag",
 								"bh_tag_center",
 								"bh_tag_open",
 								"bh_tag_close",
 								"bh_tag_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content"
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content"
 							],
 							"bracket_highlighter.locations":
 							{
@@ -1034,24 +895,24 @@
 								{
 									"1":
 									[
-										3716,
-										3717
+										1595,
+										1596
 									]
 								},
 								"icon":
 								{
 									"1":
 									[
-										"Packages/BracketHighlighter/icons/curly_bracket.png",
-										"region.purplish"
+										"Packages/BracketHighlighter/icons/round_bracket.png",
+										"region.yellowish"
 									]
 								},
 								"open":
 								{
 									"1":
 									[
-										3422,
-										3423
+										1442,
+										1443
 									]
 								},
 								"unmatched":
@@ -1065,67 +926,170 @@
 								"bh_default_open",
 								"bh_default_close",
 								"bh_default_content",
-								"bh_square",
-								"bh_square_center",
-								"bh_square_open",
-								"bh_square_close",
-								"bh_square_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
 								"bh_double_quote_close",
 								"bh_double_quote_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
 								"bh_angle",
 								"bh_angle_center",
 								"bh_angle_open",
 								"bh_angle_close",
 								"bh_angle_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
 								"bh_curly",
 								"bh_curly_center",
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
 								"bh_unmatched",
 								"bh_unmatched_center",
 								"bh_unmatched_open",
 								"bh_unmatched_close",
 								"bh_unmatched_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
 								"bh_tag",
 								"bh_tag_center",
 								"bh_tag_open",
 								"bh_tag_close",
 								"bh_tag_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content"
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content"
 							],
-							"origin_encoding": "ASCII",
 							"syntax": "Packages/C++/C++.sublime-syntax",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
 						"translation.x": 0.0,
-						"translation.y": 585.0,
+						"translation.y": 351.0,
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "8_1_notes/media/audio/audioserver/AAudioService/AAudioService_note.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 467,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.clone": -1,
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+								},
+								"icon":
+								{
+								},
+								"open":
+								{
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content"
+							],
+							"origin_encoding": "ASCII",
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
 					"type": "text"
 				}
 			]

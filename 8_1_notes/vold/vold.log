@@ -754,11 +754,12 @@
 
 12-19 22:07:44.596  3588  3726 D VoldConnector: RCV <- {650 public:8,1 0 "disk:8,0" ""}	//这里触发SND
 12-19 22:07:44.595  3588  3726 D VoldConnector: RCV <- {651 public:8,1 0}
-
 12-19 22:07:44.594  3588  3725 D VoldConnector: SND -> {31 volume mount public:8,1 2 0}
 
 12-19 22:07:44.594  3588  3726 D VoldConnector: RCV <- {643 disk:8,0}
 
+
+12-19 22:07:44.594  3588  3726 D VoldConnector: RCV <- {651 public:8,1 1}
 
 
 
@@ -766,7 +767,6 @@
 12-19 22:07:44.594  4902  4917 V vold    : /system/bin/blkid
 12-19 22:07:44.594  4902  4917 V vold    :     -c
 12-19 22:07:44.594  4902  4917 V vold    :     /dev/null
-12-19 22:07:44.594  3588  3726 D VoldConnector: RCV <- {651 public:8,1 1}
 12-19 22:07:44.594  4902  4917 V vold    :     -s
 12-19 22:07:44.594  4902  4917 V vold    :     TYPE
 12-19 22:07:44.594  4902  4917 V vold    :     -s
@@ -774,28 +774,31 @@
 12-19 22:07:44.594  4902  4917 V vold    :     -s
 12-19 22:07:44.594  4902  4917 V vold    :     LABEL
 12-19 22:07:44.594  4902  4917 V vold    :     /dev/block/vold/public:8,1
-12-19 22:07:44.535  3588  3744 D NotificationSQLiteLog: Pruned event entries: 4
+
 12-19 22:07:44.524  4902  4917 V vold    : /dev/block/vold/public:8,1: UUID="5243-5977" TYPE="vfat" 
 12-19 22:07:44.524  4902  4917 V vold    : 
 12-19 22:07:44.522  3588  3726 D VoldConnector: RCV <- {652 public:8,1 vfat}
+12-19 22:07:44.521  3588  3726 D VoldConnector: RCV <- {653 public:8,1 5243-5977}
+12-19 22:07:44.521  3588  3726 D VoldConnector: RCV <- {654 public:8,1 }
+
+
+
 12-19 22:07:44.521  4902  4917 V vold    : /system/bin/fsck_msdos
 12-19 22:07:44.521  4902  4917 V vold    :     -p
 12-19 22:07:44.521  4902  4917 V vold    :     -f
 12-19 22:07:44.521  4902  4917 V vold    :     /dev/block/vold/public:8,1
-12-19 22:07:44.521  3588  3726 D VoldConnector: RCV <- {653 public:8,1 5243-5977}
-12-19 22:07:44.521  3588  3726 D VoldConnector: RCV <- {654 public:8,1 }
 12-19 22:07:44.495  4902  4917 I fsck_msdos: ** /dev/block/vold/public:8,1
 12-19 22:07:44.492  4902  4917 I fsck_msdos: ** Phase 1 - Read FAT (compare skipped)
 12-19 22:07:44.492  4902  4917 I fsck_msdos: Attempting to allocate 7633 KB for FAT
-12-19 22:07:44.164  3830  3830 I zygote64: Deoptimizing void com.android.systemui.statusbar.stack.StackScrollState.resetViewState(com.android.systemui.statusbar.ExpandableView) due to JIT same target
-12-19 22:07:44.152  3830  3830 I zygote64: Deoptimizing void com.android.systemui.statusbar.stack.NotificationStackScrollLayout.updateViewShadows() due to JIT inline cache
 12-19 22:07:44.128  4902  4917 I fsck_msdos: ** Phase 2 - Check Cluster Chains
 12-19 22:07:44.047  4902  4917 I fsck_msdos: ** Phase 3 - Checking Directories
-12-19 22:07:45.503  3830  3830 I zygote64: Deoptimizing void com.android.systemui.statusbar.stack.ViewState.applyToView(android.view.View) due to JIT inline cache
-12-19 22:07:45.501  3830  3830 I zygote64: Deoptimizing void com.android.systemui.statusbar.stack.NotificationStackScrollLayout.updateViewShadows() due to JIT inline cache
 12-19 22:07:45.304  4902  4917 I fsck_msdos: ** Phase 4 - Checking for Lost Files
 12-19 22:07:45.283  4902  4917 I fsck_msdos: 1625 files, 1906472 free (1811173 clusters)
 12-19 22:07:45.272  4902  4917 I Vold    : Filesystem check completed OK
+
+
+
+
 12-19 22:07:45.271  3588  3726 D VoldConnector: RCV <- {656 public:8,1 /mnt/media_rw/5243-5977}
 12-19 22:07:45.270  3588  3726 D VoldConnector: RCV <- {655 public:8,1 /storage/5243-5977}
 12-19 22:07:45.239  4902  4917 V vold    : Waiting for FUSE to spin up...

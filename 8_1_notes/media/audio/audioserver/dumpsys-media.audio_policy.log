@@ -54,13 +54,13 @@ HW Modules dump:
     - Supported devices:
       Device 1:
       - tag name: Speaker
-      - type: AUDIO_DEVICE_OUT_SPEAKER                        
+      - type: AUDIO_DEVICE_OUT_SPEAKER
       Device 2:
       - tag name: Wired Headset
-      - type: AUDIO_DEVICE_OUT_WIRED_HEADSET                  
+      - type: AUDIO_DEVICE_OUT_WIRED_HEADSET
       Device 3:
       - tag name: Wired Headphones
-      - type: AUDIO_DEVICE_OUT_WIRED_HEADPHONE                
+      - type: AUDIO_DEVICE_OUT_WIRED_HEADPHONE
     output 1:
     - name: esai output
     - Profiles:
@@ -72,7 +72,7 @@ HW Modules dump:
     - Supported devices:
       Device 1:
       - tag name: Speaker
-      - type: AUDIO_DEVICE_OUT_SPEAKER                        
+      - type: AUDIO_DEVICE_OUT_SPEAKER
   - inputs:
     input 0:
     - name: primary input
@@ -85,22 +85,22 @@ HW Modules dump:
     - Supported devices:
       Device 1:
       - tag name: Built-In Mic
-      - type: AUDIO_DEVICE_IN_BUILTIN_MIC                     
+      - type: AUDIO_DEVICE_IN_BUILTIN_MIC
       Device 2:
       - tag name: Wired Headset Mic
-      - type: AUDIO_DEVICE_IN_WIRED_HEADSET                   
+      - type: AUDIO_DEVICE_IN_WIRED_HEADSET
       Device 3:
       - tag name: Spdif-In
-      - type: AUDIO_DEVICE_IN_AUX_DIGITAL                     
+      - type: AUDIO_DEVICE_IN_AUX_DIGITAL
   - Declared devices:
     Device 1:
     - tag name: Speaker
-    - type: AUDIO_DEVICE_OUT_SPEAKER                        
+    - type: AUDIO_DEVICE_OUT_SPEAKER
     - Profiles:
         Profile 0:[dynamic format][dynamic channels][dynamic rates]
     Device 2:
     - tag name: Wired Headset
-    - type: AUDIO_DEVICE_OUT_WIRED_HEADSET                  
+    - type: AUDIO_DEVICE_OUT_WIRED_HEADSET
     - Profiles:
         Profile 0:[dynamic format][dynamic channels][dynamic rates]
     Device 3:

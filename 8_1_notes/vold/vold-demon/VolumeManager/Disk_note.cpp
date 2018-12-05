@@ -331,3 +331,442 @@ std::shared_ptr<VolumeBase> Disk::findVolume(const std::string& id) { //        
     }
     return nullptr;
 }
+
+
+
+status_t PublicVolume::doMount() {
+    // TODO: expand to support mounting other filesystems
+    readMetadata();   //这里通过/system/bin/blkid工具读取 文件系统类型，mFsUuid，mFsLabel 并上报给StorageManagerService
+
+    if (mFsType != "vfat") {
+        LOG(ERROR) << getId() << " unsupported filesystem " << mFsType;
+        return -EIO;
+    }
+
+    if (vfat::Check(mDevPath)) {//  @system/vold/fs/Vfat.cpp   通过/system/bin/fsck_msdos工具校验文件系统
+        LOG(ERROR) << getId() << " failed filesystem check";
+        return -EIO;
+    }
+
+    // Use UUID as stable name, if available
+    std::string stableName = getId();// "public:8,1"
+    if (!mFsUuid.empty()) {
+        stableName = mFsUuid;//在readMetadata中获取
+    }
+
+    mRawPath = StringPrintf("/mnt/media_rw/%s", stableName.c_str());
+
+    mFuseDefault = StringPrintf("/mnt/runtime/default/%s", stableName.c_str());
+    mFuseRead = StringPrintf("/mnt/runtime/read/%s", stableName.c_str());
+    mFuseWrite = StringPrintf("/mnt/runtime/write/%s", stableName.c_str());
+
+    //  12-19 22:07:45.271  3588  3726 D VoldConnector: RCV <- {656 public:8,1 /mnt/media_rw/5243-5977}
+    setInternalPath(mRawPath);
+    if (getMountFlags() & MountFlags::kVisible) {
+        setPath(StringPrintf("/storage/%s", stableName.c_str()));   //mPath="/storage/5243-5977"
+    } else {
+        setPath(mRawPath);
+    }
+
+    if (fs_prepare_dir(mRawPath.c_str(), 0700, AID_ROOT, AID_ROOT)) {// system/core/libcutils/fs.c:109
+        PLOG(ERROR) << getId() << " failed to create mount points";
+        return -errno;
+    }
+
+    if (vfat::Mount(mDevPath, mRawPath, false, false, false, AID_MEDIA_RW, AID_MEDIA_RW, 0007, true)) {
+        PLOG(ERROR) << getId() << " failed to mount " << mDevPath;
+        return -EIO;
+    }
+
+    if (getMountFlags() & MountFlags::kPrimary) {
+        initAsecStage();
+    }
+
+    if (!(getMountFlags() & MountFlags::kVisible)) {
+        // Not visible to apps, so no need to spin up FUSE
+        return OK;
+    }
+
+    if (fs_prepare_dir(mFuseDefault.c_str(), 0700, AID_ROOT, AID_ROOT) ||
+            fs_prepare_dir(mFuseRead.c_str(), 0700, AID_ROOT, AID_ROOT) ||
+            fs_prepare_dir(mFuseWrite.c_str(), 0700, AID_ROOT, AID_ROOT)) {
+        PLOG(ERROR) << getId() << " failed to create FUSE mount points";
+        return -errno;
+    }
+
+    dev_t before = GetDevice(mFuseWrite);
+
+    //  system/vold/PublicVolume.cpp:41:static const char* kFusePath = "/system/bin/sdcard";
+    if (!(mFusePid = fork())) {
+        if (getMountFlags() & MountFlags::kPrimary) {
+            if (execl(kFusePath, kFusePath,
+                    "-u", "1023", // AID_MEDIA_RW
+                    "-g", "1023", // AID_MEDIA_RW
+                    "-U", std::to_string(getMountUserId()).c_str(),
+                    "-w",
+                    mRawPath.c_str(),
+                    stableName.c_str(),
+                    NULL)) {
+                PLOG(ERROR) << "Failed to exec";
+            }
+        } else {
+            if (execl(kFusePath, kFusePath,
+                    "-u", "1023", // AID_MEDIA_RW
+                    "-g", "1023", // AID_MEDIA_RW
+                    "-U", std::to_string(getMountUserId()).c_str(),
+                    mRawPath.c_str(),
+                    stableName.c_str(),
+                    NULL)) {
+                PLOG(ERROR) << "Failed to exec";
+            }
+        }
+
+        LOG(ERROR) << "FUSE exiting";
+        _exit(1);
+    }
+
+    if (mFusePid == -1) {
+        PLOG(ERROR) << getId() << " failed to fork";
+        return -errno;
+    }
+
+    while (before == GetDevice(mFuseWrite)) {
+        LOG(VERBOSE) << "Waiting for FUSE to spin up...";
+        usleep(50000); // 50ms
+    }
+    /* sdcardfs will have exited already. FUSE will still be running */
+    TEMP_FAILURE_RETRY(waitpid(mFusePid, nullptr, WNOHANG));
+
+    return OK;
+}
+
+
+
+status_t PublicVolume::readMetadata() {
+    status_t res = ReadMetadataUntrusted(mDevPath, mFsType, mFsUuid, mFsLabel);//   @system/vold/Utils.cpp:240
+
+    //  12-19 22:07:44.522  3588  3726 D VoldConnector: RCV <- {652 public:8,1 vfat}
+    notifyEvent(ResponseCode::VolumeFsTypeChanged, mFsType);
+
+    //  12-19 22:07:44.521  3588  3726 D VoldConnector: RCV <- {653 public:8,1 5243-5977}
+    notifyEvent(ResponseCode::VolumeFsUuidChanged, mFsUuid);
+
+    //  12-19 22:07:44.521  3588  3726 D VoldConnector: RCV <- {654 public:8,1 }
+    notifyEvent(ResponseCode::VolumeFsLabelChanged, mFsLabel);
+    return res;
+}
+
+
+
+status_t ReadMetadataUntrusted(const std::string& path, std::string& fsType,std::string& fsUuid, std::string& fsLabel) {
+    return readMetadata(path, fsType, fsUuid, fsLabel, true);
+}
+
+
+
+static status_t readMetadata(const std::string& path, std::string& fsType,
+        std::string& fsUuid, std::string& fsLabel, bool untrusted) {
+    fsType.clear();
+    fsUuid.clear();
+    fsLabel.clear();
+
+
+
+/**
+12-19 22:07:44.594  4902  4917 V vold    : /system/bin/blkid
+12-19 22:07:44.594  4902  4917 V vold    :     -c
+12-19 22:07:44.594  4902  4917 V vold    :     /dev/null
+12-19 22:07:44.594  4902  4917 V vold    :     -s
+12-19 22:07:44.594  4902  4917 V vold    :     TYPE
+12-19 22:07:44.594  4902  4917 V vold    :     -s
+12-19 22:07:44.594  4902  4917 V vold    :     UUID
+12-19 22:07:44.594  4902  4917 V vold    :     -s
+12-19 22:07:44.594  4902  4917 V vold    :     LABEL
+12-19 22:07:44.594  4902  4917 V vold    :     /dev/block/vold/public:8,1
+*/
+    std::vector<std::string> cmd;
+    cmd.push_back(kBlkidPath);  //  @system/vold/Utils.cpp:57:static const char* kBlkidPath = "/system/bin/blkid";
+    cmd.push_back("-c");
+    cmd.push_back("/dev/null");
+    cmd.push_back("-s");
+    cmd.push_back("TYPE");
+    cmd.push_back("-s");
+    cmd.push_back("UUID");
+    cmd.push_back("-s");
+    cmd.push_back("LABEL");
+    cmd.push_back(path);
+
+    std::vector<std::string> output;
+    status_t res = ForkExecvp(cmd, output, untrusted ? sBlkidUntrustedContext : sBlkidContext);
+    if (res != OK) {
+        LOG(WARNING) << "blkid failed to identify " << path;
+        return res;
+    }
+
+    char value[128];
+    for (const auto& line : output) {
+        // Extract values from blkid output, if defined
+        const char* cline = line.c_str();
+        const char* start = strstr(cline, "TYPE=");
+        if (start != nullptr && sscanf(start + 5, "\"%127[^\"]\"", value) == 1) {
+            fsType = value;
+        }
+
+        start = strstr(cline, "UUID=");
+        if (start != nullptr && sscanf(start + 5, "\"%127[^\"]\"", value) == 1) {
+            fsUuid = value;
+        }
+
+        start = strstr(cline, "LABEL=");
+        if (start != nullptr && sscanf(start + 6, "\"%127[^\"]\"", value) == 1) {
+            fsLabel = value;
+        }
+    }
+
+    return OK;
+}
+
+
+
+
+
+
+//  @system/vold/fs/Vfat.cpp
+status_t Check(const std::string& source) {
+    if (access(kFsckPath, X_OK)) {//    system/vold/fs/Vfat.cpp:59:static const char* kFsckPath = "/system/bin/fsck_msdos";
+        SLOGW("Skipping fs checks\n");
+        return 0;
+    }
+
+    int pass = 1;
+    int rc = 0;
+    do {
+        /**
+        12-19 22:07:44.521  4902  4917 V vold    : /system/bin/fsck_msdos
+        12-19 22:07:44.521  4902  4917 V vold    :     -p
+        12-19 22:07:44.521  4902  4917 V vold    :     -f
+        12-19 22:07:44.521  4902  4917 V vold    :     /dev/block/vold/public:8,1
+        */
+        std::vector<std::string> cmd;
+        cmd.push_back(kFsckPath);
+        cmd.push_back("-p");
+        cmd.push_back("-f");
+        cmd.push_back(source);
+
+        // Fat devices are currently always untrusted
+        rc = ForkExecvp(cmd, sFsckUntrustedContext);
+
+
+        //  12-19 22:07:45.272  4902  4917 I Vold    : Filesystem check completed OK
+        if (rc < 0) {
+            SLOGE("Filesystem check failed due to logwrap error");
+            errno = EIO;
+            return -1;
+        }
+
+        switch(rc) {
+        case 0:
+            SLOGI("Filesystem check completed OK");
+            return 0;
+
+        case 2:
+            SLOGE("Filesystem check failed (not a FAT filesystem)");
+            errno = ENODATA;
+            return -1;
+
+        case 4:
+            if (pass++ <= 3) {
+                SLOGW("Filesystem modified - rechecking (pass %d)",pass);
+                continue;
+            }
+            SLOGE("Failing check after too many rechecks");
+            errno = EIO;
+            return -1;
+
+        case 8:
+            SLOGE("Filesystem check failed (no filesystem)");
+            errno = ENODATA;
+            return -1;
+
+        default:
+            SLOGE("Filesystem check failed (unknown exit code %d)", rc);
+            errno = EIO;
+            return -1;
+        }
+    } while (0);
+
+    return 0;
+}
+
+
+
+status_t VolumeBase::setInternalPath(const std::string& internalPath) {
+    if (mState != State::kChecking) {
+        LOG(WARNING) << getId() << " internal path change requires state checking";
+        return -EBUSY;
+    }
+
+    mInternalPath = internalPath;
+    //  12-19 22:07:45.271  3588  3726 D VoldConnector: RCV <- {656 public:8,1 /mnt/media_rw/5243-5977}
+    notifyEvent(ResponseCode::VolumeInternalPathChanged, mInternalPath);//  
+    return OK;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//  system/core/libcutils/fs.c:109
+int fs_prepare_dir(const char* path, mode_t mode, uid_t uid, gid_t gid) {
+    return fs_prepare_path_impl(path, mode, uid, gid, /*allow_fixup*/ 1, /*prepare_as_dir*/ 1);
+}
+
+
+static int fs_prepare_path_impl(const char* path, mode_t mode, uid_t uid, gid_t gid,
+        int allow_fixup, int prepare_as_dir) {
+    // Check if path needs to be created
+    struct stat sb;
+    int create_result = -1;
+    if (TEMP_FAILURE_RETRY(lstat(path, &sb)) == -1) {
+        if (errno == ENOENT) {
+            goto create;
+        } else {
+            ALOGE("Failed to lstat(%s): %s", path, strerror(errno));
+            return -1;
+        }
+    }
+
+    // Exists, verify status
+    int type_ok = prepare_as_dir ? S_ISDIR(sb.st_mode) : S_ISREG(sb.st_mode);
+    if (!type_ok) {
+        ALOGE("Not a %s: %s", (prepare_as_dir ? "directory" : "regular file"), path);
+        return -1;
+    }
+
+    int owner_match = ((sb.st_uid == uid) && (sb.st_gid == gid));
+    int mode_match = ((sb.st_mode & ALL_PERMS) == mode);
+    if (owner_match && mode_match) {
+        return 0;
+    } else if (allow_fixup) {
+        goto fixup;
+    } else {
+        if (!owner_match) {
+            ALOGE("Expected path %s with owner %d:%d but found %d:%d",
+                    path, uid, gid, sb.st_uid, sb.st_gid);
+            return -1;
+        } else {
+            ALOGW("Expected path %s with mode %o but found %o",
+                    path, mode, (sb.st_mode & ALL_PERMS));
+            return 0;
+        }
+    }
+
+create:
+    create_result = prepare_as_dir
+        ? TEMP_FAILURE_RETRY(mkdir(path, mode))
+        : TEMP_FAILURE_RETRY(open(path, O_CREAT | O_CLOEXEC | O_NOFOLLOW | O_RDONLY, 0644));
+    if (create_result == -1) {
+        if (errno != EEXIST) {
+            ALOGE("Failed to %s(%s): %s",
+                    (prepare_as_dir ? "mkdir" : "open"), path, strerror(errno));
+            return -1;
+        }
+    } else if (!prepare_as_dir) {
+        // For regular files we need to make sure we close the descriptor
+        if (close(create_result) == -1) {
+            ALOGW("Failed to close file after create %s: %s", path, strerror(errno));
+        }
+    }
+fixup:
+    if (TEMP_FAILURE_RETRY(chmod(path, mode)) == -1) {
+        ALOGE("Failed to chmod(%s, %d): %s", path, mode, strerror(errno));
+        return -1;
+    }
+    if (TEMP_FAILURE_RETRY(chown(path, uid, gid)) == -1) {
+        ALOGE("Failed to chown(%s, %d, %d): %s", path, uid, gid, strerror(errno));
+        return -1;
+    }
+
+    return 0;
+}
+
+
+
+
+
+/*
+
+    if (vfat::Mount(mDevPath, mRawPath, false, false, false, AID_MEDIA_RW, AID_MEDIA_RW, 0007, true)) {
+        PLOG(ERROR) << getId() << " failed to mount " << mDevPath;
+        return -EIO;
+    }
+*/
+
+
+status_t Mount(const std::string& source, const std::string& target, bool ro,
+        bool remount, bool executable, int ownerUid, int ownerGid, int permMask,
+        bool createLost) {
+    int rc;
+    unsigned long flags;
+    char mountData[255];
+
+    const char* c_source = source.c_str();
+    const char* c_target = target.c_str();
+
+    flags = MS_NODEV | MS_NOSUID | MS_DIRSYNC | MS_NOATIME;
+
+    flags |= (executable ? 0 : MS_NOEXEC);
+    flags |= (ro ? MS_RDONLY : 0);
+    flags |= (remount ? MS_REMOUNT : 0);
+
+    snprintf(mountData, sizeof(mountData),
+            "utf8,uid=%d,gid=%d,fmask=%o,dmask=%o,shortname=mixed",
+            ownerUid, ownerGid, permMask, permMask);
+
+    rc = mount(c_source, c_target, "vfat", flags, mountData);
+
+    if (rc && errno == EROFS) {
+        SLOGE("%s appears to be a read only filesystem - retrying mount RO", c_source);
+        flags |= MS_RDONLY;
+        rc = mount(c_source, c_target, "vfat", flags, mountData);
+    }
+
+    if (rc == 0 && createLost) {
+        char *lost_path;
+        asprintf(&lost_path, "%s/LOST.DIR", c_target);
+        if (access(lost_path, F_OK)) {
+            /*
+             * Create a LOST.DIR in the root so we have somewhere to put
+             * lost cluster chains (fsck_msdos doesn't currently do this)
+             */
+            if (mkdir(lost_path, 0755)) {
+                SLOGE("Unable to create LOST.DIR (%s)", strerror(errno));
+            }
+        }
+        free(lost_path);
+    }
+
+    return rc;
+}
+
+
+
+//  system/vold/Utils.cpp:652
+dev_t GetDevice(const std::string& path) {
+    struct stat sb;
+    if (stat(path.c_str(), &sb)) {
+        PLOG(WARNING) << "Failed to stat " << path;
+        return 0;
+    } else {
+        return sb.st_dev;
+    }
+}

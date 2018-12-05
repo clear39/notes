@@ -336,7 +336,7 @@ class StorageManagerService extends IStorageManager.Stub implements INativeDaemo
                 break;
             }
 
-            //13    2018-11-28T09:42:21.688 - RCV <- {655 public:8,1 /mnt/media_rw/5243-5977}
+            //13    2018-11-28T14:42:16.949 - RCV <- {655 public:8,1 /storage/5243-5977}
             case VoldResponseCode.VOLUME_PATH_CHANGED: {
                 if (cooked.length != 3) break;
                 final VolumeInfo vol = mVolumes.get(cooked[1]);
