@@ -9,6 +9,7 @@ service mediaextractor /system/bin/mediaextractor
 
 //	@frameworks/av/services/mediaextractor/main_extractorservice.cpp
 static const char kSystemSeccompPolicyPath[] = "/system/etc/seccomp_policy/mediaextractor.policy";
+
 static const char kVendorSeccompPolicyPath[] = "/vendor/etc/seccomp_policy/mediaextractor.policy";
 
 int main(int argc __unused, char** argv)

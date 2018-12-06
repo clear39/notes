@@ -18,8 +18,7 @@ status_t PolicySerializer::deserialize(const char *configFile, AudioPolicyConfig
     }
 
     if (xmlStrcmp(cur->name, (const xmlChar *) mRootElementName.c_str()))  {
-        ALOGE("%s: No %s root element found in xml data %s.", __FUNCTION__, mRootElementName.c_str(),
-              (const char *)cur->name);
+        ALOGE("%s: No %s root element found in xml data %s.", __FUNCTION__, mRootElementName.c_str(),(const char *)cur->name);
         xmlFreeDoc(doc);
         return BAD_VALUE;
     }
@@ -51,12 +50,30 @@ status_t PolicySerializer::deserialize(const char *configFile, AudioPolicyConfig
     return android::OK;
 }
 
-
+//////////////////////////////////////////////////////////////////////////////////////////////////
 
 /***
     ModuleTraits::Collection modules;									//	typedef HwModuleCollection Collection;
     deserializeCollection<ModuleTraits>(doc, cur, modules, &config);
     config.setHwModules(modules);
+*/
+
+/*
+解析的格式为：
+    <modules>
+        <module name="primary" halVersion="2.0">
+        ......
+        </module>
+        <module name="a2dp" halVersion="2.0">
+        ......
+        </module>
+        <module name="usb" halVersion="2.0">
+        ......
+        </module>
+        <module name="r_submix" halVersion="2.0">
+        ......
+        </module>
+    </modules>
 */
 template <class Trait>
 static status_t deserializeCollection(_xmlDoc *doc, const _xmlNode *cur,typename Trait::Collection &collection,typename Trait::PtrSerializingCtx serializingContext)
@@ -80,7 +97,7 @@ static status_t deserializeCollection(_xmlDoc *doc, const _xmlNode *cur,typename
                 if (status != NO_ERROR) {
                     return status;
                 }
-                if (collection.add(element) < 0) {
+                if (collection.add(element) < 0) {//将HwModule添加到集合
                     ALOGE("%s: could not add element to %s collection", __FUNCTION__,Trait::collectionTag);
                 }
             }
@@ -115,6 +132,8 @@ status_t ModuleTraits::deserialize(xmlDocPtr doc, const xmlNode *root, PtrElemen
     module = new Element(name.c_str(), versionMajor, versionMinor);//	typedef HwModule Element;
 
     // Deserialize childrens: Audio Mix Port, Audio Device Ports (Source/Sink), Audio Routes
+    //  frameworks/av/services/audiopolicy/common/managerdefinitions/include/HwModule.h:37:typedef Vector<sp<IOProfile> > IOProfileCollection;
+    //  frameworks/av/services/audiopolicy/common/managerdefinitions/include/Serializer.h:99:    typedef IOProfileCollection Collection;
     MixPortTraits::Collection mixPorts;
     deserializeCollection<MixPortTraits>(doc, root, mixPorts, NULL);
     module->setProfiles(mixPorts);
@@ -162,6 +181,275 @@ status_t ModuleTraits::deserialize(xmlDocPtr doc, const xmlNode *root, PtrElemen
     return NO_ERROR;
 }
 
+
+/*
+    MixPortTraits::Collection mixPorts;
+    deserializeCollection<MixPortTraits>(doc, root, mixPorts, NULL);
+    module->setProfiles(mixPorts);
+
+    解析格式：
+    <module name="primary" halVersion="2.0">
+         。。。。。。
+        <mixPorts>
+            <mixPort name="primary output" role="source" flags="AUDIO_OUTPUT_FLAG_PRIMARY">
+                <profile name="" format="AUDIO_FORMAT_PCM_16_BIT" samplingRates="48000" channelMasks="AUDIO_CHANNEL_OUT_STEREO"/>
+            </mixPort>
+            <mixPort name="esai output" role="source" flags="AUDIO_OUTPUT_FLAG_DIRECT">
+                <profile name="" format="AUDIO_FORMAT_PCM_16_BIT" samplingRates="48000" channelMasks="AUDIO_CHANNEL_OUT_5POINT1,AUDIO_CHANNEL_OUT_7POINT1"/>
+            </mixPort>
+            <mixPort name="primary input" role="sink">
+                <profile name="" format="AUDIO_FORMAT_PCM_16_BIT" samplingRates="8000,11025,16000,22050,24000,32000,44100,48000" channelMasks="AUDIO_CHANNEL_IN_MONO,AUDIO_CHANNEL_IN_STEREO"/>
+            </mixPort>
+        </mixPorts>
+        。。。。。。
+    </module>
+
+*/
+
+status_t MixPortTraits::deserialize(_xmlDoc *doc, const _xmlNode *child, PtrElement &mixPort,PtrSerializingCtx /*serializingContext*/)
+{
+    string name = getXmlAttribute(child, Attributes::name);
+    if (name.empty()) {
+        ALOGE("%s: No %s found", __FUNCTION__, Attributes::name);
+        return BAD_VALUE;
+    }
+    ALOGV("%s: %s %s=%s", __FUNCTION__, tag, Attributes::name, name.c_str());
+    string role = getXmlAttribute(child, Attributes::role);
+    if (role.empty()) {
+        ALOGE("%s: No %s found", __FUNCTION__, Attributes::role);
+        return BAD_VALUE;
+    }
+    ALOGV("%s: Role=%s", __FUNCTION__, role.c_str());
+    audio_port_role_t portRole = role == "source" ? AUDIO_PORT_ROLE_SOURCE : AUDIO_PORT_ROLE_SINK;
+
+    //  typedef AudioProfile Element;
+    //  typedef sp<AudioProfile> PtrElement;
+    mixPort = new Element(String8(name.c_str()), portRole);
+
+
+
+    AudioProfileTraits::Collection profiles;
+    deserializeCollection<AudioProfileTraits>(doc, child, profiles, NULL);
+    if (profiles.isEmpty()) {
+        sp <AudioProfile> dynamicProfile = new AudioProfile(gDynamicFormat,ChannelsVector(), SampleRateVector());
+        dynamicProfile->setDynamicFormat(true);
+        dynamicProfile->setDynamicChannels(true);
+        dynamicProfile->setDynamicRate(true);
+        profiles.add(dynamicProfile);
+    }
+    mixPort->setAudioProfiles(profiles);
+
+    string flags = getXmlAttribute(child, Attributes::flags);
+    if (!flags.empty()) {
+        // Source role
+        if (portRole == AUDIO_PORT_ROLE_SOURCE) {
+            mixPort->setFlags(OutputFlagConverter::maskFromString(flags));
+        } else {
+            // Sink role
+            mixPort->setFlags(InputFlagConverter::maskFromString(flags));
+        }
+    }
+    // Deserialize children
+    AudioGainTraits::Collection gains;
+    deserializeCollection<AudioGainTraits>(doc, child, gains, NULL);
+    mixPort->setGains(gains);
+
+    return NO_ERROR;
+}
+
+
+status_t AudioProfileTraits::deserialize(_xmlDoc */*doc*/, const _xmlNode *root, PtrElement &profile,PtrSerializingCtx /*serializingContext*/)
+{
+    string samplingRates = getXmlAttribute(root, Attributes::samplingRates);
+    string format = getXmlAttribute(root, Attributes::format);
+    string channels = getXmlAttribute(root, Attributes::channelMasks);
+
+    profile = new Element(formatFromString(format, gDynamicFormat),channelMasksFromString(channels, ","),samplingRatesFromString(samplingRates, ","));
+
+    profile->setDynamicFormat(profile->getFormat() == gDynamicFormat);
+    profile->setDynamicChannels(profile->getChannels().isEmpty());
+    profile->setDynamicRate(profile->getSampleRates().isEmpty());
+
+    return NO_ERROR;
+}
+
+
+
+status_t AudioGainTraits::deserialize(_xmlDoc */*doc*/, const _xmlNode *root, PtrElement &gain,PtrSerializingCtx /*serializingContext*/)
+{
+    static uint32_t index = 0;
+    gain = new Element(index++, true);
+
+    string mode = getXmlAttribute(root, Attributes::mode);
+    if (!mode.empty()) {
+        gain->setMode(GainModeConverter::maskFromString(mode));
+    }
+
+    string channelsLiteral = getXmlAttribute(root, Attributes::channelMask);
+    if (!channelsLiteral.empty()) {
+        gain->setChannelMask(channelMaskFromString(channelsLiteral));
+    }
+
+    string minValueMBLiteral = getXmlAttribute(root, Attributes::minValueMB);
+    uint32_t minValueMB;
+    if (!minValueMBLiteral.empty() && convertTo(minValueMBLiteral, minValueMB)) {
+        gain->setMinValueInMb(minValueMB);
+    }
+
+    string maxValueMBLiteral = getXmlAttribute(root, Attributes::maxValueMB);
+    uint32_t maxValueMB;
+    if (!maxValueMBLiteral.empty() && convertTo(maxValueMBLiteral, maxValueMB)) {
+        gain->setMaxValueInMb(maxValueMB);
+    }
+
+    string defaultValueMBLiteral = getXmlAttribute(root, Attributes::defaultValueMB);
+    uint32_t defaultValueMB;
+    if (!defaultValueMBLiteral.empty() && convertTo(defaultValueMBLiteral, defaultValueMB)) {
+        gain->setDefaultValueInMb(defaultValueMB);
+    }
+
+    string stepValueMBLiteral = getXmlAttribute(root, Attributes::stepValueMB);
+    uint32_t stepValueMB;
+    if (!stepValueMBLiteral.empty() && convertTo(stepValueMBLiteral, stepValueMB)) {
+        gain->setStepValueInMb(stepValueMB);
+    }
+
+    string minRampMsLiteral = getXmlAttribute(root, Attributes::minRampMs);
+    uint32_t minRampMs;
+    if (!minRampMsLiteral.empty() && convertTo(minRampMsLiteral, minRampMs)) {
+        gain->setMinRampInMs(minRampMs);
+    }
+
+    string maxRampMsLiteral = getXmlAttribute(root, Attributes::maxRampMs);
+    uint32_t maxRampMs;
+    if (!maxRampMsLiteral.empty() && convertTo(maxRampMsLiteral, maxRampMs)) {
+        gain->setMaxRampInMs(maxRampMs);
+    }
+    ALOGV("%s: adding new gain mode %08x channel mask %08x min mB %d max mB %d", __FUNCTION__,
+          gain->getMode(), gain->getChannelMask(), gain->getMinValueInMb(),
+          gain->getMaxValueInMb());
+
+    if (gain->getMode() == 0) {
+        return BAD_VALUE;
+    }
+    return NO_ERROR;
+}
+
+
+status_t DevicePortTraits::deserialize(_xmlDoc *doc, const _xmlNode *root, PtrElement &deviceDesc,PtrSerializingCtx /*serializingContext*/)
+{
+    string name = getXmlAttribute(root, Attributes::tagName);
+    if (name.empty()) {
+        ALOGE("%s: No %s found", __FUNCTION__, Attributes::tagName);
+        return BAD_VALUE;
+    }
+    ALOGV("%s: %s %s=%s", __FUNCTION__, tag, Attributes::tagName, name.c_str());
+    string typeName = getXmlAttribute(root, Attributes::type);
+    if (typeName.empty()) {
+        ALOGE("%s: no type for %s", __FUNCTION__, name.c_str());
+        return BAD_VALUE;
+    }
+    ALOGV("%s: %s %s=%s", __FUNCTION__, tag, Attributes::type, typeName.c_str());
+    string role = getXmlAttribute(root, Attributes::role);
+    if (role.empty()) {
+        ALOGE("%s: No %s found", __FUNCTION__, Attributes::role);
+        return BAD_VALUE;
+    }
+    ALOGV("%s: %s %s=%s", __FUNCTION__, tag, Attributes::role, role.c_str());
+    audio_port_role_t portRole = (role == Attributes::roleSource) ? AUDIO_PORT_ROLE_SOURCE : AUDIO_PORT_ROLE_SINK;
+
+    audio_devices_t type = AUDIO_DEVICE_NONE;
+    if (!deviceFromString(typeName, type) ||
+            (!audio_is_input_device(type) && portRole == AUDIO_PORT_ROLE_SOURCE) ||
+            (!audio_is_output_devices(type) && portRole == AUDIO_PORT_ROLE_SINK)) {
+        ALOGW("%s: bad type %08x", __FUNCTION__, type);
+        return BAD_VALUE;
+    }
+    deviceDesc = new Element(type, String8(name.c_str()));
+
+    string address = getXmlAttribute(root, Attributes::address);
+    if (!address.empty()) {
+        ALOGV("%s: address=%s for %s", __FUNCTION__, address.c_str(), name.c_str());
+        deviceDesc->mAddress = String8(address.c_str());
+    }
+
+    AudioProfileTraits::Collection profiles;
+    deserializeCollection<AudioProfileTraits>(doc, root, profiles, NULL);
+    if (profiles.isEmpty()) {
+        sp <AudioProfile> dynamicProfile = new AudioProfile(gDynamicFormat,ChannelsVector(), SampleRateVector());
+        dynamicProfile->setDynamicFormat(true);
+        dynamicProfile->setDynamicChannels(true);
+        dynamicProfile->setDynamicRate(true);
+        profiles.add(dynamicProfile);
+    }
+    deviceDesc->setAudioProfiles(profiles);
+
+    // Deserialize AudioGain children
+    deserializeCollection<AudioGainTraits>(doc, root, deviceDesc->mGains, NULL);
+    ALOGV("%s: adding device tag %s type %08x address %s", __FUNCTION__,
+          deviceDesc->getName().string(), type, deviceDesc->mAddress.string());
+    return NO_ERROR;
+}
+
+
+
+
+status_t RouteTraits::deserialize(_xmlDoc */*doc*/, const _xmlNode *root, PtrElement &element,PtrSerializingCtx ctx)
+{
+    string type = getXmlAttribute(root, Attributes::type);
+    if (type.empty()) {
+        ALOGE("%s: No %s found", __FUNCTION__, Attributes::type);
+        return BAD_VALUE;
+    }
+    audio_route_type_t routeType = (type == Attributes::typeMix) ? AUDIO_ROUTE_MIX : AUDIO_ROUTE_MUX;
+
+    ALOGV("%s: %s %s=%s", __FUNCTION__, tag, Attributes::type, type.c_str());
+    element = new Element(routeType);
+
+    string sinkAttr = getXmlAttribute(root, Attributes::sink);
+    if (sinkAttr.empty()) {
+        ALOGE("%s: No %s found", __FUNCTION__, Attributes::sink);
+        return BAD_VALUE;
+    }
+    // Convert Sink name to port pointer
+    sp<AudioPort> sink = ctx->findPortByTagName(String8(sinkAttr.c_str()));
+    if (sink == NULL) {
+        ALOGE("%s: no sink found with name=%s", __FUNCTION__, sinkAttr.c_str());
+        return BAD_VALUE;
+    }
+    element->setSink(sink);
+
+    string sourcesAttr = getXmlAttribute(root, Attributes::sources);
+    if (sourcesAttr.empty()) {
+        ALOGE("%s: No %s found", __FUNCTION__, Attributes::sources);
+        return BAD_VALUE;
+    }
+    // Tokenize and Convert Sources name to port pointer
+    AudioPortVector sources;
+    char *sourcesLiteral = strndup(sourcesAttr.c_str(), strlen(sourcesAttr.c_str()));
+    char *devTag = strtok(sourcesLiteral, ",");
+    while (devTag != NULL) {
+        if (strlen(devTag) != 0) {
+            sp<AudioPort> source = ctx->findPortByTagName(String8(devTag));
+            if (source == NULL) {
+                ALOGE("%s: no source found with name=%s", __FUNCTION__, devTag);
+                free(sourcesLiteral);
+                return BAD_VALUE;
+            }
+            sources.add(source);
+        }
+        devTag = strtok(NULL, ",");
+    }
+    free(sourcesLiteral);
+
+    sink->addRoute(element);
+    for (size_t i = 0; i < sources.size(); i++) {
+        sp<AudioPort> source = sources.itemAt(i);
+        source->addRoute(element);
+    }
+    element->setSources(sources);
+    return NO_ERROR;
+}
 
 
 
@@ -233,8 +521,7 @@ status_t VolumeTraits::deserialize(_xmlDoc *doc, const _xmlNode *root, PtrElemen
     }
     device_category deviceCategory;
     if (!DeviceCategoryConverter::fromString(deviceCategoryLiteral, deviceCategory)) {
-        ALOGE("%s: Invalid %s=%s", __FUNCTION__, Attributes::deviceCategory,
-              deviceCategoryLiteral.c_str());
+        ALOGE("%s: Invalid %s=%s", __FUNCTION__, Attributes::deviceCategory,deviceCategoryLiteral.c_str());
         return BAD_VALUE;
     }
 
@@ -268,6 +555,45 @@ status_t VolumeTraits::deserialize(_xmlDoc *doc, const _xmlNode *root, PtrElemen
             xmlFree(pointDefinition);
         }
         child = child->next;
+    }
+    return NO_ERROR;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+status_t GlobalConfigTraits::deserialize(const xmlNode *cur, AudioPolicyConfig &config)
+{
+    const xmlNode *root = cur->xmlChildrenNode;
+    while (root != NULL) {
+        if (!xmlStrcmp(root->name, (const xmlChar *)tag)) {//   const char *const GlobalConfigTraits::tag = "globalConfiguration";
+            //  const char GlobalConfigTraits::Attributes::speakerDrcEnabled[] = "speaker_drc_enabled";
+            string speakerDrcEnabled = getXmlAttribute(root, Attributes::speakerDrcEnabled);
+            bool isSpeakerDrcEnabled;
+            if (!speakerDrcEnabled.empty() && convertTo<string, bool>(speakerDrcEnabled, isSpeakerDrcEnabled)) {
+                config.setSpeakerDrcEnabled(isSpeakerDrcEnabled);//true
+            }
+            return NO_ERROR;
+        }
+        root = root->next;
     }
     return NO_ERROR;
 }

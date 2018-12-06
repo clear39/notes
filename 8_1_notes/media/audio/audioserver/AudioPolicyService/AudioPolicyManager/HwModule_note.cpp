@@ -9,3 +9,7 @@ HwModule::HwModule(const char *name, uint32_t halVersionMajor, uint32_t halVersi
 {
     setHalVersion(halVersionMajor, halVersionMinor);
 }
+
+void HwModule::setHalVersion(uint32_t major, uint32_t minor) {
+    mHalVersion = (major << 8) | (minor & 0xff);
+}

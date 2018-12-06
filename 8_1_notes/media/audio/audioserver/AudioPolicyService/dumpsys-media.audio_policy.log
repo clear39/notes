@@ -260,7 +260,7 @@ HW Modules dump:
     - Supported devices:
       Device 1:
       - tag name: USB Host Out
-      - type: AUDIO_DEVICE_OUT_USB_ACCESSORY                  
+      - type: AUDIO_DEVICE_OUT_USB_ACCESSORY
     output 1:
     - name: usb_device output
     - Profiles:
@@ -269,10 +269,10 @@ HW Modules dump:
     - Supported devices:
       Device 1:
       - tag name: USB Device Out
-      - type: AUDIO_DEVICE_OUT_USB_DEVICE                     
+      - type: AUDIO_DEVICE_OUT_USB_DEVICE
       Device 2:
       - tag name: USB Headset Out
-      - type: AUDIO_DEVICE_OUT_USB_HEADSET                    
+      - type: AUDIO_DEVICE_OUT_USB_HEADSET
   - inputs:
     input 0:
     - name: usb_device input
@@ -282,14 +282,14 @@ HW Modules dump:
     - Supported devices:
       Device 1:
       - tag name: USB Device In
-      - type: AUDIO_DEVICE_IN_USB_DEVICE                      
+      - type: AUDIO_DEVICE_IN_USB_DEVICE
       Device 2:
       - tag name: USB Headset In
-      - type: AUDIO_DEVICE_IN_USB_HEADSET                     
+      - type: AUDIO_DEVICE_IN_USB_HEADSET
   - Declared devices:
     Device 1:
     - tag name: USB Host Out
-    - type: AUDIO_DEVICE_OUT_USB_ACCESSORY                  
+    - type: AUDIO_DEVICE_OUT_USB_ACCESSORY
     - Profiles:
         Profile 0:
             - format: AUDIO_FORMAT_PCM_16_BIT
@@ -297,22 +297,22 @@ HW Modules dump:
             - channel masks:0x0003
     Device 2:
     - tag name: USB Device Out
-    - type: AUDIO_DEVICE_OUT_USB_DEVICE                     
+    - type: AUDIO_DEVICE_OUT_USB_DEVICE
     - Profiles:
         Profile 0:[dynamic format][dynamic channels][dynamic rates]
     Device 3:
     - tag name: USB Headset Out
-    - type: AUDIO_DEVICE_OUT_USB_HEADSET                    
+    - type: AUDIO_DEVICE_OUT_USB_HEADSET
     - Profiles:
         Profile 0:[dynamic format][dynamic channels][dynamic rates]
     Device 4:
     - tag name: USB Device In
-    - type: AUDIO_DEVICE_IN_USB_DEVICE                      
+    - type: AUDIO_DEVICE_IN_USB_DEVICE
     - Profiles:
         Profile 0:[dynamic format][dynamic channels][dynamic rates]
     Device 5:
     - tag name: USB Headset In
-    - type: AUDIO_DEVICE_IN_USB_HEADSET                     
+    - type: AUDIO_DEVICE_IN_USB_HEADSET
     - Profiles:
         Profile 0:[dynamic format][dynamic channels][dynamic rates]
 
@@ -378,8 +378,8 @@ HW Modules dump:
   - Declared devices:
     Device 1:
     - tag name: Remote Submix Out
-    - type: AUDIO_DEVICE_OUT_REMOTE_SUBMIX                  
-    - address: 0                               
+    - type: AUDIO_DEVICE_OUT_REMOTE_SUBMIX
+    - address: 0
     - Profiles:
         Profile 0:
             - format: AUDIO_FORMAT_PCM_16_BIT
@@ -388,8 +388,8 @@ HW Modules dump:
     Device 2:
     - id:  1
     - tag name: Remote Submix In
-    - type: AUDIO_DEVICE_IN_REMOTE_SUBMIX                   
-    - address: 0                               
+    - type: AUDIO_DEVICE_IN_REMOTE_SUBMIX
+    - address: 0
     - Profiles:
         Profile 0:
             - format: AUDIO_FORMAT_PCM_16_BIT

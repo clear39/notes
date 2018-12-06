@@ -1,6 +1,8 @@
 //	@frameworks/opt/telephony/src/java/com/android/internal/telephony/RIL.java
 
 public final class RIL extends BaseCommands implements CommandsInterface {
+
+    
 	  private IRadio getRadioProxy(Message result) {
         if (!mIsMobileNetworkSupported) {//是否支持mobile,在构造函数中初始化
             if (RILJ_LOGV) riljLog("getRadioProxy: Not calling getService(): wifi-only");
