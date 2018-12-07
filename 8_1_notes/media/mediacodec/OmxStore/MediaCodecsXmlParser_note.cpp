@@ -22,15 +22,15 @@ MediaCodecsXmlParser::MediaCodecsXmlParser(
     mCodecCounter(0) {
     std::string path;
     if (findFileInDirs(searchDirs, mainXmlName, &path)) {
-        parseTopLevelXMLFile(path.c_str(), false);//			media_codecs.xml
+        parseTopLevelXMLFile(path.c_str(), false);//			/vendor/etc/media_codecs.xml
     } else {
         ALOGE("Cannot find %s", mainXmlName);
         mParsingStatus = NAME_NOT_FOUND;
     }
-    if (findFileInDirs(searchDirs, performanceXmlName, &path)) {//		"media_codecs_performance.xml"		
-        parseTopLevelXMLFile(path.c_str(), true);
+    if (findFileInDirs(searchDirs, performanceXmlName, &path)) {
+        parseTopLevelXMLFile(path.c_str(), true);//     文件为 "/vendor/etc/media_codecs_performance.xml"      
     }
-    if (profilingResultsXmlPath != nullptr) {//	profilingResultsXmlPath = "/data/misc/media/media_codecs_profiling_results.xml"
+    if (profilingResultsXmlPath != nullptr) {//	profilingResultsXmlPath = "/data/misc/media/media_codecs_profiling_results.xml"  //文件不存在
         parseTopLevelXMLFile(profilingResultsXmlPath, true);
     }
 }
