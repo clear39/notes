@@ -71,7 +71,7 @@ void MediaCodecsXmlParser::parseXMLFile(const char *path) {
         return;
     }
 
-    XML_Parser parser = ::XML_ParserCreate(nullptr);
+    XML_Parser parser = ::XML_ParserCreate(nullptr);//  @external/expat/lib/xmlparse.c
     LOG_FATAL_IF(parser == nullptr, "XML_MediaCodecsXmlParserCreate() failed.");
 
     ::XML_SetUserData(parser, this);
