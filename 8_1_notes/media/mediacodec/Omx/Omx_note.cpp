@@ -55,8 +55,11 @@ interface IOmx {
 };
 
 
-
-
+//  @frameworks/av/media/libstagefright/include/OmxNodeOwner.h
+struct OmxNodeOwner {
+    virtual status_t freeNode(const sp<OMXNodeInstance> &instance) = 0;
+    virtual ~OmxNodeOwner() {}
+};
 
 //	@frameworks/av/media/libstagefright/omx/include/media/stagefright/omx/1.0/Omx.h
 struct Omx : public IOmx, public hidl_death_recipient, public OmxNodeOwner {
@@ -151,19 +154,15 @@ Return<void> Omx::allocateNode(const hidl_string& name,const sp<IOmxObserver>& o
         // Find quirks from mParser
         const auto& codec = mParser.getCodecMap().find(name.c_str());
         if (codec == mParser.getCodecMap().cend()) {
-            LOG(WARNING) << "Failed to obtain quirks for omx component "
-                    "'" << name.c_str() << "' "
-                    "from XML files";
+            LOG(WARNING) << "Failed to obtain quirks for omx component " "'" << name.c_str() << "' " "from XML files";
         } else {
             uint32_t quirks = 0;
             for (const auto& quirk : codec->second.quirkSet) {
                 if (quirk == "requires-allocate-on-input-ports") {
-                    quirks |= OMXNodeInstance::
-                            kRequiresAllocateBufferOnInputPorts;
+                    quirks |= OMXNodeInstance::kRequiresAllocateBufferOnInputPorts;
                 }
                 if (quirk == "requires-allocate-on-output-ports") {
-                    quirks |= OMXNodeInstance::
-                            kRequiresAllocateBufferOnOutputPorts;
+                    quirks |= OMXNodeInstance::kRequiresAllocateBufferOnOutputPorts;
                 }
             }
             instance->setQuirks(quirks);

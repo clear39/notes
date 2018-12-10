@@ -4,13 +4,13 @@ OMXMaster::OMXMaster()
 
     pid_t pid = getpid();
     char filename[20];
-    snprintf(filename, sizeof(filename), "/proc/%d/comm", pid);
+    snprintf(filename, sizeof(filename), "/proc/%d/comm", pid); 
     int fd = open(filename, O_RDONLY);
     if (fd < 0) {
       ALOGW("couldn't determine process name");
       strlcpy(mProcessName, "<unknown>", sizeof(mProcessName));
     } else {
-      ssize_t len = read(fd, mProcessName, sizeof(mProcessName));
+      ssize_t len = read(fd, mProcessName, sizeof(mProcessName));       //  omx@1.0-service
       if (len < 2) {
         ALOGW("couldn't determine process name");
         strlcpy(mProcessName, "<unknown>", sizeof(mProcessName));
@@ -32,6 +32,36 @@ void OMXMaster::addVendorPlugin() {
 }
 
 
+//  @frameworks/native/headers/media_plugin/media/hardware/OMXPluginBase.h
+struct OMXPluginBase {
+    OMXPluginBase() {}
+    virtual ~OMXPluginBase() {}
+
+    virtual OMX_ERRORTYPE makeComponentInstance(
+            const char *name,
+            const OMX_CALLBACKTYPE *callbacks,
+            OMX_PTR appData,
+            OMX_COMPONENTTYPE **component) = 0;
+
+    virtual OMX_ERRORTYPE destroyComponentInstance(
+            OMX_COMPONENTTYPE *component) = 0;
+
+    virtual OMX_ERRORTYPE enumerateComponents(
+            OMX_STRING name,
+            size_t size,
+            OMX_U32 index) = 0;
+
+    virtual OMX_ERRORTYPE getRolesOfComponent(
+            const char *name,
+            Vector<String8> *roles) = 0;
+
+private:
+    OMXPluginBase(const OMXPluginBase &);
+    OMXPluginBase &operator=(const OMXPluginBase &);
+};
+
+
+//  @frameworks/av/media/libstagefright/omx/OMXMaster.cpp
 void OMXMaster::addPlugin(const char *libname) {
     mVendorLibHandle = dlopen(libname, RTLD_NOW);
 
@@ -49,7 +79,7 @@ void OMXMaster::addPlugin(const char *libname) {
     }
 }
 
-
+//  @frameworks/av/media/libstagefright/omx/OMXMaster.cpp
 void OMXMaster::addPlugin(OMXPluginBase *plugin) {
     Mutex::Autolock autoLock(mLock);
 
