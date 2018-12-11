@@ -28,7 +28,7 @@ OMXMaster::OMXMaster()
 
 
 void OMXMaster::addVendorPlugin() {
-    addPlugin("libstagefrighthw.so");
+    addPlugin("libstagefrighthw.so");// @hardware/qcom/media/msm8974/libstagefrighthw
 }
 
 
@@ -79,6 +79,13 @@ void OMXMaster::addPlugin(const char *libname) {
     }
 }
 
+
+OMXPluginBase *createOMXPlugin() {
+    return new QComOMXPlugin;// @
+}
+
+
+
 //  @frameworks/av/media/libstagefright/omx/OMXMaster.cpp
 void OMXMaster::addPlugin(OMXPluginBase *plugin) {
     Mutex::Autolock autoLock(mLock);
@@ -89,6 +96,7 @@ void OMXMaster::addPlugin(OMXPluginBase *plugin) {
 
     char name[128];
     OMX_ERRORTYPE err;
+    //枚举plugin所有支持的格式，加入到 mPluginByComponentName
     while ((err = plugin->enumerateComponents(name, sizeof(name), index++)) == OMX_ErrorNone) {
         String8 name8(name);
 

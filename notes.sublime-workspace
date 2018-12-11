@@ -8,19 +8,151 @@
 	"buffers":
 	[
 		{
-			"file": "8_1_notes/media/audio/AudioRecord/AudioRecord_note.cpp",
+			"contents": "//\t\t@frameworks/av/media/libmediaplayerservice/MediaPlayerService.cpp\n\n// 创建一个和客户断对应的播放Client\nsp<IMediaPlayer> MediaPlayerService::create(const sp<IMediaPlayerClient>& client,audio_session_t audioSessionId)\n{\n    pid_t pid = IPCThreadState::self()->getCallingPid();\n    int32_t connId = android_atomic_inc(&mNextConnId);\n    sp<Client> c = new Client(this, pid, connId, client, audioSessionId,IPCThreadState::self()->getCallingUid());\n    ALOGV(\"Create new client(%d) from pid %d, uid %d, \", connId, pid, IPCThreadState::self()->getCallingUid());\n    wp<Client> w = c;\n    {\n        Mutex::Autolock lock(mLock);\n        mClients.add(w);\n    }\n    return c;\n}\n\n\nMediaPlayerService::Client::Client(\n        const sp<MediaPlayerService>& service, pid_t pid,\n        int32_t connId, const sp<IMediaPlayerClient>& client,\n        audio_session_t audioSessionId, uid_t uid)\n{\n    ALOGV(\"Client(%d) constructor\", connId);\n    mPid = pid;\n    mConnId = connId;\n    mService = service;\n    mClient = client;\n    mLoop = false;\n    mStatus = NO_INIT;\n    mAudioSessionId = audioSessionId;\n    mUid = uid;\n    mRetransmitEndpointValid = false;\n    mAudioAttributes = NULL;\n    mListener = new Listener(this);\n\n#if CALLBACK_ANTAGONIZER            //  frameworks/av/media/libmediaplayerservice/MediaPlayerService.h:50:#define CALLBACK_ANTAGONIZER 0\n    ALOGD(\"create Antagonizer\");\n    mAntagonizer = new Antagonizer(mListener);\n#endif\n}\n\n\n\n// setDataSource动作开始/////////////////////////////////////////////////////////////////////////////////////\nstatus_t MediaPlayerService::Client::setDataSource(int fd, int64_t offset, int64_t length)\n{\n    ALOGV(\"setDataSource fd=%d (%s), offset=%lld, length=%lld\",fd, nameForFd(fd).c_str(), (long long) offset, (long long) length);\n    struct stat sb;\n    int ret = fstat(fd, &sb);\n    if (ret != 0) {\n        ALOGE(\"fstat(%d) failed: %d, %s\", fd, ret, strerror(errno));\n        return UNKNOWN_ERROR;\n    }\n\n    ALOGV(\"st_dev  = %llu\", static_cast<unsigned long long>(sb.st_dev));\n    ALOGV(\"st_mode = %u\", sb.st_mode);\n    ALOGV(\"st_uid  = %lu\", static_cast<unsigned long>(sb.st_uid));\n    ALOGV(\"st_gid  = %lu\", static_cast<unsigned long>(sb.st_gid));\n    ALOGV(\"st_size = %llu\", static_cast<unsigned long long>(sb.st_size));\n\n    if (offset >= sb.st_size) {\n        ALOGE(\"offset error\");\n        return UNKNOWN_ERROR;\n    }\n    if (offset + length > sb.st_size) {\n        length = sb.st_size - offset;\n        ALOGV(\"calculated length = %lld\", (long long)length);\n    }\n\n    //查找支持改格式的播放器类型\n    player_type playerType = MediaPlayerFactory::getPlayerType(this,fd,offset,length);\n    //创建对应播放器\n    sp<MediaPlayerBase> p = setDataSource_pre(playerType);//这里默认 播放器为NuPlayerDriver\n    if (p == NULL) {\n        return NO_INIT;\n    }\n    // now set data source\n    return mStatus = setDataSource_post(p, p->setDataSource(fd, offset, length));\n}\n\n\nsp<MediaPlayerBase> MediaPlayerService::Client::setDataSource_pre(player_type playerType)\n{\n    ALOGV(\"player type = %d\", playerType);\n\n    // create the right type of player\n    sp<MediaPlayerBase> p = createPlayer(playerType);//创建对应的播放器\n    if (p == NULL) {\n        return p;\n    }\n\n    sp<IServiceManager> sm = defaultServiceManager();\n    sp<IBinder> binder = sm->getService(String16(\"media.extractor\"));\n    if (binder == NULL) {\n        ALOGE(\"extractor service not available\");\n        return NULL;\n    }\n    sp<ServiceDeathNotifier> extractorDeathListener = new ServiceDeathNotifier(binder, p, MEDIAEXTRACTOR_PROCESS_DEATH);\n    binder->linkToDeath(extractorDeathListener);\n\n    sp<ServiceDeathNotifier> codecDeathListener;\n    if (property_get_bool(\"persist.media.treble_omx\", true)) {//true\n        // Treble IOmx\n        sp<IOmx> omx = IOmx::getService();\n        if (omx == nullptr) {\n            ALOGE(\"Treble IOmx not available\");\n            return NULL;\n        }\n        codecDeathListener = new ServiceDeathNotifier(omx, p, MEDIACODEC_PROCESS_DEATH);\n        omx->linkToDeath(codecDeathListener, 0);\n    } else {\n        // Legacy IOMX\n        binder = sm->getService(String16(\"media.codec\"));\n        if (binder == NULL) {\n            ALOGE(\"codec service not available\");\n            return NULL;\n        }\n        codecDeathListener = new ServiceDeathNotifier(binder, p, MEDIACODEC_PROCESS_DEATH);\n        binder->linkToDeath(codecDeathListener);\n    }\n\n    Mutex::Autolock lock(mLock);\n\n    clearDeathNotifiers_l();\n    mExtractorDeathListener = extractorDeathListener;\n    mCodecDeathListener = codecDeathListener;\n\n    //设置音频输出\n    if (!p->hardwareOutput()) {\n        mAudioOutput = new AudioOutput(mAudioSessionId, IPCThreadState::self()->getCallingUid(),mPid, mAudioAttributes);\n        static_cast<MediaPlayerInterface*>(p.get())->setAudioSink(mAudioOutput);\n    }\n\n    return p;\n}\n\n\n\nstatus_t MediaPlayerService::Client::setDataSource_post(const sp<MediaPlayerBase>& p,status_t status)\n{\n    ALOGV(\" setDataSource\");\n    if (status != OK) {\n        ALOGE(\"  error: %d\", status);\n        return status;\n    }\n\n    // Set the re-transmission endpoint if one was chosen.\n    if (mRetransmitEndpointValid) {\n        status = p->setRetransmitEndpoint(&mRetransmitEndpoint);\n        if (status != NO_ERROR) {\n            ALOGE(\"setRetransmitEndpoint error: %d\", status);\n        }\n    }\n\n    if (status == OK) {\n        Mutex::Autolock lock(mLock);\n        mPlayer = p;//将创建好的播放器 赋值给成员变量\n    }\n    return status;\n}\n\n\n\n\n//设置声音输出类型有俩中方式///////////////////////////////////////////////////////////////////////\nstatus_t MediaPlayerService::Client::setAudioStreamType(audio_stream_type_t type)\n{\n    ALOGV(\"[%d] setAudioStreamType(%d)\", mConnId, type);\n    // TODO: for hardware output, call player instead\n    Mutex::Autolock l(mLock);\n    if (mAudioOutput != 0) mAudioOutput->setAudioStreamType(type);\n    return NO_ERROR;\n}\n\n\nstatus_t MediaPlayerService::Client::setAudioAttributes_l(const Parcel &parcel)\n{\n    if (mAudioAttributes != NULL) { free(mAudioAttributes); }\n    mAudioAttributes = (audio_attributes_t *) calloc(1, sizeof(audio_attributes_t));\n    if (mAudioAttributes == NULL) {\n        return NO_MEMORY;\n    }\n    unmarshallAudioAttributes(parcel, mAudioAttributes);\n\n    ALOGV(\"setAudioAttributes_l() usage=%d content=%d flags=0x%x tags=%s\",\n            mAudioAttributes->usage, mAudioAttributes->content_type, mAudioAttributes->flags,\n            mAudioAttributes->tags);\n\n    if (mAudioOutput != 0) {\n        mAudioOutput->setAudioAttributes(mAudioAttributes);\n    }\n    return NO_ERROR;\n}\n\n//prepare///////////////////////////////////////////////////////////////////////\nstatus_t MediaPlayerService::Client::prepareAsync()\n{\n    ALOGV(\"[%d] prepareAsync\", mConnId);\n    sp<MediaPlayerBase> p = getPlayer();\n    if (p == 0) return UNKNOWN_ERROR;\n    status_t ret = p->prepareAsync();\n#if CALLBACK_ANTAGONIZER\n    ALOGD(\"start Antagonizer\");\n    if (ret == NO_ERROR) mAntagonizer->start();\n#endif\n    return ret;\n}\n\n\n\n//start///////////////////////////////////////////////////////////////////////\nstatus_t MediaPlayerService::Client::start()\n{\n    ALOGV(\"[%d] start\", mConnId);\n    sp<MediaPlayerBase> p = getPlayer();\n    if (p == 0) return UNKNOWN_ERROR;\n    p->setLooping(mLoop);\n    return p->start();\n}\n",
+			"file": "8_1_notes/media/mediaplayer/mediaserver/MediaPlayerService/MediaPlayerService_note.cpp",
+			"file_size": 8355,
+			"file_write_time": 131889724301009086,
 			"settings":
 			{
-				"buffer_size": 56,
+				"buffer_size": 7212,
 				"encoding": "UTF-8",
 				"line_ending": "Unix"
 			}
 		},
 		{
-			"file": "8_1_notes/hwbinder/radio/rild/rild_note.c",
+			"file": "8_1_notes/media/mediaplayer/mediaserver/MediaPlayerService/NuPlayerDriver/NuPlayerDriver_note.cpp",
 			"settings":
 			{
-				"buffer_size": 5078,
+				"buffer_size": 3917,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "8_1_notes/media/mediaplayer/mediaserver/MediaPlayerService/NuPlayerDriver/NuPlayer_note.cpp",
+			"settings":
+			{
+				"buffer_size": 7107,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "8_1_notes/media/mediaplayer/mediaserver/MediaPlayerService/NuPlayerDriver/GenericSource/GenericSource_note.cpp",
+			"settings":
+			{
+				"buffer_size": 10594,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "8_1_notes/media/mediacodec/OmxStore/OmxStore_note.cpp",
+			"settings":
+			{
+				"buffer_size": 12332,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "8_1_notes/media/mediacodec/Omx/OMXMaster/FSLOMXPlugin/FSLOMXPlugin_note.cpp",
+			"settings":
+			{
+				"buffer_size": 2145,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "8_1_notes/media/mediacodec/Omx/OMXMaster/FSLOMXPlugin/OMXCore/OMXCore_note.cpp",
+			"settings":
+			{
+				"buffer_size": 5718,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "8_1_notes/media/mediacodec/Omx/OMXMaster/FSLOMXPlugin/OMXCore/ShareLibarayMgr_note.cpp",
+			"settings":
+			{
+				"buffer_size": 53,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "8_1_notes/media/mediacodec/Omx/OMXMaster/FSLOMXPlugin/PlatformResourceMgr/PlatformResourceMgr_note.cpp",
+			"settings":
+			{
+				"buffer_size": 487,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "8_1_notes/media/mediaplayer/mediaserver/MediaPlayerService/NuPlayerDriver/NuPlayerRenderer_note.cpp",
+			"settings":
+			{
+				"buffer_size": 2404,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "8_1_notes/media/mediaextractor/DataSource/DataSource_note.cpp",
+			"settings":
+			{
+				"buffer_size": 2375,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "8_1_notes/media/mediaextractor/DataSource/FileSource_note.cpp",
+			"settings":
+			{
+				"buffer_size": 2281,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "8_1_notes/media/mediaplayer/mediaserver/MediaPlayerService/NuPlayerDriver/MediaAnalyticsItem_note.cpp",
+			"settings":
+			{
+				"buffer_size": 460,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "8_1_notes/media/mediaextractor/MediaExtractor/MPEG4Extractor/MPEG4Extractor_note.cpp",
+			"settings":
+			{
+				"buffer_size": 6587,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"contents": "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\nBuild fingerprint: 'Android/autolink_8qxp/autolink_8qxp:8.1.0/1.2.0-beta2-rc3/20180724:eng/dev-keys'\nRevision: '0'\nABI: 'arm'\npid: 3319, tid: 5222, name: media.codec  >>> omx@1.0-service <<<\nsignal 11 (SIGSEGV), code 1 (SEGV_MAPERR), fault addr 0x1a0808\n    r0 001a0808  r1 af500000  r2 00000000  r3 00000000\n    r4 ea3b6800  r5 00000000  r6 e7d558b8  r7 00000000\n    r8 e7d55840  r9 af500000  sl 00000000  fp e9eefff4\n    ip e8dabf88  sp e7d55810  lr e8e68490  pc e8e67624  cpsr 80000010\n\nbacktrace:\n    #00 pc 0009d624  /vendor/lib/libvpu-malone.so (VpuReadReg+12)\n    #01 pc 0009e48c  /vendor/lib/libvpu-malone.so (VPU_Stream_FeedBuffer+28)\n\nstack:\n         e7d557d0  ea3b6800  [anon:libc_malloc]\n         e7d557d4  e8da6d9f  /vendor/lib/lib_vpu_wrapper.so (VPU_DecOpen+390)\n         e7d557d8  af500000\n         e7d557dc  00001400\n         e7d557e0  00000000\n         e7d557e4  ea799868  [anon:libc_malloc]\n         e7d557e8  00000000\n         e7d557ec  03fc4b50\n         e7d557f0  00000000\n         e7d557f4  00000000\n         e7d557f8  000003e8\n         e7d557fc  03fc4b50\n         e7d55800  e9ef0c98  [anon:libc_malloc]\n         e7d55804  e9ef0c84  [anon:libc_malloc]\n         e7d55808  00000000\n         e7d5580c  eb6b2ca0  /system/lib/libbinder.so (__gnu_uldivmod_helper+24)\n    #00  e7d55810  00000000\n         ........  ........\n    #01  e7d55810  00000000\n         e7d55814  ffffffff\n         e7d55818  ea3a4388  [anon:libc_malloc]\n         e7d5581c  ea3b6800  [anon:libc_malloc]\n         e7d55820  00000000\n         e7d55824  e7d558b8\n         e7d55828  e9ef0c7c  [anon:libc_malloc]\n         e7d5582c  00001078\n         e7d55830  e9ef0c98  [anon:libc_malloc]\n         e7d55834  e9ef0c84  [anon:libc_malloc]\n         e7d55838  e9eefff4  [anon:libc_malloc]\n         e7d5583c  e8da7193  /vendor/lib/lib_vpu_wrapper.so\n         e7d55840  e9eefc00  [anon:libc_malloc]\n         e7d55844  b8b082fd\n         e7d55848  e7d55894\n         e7d5584c  ea3b6800  [anon:libc_malloc]\nmemory map:\nb6cd6000-b6cda000 r-xp 00000000 b3:08 454                                /vendor/bin/hw/android.hardware.media.omx@1.0-service\nb6cda000-b6cdb000 r--p 00003000 b3:08 454                                /vendor/bin/hw/android.hardware.media.omx@1.0-service\nb6cdb000-b6cdc000 rw-p 00000000 00:00 0 \ne5a30000-e5aff000 r--p 00000000 b3:08 280                                /vendor/lib/libvpu-malone.so\ne5aff000-e6700000 rw-s 00000000 00:0b 7837                               anon_inode:dmabuf\ne6700000-e6780000 rw-p 00000000 00:00 0                                  [anon:libc_malloc]\ne67b0000-e68d0000 rw-s 00000000 00:0b 7837                               anon_inode:dmabuf\ne68d0000-e69f0000 rw-s 00000000 00:0b 7837                               anon_inode:dmabuf\ne69f0000-e6b10000 rw-s 00000000 00:0b 7837                               anon_inode:dmabuf\ne6b10000-e6c30000 rw-s 00000000 00:0b 7837                               anon_inode:dmabuf\ne6c30000-e6d50000 rw-s 00000000 00:0b 7837                               anon_inode:dmabuf\ne6d50000-e6e70000 rw-s 00000000 00:0b 7837                               anon_inode:dmabuf\ne6e70000-e6f90000 rw-s 00000000 00:0b 7837                               anon_inode:dmabuf\ne6f90000-e6f98000 r-xp 00000000 b3:08 297                                /vendor/lib/hw/gralloc_viv.imx8.so\ne6f98000-e6f99000 r--p 00007000 b3:08 297                                /vendor/lib/hw/gralloc_viv.imx8.so\ne6f99000-e6f9a000 rw-p 00008000 b3:08 297                                /vendor/lib/hw/gralloc_viv.imx8.so\ne6fe4000-e6fe7000 r-xp 00000000 b3:08 356                                /vendor/lib/libdrm_vivante.so\ne6fe7000-e6fe8000 ---p 00000000 00:00 0 \ne6fe8000-e6fe9000 r--p 00003000 b3:08 356                                /vendor/lib/libdrm_vivante.so\ne6fe9000-e6fea000 rw-p 00004000 b3:08 356                                /vendor/lib/libdrm_vivante.so\ne7007000-e7008000 ---p 00000000 00:00 0                                  [anon:thread stack guard page]\ne7008000-e7104000 rw-p 00000000 00:00 0 \ne7104000-e7110000 r-xp 00000000 b3:08 353                                /vendor/lib/libdrm_android.so\ne7110000-e7111000 ---p 00000000 00:00 0 \ne7111000-e7112000 r--p 0000c000 b3:08 353                                /vendor/lib/libdrm_android.so\ne7112000-e7113000 rw-p 0000d000 b3:08 353                                /vendor/lib/libdrm_android.so\ne7145000-e7148000 r-xp 00000000 b3:03 1760                               /system/lib/vndk-sp/libion.so\ne7148000-e7149000 r--p 00002000 b3:03 1760                               /system/lib/vndk-sp/libion.so\ne7149000-e714a000 rw-p 00003000 b3:03 1760                               /system/lib/vndk-sp/libion.so\ne71a5000-e71bd000 r-xp 00000000 b3:08 421                                /vendor/lib/libfsldisplay.so\ne71bd000-e71be000 ---p 00000000 00:00 0 \ne71be000-e71bf000 r--p 00018000 b3:08 421                                /vendor/lib/libfsldisplay.so\ne71bf000-e71c0000 rw-p 00019000 b3:08 421                                /vendor/lib/libfsldisplay.so\ne71cb000-e71ce000 r-xp 00000000 b3:08 384                                /vendor/lib/libedid.so\ne71ce000-e71cf000 r--p 00002000 b3:08 384                                /vendor/lib/libedid.so\ne71cf000-e71d0000 rw-p 00003000 b3:08 384                                /vendor/lib/libedid.so\ne722c000-e7230000 r-xp 00000000 b3:08 315                                /vendor/lib/hw/gralloc.imx8.so\ne7230000-e7231000 r--p 00003000 b3:08 315                                /vendor/lib/hw/gralloc.imx8.so\ne7231000-e7232000 rw-p 00004000 b3:08 315                                /vendor/lib/hw/gralloc.imx8.so\ne7264000-e726c000 r-xp 00000000 b3:08 316                                /vendor/lib/hw/android.hardware.graphics.mapper@2.0-impl.so\ne726c000-e726d000 ---p 00000000 00:00 0 \ne726d000-e726e000 r--p 00008000 b3:08 316                                /vendor/lib/hw/android.hardware.graphics.mapper@2.0-impl.so\ne726e000-e726f000 rw-p 00009000 b3:08 316                                /vendor/lib/hw/android.hardware.graphics.mapper@2.0-impl.so\ne7280000-e7380000 rw-p 00000000 00:00 0                                  [anon:libc_malloc]\ne7385000-e7485000 rw-s 00000000 00:05 18329                              /dev/ashmem/AshmemAllocator_hidl (deleted)\ne7485000-e7585000 rw-s 00000000 00:05 29736                              /dev/ashmem/AshmemAllocator_hidl (deleted)\ne7585000-e7685000 rw-s 00000000 00:05 26332                              /dev/ashmem/AshmemAllocator_hidl (deleted)\ne7685000-e768a000 r-xp 00000000 b3:03 1899                               /system/lib/hw/android.hidl.memory@1.0-impl.so\ne768a000-e768b000 r--p 00004000 b3:03 1899                               /system/lib/hw/android.hidl.memory@1.0-impl.so\ne768b000-e768c000 rw-p 00005000 b3:03 1899                               /system/lib/hw/android.hidl.memory@1.0-impl.so\ne76c4000-e76c5000 ---p 00000000 00:00 0                                  [anon:thread stack guard page]\ne76c5000-e77c1000 rw-p 00000000 00:00 0 \ne77c1000-e77c2000 ---p 00000000 00:00 0                                  [anon:thread stack guard page]\ne77c2000-e78be000 rw-p 00000000 00:00 0 \ne78be000-e78bf000 ---p 00000000 00:00 0                                  [anon:thread stack guard page]\ne78bf000-e79bb000 rw-p 00000000 00:00 0 \ne79bb000-e79be000 r-xp 00000000 b3:08 282                                /vendor/lib/lib_aacd_wrap_arm12_elinux_android.so\ne79be000-e79bf000 r--p 00002000 b3:08 282                                /vendor/lib/lib_aacd_wrap_arm12_elinux_android.so\ne79bf000-e79c0000 rw-p 00003000 b3:08 282                                /vendor/lib/lib_aacd_wrap_arm12_elinux_android.so\ne79e0000-e79f5000 r-xp 00000000 b3:08 422                                /vendor/lib/lib_aac_dec_v2_arm12_elinux.so\ne79f5000-e79f6000 rw-p 00015000 b3:08 422                                /vendor/lib/lib_aac_dec_v2_arm12_elinux.so\ne7a1b000-e7a1c000 ---p 00000000 00:00 0                                  [anon:thread stack guard page]\ne7a1c000-e7b18000 rw-p 00000000 00:00 0 \ne7b18000-e7b1c000 r-xp 00000000 b3:08 362                                /vendor/lib/lib_omx_aac_dec_v2_arm11_elinux.so\ne7b1c000-e7b1d000 r--p 00003000 b3:08 362                                /vendor/lib/lib_omx_aac_dec_v2_arm11_elinux.so\ne7b1d000-e7b1e000 rw-p 00004000 b3:08 362                                /vendor/lib/lib_omx_aac_dec_v2_arm11_elinux.so\ne7b5c000-e7b5d000 ---p 00000000 00:00 0                                  [anon:thread stack guard page]\ne7b5d000-e7c59000 rw-p 00000000 00:00 0 \ne7c59000-e7c5a000 ---p 00000000 00:00 0                                  [anon:thread stack guard page]\ne7c5a000-e7d56000 rw-p 00000000 00:00 0 \ne7d56000-e7eb2000 r-xp 00000000 b3:03 1963                               /system/lib/libstagefright_soft_vpxenc.so\ne7eb2000-e7eb4000 r--p 0015b000 b3:03 1963                               /system/lib/libstagefright_soft_vpxenc.so\ne7eb4000-e7eb5000 rw-p 0015d000 b3:03 1963                               /system/lib/libstagefright_soft_vpxenc.so\ne7eb5000-e7eb7000 rw-p 00000000 00:00 0                                  [anon:.bss]\ne7ec4000-e7eea000 r-xp 00000000 b3:03 1812                               /system/lib/libstagefright_soft_mpeg4enc.so\ne7eea000-e7eeb000 ---p 00000000 00:00 0 \ne7eeb000-e7eec000 r--p 00026000 b3:03 1812                               /system/lib/libstagefright_soft_mpeg4enc.so\ne7eec000-e7eed000 rw-p 00027000 b3:03 1812                               /system/lib/libstagefright_soft_mpeg4enc.so\ne7f0c000-e7f0d000 ---p 00000000 00:00 0                                  [anon:thread stack guard page]\ne7f0d000-e8009000 rw-p 00000000 00:00 0 \ne8009000-e800a000 ---p 00000000 00:00 0                                  [anon:thread stack guard page]\ne800a000-e8106000 rw-p 00000000 00:00 0 \ne8106000-e8107000 ---p 00000000 00:00 0                                  [anon:thread stack guard page]\ne8107000-e8203000 rw-p 00000000 00:00 0 \ne8260000-e82b6000 r-xp 00000000 b3:03 1626                               /system/lib/libstagefright_soft_avcenc.so\ne82b6000-e82b7000 ---p 00000000 00:00 0 \ne82b7000-e82b8000 r--p 00056000 b3:03 1626                               /system/lib/libstagefright_soft_avcenc.so\ne82b8000-e82b9000 rw-p 00057000 b3:03 1626                               /system/lib/libstagefright_soft_avcenc.so\ne82d0000-e82d5000 r-xp 00000000 b3:08 322                                /vendor/lib/lib_omx_wmv_dec_v2_arm11_elinux.so\ne82d5000-e82d6000 r--p 00004000 b3:08 322                                /vendor/lib/lib_omx_wmv_dec_v2_arm11_elinux.so\ne82d6000-e82d7000 rw-p 00005000 b3:08 322                                /vendor/lib/lib_omx_wmv_dec_v2_arm11_elinux.so\ne8300000-e8800000 rw-p 00000000 00:00 0                                  [anon:libc_malloc]\ne885b000-e885c000 ---p 00000000 00:00 0                                  [anon:thread stack guard page]\ne885c000-e8958000 rw-p 00000000 00:00 0 \ne89cb000-e8a37000 r-xp 00000000 b3:03 1744                               /system/lib/libstagefright_soft_vpxdec.so\ne8a37000-e8a38000 r--p 0006b000 b3:03 1744                               /system/lib/libstagefright_soft_vpxdec.so\ne8a38000-e8a39000 rw-p 0006c000 b3:03 1744                               /system/lib/libstagefright_soft_vpxdec.so\ne8a55000-e8a56000 ---p 00000000 00:00 0                                  [anon:thread stack guard page]\ne8a56000-e8b52000 rw-p 00000000 00:00 0 \ne8b89000-e8b8e000 r-xp 00000000 b3:08 383                                /vendor/lib/lib_omx_sorenson_dec_v2_arm11_elinux.so\ne8b8e000-e8b8f000 ---p 00000000 00:00 0 \ne8b8f000-e8b90000 r--p 00005000 b3:08 383                                /vendor/lib/lib_omx_sorenson_dec_v2_arm11_elinux.so\ne8b90000-e8b91000 rw-p 00006000 b3:08 383                                /vendor/lib/lib_omx_sorenson_dec_v2_arm11_elinux.so\ne8be0000-e8be6000 r-xp 00000000 b3:08 374                                /vendor/lib/lib_H263_dec_v2_arm11_elinux.so\ne8be6000-e8be7000 r--p 00005000 b3:08 374                                /vendor/lib/lib_H263_dec_v2_arm11_elinux.so\ne8c01000-e8c71000 r-xp 00000000 b3:03 1794                               /system/lib/libstagefright_soft_hevcdec.so\ne8c71000-e8c72000 ---p 00000000 00:00 0 \ne8c72000-e8c73000 r--p 00070000 b3:03 1794                               /system/lib/libstagefright_soft_hevcdec.so\ne8c73000-e8c74000 rw-p 00071000 b3:03 1794                               /system/lib/libstagefright_soft_hevcdec.so\ne8c87000-e8ca3000 r-xp 00000000 b3:03 1952                               /system/lib/libstagefright_soft_mpeg4dec.so\ne8ca3000-e8ca4000 ---p 00000000 00:00 0 \ne8ca4000-e8ca5000 r--p 0001c000 b3:03 1952                               /system/lib/libstagefright_soft_mpeg4dec.so\ne8ca5000-e8ca6000 rw-p 0001d000 b3:03 1952                               /system/lib/libstagefright_soft_mpeg4dec.so\ne8cd2000-e8d2a000 r-xp 00000000 b3:03 1856                               /system/lib/libstagefright_soft_avcdec.so\ne8d2a000-e8d2b000 ---p 00000000 00:00 0 \ne8d2b000-e8d2c000 r--p 00058000 b3:03 1856                               /system/lib/libstagefright_soft_avcdec.so\ne8d2c000-e8d2d000 rw-p 00059000 b3:03 1856                               /system/lib/libstagefright_soft_avcdec.so\ne8d4c000-e8d57000 r-xp 00000000 b3:08 372                                /vendor/lib/lib_omx_vpu_dec_v2_arm11_elinux.so\ne8d57000-e8d58000 ---p 00000000 00:00 0 \ne8d58000-e8d59000 r--p 0000b000 b3:08 372                                /vendor/lib/lib_omx_vpu_dec_v2_arm11_elinux.so\ne8d59000-e8d5a000 rw-p 0000c000 b3:08 372                                /vendor/lib/lib_omx_vpu_dec_v2_arm11_elinux.so\ne8da5000-e8dab000 r-xp 00000000 b3:08 412                                /vendor/lib/lib_vpu_wrapper.so\ne8dab000-e8dac000 r--p 00005000 b3:08 412                                /vendor/lib/lib_vpu_wrapper.so\ne8dac000-e8dad000 rw-p 00006000 b3:08 412                                /vendor/lib/lib_vpu_wrapper.so\ne8dad000-e8db1000 rw-p 00000000 00:00 0                                  [anon:.bss]\ne8dca000-e8e98000 r-xp 00000000 b3:08 280                                /vendor/lib/libvpu-malone.so\ne8e98000-e8e99000 r--p 000cd000 b3:08 280                                /vendor/lib/libvpu-malone.so\ne8e99000-e8e9a000 rw-p 000ce000 b3:08 280                                /vendor/lib/libvpu-malone.so\ne8e9a000-e96be000 rw-p 00000000 00:00 0                                  [anon:.bss]\ne96ce000-e96ef000 r-xp 00000000 b3:03 1740                               /system/lib/libstagefright_soft_flacenc.so\ne96ef000-e96f0000 ---p 00000000 00:00 0 \ne96f0000-e96f1000 r--p 00021000 b3:03 1740                               /system/lib/libstagefright_soft_flacenc.so\ne96f1000-e96f2000 rw-p 00022000 b3:03 1740                               /system/lib/libstagefright_soft_flacenc.so\ne9706000-e9723000 r-xp 00000000 b3:03 1945                               /system/lib/libstagefright_soft_amrwbenc.so\ne9723000-e9724000 r--p 0001c000 b3:03 1945                               /system/lib/libstagefright_soft_amrwbenc.so\ne9724000-e972a000 rw-p 0001d000 b3:03 1945                               /system/lib/libstagefright_soft_amrwbenc.so\ne976a000-e976d000 r-xp 00000000 b3:03 1786                               /system/lib/libstagefright_enc_common.so\ne976d000-e976e000 r--p 00002000 b3:03 1786                               /system/lib/libstagefright_enc_common.so\ne976e000-e976f000 rw-p 00003000 b3:03 1786                               /system/lib/libstagefright_enc_common.so\ne97ab000-e97bd000 r-xp 00000000 b3:03 1894                               /system/lib/libstagefright_soft_amrnbenc.so\ne97bd000-e97be000 ---p 00000000 00:00 0 \ne97be000-e97bf000 r--p 00012000 b3:03 1894                               /system/lib/libstagefright_soft_amrnbenc.so\ne97bf000-e97c0000 rw-p 00013000 b3:03 1894                               /system/lib/libstagefright_soft_amrnbenc.so\ne97c4000-e9814000 r-xp 00000000 b3:03 1737                               /system/lib/libstagefright_soft_aacenc.so\ne9814000-e9816000 r--p 0004f000 b3:03 1737                               /system/lib/libstagefright_soft_aacenc.so\ne9816000-e9817000 rw-p 00051000 b3:03 1737                               /system/lib/libstagefright_soft_aacenc.so\ne9840000-e9844000 r-xp 00000000 b3:08 336                                /vendor/lib/lib_omx_wma_dec_v2_arm11_elinux.so\ne9844000-e9845000 r--p 00003000 b3:08 336                                /vendor/lib/lib_omx_wma_dec_v2_arm11_elinux.so\ne9845000-e9846000 rw-p 00004000 b3:08 336                                /vendor/lib/lib_omx_wma_dec_v2_arm11_elinux.so\ne9898000-e989f000 r-xp 00000000 b3:03 1851                               /system/lib/libstagefright_soft_vorbisdec.so\ne989f000-e98a0000 r--p 00006000 b3:03 1851                               /system/lib/libstagefright_soft_vorbisdec.so\ne98a0000-e98a1000 rw-p 00007000 b3:03 1851                               /system/lib/libstagefright_soft_vorbisdec.so\ne98d5000-e98f4000 r-xp 00000000 b3:03 1676                               /system/lib/libvorbisidec.so\ne98f4000-e98f5000 r--p 0001e000 b3:03 1676                               /system/lib/libvorbisidec.so\ne98f5000-e98f6000 rw-p 0001f000 b3:03 1676                               /system/lib/libvorbisidec.so\ne992f000-e9935000 r-xp 00000000 b3:03 1712                               /system/lib/libstagefright_soft_rawdec.so\ne9935000-e9936000 r--p 00005000 b3:03 1712                               /system/lib/libstagefright_soft_rawdec.so\ne9936000-e9937000 rw-p 00006000 b3:03 1712                               /system/lib/libstagefright_soft_rawdec.so\ne995e000-e9962000 r-xp 00000000 b3:08 418                                /vendor/lib/lib_omx_ra_dec_v2_arm11_elinux.so\ne9962000-e9963000 r--p 00003000 b3:08 418                                /vendor/lib/lib_omx_ra_dec_v2_arm11_elinux.so\ne9963000-e9964000 rw-p 00004000 b3:08 418                                /vendor/lib/lib_omx_ra_dec_v2_arm11_elinux.so\ne99b5000-e99f3000 r-xp 00000000 b3:03 1728                               /system/lib/libopus.so\ne99f3000-e99f4000 ---p 00000000 00:00 0 \ne99f4000-e99f5000 r--p 0003e000 b3:03 1728                               /system/lib/libopus.so\ne99f5000-e99f6000 rw-p 0003f000 b3:03 1728                               /system/lib/libopus.so\ne9a19000-e9a20000 r-xp 00000000 b3:03 1753                               /system/lib/libstagefright_soft_opusdec.so\ne9a20000-e9a21000 ---p 00000000 00:00 0 \ne9a21000-e9a22000 r--p 00007000 b3:03 1753                               /system/lib/libstagefright_soft_opusdec.so\ne9a22000-e9a23000 rw-p 00008000 b3:03 1753                               /system/lib/libstagefright_soft_opusdec.so\ne9a50000-e9a63000 r-xp 00000000 b3:03 1631                               /system/lib/libstagefright_soft_mp3dec.so\ne9a63000-e9a64000 ---p 00000000 00:00 0 \ne9a64000-e9a65000 r--p 00013000 b3:03 1631                               /system/lib/libstagefright_soft_mp3dec.so\ne9a65000-e9a66000 rw-p 00014000 b3:03 1631                               /system/lib/libstagefright_soft_mp3dec.so\ne9a88000-e9a90000 r-xp 00000000 b3:03 1803                               /system/lib/libstagefright_soft_gsmdec.so\ne9a90000-e9a91000 r--p 00007000 b3:03 1803                               /system/lib/libstagefright_soft_gsmdec.so\ne9a91000-e9a92000 rw-p 00008000 b3:03 1803                               /system/lib/libstagefright_soft_gsmdec.so\ne9af0000-e9af5000 r-xp 00000000 b3:03 1632                               /system/lib/libstagefright_soft_g711dec.so\ne9af5000-e9af6000 ---p 00000000 00:00 0 \ne9af6000-e9af7000 r--p 00005000 b3:03 1632                               /system/lib/libstagefright_soft_g711dec.so\ne9af7000-e9af8000 rw-p 00006000 b3:03 1632                               /system/lib/libstagefright_soft_g711dec.so\ne9b34000-e9b38000 r-xp 00000000 b3:08 419                                /vendor/lib/lib_omx_ec3_dec_v2_arm11_elinux.so\ne9b38000-e9b39000 r--p 00003000 b3:08 419                                /vendor/lib/lib_omx_ec3_dec_v2_arm11_elinux.so\ne9b39000-e9b3a000 rw-p 00004000 b3:08 419                                /vendor/lib/lib_omx_ec3_dec_v2_arm11_elinux.so\ne9b44000-e9b45000 ---p 00000000 00:00 0                                  [anon:thread stack guard page]\ne9b45000-e9c41000 rw-p 00000000 00:00 0 \ne9c41000-e9c5e000 r-xp 00000000 b3:03 1656                               /system/lib/libstagefright_soft_amrdec.so\ne9c5e000-e9c5f000 ---p 00000000 00:00 0 \ne9c5f000-e9c60000 r--p 0001d000 b3:03 1656                               /system/lib/libstagefright_soft_amrdec.so\ne9c60000-e9c61000 rw-p 0001e000 b3:03 1656                               /system/lib/libstagefright_soft_amrdec.so\ne9c80000-e9d00000 rw-p 00000000 00:00 0                                  [anon:libc_malloc]\ne9d42000-e9d50000 r-xp 00000000 b3:03 1661                               /system/lib/libstagefright_amrnb_common.so\ne9d50000-e9d51000 r--p 0000d000 b3:03 1661                               /system/lib/libstagefright_amrnb_common.so\ne9d51000-e9d52000 rw-p 0000e000 b3:03 1661                               /system/lib/libstagefright_amrnb_common.so\ne9d83000-e9d9b000 r-xp 00000000 b3:08 330                                /vendor/lib/lib_omx_common_v2_arm11_elinux.so\ne9d9b000-e9d9c000 ---p 00000000 00:00 0 \ne9d9c000-e9d9d000 r--p 00018000 b3:08 330                                /vendor/lib/lib_omx_common_v2_arm11_elinux.so\ne9d9d000-e9d9f000 rw-p 00019000 b3:08 330                                /vendor/lib/lib_omx_common_v2_arm11_elinux.so\ne9de6000-e9dea000 r-xp 00000000 b3:08 369                                /vendor/lib/lib_omx_ac3_dec_v2_arm11_elinux.so\ne9dea000-e9deb000 r--p 00003000 b3:08 369                                /vendor/lib/lib_omx_ac3_dec_v2_arm11_elinux.so\ne9deb000-e9dec000 rw-p 00004000 b3:08 369                                /vendor/lib/lib_omx_ac3_dec_v2_arm11_elinux.so\ne9e24000-e9e6d000 r-xp 00000000 b3:03 1934                               /system/lib/libstagefright_soft_aacdec.so\ne9e6d000-e9e6f000 r--p 00048000 b3:03 1934                               /system/lib/libstagefright_soft_aacdec.so\ne9e6f000-e9e70000 rw-p 0004a000 b3:03 1934                               /system/lib/libstagefright_soft_aacdec.so\ne9e80000-e9f00000 rw-p 00000000 00:00 0                                  [anon:libc_malloc]\ne9f45000-e9f46000 ---p 00000000 00:00 0                                  [anon:thread stack guard page]\ne9f46000-ea042000 rw-p 00000000 00:00 0 \nea042000-ea050000 r-xp 00000000 b3:08 425                                /vendor/lib/lib_omx_utils_v2_arm11_elinux.so\nea050000-ea051000 r--p 0000d000 b3:08 425                                /vendor/lib/lib_omx_utils_v2_arm11_elinux.so\nea051000-ea052000 rw-p 0000e000 b3:08 425                                /vendor/lib/lib_omx_utils_v2_arm11_elinux.so\nea08c000-ea097000 r-xp 00000000 b3:08 281                                /vendor/lib/lib_omx_tunneled_decoder_arm11_elinux.so\nea097000-ea098000 r--p 0000a000 b3:08 281                                /vendor/lib/lib_omx_tunneled_decoder_arm11_elinux.so\nea098000-ea099000 rw-p 0000b000 b3:08 281                                /vendor/lib/lib_omx_tunneled_decoder_arm11_elinux.so\nea0fb000-ea0fe000 r-xp 00000000 b3:08 432                                /vendor/lib/lib_omx_res_mgr_v2_arm11_elinux.so\nea0fe000-ea0ff000 r--p 00002000 b3:08 432                                /vendor/lib/lib_omx_res_mgr_v2_arm11_elinux.so\nea0ff000-ea100000 rw-p 00003000 b3:08 432                                /vendor/lib/lib_omx_res_mgr_v2_arm11_elinux.so\nea134000-ea13b000 r-xp 00000000 b3:08 400                                /vendor/lib/libstagefrighthw.so\nea13b000-ea13c000 r--p 00006000 b3:08 400                                /vendor/lib/libstagefrighthw.so\nea13c000-ea13d000 rw-p 00007000 b3:08 400                                /vendor/lib/libstagefrighthw.so\nea157000-ea15d000 r-xp 00000000 b3:08 331                                /vendor/lib/lib_omx_core_v2_arm11_elinux.so\nea15d000-ea15e000 r--p 00005000 b3:08 331                                /vendor/lib/lib_omx_core_v2_arm11_elinux.so\nea15e000-ea15f000 rw-p 00006000 b3:08 331                                /vendor/lib/lib_omx_core_v2_arm11_elinux.so\nea1b2000-ea1b7000 r-xp 00000000 b3:08 386                                /vendor/lib/lib_omx_osal_v2_arm11_elinux.so\nea1b7000-ea1b8000 r--p 00004000 b3:08 386                                /vendor/lib/lib_omx_osal_v2_arm11_elinux.so\nea1b8000-ea1b9000 rw-p 00005000 b3:08 386                                /vendor/lib/lib_omx_osal_v2_arm11_elinux.so\nea1c2000-ea1c7000 r-xp 00000000 b3:08 334                                /vendor/lib/lib_omx_core_mgr_v2_arm11_elinux.so\nea1c7000-ea1c8000 r--p 00004000 b3:08 334                                /vendor/lib/lib_omx_core_mgr_v2_arm11_elinux.so\nea1c8000-ea1c9000 rw-p 00005000 b3:08 334                                /vendor/lib/lib_omx_core_mgr_v2_arm11_elinux.so\nea200000-ea280000 rw-p 00000000 00:00 0                                  [anon:libc_malloc]\nea283000-ea284000 ---p 00000000 00:00 0                                  [anon:thread stack guard page]\nea284000-ea380000 rw-p 00000000 00:00 0 \nea380000-ea400000 rw-p 00000000 00:00 0                                  [anon:libc_malloc]\nea410000-ea479000 r--p 00000000 b3:03 1872                               /system/lib/libbinder.so\nea479000-ea47a000 ---p 00000000 00:00 0                                  [anon:thread stack guard page]\nea47a000-ea576000 rw-p 00000000 00:00 0 \nea576000-ea674000 r--p 00000000 00:12 12348                              /dev/hwbinder\nea674000-ea772000 r--p 00000000 00:12 12297                              /dev/vndbinder\nea772000-ea776000 r-xp 00000000 b3:03 1792                               /system/lib/libnetd_client.so\nea776000-ea777000 r--p 00003000 b3:03 1792                               /system/lib/libnetd_client.so\nea777000-ea778000 rw-p 00004000 b3:03 1792                               /system/lib/libnetd_client.so\nea780000-ea880000 rw-p 00000000 00:00 0                                  [anon:libc_malloc]\nea8e1000-ea8ef000 r-xp 00000000 b3:03 1776                               /system/lib/vndk-sp/libbase.so\nea8ef000-ea8f0000 r--p 0000d000 b3:03 1776                               /system/lib/vndk-sp/libbase.so\nea8f0000-ea8f1000 rw-p 0000e000 b3:03 1776                               /system/lib/vndk-sp/libbase.so\nea92b000-ea92e000 r-xp 00000000 b3:03 1789                               /system/lib/android.hardware.configstore-utils.so\nea92e000-ea92f000 r--p 00002000 b3:03 1789                               /system/lib/android.hardware.configstore-utils.so\nea92f000-ea930000 rw-p 00003000 b3:03 1789                               /system/lib/android.hardware.configstore-utils.so\nea94a000-ea962000 r-xp 00000000 b3:03 1891                               /system/lib/libui.so\nea962000-ea963000 ---p 00000000 00:00 0 \nea963000-ea964000 r--p 00018000 b3:03 1891                               /system/lib/libui.so\nea964000-ea965000 rw-p 00019000 b3:03 1891                               /system/lib/libui.so\nea9a4000-ea9b3000 r-xp 00000000 b3:08 378                                /vendor/lib/libminijail_vendor.so\nea9b3000-ea9b6000 r--p 0000e000 b3:08 378                                /vendor/lib/libminijail_vendor.so\nea9b6000-ea9b7000 rw-p 00011000 b3:08 378                                /vendor/lib/libminijail_vendor.so\nea9e4000-ea9f9000 r-xp 00000000 b3:03 1778                               /system/lib/vndk-sp/libutils.so\nea9f9000-ea9fa000 ---p 00000000 00:00 0 \nea9fa000-ea9fb000 r--p 00015000 b3:03 1778                               /system/lib/vndk-sp/libutils.so\nea9fb000-ea9fc000 rw-p 00016000 b3:03 1778                               /system/lib/vndk-sp/libutils.so\neaa16000-eaa34000 r-xp 00000000 b3:03 1971                               /system/lib/android.hardware.configstore@1.0.so\neaa34000-eaa36000 r--p 0001d000 b3:03 1971                               /system/lib/android.hardware.configstore@1.0.so\neaa36000-eaa37000 rw-p 0001f000 b3:03 1971                               /system/lib/android.hardware.configstore@1.0.so\neaa40000-eaa43000 r-xp 00000000 b3:03 1623                               /system/lib/libdl.so\neaa43000-eaa44000 r--p 00002000 b3:03 1623                               /system/lib/libdl.so\neaa44000-eaa45000 rw-p 00003000 b3:03 1623                               /system/lib/libdl.so\neaa45000-eaa46000 rw-p 00000000 00:00 0                                  [anon:.bss]\neaa84000-eaaa5000 r-xp 00000000 b3:03 1720                               /system/lib/libstagefright_foundation.so\neaaa5000-eaaa6000 ---p 00000000 00:00 0 \neaaa6000-eaaa7000 r--p 00021000 b3:03 1720                               /system/lib/libstagefright_foundation.so\neaaa7000-eaaa8000 rw-p 00022000 b3:03 1720                               /system/lib/libstagefright_foundation.so\neaad2000-eaaeb000 r-xp 00000000 b3:03 1762                               /system/lib/vndk-sp/android.hardware.graphics.mapper@2.0.so\neaaeb000-eaaed000 r--p 00018000 b3:03 1762                               /system/lib/vndk-sp/android.hardware.graphics.mapper@2.0.so\neaaed000-eaaee000 rw-p 0001a000 b3:03 1762                               /system/lib/vndk-sp/android.hardware.graphics.mapper@2.0.so\neab13000-eab17000 r-xp 00000000 b3:03 1813                               /system/lib/libpowermanager.so\neab17000-eab18000 ---p 00000000 00:00 0 \neab18000-eab19000 r--p 00004000 b3:03 1813                               /system/lib/libpowermanager.so\neab19000-eab1a000 rw-p 00005000 b3:03 1813                               /system/lib/libpowermanager.so\neab5a000-eab5e000 r-xp 00000000 b3:03 1628                               /system/lib/android.hidl.token@1.0-utils.so\neab5e000-eab5f000 r--p 00003000 b3:03 1628                               /system/lib/android.hidl.token@1.0-utils.so\neab5f000-eab60000 rw-p 00004000 b3:03 1628                               /system/lib/android.hidl.token@1.0-utils.so\neabb0000-eabb3000 r-xp 00000000 b3:03 1831                               /system/lib/libsync.so\neabb3000-eabb4000 r--p 00002000 b3:03 1831                               /system/lib/libsync.so\neabb4000-eabb5000 rw-p 00003000 b3:03 1831                               /system/lib/libsync.so\neabd2000-eabf3000 r-xp 00000000 b3:03 1674                               /system/lib/libm.so\neabf3000-eabf4000 r--p 00020000 b3:03 1674                               /system/lib/libm.so\neabf4000-eabf5000 rw-p 00021000 b3:03 1674                               /system/lib/libm.so\neac1b000-eac21000 r-xp 00000000 b3:03 1750                               /system/lib/android.hardware.media@1.0.so\neac21000-eac22000 r--p 00005000 b3:03 1750                               /system/lib/android.hardware.media@1.0.so\neac22000-eac23000 rw-p 00006000 b3:03 1750                               /system/lib/android.hardware.media@1.0.so\neac61000-eac65000 r-xp 00000000 b3:08 436                                /vendor/lib/libavservices_minijail_vendor.so\neac65000-eac66000 r--p 00003000 b3:08 436                                /vendor/lib/libavservices_minijail_vendor.so\neac66000-eac67000 rw-p 00004000 b3:08 436                                /vendor/lib/libavservices_minijail_vendor.so\neac80000-eaca7000 r-xp 00000000 b3:03 1673                               /system/lib/libmedia_omx.so\neaca7000-eacae000 r--p 00026000 b3:03 1673                               /system/lib/libmedia_omx.so\neacae000-eacaf000 rw-p 0002d000 b3:03 1673                               /system/lib/libmedia_omx.so\neacda000-eace6000 r-xp 00000000 b3:03 1768                               /system/lib/vndk-sp/libcutils.so\neace6000-eace7000 ---p 00000000 00:00 0 \neace7000-eace8000 r--p 0000c000 b3:03 1768                               /system/lib/vndk-sp/libcutils.so\neace8000-eace9000 rw-p 0000d000 b3:03 1768                               /system/lib/vndk-sp/libcutils.so\nead1b000-ead35000 r-xp 00000000 b3:03 1652                               /system/lib/libEGL.so\nead35000-ead37000 r--p 00019000 b3:03 1652                               /system/lib/libEGL.so\nead37000-ead38000 rw-p 0001b000 b3:03 1652                               /system/lib/libEGL.so\nead38000-ead3b000 rw-p 00000000 00:00 0                                  [anon:.bss]\nead6a000-ead6e000 r-xp 00000000 b3:08 355                                /vendor/lib/libmediacodecservice.so\nead6e000-ead6f000 ---p 00000000 00:00 0 \nead6f000-ead70000 r--p 00004000 b3:08 355                                /vendor/lib/libmediacodecservice.so\nead70000-ead71000 rw-p 00005000 b3:08 355                                /vendor/lib/libmediacodecservice.so\nead87000-ead8a000 r-xp 00000000 b3:03 1941                               /system/lib/libvndksupport.so\nead8a000-ead8b000 r--p 00002000 b3:03 1941                               /system/lib/libvndksupport.so\nead8b000-ead8c000 rw-p 00003000 b3:03 1941                               /system/lib/libvndksupport.so\neadc6000-eaddb000 r-xp 00000000 b3:03 1914                               /system/lib/libexpat.so\neaddb000-eaddd000 r--p 00014000 b3:03 1914                               /system/lib/libexpat.so\neaddd000-eadde000 rw-p 00016000 b3:03 1914                               /system/lib/libexpat.so\neae29000-eaeb3000 r-xp 00000000 b3:03 1758                               /system/lib/vndk-sp/libc++.so\neaeb3000-eaeb4000 ---p 00000000 00:00 0 \neaeb4000-eaeb8000 r--p 0008a000 b3:03 1758                               /system/lib/vndk-sp/libc++.so\neaeb8000-eaeb9000 rw-p 0008e000 b3:03 1758                               /system/lib/vndk-sp/libc++.so\neaeb9000-eaeba000 rw-p 00000000 00:00 0                                  [anon:.bss]\neaecb000-eaed8000 r-xp 00000000 b3:03 1921                               /system/lib/libstagefright_xmlparser.so\neaed8000-eaed9000 r--p 0000c000 b3:03 1921                               /system/lib/libstagefright_xmlparser.so\neaed9000-eaeda000 rw-p 0000d000 b3:03 1921                               /system/lib/libstagefright_xmlparser.so\neaf25000-eaf74000 r-xp 00000000 b3:03 1663                               /system/lib/libstagefright_omx.so\neaf74000-eaf75000 ---p 00000000 00:00 0 \neaf75000-eaf7b000 r--p 0004f000 b3:03 1663                               /system/lib/libstagefright_omx.so\neaf7b000-eaf7c000 rw-p 00055000 b3:03 1663                               /system/lib/libstagefright_omx.so\neaf8e000-eaf92000 r-xp 00000000 b3:03 1895                               /system/lib/libstdc++.so\neaf92000-eaf93000 r--p 00003000 b3:03 1895                               /system/lib/libstdc++.so\neaf93000-eaf94000 rw-p 00004000 b3:03 1895                               /system/lib/libstdc++.so\neafe0000-eaff3000 r-xp 00000000 b3:03 1763                               /system/lib/vndk-sp/libbacktrace.so\neaff3000-eaff4000 ---p 00000000 00:00 0 \neaff4000-eaff5000 r--p 00013000 b3:03 1763                               /system/lib/vndk-sp/libbacktrace.so\neaff5000-eaff6000 rw-p 00014000 b3:03 1763                               /system/lib/vndk-sp/libbacktrace.so\neb02f000-eb033000 r-xp 00000000 b3:03 1881                               /system/lib/libcap.so\neb033000-eb034000 r--p 00003000 b3:03 1881                               /system/lib/libcap.so\neb034000-eb035000 rw-p 00004000 b3:03 1881                               /system/lib/libcap.so\neb057000-eb05b000 r-xp 00000000 b3:03 1916                               /system/lib/libhidlmemory.so\neb05b000-eb05c000 ---p 00000000 00:00 0 \neb05c000-eb05d000 r--p 00004000 b3:03 1916                               /system/lib/libhidlmemory.so\neb05d000-eb05e000 rw-p 00005000 b3:03 1916                               /system/lib/libhidlmemory.so\neb08d000-eb0a1000 r-xp 00000000 b3:03 1774                               /system/lib/vndk-sp/android.hardware.graphics.allocator@2.0.so\neb0a1000-eb0a2000 ---p 00000000 00:00 0 \neb0a2000-eb0a3000 r--p 00014000 b3:03 1774                               /system/lib/vndk-sp/android.hardware.graphics.allocator@2.0.so\neb0a3000-eb0a4000 rw-p 00015000 b3:03 1774                               /system/lib/vndk-sp/android.hardware.graphics.allocator@2.0.so\neb0dc000-eb0e1000 r-xp 00000000 b3:03 1972                               /system/lib/libnativeloader.so\neb0e1000-eb0e2000 ---p 00000000 00:00 0 \neb0e2000-eb0e3000 r--p 00005000 b3:03 1972                               /system/lib/libnativeloader.so\neb0e3000-eb0e4000 rw-p 00006000 b3:03 1972                               /system/lib/libnativeloader.so\neb100000-eb11c000 r-xp 00000000 b3:03 1927                               /system/lib/android.hidl.memory@1.0.so\neb11c000-eb11d000 ---p 00000000 00:00 0 \neb11d000-eb11f000 r--p 0001c000 b3:03 1927                               /system/lib/android.hidl.memory@1.0.so\neb11f000-eb120000 rw-p 0001e000 b3:03 1927                               /system/lib/android.hidl.memory@1.0.so\neb179000-eb17d000 r-xp 00000000 b3:03 1959                               /system/lib/libnativebridge.so\neb17d000-eb17e000 r--p 00003000 b3:03 1959                               /system/lib/libnativebridge.so\neb17e000-eb17f000 rw-p 00004000 b3:03 1959                               /system/lib/libnativebridge.so\neb181000-eb184000 r-xp 00000000 b3:03 1766                               /system/lib/vndk-sp/libhardware.so\neb184000-eb185000 r--p 00002000 b3:03 1766                               /system/lib/vndk-sp/libhardware.so\neb185000-eb186000 rw-p 00003000 b3:03 1766                               /system/lib/vndk-sp/libhardware.so\neb1de000-eb1f9000 r-xp 00000000 b3:03 1772                               /system/lib/vndk-sp/libhwbinder.so\neb1f9000-eb1fb000 r--p 0001a000 b3:03 1772                               /system/lib/vndk-sp/libhwbinder.so\neb1fb000-eb1fc000 rw-p 0001c000 b3:03 1772                               /system/lib/vndk-sp/libhwbinder.so\neb20a000-eb220000 r-xp 00000000 b3:03 1764                               /system/lib/vndk-sp/liblzma.so\neb220000-eb221000 ---p 00000000 00:00 0 \neb221000-eb222000 r--p 00016000 b3:03 1764                               /system/lib/vndk-sp/liblzma.so\neb222000-eb223000 rw-p 00017000 b3:03 1764                               /system/lib/vndk-sp/liblzma.so\neb223000-eb229000 rw-p 00000000 00:00 0                                  [anon:.bss]\neb246000-eb2a4000 r-xp 00000000 b3:03 1657                               /system/lib/android.hardware.media.omx@1.0.so\neb2a4000-eb2a9000 r--p 0005d000 b3:03 1657                               /system/lib/android.hardware.media.omx@1.0.so\neb2a9000-eb2aa000 rw-p 00062000 b3:03 1657                               /system/lib/android.hardware.media.omx@1.0.so\neb2dc000-eb369000 r-xp 00000000 b3:03 1928                               /system/lib/libc.so\neb369000-eb36d000 r--p 0008c000 b3:03 1928                               /system/lib/libc.so\neb36d000-eb36f000 rw-p 00090000 b3:03 1928                               /system/lib/libc.so\neb36f000-eb370000 rw-p 00000000 00:00 0                                  [anon:.bss]\neb370000-eb371000 r--p 00000000 00:00 0                                  [anon:.bss]\neb371000-eb377000 rw-p 00000000 00:00 0                                  [anon:.bss]\neb39b000-eb3ad000 r-xp 00000000 b3:03 1681                               /system/lib/liblog.so\neb3ad000-eb3ae000 r--p 00011000 b3:03 1681                               /system/lib/liblog.so\neb3ae000-eb3af000 rw-p 00012000 b3:03 1681                               /system/lib/liblog.so\neb3d5000-eb3e9000 r-xp 00000000 b3:03 1767                               /system/lib/vndk-sp/libunwind.so\neb3e9000-eb3ea000 ---p 00000000 00:00 0 \neb3ea000-eb3eb000 r--p 00014000 b3:03 1767                               /system/lib/vndk-sp/libunwind.so\neb3eb000-eb3ec000 rw-p 00015000 b3:03 1767                               /system/lib/vndk-sp/libunwind.so\neb3ec000-eb432000 rw-p 00000000 00:00 0                                  [anon:.bss]\neb463000-eb466000 r-xp 00000000 b3:03 1933                               /system/lib/libgraphicsenv.so\neb466000-eb467000 r--p 00002000 b3:03 1933                               /system/lib/libgraphicsenv.so\neb467000-eb468000 rw-p 00003000 b3:03 1933                               /system/lib/libgraphicsenv.so\neb48a000-eb490000 r-xp 00000000 b3:03 1754                               /system/lib/libnativehelper.so\neb490000-eb491000 r--p 00005000 b3:03 1754                               /system/lib/libnativehelper.so\neb491000-eb492000 rw-p 00006000 b3:03 1754                               /system/lib/libnativehelper.so\neb4c8000-eb4fb000 r-xp 00000000 b3:03 1802                               /system/lib/android.hardware.graphics.bufferqueue@1.0.so\neb4fb000-eb4fc000 ---p 00000000 00:00 0 \neb4fc000-eb4ff000 r--p 00033000 b3:03 1802                               /system/lib/android.hardware.graphics.bufferqueue@1.0.so\neb4ff000-eb500000 rw-p 00036000 b3:03 1802                               /system/lib/android.hardware.graphics.bufferqueue@1.0.so\neb50b000-eb510000 r-xp 00000000 b3:03 1808                               /system/lib/libstagefright_omx_utils.so\neb510000-eb511000 r--p 00004000 b3:03 1808                               /system/lib/libstagefright_omx_utils.so\neb511000-eb512000 rw-p 00005000 b3:03 1808                               /system/lib/libstagefright_omx_utils.so\neb553000-eb563000 r-xp 00000000 b3:03 1887                               /system/lib/libGLESv2.so\neb563000-eb564000 r--p 0000f000 b3:03 1887                               /system/lib/libGLESv2.so\neb564000-eb565000 rw-p 00010000 b3:03 1887                               /system/lib/libGLESv2.so\neb589000-eb5e8000 r-xp 00000000 b3:03 1844                               /system/lib/libgui.so\neb5e8000-eb5f2000 r--p 0005e000 b3:03 1844                               /system/lib/libgui.so\neb5f2000-eb5f3000 rw-p 00068000 b3:03 1844                               /system/lib/libgui.so\neb623000-eb63d000 r-xp 00000000 b3:03 1770                               /system/lib/vndk-sp/libhidlbase.so\neb63d000-eb63e000 ---p 00000000 00:00 0 \neb63e000-eb63f000 r--p 0001a000 b3:03 1770                               /system/lib/vndk-sp/libhidlbase.so\neb63f000-eb640000 rw-p 0001b000 b3:03 1770                               /system/lib/vndk-sp/libhidlbase.so\neb65a000-eb6b7000 r-xp 00000000 b3:03 1872                               /system/lib/libbinder.so\neb6b7000-eb6bf000 r--p 0005c000 b3:03 1872                               /system/lib/libbinder.so\neb6bf000-eb6c0000 rw-p 00064000 b3:03 1872                               /system/lib/libbinder.so\neb6ef000-eb6f8000 r-xp 00000000 b3:03 1779                               /system/lib/vndk-sp/android.hardware.graphics.common@1.0.so\neb6f8000-eb6f9000 r--p 00008000 b3:03 1779                               /system/lib/vndk-sp/android.hardware.graphics.common@1.0.so\neb6f9000-eb6fa000 rw-p 00009000 b3:03 1779                               /system/lib/vndk-sp/android.hardware.graphics.common@1.0.so\neb704000-eb709000 r-xp 00000000 b3:03 1732                               /system/lib/libnativewindow.so\neb709000-eb70a000 r--p 00004000 b3:03 1732                               /system/lib/libnativewindow.so\neb70a000-eb70b000 rw-p 00005000 b3:03 1732                               /system/lib/libnativewindow.so\neb762000-eb777000 r-xp 00000000 b3:03 1733                               /system/lib/android.hidl.token@1.0.so\neb777000-eb778000 ---p 00000000 00:00 0 \neb778000-eb779000 r--p 00015000 b3:03 1733                               /system/lib/android.hidl.token@1.0.so\neb779000-eb77a000 rw-p 00016000 b3:03 1733                               /system/lib/android.hidl.token@1.0.so\neb789000-eb78a000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_vector]\neb78b000-eb7ab000 r--s 00000000 00:12 7982                               /dev/__properties__/u:object_r:default_prop:s0\neb7ab000-eb7f8000 r-xp 00000000 b3:03 1780                               /system/lib/vndk-sp/libhidltransport.so\neb7f8000-eb7f9000 ---p 00000000 00:00 0 \neb7f9000-eb7fd000 r--p 0004d000 b3:03 1780                               /system/lib/vndk-sp/libhidltransport.so\neb7fd000-eb7fe000 rw-p 00051000 b3:03 1780                               /system/lib/vndk-sp/libhidltransport.so\neb7fe000-eb81e000 r--s 00000000 00:12 8022                               /dev/__properties__/properties_serial\neb81e000-eb820000 rw-p 00000000 00:00 0                                  [anon:linker_alloc]\neb82e000-eb82f000 rw-p 00000000 00:00 0                                  [anon:linker_alloc]\neb835000-eb83d000 r--p 00000000 b3:08 412                                /vendor/lib/lib_vpu_wrapper.so\neb83d000-eb83e000 r--p 00000000 00:00 0                                  [anon:linker_alloc]\neb844000-eb845000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_vector]\neb846000-eb847000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_vector]\neb848000-eb851000 rw-p 00000000 00:00 0 \neb851000-eb852000 r--p 00000000 00:00 0                                  [anon:linker_alloc]\neb859000-eb85b000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_vector]\neb85b000-eb87b000 r--s 00000000 00:12 7992                               /dev/__properties__/u:object_r:fingerprint_prop:s0\neb87b000-eb87c000 r--p 00000000 00:00 0                                  [anon:linker_alloc]\neb87c000-eb87e000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_lob]\neb87e000-eb89e000 r--s 00000000 00:12 8008                               /dev/__properties__/u:object_r:log_tag_prop:s0\neb89e000-eb89f000 rw-p 00000000 00:00 0                                  [anon:linker_alloc]\neb89f000-eb8a1000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_small_objects]\neb8a1000-eb8a3000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_lob]\neb8a3000-eb8a4000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_small_objects]\neb8a4000-eb8a6000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_lob]\neb8a6000-eb8a7000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_small_objects]\neb8a7000-eb8a9000 r--p 00000000 00:00 0                                  [anon:linker_alloc]\neb8a9000-eb8af000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_lob]\neb8af000-eb8b1000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_small_objects]\neb8b1000-eb8b2000 rw-p 00000000 00:00 0 \neb8b2000-eb8d2000 r--s 00000000 00:12 7999                               /dev/__properties__/u:object_r:logd_prop:s0\neb8d2000-eb8f2000 r--s 00000000 00:12 7982                               /dev/__properties__/u:object_r:default_prop:s0\neb8f2000-eb8f3000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_vector]\neb8f3000-eb8f6000 rw-p 00000000 00:00 0 \neb8f6000-eb8f7000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_small_objects]\neb8f7000-eb8f9000 rw-p 00000000 00:00 0 \neb8f9000-eb8fa000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_small_objects]\neb8fa000-eb8fb000 r--p 00000000 00:00 0                                  [anon:linker_alloc]\neb8fb000-eb8fc000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_small_objects]\neb8fc000-eb8fd000 rw-p 00000000 00:00 0 \neb8fd000-eb8fe000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_small_objects]\neb8fe000-eb900000 rw-p 00000000 00:00 0 \neb900000-eb901000 rw-p 00000000 00:00 0                                  [anon:arc4random data]\neb901000-eb902000 rw-p 00000000 00:00 0                                  [anon:linker_alloc]\neb902000-eb904000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_small_objects]\neb904000-eb90f000 rw-p 00000000 00:00 0 \neb90f000-eb910000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_small_objects]\neb910000-eb91c000 rw-s 00000000 00:05 18331                              /dev/ashmem/AshmemAllocator_hidl (deleted)\neb91c000-eb928000 rw-s 00000000 00:05 18330                              /dev/ashmem/AshmemAllocator_hidl (deleted)\neb928000-eb934000 rw-s 00000000 00:05 29738                              /dev/ashmem/AshmemAllocator_hidl (deleted)\neb934000-eb93c000 rw-s 00000000 00:05 29737                              /dev/ashmem/AshmemAllocator_hidl (deleted)\neb93c000-eb944000 rw-s 00000000 00:05 26333                              /dev/ashmem/AshmemAllocator_hidl (deleted)\neb944000-eb94c000 rw-s 00000000 00:05 29735                              /dev/ashmem/AshmemAllocator_hidl (deleted)\neb94c000-eb94d000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_vector]\neb94d000-eb94e000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_small_objects]\neb94e000-eb94f000 rw-p 00000000 00:00 0 \neb94f000-eb950000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_small_objects]\neb950000-eb951000 ---p 00000000 00:00 0                                  [anon:thread signal stack guard page]\neb951000-eb955000 rw-p 00000000 00:00 0                                  [anon:thread signal stack]\neb955000-eb956000 r--p 00000000 00:00 0                                  [anon:linker_alloc]\neb956000-eb957000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neb957000-eb95a000 rw-p 00000000 00:00 0                                  [anon:bionic TLS]\neb95a000-eb95b000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neb95b000-eb95c000 ---p 00000000 00:00 0                                  [anon:thread signal stack guard page]\neb95c000-eb960000 rw-p 00000000 00:00 0                                  [anon:thread signal stack]\neb960000-eb961000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neb961000-eb964000 rw-p 00000000 00:00 0                                  [anon:bionic TLS]\neb964000-eb965000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neb965000-eb966000 ---p 00000000 00:00 0                                  [anon:thread signal stack guard page]\neb966000-eb96a000 rw-p 00000000 00:00 0                                  [anon:thread signal stack]\neb96a000-eb96b000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neb96b000-eb96e000 rw-p 00000000 00:00 0                                  [anon:bionic TLS]\neb96e000-eb96f000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neb96f000-eb970000 ---p 00000000 00:00 0                                  [anon:thread signal stack guard page]\neb970000-eb974000 rw-p 00000000 00:00 0                                  [anon:thread signal stack]\neb974000-eb975000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neb975000-eb978000 rw-p 00000000 00:00 0                                  [anon:bionic TLS]\neb978000-eb979000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neb979000-eb97a000 ---p 00000000 00:00 0                                  [anon:thread signal stack guard page]\neb97a000-eb97e000 rw-p 00000000 00:00 0                                  [anon:thread signal stack]\neb97e000-eb97f000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neb97f000-eb982000 rw-p 00000000 00:00 0                                  [anon:bionic TLS]\neb982000-eb983000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neb983000-eb984000 ---p 00000000 00:00 0                                  [anon:thread signal stack guard page]\neb984000-eb988000 rw-p 00000000 00:00 0                                  [anon:thread signal stack]\neb988000-eb989000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neb989000-eb98c000 rw-p 00000000 00:00 0                                  [anon:bionic TLS]\neb98c000-eb98d000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neb98d000-eb98e000 rw-p 00000000 00:00 0                                  [anon:linker_alloc]\neb98e000-eb98f000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_vector]\neb98f000-eb990000 ---p 00000000 00:00 0                                  [anon:thread signal stack guard page]\neb990000-eb994000 rw-p 00000000 00:00 0                                  [anon:thread signal stack]\neb994000-eb995000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neb995000-eb998000 rw-p 00000000 00:00 0                                  [anon:bionic TLS]\neb998000-eb999000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neb999000-eb99a000 ---p 00000000 00:00 0                                  [anon:thread signal stack guard page]\neb99a000-eb99e000 rw-p 00000000 00:00 0                                  [anon:thread signal stack]\neb99e000-eb99f000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neb99f000-eb9a2000 rw-p 00000000 00:00 0                                  [anon:bionic TLS]\neb9a2000-eb9a3000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neb9a3000-eb9a4000 ---p 00000000 00:00 0                                  [anon:thread signal stack guard page]\neb9a4000-eb9a8000 rw-p 00000000 00:00 0                                  [anon:thread signal stack]\neb9a8000-eb9a9000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neb9a9000-eb9ac000 rw-p 00000000 00:00 0                                  [anon:bionic TLS]\neb9ac000-eb9ad000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neb9ad000-eb9ae000 ---p 00000000 00:00 0                                  [anon:thread signal stack guard page]\neb9ae000-eb9b2000 rw-p 00000000 00:00 0                                  [anon:thread signal stack]\neb9b2000-eb9b3000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_vector]\neb9b3000-eb9b4000 r--p 00000000 00:00 0                                  [anon:linker_alloc]\neb9b4000-eb9b5000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_small_objects]\neb9b5000-eb9b6000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neb9b6000-eb9b9000 rw-p 00000000 00:00 0                                  [anon:bionic TLS]\neb9b9000-eb9ba000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neb9ba000-eb9bb000 r--p 00000000 00:00 0                                  [anon:linker_alloc]\neb9bb000-eb9bc000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_small_objects]\neb9bc000-eb9bd000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_vector]\neb9bd000-eb9be000 ---p 00000000 00:00 0                                  [anon:thread signal stack guard page]\neb9be000-eb9c2000 rw-p 00000000 00:00 0                                  [anon:thread signal stack]\neb9c2000-eb9c3000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neb9c3000-eb9c6000 rw-p 00000000 00:00 0                                  [anon:bionic TLS]\neb9c6000-eb9c7000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neb9c7000-eb9c8000 r--p 00000000 00:00 0                                  [anon:linker_alloc]\neb9c8000-eb9c9000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_small_objects]\neb9c9000-eb9ca000 rw-p 00000000 00:00 0 \neb9ca000-eb9cb000 ---p 00000000 00:00 0                                  [anon:thread signal stack guard page]\neb9cb000-eb9cf000 rw-p 00000000 00:00 0                                  [anon:thread signal stack]\neb9cf000-eb9d0000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neb9d0000-eb9d3000 rw-p 00000000 00:00 0                                  [anon:bionic TLS]\neb9d3000-eb9d4000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neb9d4000-eb9d5000 ---p 00000000 00:00 0                                  [anon:thread signal stack guard page]\neb9d5000-eb9d9000 rw-p 00000000 00:00 0                                  [anon:thread signal stack]\neb9d9000-eb9da000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neb9da000-eb9dd000 rw-p 00000000 00:00 0                                  [anon:bionic TLS]\neb9dd000-eb9de000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neb9de000-eb9fe000 r--s 00000000 00:12 8017                               /dev/__properties__/u:object_r:debug_prop:s0\neb9fe000-eb9ff000 r--p 00000000 00:00 0                                  [anon:linker_alloc]\neb9ff000-eba00000 ---p 00000000 00:00 0                                  [anon:thread signal stack guard page]\neba00000-eba04000 rw-p 00000000 00:00 0                                  [anon:thread signal stack]\neba04000-eba05000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neba05000-eba08000 rw-p 00000000 00:00 0                                  [anon:bionic TLS]\neba08000-eba09000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neba09000-eba0a000 ---p 00000000 00:00 0                                  [anon:thread signal stack guard page]\neba0a000-eba0e000 rw-p 00000000 00:00 0                                  [anon:thread signal stack]\neba0e000-eba0f000 rw-p 00000000 00:00 0                                  [anon:linker_alloc]\neba0f000-eba11000 r--p 00000000 00:00 0                                  [anon:linker_alloc]\neba11000-eba12000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neba12000-eba15000 rw-p 00000000 00:00 0                                  [anon:bionic TLS]\neba15000-eba16000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neba16000-eba17000 ---p 00000000 00:00 0                                  [anon:thread signal stack guard page]\neba17000-eba1b000 rw-p 00000000 00:00 0                                  [anon:thread signal stack]\neba1b000-eba1c000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neba1c000-eba1f000 rw-p 00000000 00:00 0                                  [anon:bionic TLS]\neba1f000-eba20000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\neba20000-eba40000 r--s 00000000 00:12 8010                               /dev/__properties__/u:object_r:hwservicemanager_prop:s0\neba40000-eba60000 r--s 00000000 00:12 8008                               /dev/__properties__/u:object_r:log_tag_prop:s0\neba60000-eba80000 r--s 00000000 00:12 7999                               /dev/__properties__/u:object_r:logd_prop:s0\neba80000-eba81000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_vector]\neba81000-eba82000 r--p 00000000 00:00 0                                  [anon:linker_alloc]\neba82000-eba83000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_small_objects]\neba83000-eba85000 r--p 00000000 00:00 0                                  [anon:linker_alloc]\neba85000-eba86000 rw-p 00000000 00:00 0                                  [anon:linker_alloc]\neba86000-eba88000 r--p 00000000 00:00 0                                  [anon:linker_alloc]\neba88000-ebaa8000 r--s 00000000 00:12 8017                               /dev/__properties__/u:object_r:debug_prop:s0\nebaa8000-ebac8000 r--s 00000000 00:12 8022                               /dev/__properties__/properties_serial\nebac8000-ebac9000 r--p 00000000 00:00 0                                  [anon:atexit handlers]\nebac9000-ebaca000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_small_objects]\nebaca000-ebacb000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_vector]\nebacb000-ebacc000 ---p 00000000 00:00 0 \nebacc000-ebacd000 rw-p 00000000 00:00 0 \nebacd000-ebace000 ---p 00000000 00:00 0 \nebace000-ebacf000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_lob]\nebacf000-ebad0000 r--p 00000000 00:00 0                                  [anon:linker_alloc]\nebad0000-ebad1000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_vector]\nebad1000-ebad2000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_small_objects]\nebad2000-ebad3000 r--p 00000000 00:00 0                                  [anon:linker_alloc]\nebad3000-ebad4000 rw-p 00000000 00:00 0                                  [anon:linker_alloc_small_objects]\nebad4000-ebad5000 r--p 00000000 00:00 0                                  [anon:atexit handlers]\nebad5000-ebad6000 ---p 00000000 00:00 0                                  [anon:thread signal stack guard page]\nebad6000-ebada000 rw-p 00000000 00:00 0                                  [anon:thread signal stack]\nebada000-ebadb000 rw-p 00000000 00:00 0                                  [anon:arc4random data]\nebadb000-ebadc000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\nebadc000-ebadf000 rw-p 00000000 00:00 0                                  [anon:bionic TLS]\nebadf000-ebae0000 ---p 00000000 00:00 0                                  [anon:bionic TLS guard]\nebae0000-ebb69000 r-xp 00000000 b3:03 1395                               /system/bin/linker\nebb69000-ebb6b000 r--p 00088000 b3:03 1395                               /system/bin/linker\nebb6b000-ebb6c000 rw-p 0008a000 b3:03 1395                               /system/bin/linker\nebb6c000-ebbb4000 rw-p 00000000 00:00 0 \nebbb4000-ebbb5000 r--p 00000000 00:00 0 \nebbb5000-ebbbb000 rw-p 00000000 00:00 0 \nffee3000-fff04000 rw-p 00000000 00:00 0                                  [stack]\nffff0000-ffff1000 r-xp 00000000 00:00 0                                  [vectors]\n",
+			"file": "/media/xqli/B4FE-5315/tombstone_00",
+			"file_size": 62011,
+			"file_write_time": 131887288540000000,
+			"settings":
+			{
+				"buffer_size": 62011,
+				"encoding": "UTF-8",
+				"line_ending": "Unix"
+			}
+		},
+		{
+			"file": "/work/workcodes/imx8-android-o/vendor/nxp/fsl_imx_omx/OpenMAXIL/src/component/vpu_wrapper/Android.mk",
+			"settings":
+			{
+				"buffer_size": 6904,
 				"line_ending": "Unix"
 			}
 		}
@@ -65,16 +197,35 @@
 	[
 		"/home/xqli/work/notes",
 		"/home/xqli/work/notes/8_1_notes",
+		"/home/xqli/work/notes/8_1_notes/media",
+		"/home/xqli/work/notes/8_1_notes/media/mediacodec",
+		"/home/xqli/work/notes/8_1_notes/media/mediacodec/Omx",
+		"/home/xqli/work/notes/8_1_notes/media/mediacodec/Omx/OMXMaster",
+		"/home/xqli/work/notes/8_1_notes/media/mediacodec/OmxStore",
+		"/home/xqli/work/notes/8_1_notes/media/mediaplayer",
+		"/home/xqli/work/notes/8_1_notes/media/mediaplayer/mediaserver",
 		"/home/xqli/work/notes/8_1_notes/vndbinder"
 	],
 	"file_history":
 	[
-		"/home/xqli/work/notes/8_1_notes/media/mediacodec/Omx/Omx_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/media/mediaplayer/mediaserver/MediaPlayerService/NuPlayerDriver/GenericSource/MediaExtractor_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/media/mediaextractor/MediaExtractorService_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/media/mediaextractor/MediaExtractor/MediaExtractor_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/media/mediaextractor/DataSource_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/media/mediaplayer/mediaserver/main_mediaserver_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/media/mediaplayer/mediaserver/MediaPlayerService/MediaPlayerFactory_note.cpp",
 		"/home/xqli/work/notes/8_1_notes/media/mediacodec/OmxStore/OmxStore_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/media/mediacodec/Omx/Omx_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/media/mediacodec/Omx/OMXMaster/SoftOMXPlugin_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/media/mediacodec/Omx/OMXMaster/OMXMaster_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/media/mediacodec/Omx/OMXMaster/QComOMXPlugin/QComOMXPlugin_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/media/mediacodec/OmxStore/MediaCodecsXmlParser_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/media/mediacodec/OmxStore/MediaCodecsXmlParser/MediaCodecsXmlParser_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/media/audio/AudioRecord/AudioRecord_note.cpp",
+		"/home/xqli/work/notes/8_1_notes/hwbinder/radio/rild/rild_note.c",
 		"/home/xqli/work/notes/8_1_notes/media/mediacodec/Omx/OMXMaster_note.cpp",
 		"/home/xqli/work/notes/8_1_notes/media/audio/AudioTrack/AudioTrack_note.cpp",
 		"/home/xqli/work/notes/8_1_notes/media/mediacodec/main_codecservice_note.cpp",
-		"/home/xqli/work/notes/8_1_notes/media/mediacodec/OmxStore/MediaCodecsXmlParser/MediaCodecsXmlParser_note.cpp",
 		"/home/xqli/work/notes/8_1_notes/media/mediacodec/OmxStore/MediaCodecsXmlParser/config-files/media_codecs_performance.xml",
 		"/home/xqli/work/notes/8_1_notes/media/mediacodec/OmxStore/MediaCodecsXmlParser/config-files/media_codecs.xml",
 		"/home/xqli/work/notes/8_1_notes/wifi/wificond/looper_backed_event_loop_note.cpp",
@@ -107,7 +258,6 @@
 		"/home/xqli/work/notes/8_1_notes/media/audio/audioserver/AudioPolicyService/AudioPolicyManager/HwModule_note.cpp",
 		"/home/xqli/work/notes/8_1_notes/media/audio/audioserver/AudioPolicyService/config-files/default_volume_tables.xml",
 		"/home/xqli/work/notes/8_1_notes/media/audio/audioserver/AudioPolicyService/AudioPolicyEffects_note.cpp",
-		"/home/xqli/work/notes/8_1_notes/media/mediaextractor/MediaExtractorService_note.cpp",
 		"/home/xqli/work/notes/8_1_notes/media/mediaextractor/main_extractorservice_note.cpp",
 		"/home/xqli/work/notes/8_1_notes/media/audio/audioserver/AudioPolicyService/dumpsys-media.audio_policy.log",
 		"/home/xqli/work/notes/8_1_notes/wifi/java-service/WifiService_note.java",
@@ -132,7 +282,6 @@
 		"/home/xqli/work/notes/8_1_notes/vold/vold-demon/VolumeManager /Disk_note.cpp",
 		"/home/xqli/.bashrc",
 		"/home/xqli/work/notes/8_1_notes/media/audio/android.hardware.audio@2.0-service/service_note.cpp",
-		"/home/xqli/work/notes/8_1_notes/media/mediaplayer/mediaserver/main_mediaserver_note.cpp",
 		"/home/xqli/work/notes/8_1_notes/media/mediaplayer/mediaserver/MediaPlayerService/MediaPlayerService_note.cpp",
 		"/home/xqli/work/notes/8_1_notes/audio/audioserver/AudioFlinger/DevicesFactoryHalHybrid_note.cpp",
 		"/home/xqli/work/notes/8_1_notes/audio/audioserver/AudioFlinger/AudioFlinger_note.cpp",
@@ -186,8 +335,7 @@
 		"/work/notes/4_4_notes/Binder/service_manager/binder_map.c",
 		"/work/notes/4_4_notes/Binder/service_manager/service_manager_note.c",
 		"/work/notes/4_4_notes/Binder/service_manager/defaultServiceManager_note.c",
-		"/home/xqli/.config/sublime-text-3/Packages/Package Control/Package Control.sublime-settings",
-		"/usr/share/applications/android_studio.desktop"
+		"/home/xqli/.config/sublime-text-3/Packages/Package Control/Package Control.sublime-settings"
 	],
 	"find":
 	{
@@ -205,6 +353,19 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"lib_vpu_wrapper",
+			"mVideoDecoder",
+			"mStarted",
+			"kWhatStart",
+			"mLoop",
+			"isCompatibleBrand",
+			"MPEG2TSExtractor",
+			"MPEG2PSExtractor",
+			"mDataSource",
+			"mUri",
+			"mAntagonizer",
+			"mDriver",
+			"    //",
 			"popcount",
 			"AUDIO_DEVICE_BIT_IN",
 			"audio_devices_t",
@@ -236,24 +397,24 @@
 	"groups":
 	[
 		{
-			"selected": 1,
+			"selected": 14,
 			"sheets":
 			[
 				{
 					"buffer": 0,
-					"file": "8_1_notes/media/audio/AudioRecord/AudioRecord_note.cpp",
+					"file": "8_1_notes/media/mediaplayer/mediaserver/MediaPlayerService/MediaPlayerService_note.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 56,
+						"buffer_size": 7212,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								56,
-								56
+								7212,
+								7212
 							]
 						],
 						"settings":
@@ -282,56 +443,56 @@
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
 								"bh_double_quote_close",
 								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
 								"bh_square_close",
-								"bh_square_content"
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
 							],
 							"bracket_highlighter.locations":
 							{
@@ -355,56 +516,1225 @@
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
 								"bh_double_quote_close",
 								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
 								"bh_square_close",
-								"bh_square_content"
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
+							"is_init_dirty_state": false,
+							"origin_encoding": "UTF-8",
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 2986.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 11,
+					"type": "text"
+				},
+				{
+					"buffer": 1,
+					"file": "8_1_notes/media/mediaplayer/mediaserver/MediaPlayerService/NuPlayerDriver/NuPlayerDriver_note.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 3917,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3917,
+								3917
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.clone": -1,
+							"bracket_highlighter.clone_locations":
+							{
+								"close":
+								{
+								},
+								"icon":
+								{
+								},
+								"open":
+								{
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.clone_regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+								},
+								"icon":
+								{
+								},
+								"open":
+								{
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
+							"is_init_dirty_state": true,
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 2,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1446.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 9,
+					"type": "text"
+				},
+				{
+					"buffer": 2,
+					"file": "8_1_notes/media/mediaplayer/mediaserver/MediaPlayerService/NuPlayerDriver/NuPlayer_note.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7107,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								3776,
+								3776
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.clone": -1,
+							"bracket_highlighter.clone_locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										2895,
+										2896
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/round_bracket.png",
+										"region.yellowish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										2876,
+										2877
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.clone_regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										3775,
+										3776
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/curly_bracket.png",
+										"region.purplish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										3354,
+										3355
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
+							"is_init_dirty_state": false,
+							"origin_encoding": "ASCII",
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 1264.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 8,
+					"type": "text"
+				},
+				{
+					"buffer": 3,
+					"file": "8_1_notes/media/mediaplayer/mediaserver/MediaPlayerService/NuPlayerDriver/GenericSource/GenericSource_note.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 10594,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								5709,
+								5709
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.clone": -1,
+							"bracket_highlighter.clone_locations":
+							{
+								"close":
+								{
+								},
+								"icon":
+								{
+								},
+								"open":
+								{
+								},
+								"unmatched":
+								{
+									"1":
+									[
+										2160,
+										2161
+									]
+								}
+							},
+							"bracket_highlighter.clone_regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+								},
+								"icon":
+								{
+								},
+								"open":
+								{
+								},
+								"unmatched":
+								{
+									"1":
+									[
+										6893,
+										6894
+									]
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
+							"open_with_edit": true,
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 2016.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 2,
+					"type": "text"
+				},
+				{
+					"buffer": 4,
+					"file": "8_1_notes/media/mediacodec/OmxStore/OmxStore_note.cpp",
+					"semi_transient": true,
+					"settings":
+					{
+						"buffer_size": 12332,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2705,
+								2705
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.clone": -1,
+							"bracket_highlighter.clone_locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										1398,
+										1399
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/curly_bracket.png",
+										"region.purplish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										125,
+										126
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.clone_regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										3748,
+										3749
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/curly_bracket.png",
+										"region.purplish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										2405,
+										2406
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 3,
+					"type": "text"
+				},
+				{
+					"buffer": 5,
+					"file": "8_1_notes/media/mediacodec/Omx/OMXMaster/FSLOMXPlugin/FSLOMXPlugin_note.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2145,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1058,
+								1058
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.clone": -1,
+							"bracket_highlighter.clone_locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										1152,
+										1153
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/round_bracket.png",
+										"region.yellowish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										1132,
+										1133
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.clone_regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+								},
+								"icon":
+								{
+								},
+								"open":
+								{
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
+							"open_with_edit": true,
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 462.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 6,
+					"type": "text"
+				},
+				{
+					"buffer": 6,
+					"file": "8_1_notes/media/mediacodec/Omx/OMXMaster/FSLOMXPlugin/OMXCore/OMXCore_note.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 5718,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								568,
+								568
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.clone": -1,
+							"bracket_highlighter.clone_locations":
+							{
+								"close":
+								{
+								},
+								"icon":
+								{
+								},
+								"open":
+								{
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.clone_regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										584,
+										585
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/curly_bracket.png",
+										"region.purplish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										567,
+										568
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
 							],
 							"open_with_edit": true,
 							"syntax": "Packages/C++/C++.sublime-syntax"
@@ -413,30 +1743,103 @@
 						"translation.y": 0.0,
 						"zoom_level": 1.0
 					},
-					"stack_index": 1,
+					"stack_index": 4,
 					"type": "text"
 				},
 				{
-					"buffer": 1,
-					"file": "8_1_notes/hwbinder/radio/rild/rild_note.c",
+					"buffer": 7,
+					"file": "8_1_notes/media/mediacodec/Omx/OMXMaster/FSLOMXPlugin/OMXCore/ShareLibarayMgr_note.cpp",
 					"semi_transient": false,
 					"settings":
 					{
-						"buffer_size": 5078,
+						"buffer_size": 53,
 						"regions":
 						{
 						},
 						"selection":
 						[
 							[
-								183,
-								183
+								48,
+								48
 							]
 						],
 						"settings":
 						{
 							"bracket_highlighter.busy": false,
 							"bracket_highlighter.clone": -1,
+							"bracket_highlighter.clone_locations":
+							{
+								"close":
+								{
+								},
+								"icon":
+								{
+								},
+								"open":
+								{
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.clone_regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
 							"bracket_highlighter.locations":
 							{
 								"close":
@@ -459,59 +1862,1382 @@
 								"bh_curly_open",
 								"bh_curly_close",
 								"bh_curly_content",
-								"bh_angle",
-								"bh_angle_center",
-								"bh_angle_open",
-								"bh_angle_close",
-								"bh_angle_content",
-								"bh_regex",
-								"bh_regex_center",
-								"bh_regex_open",
-								"bh_regex_close",
-								"bh_regex_content",
-								"bh_tag",
-								"bh_tag_center",
-								"bh_tag_open",
-								"bh_tag_close",
-								"bh_tag_content",
-								"bh_round",
-								"bh_round_center",
-								"bh_round_open",
-								"bh_round_close",
-								"bh_round_content",
-								"bh_c_define",
-								"bh_c_define_center",
-								"bh_c_define_open",
-								"bh_c_define_close",
-								"bh_c_define_content",
-								"bh_single_quote",
-								"bh_single_quote_center",
-								"bh_single_quote_open",
-								"bh_single_quote_close",
-								"bh_single_quote_content",
-								"bh_default",
-								"bh_default_center",
-								"bh_default_open",
-								"bh_default_close",
-								"bh_default_content",
-								"bh_unmatched",
-								"bh_unmatched_center",
-								"bh_unmatched_open",
-								"bh_unmatched_close",
-								"bh_unmatched_content",
 								"bh_double_quote",
 								"bh_double_quote_center",
 								"bh_double_quote_open",
 								"bh_double_quote_close",
 								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
 								"bh_square",
 								"bh_square_center",
 								"bh_square_open",
 								"bh_square_close",
-								"bh_square_content"
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
+							"open_with_edit": true,
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 5,
+					"type": "text"
+				},
+				{
+					"buffer": 8,
+					"file": "8_1_notes/media/mediacodec/Omx/OMXMaster/FSLOMXPlugin/PlatformResourceMgr/PlatformResourceMgr_note.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 487,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								77,
+								77
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.clone": -1,
+							"bracket_highlighter.clone_locations":
+							{
+								"close":
+								{
+								},
+								"icon":
+								{
+								},
+								"open":
+								{
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.clone_regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+								},
+								"icon":
+								{
+								},
+								"open":
+								{
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
+							"open_with_edit": true,
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 7,
+					"type": "text"
+				},
+				{
+					"buffer": 9,
+					"file": "8_1_notes/media/mediaplayer/mediaserver/MediaPlayerService/NuPlayerDriver/NuPlayerRenderer_note.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2404,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								2404,
+								2404
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.clone": -1,
+							"bracket_highlighter.clone_locations":
+							{
+								"close":
+								{
+								},
+								"icon":
+								{
+								},
+								"open":
+								{
+								},
+								"unmatched":
+								{
+									"1":
+									[
+										5961,
+										5962
+									]
+								}
+							},
+							"bracket_highlighter.clone_regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+								},
+								"icon":
+								{
+								},
+								"open":
+								{
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
+							"open_with_edit": true,
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 414.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 10,
+					"type": "text"
+				},
+				{
+					"buffer": 10,
+					"file": "8_1_notes/media/mediaextractor/DataSource/DataSource_note.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2375,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1437,
+								1437
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.clone": -1,
+							"bracket_highlighter.clone_locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										378,
+										379
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/curly_bracket.png",
+										"region.purplish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										255,
+										256
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.clone_regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+								},
+								"icon":
+								{
+								},
+								"open":
+								{
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
 							],
 							"origin_encoding": "ASCII",
-							"syntax": "Packages/C++/C.sublime-syntax",
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 336.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 15,
+					"type": "text"
+				},
+				{
+					"buffer": 11,
+					"file": "8_1_notes/media/mediaextractor/DataSource/FileSource_note.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 2281,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								718,
+								718
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.clone": -1,
+							"bracket_highlighter.clone_locations":
+							{
+								"close":
+								{
+								},
+								"icon":
+								{
+								},
+								"open":
+								{
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.clone_regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										1293,
+										1294
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/curly_bracket.png",
+										"region.purplish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										393,
+										394
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
+							"open_with_edit": true,
+							"syntax": "Packages/C++/C++.sublime-syntax",
+							"tab_size": 4,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 13,
+					"type": "text"
+				},
+				{
+					"buffer": 12,
+					"file": "8_1_notes/media/mediaplayer/mediaserver/MediaPlayerService/NuPlayerDriver/MediaAnalyticsItem_note.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 460,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								460,
+								460
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.clone": -1,
+							"bracket_highlighter.clone_locations":
+							{
+								"close":
+								{
+								},
+								"icon":
+								{
+								},
+								"open":
+								{
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.clone_regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										459,
+										460
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/curly_bracket.png",
+										"region.purplish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										349,
+										350
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
+							"open_with_edit": true,
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 14,
+					"type": "text"
+				},
+				{
+					"buffer": 13,
+					"file": "8_1_notes/media/mediaextractor/MediaExtractor/MPEG4Extractor/MPEG4Extractor_note.cpp",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6587,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6587,
+								6587
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.clone": -1,
+							"bracket_highlighter.clone_locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										5626,
+										5627
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/curly_bracket.png",
+										"region.purplish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										4358,
+										4359
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.clone_regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										6586,
+										6587
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/curly_bracket.png",
+										"region.purplish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										6584,
+										6585
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
+							"open_with_edit": true,
+							"syntax": "Packages/C++/C++.sublime-syntax"
+						},
+						"translation.x": 0.0,
+						"translation.y": 2464.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 12,
+					"type": "text"
+				},
+				{
+					"buffer": 14,
+					"file": "/media/xqli/B4FE-5315/tombstone_00",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 62011,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								1858,
+								1858
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.clone": -1,
+							"bracket_highlighter.clone_locations":
+							{
+								"close":
+								{
+								},
+								"icon":
+								{
+								},
+								"open":
+								{
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.clone_regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+								},
+								"icon":
+								{
+								},
+								"open":
+								{
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
+							"origin_encoding": "ASCII",
+							"syntax": "Packages/Text/Plain text.tmLanguage",
 							"tab_size": 4,
 							"translate_tabs_to_spaces": true
 						},
@@ -520,6 +3246,200 @@
 						"zoom_level": 1.0
 					},
 					"stack_index": 0,
+					"type": "text"
+				},
+				{
+					"buffer": 15,
+					"file": "/work/workcodes/imx8-android-o/vendor/nxp/fsl_imx_omx/OpenMAXIL/src/component/vpu_wrapper/Android.mk",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 6904,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								6191,
+								6191
+							]
+						],
+						"settings":
+						{
+							"bracket_highlighter.busy": false,
+							"bracket_highlighter.clone": -1,
+							"bracket_highlighter.clone_locations":
+							{
+								"close":
+								{
+								},
+								"icon":
+								{
+								},
+								"open":
+								{
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.clone_regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
+							"bracket_highlighter.locations":
+							{
+								"close":
+								{
+									"1":
+									[
+										6191,
+										6192
+									]
+								},
+								"icon":
+								{
+									"1":
+									[
+										"Packages/BracketHighlighter/icons/round_bracket.png",
+										"region.yellowish"
+									]
+								},
+								"open":
+								{
+									"1":
+									[
+										6176,
+										6177
+									]
+								},
+								"unmatched":
+								{
+								}
+							},
+							"bracket_highlighter.regions":
+							[
+								"bh_curly",
+								"bh_curly_center",
+								"bh_curly_open",
+								"bh_curly_close",
+								"bh_curly_content",
+								"bh_double_quote",
+								"bh_double_quote_center",
+								"bh_double_quote_open",
+								"bh_double_quote_close",
+								"bh_double_quote_content",
+								"bh_regex",
+								"bh_regex_center",
+								"bh_regex_open",
+								"bh_regex_close",
+								"bh_regex_content",
+								"bh_square",
+								"bh_square_center",
+								"bh_square_open",
+								"bh_square_close",
+								"bh_square_content",
+								"bh_single_quote",
+								"bh_single_quote_center",
+								"bh_single_quote_open",
+								"bh_single_quote_close",
+								"bh_single_quote_content",
+								"bh_angle",
+								"bh_angle_center",
+								"bh_angle_open",
+								"bh_angle_close",
+								"bh_angle_content",
+								"bh_unmatched",
+								"bh_unmatched_center",
+								"bh_unmatched_open",
+								"bh_unmatched_close",
+								"bh_unmatched_content",
+								"bh_round",
+								"bh_round_center",
+								"bh_round_open",
+								"bh_round_close",
+								"bh_round_content",
+								"bh_default",
+								"bh_default_center",
+								"bh_default_open",
+								"bh_default_close",
+								"bh_default_content",
+								"bh_c_define",
+								"bh_c_define_center",
+								"bh_c_define_open",
+								"bh_c_define_close",
+								"bh_c_define_content",
+								"bh_tag",
+								"bh_tag_center",
+								"bh_tag_open",
+								"bh_tag_close",
+								"bh_tag_content"
+							],
+							"origin_encoding": "ASCII",
+							"syntax": "Packages/Makefile/Makefile.sublime-syntax",
+							"tab_size": 5,
+							"translate_tabs_to_spaces": true
+						},
+						"translation.x": 0.0,
+						"translation.y": 1890.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 1,
 					"type": "text"
 				}
 			]
@@ -606,7 +3526,7 @@
 	"show_open_files": true,
 	"show_tabs": true,
 	"side_bar_visible": true,
-	"side_bar_width": 379.0,
+	"side_bar_width": 414.0,
 	"status_bar_visible": true,
 	"template_settings":
 	{

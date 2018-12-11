@@ -116,6 +116,32 @@ void MediaCodecsXmlParser::generateCommonPrefix() const {
 
 
 
+Return<void> OmxStore::listServiceAttributes(listServiceAttributes_cb _hidl_cb) {
+    if (mParsingStatus == Status::NO_ERROR) {
+        _hidl_cb(Status::NO_ERROR, mServiceAttributeList);
+    } else {
+        _hidl_cb(mParsingStatus, hidl_vec<ServiceAttribute>());
+    }
+    return Void();
+}
+
+Return<void> OmxStore::getNodePrefix(getNodePrefix_cb _hidl_cb) {
+    _hidl_cb(mPrefix);
+    return Void();
+}
+
+Return<void> OmxStore::listRoles(listRoles_cb _hidl_cb) {
+    _hidl_cb(mRoleList);
+    return Void();
+}
+
+Return<sp<IOmx>> OmxStore::getOmx(hidl_string const& omxName) {
+    return IOmx::tryGetService(omxName);
+}
+
+
+
+
 
 
 
