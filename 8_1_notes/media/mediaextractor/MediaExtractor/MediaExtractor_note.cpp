@@ -50,7 +50,7 @@ public:
 class MediaExtractor : public BnMediaExtractor {}
 
 
-//	@frameworks/av/media/libstagefright/MediaExtractor.cpp
+//	@frameworks/av/media/libstagefright/
 sp<MediaExtractor> MediaExtractor::CreateFromService(const sp<DataSource> &source, const char *mime) {
 
     ALOGV("MediaExtractor::CreateFromService %s", mime);
@@ -71,6 +71,7 @@ sp<MediaExtractor> MediaExtractor::CreateFromService(const sp<DataSource> &sourc
         }
 
         mime = tmp.string();
+        //  10-08 04:02:12.922  3253  5335 V MediaExtractor: Autodetected media content as 'video/mp4' with confidence 0.40
         ALOGV("Autodetected media content as '%s' with confidence %.2f",mime, confidence);
     }
 
@@ -81,6 +82,7 @@ sp<MediaExtractor> MediaExtractor::CreateFromService(const sp<DataSource> &sourc
     if(value & 0x01)
         use_fsl = true;  //这里执行
 
+    //  @frameworks/av/media/libmedia/MediaDefs.cpp:56:const char *MEDIA_MIMETYPE_CONTAINER_MPEG4 = "video/mp4";
     if (!strcasecmp(mime, MEDIA_MIMETYPE_CONTAINER_MPEG4)  || !strcasecmp(mime, "audio/mp4")) {
         if(use_fsl)
             ret = new FslExtractor(source,mime);

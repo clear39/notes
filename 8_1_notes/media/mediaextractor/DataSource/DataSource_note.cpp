@@ -11,6 +11,13 @@ sp<DataSource> DataSource::CreateFromFd(int fd, int64_t offset, int64_t length) 
 }
 
 
+
+
+
+
+
+
+
 //	@frameworks/av/media/libstagefright/DataSource.cpp
 sp<IDataSource> DataSource::asIDataSource() {
     return RemoteDataSource::wrap(sp<DataSource>(this));
@@ -32,17 +39,27 @@ public:
         return new RemoteDataSource(source);
     }
 
+    enum {
+        kBufferSize = 64 * 1024,
+    };
 
 
     explicit RemoteDataSource(const sp<DataSource> &source) {
         mSource = source;
-        sp<MemoryDealer> memoryDealer = new MemoryDealer(kBufferSize, "RemoteDataSource");
+        sp<MemoryDealer> memoryDealer = new MemoryDealer(kBufferSize, "RemoteDataSource");//64k
         mMemory = memoryDealer->allocate(kBufferSize);
         if (mMemory.get() == nullptr) {
             ALOGE("Failed to allocate memory!");
         }
         mName = String8::format("RemoteDataSource(%s)", mSource->toString().string());
     }
+
+
+
+    virtual uint32_t getFlags() {
+        return mSource->flags();
+    }
+
 }
 
 
@@ -79,3 +96,5 @@ TinyCacheSource::TinyCacheSource(const sp<DataSource>& source)
     : mSource(source), mCachedOffset(0), mCachedSize(0) {
     mName = String8::format("TinyCacheSource(%s)", mSource->toString().string());
 }
+
+

@@ -43,6 +43,12 @@ FileSource::FileSource(int fd, int64_t offset, int64_t length)
 
 
 
+virtual uint32_t FileSource::flags() {
+    return kIsLocalFileSource;
+}
+
+
+
 // nameForFd @frameworks/av/media/libstagefright/Utils.cpp
 AString nameForFd(int fd) {
     const size_t SIZE = 256;

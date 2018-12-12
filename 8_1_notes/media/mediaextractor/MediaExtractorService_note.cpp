@@ -2,8 +2,10 @@
 sp<IMediaExtractor> MediaExtractorService::makeExtractor(const sp<IDataSource> &remoteSource, const char *mime) {
     ALOGV("@@@ MediaExtractorService::makeExtractor for %s", mime);
 
+    //这里 通过 DataSource::CreateFromIDataSource 同样创建 CallbackDataSource
     sp<DataSource> localSource = DataSource::CreateFromIDataSource(remoteSource);
 
+    // 这里 mime 为空，
     sp<IMediaExtractor> ret = MediaExtractor::CreateFromService(localSource, mime);
 
     ALOGV("extractor service created %p (%s)", ret.get(), ret == NULL ? "" : ret->name());

@@ -113,8 +113,7 @@ void NuPlayer::onMessageReceived(const sp<AMessage> &msg) {
         case kWhatPrepare:
         {
             ALOGV("onMessageReceived kWhatPrepare");
-            mSource->prepareAsync();
-            break;
+            mSource->prepareAsync();//  GenericSource->prepareAsync();
         }
         。。。。。。
     }
@@ -234,10 +233,10 @@ void NuPlayer::onStart(int64_t startPositionUs, MediaPlayerSeekMode mode) {
         mRenderer->setVideoFrameRate(rate);
     }
 
-    if (mVideoDecoder != NULL) {
+    if (mVideoDecoder != NULL) {    // @frameworks/av/media/libmediaplayerservice/nuplayer/NuPlayerDecoder.cpp
         mVideoDecoder->setRenderer(mRenderer);
     }
-    if (mAudioDecoder != NULL) {
+    if (mAudioDecoder != NULL) {       //   @frameworks/av/media/libmediaplayerservice/nuplayer/NuPlayerDecoder.cpp
         mAudioDecoder->setRenderer(mRenderer);
     }
 
@@ -248,4 +247,97 @@ void NuPlayer::onStart(int64_t startPositionUs, MediaPlayerSeekMode mode) {
     }
 
     postScanSources();
+}
+
+
+void NuPlayer::scheduleSetVideoDecoderTime() {
+    sp<AMessage> msg = new AMessage(kWhatSetTime, this);
+    msg->setInt32("generation", mSetVideoTimeGeneration);
+    msg->setInt32("pause", mPaused);
+    msg->post();
+
+
+
+void NuPlayer::postScanSources() {
+    if (mScanSourcesPending) {
+        return;
+    }
+
+    sp<AMessage> msg = new AMessage(kWhatScanSources, this);
+    msg->setInt32("generation", mScanSourcesGeneration);
+    msg->post();
+
+    mScanSourcesPending = true;
+}
+
+
+void NuPlayer::onMessageReceived(const sp<AMessage> &msg) {
+    switch (msg->what()) {
+        case kWhatScanSources:
+        {
+            int32_t generation;
+            CHECK(msg->findInt32("generation", &generation));
+            if (generation != mScanSourcesGeneration) {
+                // Drop obsolete msg.
+                break;
+            }
+
+            mScanSourcesPending = false;
+
+            ALOGV("scanning sources haveAudio=%d, haveVideo=%d", mAudioDecoder != NULL, mVideoDecoder != NULL);
+
+            bool mHadAnySourcesBefore = (mAudioDecoder != NULL) || (mVideoDecoder != NULL);
+            bool rescan = false;
+
+            // initialize video before audio because successful initialization of
+            // video may change deep buffer mode of audio.
+            if (mSurface != NULL) {
+                if (instantiateDecoder(false, &mVideoDecoder) == -EWOULDBLOCK) {
+                    rescan = true;
+                }
+            }
+
+            // Don't try to re-open audio sink if there's an existing decoder.
+            if (mAudioSink != NULL && mAudioDecoder == NULL) {
+                if (instantiateDecoder(true, &mAudioDecoder) == -EWOULDBLOCK) {
+                    rescan = true;
+                }
+            }
+
+            if (!mHadAnySourcesBefore && (mAudioDecoder != NULL || mVideoDecoder != NULL)) {
+                // This is the first time we've found anything playable.
+
+                if (mSourceFlags & Source::FLAG_DYNAMIC_DURATION) {
+                    schedulePollDuration();
+                }
+            }
+
+
+#if 0
+            if(mAudioDecoder != NULL && mVideoDecoder != NULL)
+                mRenderer->enableSyncQueue(true);
+#endif
+
+            status_t err;
+            if ((err = mSource->feedMoreTSData()) != OK) {
+                if (mAudioDecoder == NULL && mVideoDecoder == NULL) {
+                    // We're not currently decoding anything (no audio or
+                    // video tracks found) and we just ran out of input data.
+
+                    if (err == ERROR_END_OF_STREAM) {
+                        notifyListener(MEDIA_PLAYBACK_COMPLETE, 0, 0);
+                    } else {
+                        notifyListener(MEDIA_ERROR, MEDIA_ERROR_UNKNOWN, err);
+                    }
+                }
+                break;
+            }
+
+            if (rescan) {
+                msg->post(100000ll);
+                mScanSourcesPending = true;
+            }
+            break;
+        }
+    }
 }
