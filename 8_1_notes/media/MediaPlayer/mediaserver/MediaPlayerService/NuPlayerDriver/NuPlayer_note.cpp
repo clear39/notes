@@ -341,3 +341,154 @@ void NuPlayer::onMessageReceived(const sp<AMessage> &msg) {
         }
     }
 }
+
+
+
+status_t NuPlayer::instantiateDecoder(bool audio, sp<DecoderBase> *decoder, bool checkAudioModeChange) {
+    // The audio decoder could be cleared by tear down. If still in shut down
+    // process, no need to create a new audio decoder.
+    if (*decoder != NULL || (audio && mFlushingAudio == SHUT_DOWN)) {
+        return OK;
+    }
+
+    ALOGV("instantiateDecoder audio:%d",audio);
+
+    sp<AMessage> format = mSource->getFormat(audio);
+
+    if (format == NULL) {
+        return UNKNOWN_ERROR;
+    } else {
+        status_t err;
+        if (format->findInt32("err", &err) && err) {
+            return err;
+        }
+    }
+
+    format->setInt32("priority", 0 /* realtime */);
+
+    if (!audio) {
+        AString mime;
+        CHECK(format->findString("mime", &mime));
+
+        bool bVideoIsAVC = !strcasecmp(MEDIA_MIMETYPE_VIDEO_AVC, mime.c_str());
+        if (bVideoIsAVC && mSource->isAVCReorderDisabled())
+            format->setString("disreorder", "1");
+        else
+            format->setString("disreorder", "0");
+
+        sp<AMessage> ccNotify = new AMessage(kWhatClosedCaptionNotify, this);
+        if (mCCDecoder == NULL) {
+            mCCDecoder = new CCDecoder(ccNotify);
+        }
+
+        if (mSourceFlags & Source::FLAG_SECURE) {
+            format->setInt32("secure", true);
+        }
+
+        if (mSourceFlags & Source::FLAG_PROTECTED) {
+            format->setInt32("protected", true);
+        }
+
+        float rate = getFrameRate();
+        if (rate > 0) {
+            format->setFloat("operating-rate", rate * mPlaybackSettings.mSpeed);
+        }
+    }
+
+    if (audio) {
+        sp<AMessage> notify = new AMessage(kWhatAudioNotify, this);
+        ++mAudioDecoderGeneration;
+        notify->setInt32("generation", mAudioDecoderGeneration);
+
+        if (checkAudioModeChange) {
+            determineAudioModeChange(format);
+        }
+
+        if(bEnablePassThrough){
+            AString mime;
+            CHECK(format->findString("mime", &mime));
+            mSource->setOffloadAudio(false /* offload */);
+
+            //use pass through decoder for test now.
+            const bool hasVideo = (mSource->getFormat(false /*audio */) != NULL);
+            format->setInt32("has-video", hasVideo);
+            if(0 == strcasecmp(mime.c_str(), MEDIA_MIMETYPE_AUDIO_AC3))
+                *decoder = new DecoderPassThroughAC3(notify, mSource, mRenderer);
+            else if( 0 == strcmp(mime.c_str(), MEDIA_MIMETYPE_AUDIO_EAC3))
+                *decoder = new DecoderPassThroughDDP(notify, mSource, mRenderer);
+        }else if (mOffloadAudio) {
+            mSource->setOffloadAudio(true /* offload */);
+
+            const bool hasVideo = (mSource->getFormat(false /*audio */) != NULL);
+            format->setInt32("has-video", hasVideo);
+            *decoder = new DecoderPassThrough(notify, mSource, mRenderer);
+            ALOGV("instantiateDecoder audio DecoderPassThrough  hasVideo: %d", hasVideo);
+        } else {
+            mSource->setOffloadAudio(false /* offload */);
+            //  创建音频 Decoder解码类
+            *decoder = new Decoder(notify, mSource, mPID, mUID, mRenderer);
+            ALOGV("instantiateDecoder audio Decoder");
+        }
+        mAudioDecoderError = false;
+    } else {
+        sp<AMessage> notify = new AMessage(kWhatVideoNotify, this);
+        ++mVideoDecoderGeneration;
+        notify->setInt32("generation", mVideoDecoderGeneration);
+        
+        //创建视频Decoder解码类
+        *decoder = new Decoder(notify, mSource, mPID, mUID, mRenderer, mSurface, mCCDecoder);
+        mVideoDecoderError = false;
+
+        // enable FRC if high-quality AV sync is requested, even if not
+        // directly queuing to display, as this will even improve textureview
+        // playback.
+        {
+            if (property_get_bool("persist.sys.media.avsync", false)) {
+                format->setInt32("auto-frc", 1);
+            }
+        }
+    }
+    format->setInt32("streaming", mStreaming?1:0);
+
+    (*decoder)->init();//这里只是注册了handler
+
+    // Modular DRM
+    if (mIsDrmProtected) {
+        format->setPointer("crypto", mCrypto.get());
+        ALOGV("instantiateDecoder: mCrypto: %p (%d) isSecure: %d", mCrypto.get(),
+                (mCrypto != NULL ? mCrypto->getStrongCount() : 0),
+                (mSourceFlags & Source::FLAG_SECURE) != 0);
+    }
+
+    (*decoder)->configure(format);
+
+    if (!audio) {//如果为视频，执行
+        sp<AMessage> params = new AMessage();
+        float rate = getFrameRate();
+        if (rate > 0) {
+            params->setFloat("frame-rate-total", rate);
+        }
+
+        sp<MetaData> fileMeta = getFileMeta();
+        if (fileMeta != NULL) {
+            int32_t videoTemporalLayerCount;
+            if (fileMeta->findInt32(kKeyTemporalLayerCount, &videoTemporalLayerCount) & videoTemporalLayerCount > 0) {
+                params->setInt32("temporal-layer-count", videoTemporalLayerCount);
+            }
+        }
+
+        // paused before start, send the state to video decoder
+        if (mPaused) {
+            params->setInt64("media-time", mPreviousSeekTimeUs);
+            params->setInt32("pause", mPaused);
+        }
+
+        if (params->countEntries() > 0) {
+            (*decoder)->setParameters(params);
+        }
+    }
+    return OK;
+}
+
+
+
