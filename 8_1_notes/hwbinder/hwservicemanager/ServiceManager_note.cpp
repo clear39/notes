@@ -20,7 +20,7 @@ Return<ServiceManager::Transport> ServiceManager::getTransport(const hidl_string
 }
 
 
-
+//  @system/hwservicemanager/Vintf.cpp
 vintf::Transport getTransport(const std::string &interfaceName, const std::string &instanceName) {
     FQName fqName(interfaceName);//	@system/tools/hidl/utils/FQName.cpp
     if (!fqName.isValid()) {
@@ -53,6 +53,22 @@ vintf::Transport getTransport(const std::string &interfaceName, const std::strin
 }
 
 
+//  @system/libvintf/VintfObject.cpp
+// static
+std::shared_ptr<const HalManifest> VintfObject::GetDeviceHalManifest(bool skipCache) {
+    static LockedSharedPtr<HalManifest> gVendorManifest;
+    return Get(&gVendorManifest, skipCache, &VintfObject::FetchDeviceHalManifest);
+}
+ 
+// static
+std::shared_ptr<const HalManifest> VintfObject::GetFrameworkHalManifest(bool skipCache) {
+    static LockedSharedPtr<HalManifest> gFrameworkManifest;
+    return Get(&gFrameworkManifest, skipCache, &VintfObject::FetchFrameworkHalManifest);
+}
+ 
+
+
+
 //关于文件解析可一个看manifest.xml_parse_note.cpp
 vintf::Transport getTransportFromManifest(const FQName &fqName, const std::string &instanceName,const vintf::HalManifest *vm) {
     if (vm == nullptr) {
@@ -61,18 +77,6 @@ vintf::Transport getTransportFromManifest(const FQName &fqName, const std::strin
     //	@system/libvintf/HalManifest.cpp
     return vm->getTransport(fqName.package(), vintf::Version{fqName.getPackageMajorVersion(), fqName.getPackageMinorVersion()},fqName.name(), instanceName);
 }
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

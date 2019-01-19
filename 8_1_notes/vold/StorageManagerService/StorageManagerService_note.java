@@ -1,4 +1,4 @@
-//	@base/services/core/java/com/android/server/StorageManagerService.java
+//	@frameworks/base/services/core/java/com/android/server/StorageManagerService.java
 class StorageManagerService extends IStorageManager.Stub implements INativeDaemonConnectorCallbacks, Watchdog.Monitor {
 
 	/**
