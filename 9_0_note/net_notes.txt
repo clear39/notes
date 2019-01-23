@@ -1,0 +1,153 @@
+# tracepath                                                                                                                                                                                
+Usage: tracepath [-n] [-b] [-l <len>] [-p port] <destination>
+
+
+# netstat --help                                                                                                                                                                               
+usage: netstat [-pWrxwutneal]
+Display networking information. Default is netsat -tuwx
+-r  routing table
+-a  all sockets (not just connected)
+-l  listening server sockets
+-t  TCP sockets
+-u  UDP sockets
+-w  raw sockets
+-x  unix sockets
+-e  extended info
+-n  don't resolve names
+-W  wide display
+-p  PID/Program name of sockets
+
+
+
+
+java 层网络相关服务：
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+4G 相关服务：
+
+phone 服务：    PhoneInterfaceManager.java      ITelephony.aidl
+logcat -s PhoneInterfaceManager
+dumpsys phone
+
+
+//调试信息打印
+TelephonyDebugService 服务
+dumpsys activity service TelephonyDebugService
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+connectivity 服务：       ConnectivityService.java IConnectivityManager.aidl
+
+logcat -s ConnectivityService
+
+dumpsys connectivity
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+network_management 服务： NetworkManagementService.java   INetworkManagementService.aidl
+logcat -s NetworkManagement NetdConnector
+dumpsys network_management
+
+
+
+
+
+
+
+
+
+adb shell settings put global captive_portal_detection_eanbled 0            //功能关闭
+adb shell settings put global captive_portal_server 204.gentool.top         //删除属性，恢复服务器地址
+adb shell settings delete global captive_portal_server                      //恢复初始状态
+
+
+删除（删除默认用HTTPS）
+adb shell settings delete global captive_portal_https_url
+adb shell settings delete global captive_portal_http_url
+分别修改两个地址
+adb shell settings put global captive_portal_http_url http://captive.v2ex.co/generate_204
+adb shell settings put global captive_portal_https_url https://captive.v2ex.co/generate_204
+
+删除变量：（删除以后默认启用）
+adb shell settings delete global captive_portal_mode
+关闭检测：
+adb shell settings put global captive_portal_mode 0
+查看当前状态：
+adb shell settings get global captive_portal_mode
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+netpolicy 服务：       NetworkPolicyManagerService.java    INetworkPolicyManager.aidl
+
+logcat -s NetworkPolicy	
+
+dumpsys netpolicy		    
+
+    
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * Collect(收集) and persist(存留) detailed network statistics（统计资料）, and provide this data to
+ * other system services.
+ */
+netstats 服务：  NetworkStatsService.java    INetworkStatsService.aidl
+logcat -s NetworkStats
+dumpsys netstats
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ethernet 服务    EthernetService.java    IEthernetManager.aidl
+启动特征： 配置 android.hardware.ethernet 或者 android.hardware.usb.host 为 feature 属性 即可
+logcat -s EthernetServiceImpl  (EthernetServiceImpl 实现了 IEthernetManager.aidl 接口)
+dumpsys ethernet
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+NsdService 服务：               NsdService.java           INsdManager.aidl   
+logcat -s NsdService
+dumpsys servicediscovery
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ipsec 服务：     IpSecService.java           IIpSecService.aidl
+logcat -s IpSecService
+dumpsys ipsec
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+network_score 服务：  NetworkScoreService.java    INetworkScoreService.aidl
+logcat -s NetworkScoreService
+dumpsys network_score
+
+
+
+
+
+
+
+

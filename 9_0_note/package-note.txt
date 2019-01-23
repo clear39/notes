@@ -1,0 +1,123 @@
+//  @frameworks/base/core/java/android/app/ApplicationPackageManager.java
+public class ApplicationPackageManager extends PackageManager {}
+
+ 在 PackageManagerService 中 配置文件解析以及属性存储都封装在 SystemConfig 类中
+
+ SystemConfig 会解析一下文件:
+{
+ /system/etc/sysconfig  为目录：
+-rw-r--r--  1 root root 1797 2018-12-27 02:32 app_whitelist.xml
+-rw-r--r--  1 root root 1757 2018-12-26 17:17 framework-sysconfig.xml
+-rw-r--r--  1 root root 3360 2018-12-26 17:17 hiddenapi-package-whitelist.xml
+
+/system/etc/permissions  为目录：
+-rw-r--r--  1 root root   832 2018-12-27 02:32 android.hardware.type.automotive.xml
+-rw-r--r--  1 root root   748 2018-12-27 02:32 android.software.webview.xml
+-rw-r--r--  1 root root   828 2018-12-26 17:17 com.android.location.provider.xml
+-rw-r--r--  1 root root   828 2018-12-26 17:17 com.android.media.remotedisplay.xml
+-rw-r--r--  1 root root   820 2018-12-26 17:17 com.android.mediadrm.signer.xml
+-rw-r--r--  1 root root 10323 2018-12-26 17:17 platform.xml
+-rw-r--r--  1 root root 23162 2018-12-26 17:17 privapp-permissions-platform.xml
+
+/vendor/etc/permissions 为目录：
+-rw-r--r-- 1 root root   945 2018-12-27 02:32 android.hardware.audio.output.xml
+-rw-r--r-- 1 root root   830 2018-12-27 02:32 android.hardware.bluetooth_le.xml
+-rw-r--r-- 1 root root   877 2018-12-27 02:32 android.hardware.camera.front.xml
+-rw-r--r-- 1 root root   877 2018-12-27 02:32 android.hardware.camera.xml
+-rw-r--r-- 1 root root   942 2019-01-14 10:24 android.hardware.location.gps.xml
+-rw-r--r-- 1 root root   870 2018-12-27 02:32 android.hardware.opengles.aep.xml
+-rw-r--r-- 1 root root   835 2018-12-27 02:32 android.hardware.screen.landscape.xml
+-rw-r--r-- 1 root root   833 2018-12-27 02:32 android.hardware.screen.portrait.xml
+-rw-r--r-- 1 root root   824 2018-12-27 02:32 android.hardware.sensor.accelerometer.xml
+-rw-r--r-- 1 root root   836 2018-12-27 02:32 android.hardware.sensor.ambient_temperature.xml
+-rw-r--r-- 1 root root   806 2018-12-27 02:32 android.hardware.sensor.barometer.xml
+-rw-r--r-- 1 root root   804 2018-12-27 02:32 android.hardware.sensor.compass.xml
+-rw-r--r-- 1 root root   806 2018-12-27 02:32 android.hardware.sensor.gyroscope.xml
+-rw-r--r-- 1 root root   816 2018-12-27 02:32 android.hardware.sensor.light.xml
+-rw-r--r-- 1 root root  1076 2018-12-27 02:32 android.hardware.touchscreen.multitouch.distinct.xml
+-rw-r--r-- 1 root root  1035 2018-12-27 02:32 android.hardware.touchscreen.multitouch.xml
+-rw-r--r-- 1 root root   909 2018-12-27 02:32 android.hardware.touchscreen.xml
+-rw-r--r-- 1 root root   832 2018-12-27 02:32 android.hardware.type.automotive.xml
+-rw-r--r-- 1 root root   975 2018-12-27 02:32 android.hardware.usb.accessory.xml
+-rw-r--r-- 1 root root   868 2018-12-27 02:32 android.hardware.usb.host.xml
+-rw-r--r-- 1 root root   865 2018-12-27 02:32 android.hardware.vulkan.level-0.xml
+-rw-r--r-- 1 root root   904 2018-12-27 02:32 android.hardware.vulkan.version-1_0_3.xml
+-rw-r--r-- 1 root root   843 2018-12-27 02:32 android.hardware.wifi.direct.xml
+-rw-r--r-- 1 root root   829 2018-12-27 02:32 android.hardware.wifi.xml
+-rw-r--r-- 1 root root   752 2018-12-27 02:32 android.software.app_widgets.xml
+-rw-r--r-- 1 root root   747 2018-12-27 02:32 android.software.backup.xml
+-rw-r--r-- 1 root root   753 2018-12-27 02:32 android.software.device_admin.xml
+-rw-r--r-- 1 root root   767 2018-12-27 02:32 android.software.freeform_window_management.xml
+-rw-r--r-- 1 root root   843 2018-12-27 02:32 android.software.managed_users.xml
+-rw-r--r-- 1 root root   746 2018-12-27 02:32 android.software.print.xml
+-rw-r--r-- 1 root root   880 2018-12-27 02:32 android.software.sip.voip.xml
+-rw-r--r-- 1 root root   753 2018-12-27 02:32 android.software.verified_boot.xml
+-rw-r--r-- 1 root root   775 2018-12-27 02:32 android.software.voice_recognizers.xml
+-rw-r--r-- 1 root root  1262 2018-12-27 02:32 required_hardware.xml
+
+
+}
+
+
+
+
+
+SystemConfig() {
+        // Read configuration from system   
+        readPermissions(Environment.buildPath(Environment.getRootDirectory(), "etc", "sysconfig"), ALLOW_ALL);
+
+        // Read configuration from the old permissions dir
+        readPermissions(Environment.buildPath(
+                Environment.getRootDirectory(), "etc", "permissions"), ALLOW_ALL);
+
+        // Vendors are only allowed to customze libs, features and privapp permissions
+        int vendorPermissionFlag = ALLOW_LIBS | ALLOW_FEATURES | ALLOW_PRIVAPP_PERMISSIONS;
+        if (Build.VERSION.FIRST_SDK_INT <= Build.VERSION_CODES.O_MR1) {
+            // For backward compatibility
+            vendorPermissionFlag |= (ALLOW_PERMISSIONS | ALLOW_APP_CONFIGS);
+        }
+        readPermissions(Environment.buildPath(
+                Environment.getVendorDirectory(), "etc", "sysconfig"), vendorPermissionFlag);
+        readPermissions(Environment.buildPath(
+                Environment.getVendorDirectory(), "etc", "permissions"), vendorPermissionFlag);
+
+        // Allow ODM to customize system configs as much as Vendor, because /odm is another
+        // vendor partition other than /vendor.
+        int odmPermissionFlag = vendorPermissionFlag;
+        readPermissions(Environment.buildPath(
+                Environment.getOdmDirectory(), "etc", "sysconfig"), odmPermissionFlag);
+        readPermissions(Environment.buildPath(
+                Environment.getOdmDirectory(), "etc", "permissions"), odmPermissionFlag);
+
+        // Allow OEM to customize features and OEM permissions
+        int oemPermissionFlag = ALLOW_FEATURES | ALLOW_OEM_PERMISSIONS;
+        readPermissions(Environment.buildPath(
+                Environment.getOemDirectory(), "etc", "sysconfig"), oemPermissionFlag);
+        readPermissions(Environment.buildPath(
+                Environment.getOemDirectory(), "etc", "permissions"), oemPermissionFlag);
+
+        // Allow Product to customize system configs around libs, features, permissions and apps
+        int productPermissionFlag = ALLOW_LIBS | ALLOW_FEATURES | ALLOW_PERMISSIONS |
+                ALLOW_APP_CONFIGS | ALLOW_PRIVAPP_PERMISSIONS;
+        readPermissions(Environment.buildPath(
+                Environment.getProductDirectory(), "etc", "sysconfig"), productPermissionFlag);
+        readPermissions(Environment.buildPath(
+                Environment.getProductDirectory(), "etc", "permissions"), productPermissionFlag);
+    }
+
+
+
+
+
+@Override
+public boolean hasSystemFeature(String name, int version) {
+    // allow instant applications
+    synchronized (mAvailableFeatures) {
+        final FeatureInfo feat = mAvailableFeatures.get(name);
+        if (feat == null) {
+            return false;
+        } else {
+            return feat.version >= version;
+        }
+    }
+}

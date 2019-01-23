@@ -1,0 +1,1 @@
+OMX_ERRORTYPE   定义在    vendor/nxp/fsl_imx_omx/OpenMAXIL/ghdr/OMX_Core.h

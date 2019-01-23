@@ -18,8 +18,7 @@ binder::Status NetdNativeService::setResolverConfiguration(int32_t netId,
     for (const std::string& fingerprint : tlsFingerprints) {
         std::vector<uint8_t> decoded = parseBase64(fingerprint);
         if (decoded.empty()) {
-            return binder::Status::fromServiceSpecificError(EINVAL,
-                    String8::format("ResolverController error: bad fingerprint"));
+            return binder::Status::fromServiceSpecificError(EINVAL,String8::format("ResolverController error: bad fingerprint"));
         }
         decoded_fingerprints.emplace(decoded);
     }
