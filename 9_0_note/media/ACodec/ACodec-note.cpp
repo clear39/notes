@@ -2,6 +2,7 @@
  * ACodec 被封装在 MediaCodec 中，而 MediaCodec 又被封装在 NuPlayer::Decoder 中
  * 这里重点分析 AHierarchicalStateMachine 机制，类似与Java层中StateMachine机制
  */
+
 //  @frameworks/av/media/libstagefright/ACodec.cpp
 struct ACodec : public AHierarchicalStateMachine, public CodecBase {
 
@@ -9,17 +10,15 @@ struct ACodec : public AHierarchicalStateMachine, public CodecBase {
     virtual void onMessageReceived(const sp<AMessage> &msg) {
         handleMessage(msg);
     }
+
 }
 
 
 struct CodecBase : public AHandler, /* static */ ColorUtils {}
 
 
-
-
 /**
- * AState 和 AHierarchicalStateMachine 匹配一起用
- * 
+ * AState 和 AHierarchicalStateMachine 匹配一起用 
  */
 //  @frameworks/av/media/libstagefright/foundation/AHierarchicalStateMachine.cpp
 struct AState : public RefBase {
@@ -37,6 +36,7 @@ struct AState : public RefBase {
      */
     virtual bool onMessageReceived(const sp<AMessage> &msg) = 0;  
 }
+
 struct AHierarchicalStateMachine {}
 
 
