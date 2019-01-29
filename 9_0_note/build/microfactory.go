@@ -631,12 +631,22 @@ func Main() {
 
 	flags := flag.NewFlagSet("", flag.ExitOnError)
 	flags.BoolVar(&config.Race, "race", false, "enable data race detection.")
+	fmt.Println("config.Race:%s"，config.Race);
 	flags.BoolVar(&config.Verbose, "v", false, "Verbose")
+	fmt.Println("config.Verbose:%s"，config.Verbose);
 	flags.StringVar(&output, "o", "", "Output file")
+	fmt.Println("output:%s"，output);
 	flags.StringVar(&mybin, "b", "", "Microfactory binary location")
+	fmt.Println("mybin:%s"mybin);
 	flags.StringVar(&config.TrimPath, "trimpath", "", "remove prefix from recorded source file paths")
+	fmt.Println("config.TrimPath:%s"config.TrimPath);
 	flags.Var(&pkgMap, "pkg-path", "Mapping of package prefixes to file paths")
+
+	
+
 	err := flags.Parse(os.Args[1:])
+
+	//fmt.Println("os.Args[1:]:%s,tracePath:%s"，filepath,tracePath);
 
 	if err == flag.ErrHelp || flags.NArg() != 1 || output == "" {
 		fmt.Fprintln(os.Stderr, "Usage:", os.Args[0], "-o out/binary <main-package>")
@@ -645,6 +655,7 @@ func Main() {
 	}
 
 	tracePath := filepath.Join(filepath.Dir(output), "."+filepath.Base(output)+".trace")
+	fmt.Println("filepath:%s,tracePath:%s"，filepath,tracePath);
 	if traceFile, err := os.OpenFile(tracePath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666); err == nil {
 		defer traceFile.Close()
 		config.TraceFunc = func(name string) func() {
