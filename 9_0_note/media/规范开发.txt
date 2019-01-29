@@ -1,0 +1,41 @@
+1、消除MediaPlayer如下警告：
+01-26 09:26:13.501  6576  6576 W MediaPlayer: Couldn't open /storage/B4FE-5315/test.mp4 : java.io.FileNotFoundException: No content provider: /storage/B4FE-5315/test.mp4
+解决方法：  本地文件路径前加上 file://
+
+2、Context使用：
+尽可能使用getApplicationContext()，尤其类似于getSystemService()接口(确保服务代理每个进程中只有一份；减少内存泄露)；
+
+
+
+3、Handler使用：
+1) Handler内部类尽可能使用静态内部类,通过弱引用传递外部内：
+public static MyHandler extends Hander(){
+    private WeakReference mOutClass；
+    public MyHandler(OutClass os){
+        mOutClass = new WeakReference(os);
+    }
+}
+
+2）在外部类 (Activity / Service ) 退出之前，请确保调用 removeCallbacksAndMessages 移除Hander内部所有消息或者回调；
+
+
+3）对于UI更新或者消息发送可能出现高频率操作，请使用Handler进行过滤 (确保在下一次操作之前，移除由于系统繁忙未来得及处理的操作);
+尽可能在消息发出点进行处理，以减少进程间通讯不必要的资源消耗；
+场景：倒车信号/收音机搜台频点信息等等；
+当系统打印警告出现“skip frame”或者“slow”，请排查自己的应用！ 
+
+
+4、aidl使用：
+1）在通过aidl访问时，进行单实例类封装，确保每个进程中同一个服务代理只有一个；
+
+2）aidl接口定义时，在没有返回值尽可能使用oneway关键字；
+请不要在aidl回调接口中做比较耗时的操作；
+
+3）对于实时性要求不是很高的通讯，建议使用系统封装的Messenger和AsyncChannel类匹配使用；
+
+
+
+5、调试优化
+1) 建议每个模块/应用封装自身的日志打印类（请日志规范话，以及只输出关键日志），方便日志打印；（高版本Android logcat提供了根据进程id进行过滤（logcat --pid=进程id））
+2）核心调试信息打印（使用 dumpsys 和 am 命令）
+应用内部可以集成一个Service(这里类命名为DebugRadioService简称DRS，该类必须重载dump方法)，可以通过am命令启动该Service，然后通过dumpsys activity service DRS进行信息打印输出；

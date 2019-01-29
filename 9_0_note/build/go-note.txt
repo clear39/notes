@@ -1,0 +1,568 @@
+package main 定义了包名。你必须在源文件中非注释的第一行指明这个文件属于哪个包，如：package main。package main表示一个可独立执行的程序，
+每个 Go 应用程序都包含一个名为 main 的包。
+
+func main() 是程序开始执行的函数。main 函数是每一个可执行程序所必须包含的，一般来说都是在启动后第一个执行的函数（如果有 init() 函数则会先执行该函数）。
+
+
+当标识符（包括常量、变量、类型、函数名、结构字段等等）以一个大写字母开头，
+如：Group1，那么使用这种形式的标识符的对象就可以被外部包的代码所使用（客户端程序需要先导入这个包），这被称为导出(像面向对象语言中的 public)
+标识符如果以小写字母开头，则对包外是不可见的，但是他们在整个包的内部是可见并且可用的（像面向对象语言中的 protected ）
+
+
+
+
+//变量：//////////////////////////////////////////////////////////////////////////////////////////////
+声明变量的一般形式是使用 var 关键字：var identifier type
+Go 语言变量名由字母、数字、下划线组成，其中首个字符不能为数字。
+
+根据值自行判定变量类型: var v_name = value
+
+省略var, 注意 :=左侧的变量不应该是已经声明过的，否则会导致编译错误  v_name := value
+
+
+
+Go 语言常量:
+const identifier [type] = value  //type 可以不写
+
+
+
+
+
+
+
+
+
+
+
+
+//Go 语言数组://////////////////////////////////////////////////////////////////////////////////////////////
+声明数组,语法格式:   var variable_name [SIZE] variable_type
+
+初始化数组:
+方法一：var balance = [5]float32{1000.0, 2.0, 3.4, 7.0, 50.0}
+方法二：var balance = [...]float32{1000.0, 2.0, 3.4, 7.0, 50.0}
+
+
+Go 语言多维数组，多维数组声明方式：var variable_name [SIZE1][SIZE2]...[SIZEN] variable_type
+
+初始化二维数组：
+多维数组可通过大括号来初始值。以下实例为一个 3 行 4 列的二维数组：
+a = [3][4]int{  
+ {0, 1, 2, 3} ,   /*  第一行索引为 0 */
+ {4, 5, 6, 7} ,   /*  第二行索引为 1 */
+ {8, 9, 10, 11},   /* 第三行索引为 2 */
+}
+注意：以上代码中倒数第二行的 } 必须要有逗号，因为最后一行的 } 不能单独一行，也可以写成这样：
+a = [3][4]int{  
+ {0, 1, 2, 3} ,   /*  第一行索引为 0 */
+ {4, 5, 6, 7} ,   /*  第二行索引为 1 */
+ {8, 9, 10, 11}}   /* 第三行索引为 2 */
+
+
+Go 语言向函数传递数组：
+
+方式一、形参设定数组大小：
+void myFunction(param [10]int)
+{
+}
+方式二、形参未设定数组大小：
+void myFunction(param []int)
+{
+}
+
+
+
+//Go 语言切片(Slice)://////////////////////////////////////////////////////////////////////////////////////////////
+Go 语言切片是对数组的抽象。
+Go 数组的长度不可改变，在特定场景中这样的集合就不太适用，Go中提供了一种灵活，功能强悍的内置类型切片("动态数组"),
+与数组相比切片的长度是不固定的，可以追加元素，在追加时可能使切片的容量增大。
+
+定义切片:
+可以声明一个未指定大小的数组来定义切片:     var identifier []type
+
+切片不需要说明长度。
+或使用make()函数来创建切片:
+var slice1 []type = make([]type, len)
+也可以简写为
+slice1 := make([]type, len)
+
+也可以指定容量，其中capacity为可选参数:make([]T, length, capacity)
+
+切片初始化:
+s :=[] int {1,2,3 }     //  直接初始化切片，[]表示是切片类型，{1,2,3}初始化值依次是1,2,3.其cap=len=3
+
+s := arr[:]         //  初始化切片s,是数组arr的引用
+s := arr[startIndex:endIndex] 
+s := arr[startIndex:] 
+
+
+s :=make([]int,len,cap) //通过内置函数make()初始化切片s,[]int 标识为其元素类型为int的切片
+
+
+
+//Go 语言范围(Range)://////////////////////////////////////////////////////////////////////////////////////////////
+Go 语言中 range 关键字用于 for 循环中迭代数组(array)、切片(slice)、通道(channel)或集合(map)的元素。
+在数组和切片中它返回元素的索引和索引对应的值，在集合中返回 key-value 对的 key 值。
+package main
+import "fmt"
+func main() {
+    //这是我们使用range去求一个slice的和。使用数组跟这个很类似
+    nums := []int{2, 3, 4}
+    sum := 0
+    for _, num := range nums {
+        sum += num
+    }
+    fmt.Println("sum:", sum)
+    //在数组上使用range将传入index和值两个变量。上面那个例子我们不需要使用该元素的序号，所以我们使用空白符"_"省略了。有时侯我们确实需要知道它的索引。
+    for i, num := range nums {
+        if num == 3 {
+            fmt.Println("index:", i)
+        }
+    }
+    //range也可以用在map的键值对上。
+    kvs := map[string]string{"a": "apple", "b": "banana"}
+    for k, v := range kvs {
+        fmt.Printf("%s -> %s\n", k, v)
+    }
+    //range也可以用来枚举Unicode字符串。第一个参数是字符的索引，第二个是字符（Unicode的值）本身。
+    for i, c := range "go" {
+        fmt.Println(i, c)
+    }
+}
+
+
+
+//Go 语言Map(集合)://////////////////////////////////////////////////////////////////////////////////////////////
+Map 是一种无序的键值对的集合。Map 最重要的一点是通过 key 来快速检索数据，key 类似于索引，指向数据的值。
+Map 是一种集合，所以我们可以像迭代数组和切片那样迭代它。不过，Map 是无序的，我们无法决定它的返回顺序，这是因为 Map 是使用 hash 表来实现的。
+
+定义 Map:   可以使用内建函数 make 也可以使用 map 关键字来定义 Map:
+/* 声明变量，默认 map 是 nil */
+var map_variable map[key_data_type]value_data_type
+
+/* 使用 make 函数 */
+map_variable := make(map[key_data_type]value_data_type)
+
+如果不初始化 map，那么就会创建一个 nil map。nil map 不能用来存放键值对
+
+
+package main
+import "fmt"
+func main() {
+    var countryCapitalMap map[string]string /*创建集合 */
+    countryCapitalMap = make(map[string]string)
+
+    /* map插入key - value对,各个国家对应的首都 */
+    countryCapitalMap [ "France" ] = "Paris"
+    countryCapitalMap [ "Italy" ] = "罗马"
+    countryCapitalMap [ "Japan" ] = "东京"
+    countryCapitalMap [ "India " ] = "新德里"
+
+    /*使用键输出地图值 */ for country := range countryCapitalMap {
+        fmt.Println(country, "首都是", countryCapitalMap [country])
+    }
+
+    /*查看元素在集合中是否存在 */
+    captial, ok := countryCapitalMap [ "美国" ] /*如果确定是真实的,则存在,否则不存在 */
+    /*fmt.Println(captial) */
+    /*fmt.Println(ok) */
+    if (ok) {
+        fmt.Println("美国的首都是", captial)
+    } else {
+        fmt.Println("美国的首都不存在")
+    }
+}
+
+
+delete() 函数
+delete() 函数用于删除集合的元素, 参数为 map 和其对应的 key。实例如下：
+
+package main
+import "fmt"
+func main() {
+    /* 创建map */
+    countryCapitalMap := map[string]string{"France": "Paris", "Italy": "Rome", "Japan": "Tokyo", "India": "New delhi"}
+
+    fmt.Println("原始地图")
+
+    /* 打印地图 */
+    for country := range countryCapitalMap {
+        fmt.Println(country, "首都是", countryCapitalMap [ country ])
+    }
+
+    /*删除元素*/ delete(countryCapitalMap, "France")
+    fmt.Println("法国条目被删除")
+
+    fmt.Println("删除元素后地图")
+
+    /*打印地图*/
+    for country := range countryCapitalMap {
+        fmt.Println(country, "首都是", countryCapitalMap [ country ])
+    }
+}
+
+
+
+
+
+//Go 语言结构体://////////////////////////////////////////////////////////////////////////////////////////////
+
+结构体的格式如下：
+type struct_variable_type struct {
+   member definition;
+   member definition;
+   ...
+   member definition;
+}
+一旦定义了结构体类型，它就能用于变量的声明，语法格式如下：
+variable_name := structure_variable_type {value1, value2...valuen}或
+variable_name := structure_variable_type { key1: value1, key2: value2..., keyn: valuen}
+
+
+访问结构体成员: 结构体.成员名
+结构体作为函数参数: 
+type Books struct {
+
+}
+
+func printBook( book Books ) {
+
+}
+
+
+结构体指针:
+var struct_pointer *Books
+struct_pointer = &Book1;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Go 语言指针://////////////////////////////////////////////////////////////////////////////////////////////
+Go 语言的取地址符是 &，放到一个变量前使用就会返回相应变量的内存地址。
+package main
+import "fmt"
+func main() {
+   var a int = 10   
+   fmt.Printf("变量的地址: %x\n", &a  ) //变量的地址: 20818a220
+}
+
+指针声明格式如下：var var_name *var-type
+
+Go 空指针:
+当一个指针被定义后没有分配到任何变量时，它的值为 nil。
+nil 指针也称为空指针。
+nil在概念上和其它语言的null、None、nil、NULL一样，都指代零值或空值。
+一个指针变量通常缩写为 ptr。
+package main
+import "fmt"
+func main() {
+   var  ptr *int
+   fmt.Printf("ptr 的值为 : %x\n", ptr  )
+}
+
+空指针判断：
+if(ptr != nil)     /* ptr 不是空指针 */
+if(ptr == nil)    /* ptr 是空指针 */
+
+
+Go 语言指针数组，格式： var ptr [MAX]*int;
+
+
+Go 语言指向指针的指针,格式：var ptr **int;
+package main
+import "fmt"
+func main() {
+   var a int
+   var ptr *int
+   var pptr **int
+   a = 3000
+   /* 指针 ptr 地址 */
+   ptr = &a
+   /* 指向指针 ptr 地址 */
+   pptr = &ptr
+   /* 获取 pptr 的值 */
+   fmt.Printf("变量 a = %d\n", a )
+   fmt.Printf("指针变量 *ptr = %d\n", *ptr )
+   fmt.Printf("指向指针的指针变量 **pptr = %d\n", **pptr)
+}
+
+Go 语言指针作为函数参数：
+package main
+import "fmt"
+func main() {
+   /* 定义局部变量 */
+   var a int = 100
+   var b int= 200
+
+   fmt.Printf("交换前 a 的值 : %d\n", a )
+   fmt.Printf("交换前 b 的值 : %d\n", b )
+
+   /* 调用函数用于交换值
+   * &a 指向 a 变量的地址
+   * &b 指向 b 变量的地址
+   */
+   swap(&a, &b);//使用
+
+   fmt.Printf("交换后 a 的值 : %d\n", a )
+   fmt.Printf("交换后 b 的值 : %d\n", b )
+}
+
+func swap(x *int, y *int) {
+   var temp int
+   temp = *x    /* 保存 x 地址的值 */
+   *x = *y      /* 将 y 赋值给 x */
+   *y = temp    /* 将 temp 赋值给 y */
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Go 语言函数：//////////////////////////////////////////////////////////////////////////////////////////////
+Go 语言函数：       @   http://www.runoob.com/go/go-functions.html
+func：函数由 func 开始声明
+function_name：函数名称，函数名和参数列表一起构成了函数签名。
+parameter list：参数列表，参数就像一个占位符，当函数被调用时，你可以将值传递给参数，这个值被称为实际参数。参数列表指定的是参数类型、顺序、及参数个数。参数是可选的，也就是说函数也可以不包含参数。
+return_types：返回类型，函数返回一列值。return_types 是该列值的数据类型。有些功能不需要返回值，这种情况下 return_types 不是必须的。（注意可以返回多个值）
+func function_name( [parameter list] ) [return_types] {
+   函数体
+}
+
+默认情况下，Go 语言使用的是值传递，即在调用过程中不会影响到实际参数。
+
+
+Go 语言函数引用传递值： @http://www.runoob.com/go/go-function-call-by-reference.html
+func swap(x *int, y *int) {
+   var temp int
+   temp = *x    /* 保持 x 地址上的值 */
+   *x = *y      /* 将 y 值赋给 x */
+   *y = temp    /* 将 temp 值赋给 y */
+}
+
+
+
+Go 语言函数方法: @ http://www.runoob.com/go/go-method.html
+Go 语言中同时有函数和方法。一个方法就是一个包含了接受者的函数，接受者可以是命名类型或者结构体类型的一个值或者是一个指针。
+所有给定类型的方法属于该类型的方法集。语法格式如下：
+func (variable_name variable_data_type) function_name() [return_type]{
+   /* 函数体*/
+}
+
+Go 语言函数作为值:  @ http://www.runoob.com/go/go-function-as-values.html
+Go 语言可以很灵活的创建函数，并作为值使用。以下实例中我们在定义的函数中初始化一个变量，该函数仅仅是为了使用内置函数 math.sqrt() ，实例为：
+package main
+import (
+   "fmt"
+   "math"
+)
+func main(){
+   /* 声明函数变量 */
+   getSquareRoot := func(x float64) float64 {
+      return math.Sqrt(x)
+   }
+   /* 使用函数 */
+   fmt.Println(getSquareRoot(9))
+}
+
+Go 语言函数闭包:    @  http://www.runoob.com/go/go-function-closures.html
+Go 语言支持匿名函数，可作为闭包。匿名函数是一个"内联"语句或表达式。匿名函数的优越性在于可以直接使用函数内的变量，不必申明。
+以下实例中，我们创建了函数 getSequence() ，返回另外一个函数。该函数的目的是在闭包中递增 i 变量，代码如下：
+package main
+import "fmt"
+func getSequence() func() int {
+   i:=0
+   return func() int {
+      i+=1
+     return i  
+   }
+}
+
+func main(){
+   /* nextNumber 为一个函数，函数 i 为 0 */
+   nextNumber := getSequence()  
+
+   /* 调用 nextNumber 函数，i 变量自增 1 并返回 */
+   fmt.Println(nextNumber())
+   fmt.Println(nextNumber())
+   fmt.Println(nextNumber())
+   
+   /* 创建新的函数 nextNumber1，并查看结果 */
+   nextNumber1 := getSequence()  
+   fmt.Println(nextNumber1())
+   fmt.Println(nextNumber1())
+}
+
+
+
+
+
+
+//Go 语言接口://////////////////////////////////////////////////////////////////////////////
+Go 语言提供了另外一种数据类型即接口，它把所有的具有共性的方法定义在一起，任何其他类型只要实现了这些方法就是实现了这个接口。
+
+/* 定义接口 */
+type interface_name interface {
+   method_name1 [return_type]
+   method_name2 [return_type]
+   method_name3 [return_type]
+   ...
+   method_namen [return_type]
+}
+
+/* 定义结构体 */
+type struct_name struct {
+   /* variables */
+}
+
+/* 实现接口方法 */
+func (struct_name_variable struct_name) method_name1() [return_type] {
+   /* 方法实现 */
+}
+...
+func (struct_name_variable struct_name) method_namen() [return_type] {
+   /* 方法实现*/
+}
+
+
+package main
+import (
+    "fmt"
+)
+
+type Phone interface {
+    call()
+}
+
+type NokiaPhone struct {
+}
+
+func (nokiaPhone NokiaPhone) call() {
+    fmt.Println("I am Nokia, I can call you!")
+}
+
+type IPhone struct {
+}
+
+func (iPhone IPhone) call() {
+    fmt.Println("I am iPhone, I can call you!")
+}
+
+func main() {
+    var phone Phone
+
+    phone = new(NokiaPhone)
+    phone.call()
+
+    phone = new(IPhone)
+    phone.call()
+
+}
+
+
+
+
+
+
+
+//Go 错误处理://///////////////////////////////////////////////////////////////////////////
+//  @   http://www.runoob.com/go/go-error-handling.html
+
+Go 语言通过内置的错误接口提供了非常简单的错误处理机制。
+
+error类型是一个接口类型，这是它的定义：
+type error interface {
+    Error() string
+}
+
+我们可以在编码中通过实现 error 接口类型来生成错误信息。
+
+函数通常在最后的返回值中返回错误信息。使用errors.New 可返回一个错误信息：
+func Sqrt(f float64) (float64, error) {
+    if f < 0 {
+        return 0, errors.New("math: square root of negative number")
+    }
+    // 实现
+}
+
+
+//Go 并发://///////////////////////////////////////////////////////////////////////////
+Go 语言支持并发，我们只需要通过 go 关键字来开启 goroutine 即可。
+
+goroutine 是轻量级线程，goroutine 的调度是由 Golang 运行时进行管理的。
+
+goroutine 语法格式：    go 函数名( 参数列表 )
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
