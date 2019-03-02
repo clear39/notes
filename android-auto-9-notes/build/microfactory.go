@@ -1,3 +1,6 @@
+//这个文件是由 "build/blueprint/microfactory/microfactory.go" 替换而来 
+// @ out/.microfactory_Linux_intermediates/src/microfactory.go`
+
 /**
 	GOROOT = /work/workcodes/aosp-p9.x-auto-alpha/prebuilts/go/linux-x86
 	mf_cmd = prebuilts/go/linux-x86/bin/go run out/.microfactory_Linux_intermediates/src/microfactory.go
@@ -22,7 +25,8 @@
 	-pkg-path "github.com/google/blueprint=build/blueprint/"
 	-trimpath "work/workcodes/aosp-p9.x-auto-alpha/"
 	-pkg-path android/soong=/work/workcodes/aosp-p9.x-auto-alpha/build/soong
-	-o out/soong_ui android/soong/cmd/soong_ui
+	-o out/soong_ui 
+	android/soong/cmd/soong_ui
 
 */
 
@@ -81,6 +85,8 @@ type Config struct {
 	TrimPath string
 
 	TraceFunc func(name string) func()
+
+	LogFunc func(name string) func()
 
 	pkgs  []string
 	paths map[string]string
@@ -247,7 +253,7 @@ func parseBuildComment(comment string) (matches, ok bool) {
 	return false, false
 }
 
-// findDeps is the recursive version of FindDeps. allPackages is the map of
+// findDeps is the recursive(递归的) version of FindDeps. allPackages is the map of
 // all locally defined packages so that the same dependency of two different
 // packages is only resolved once.
 func (p *GoPackage) findDeps(config *Config, path string, allPackages *linkedDepSet) error {
@@ -275,6 +281,8 @@ func (p *GoPackage) findDeps(config *Config, path string, allPackages *linkedDep
 	if len(foundPkgs) != 1 {
 		return fmt.Errorf("Expected one package in %q, got %d", path, len(foundPkgs))
 	}
+
+	
 	// Extract the first (and only) entry from the map.
 	for _, pkg := range foundPkgs {
 		foundPkg = pkg
@@ -304,6 +312,7 @@ func (p *GoPackage) findDeps(config *Config, path string, allPackages *linkedDep
 				return fmt.Errorf("%s: invalid quoted string: <%s> %v", filename, importSpec.Path.Value, err)
 			}
 
+			//在allPackages中通过键值name查找对应的GoPackage，如果已经存在，则添加
 			if pkg, ok := allPackages.tryGetByName(name); ok {
 				if pkg != nil {
 					if _, ok := localDeps[name]; !ok {
@@ -315,6 +324,7 @@ func (p *GoPackage) findDeps(config *Config, path string, allPackages *linkedDep
 			}
 
 			var pkgPath string
+			//这里通过config.Path方法，进行前缀过滤和拼接得到对应的路径，并且返回给path
 			if path, ok, err := config.Path(name); err != nil {
 				return err
 			} else if !ok {
@@ -349,7 +359,6 @@ func (p *GoPackage) findDeps(config *Config, path string, allPackages *linkedDep
 	for _, dep := range deps {
 		p.directDeps = append(p.directDeps, allPackages.getByName(dep))
 	}
-
 	return nil
 }
 
@@ -363,11 +372,11 @@ func (p *GoPackage) Compile(config *Config, outDir string) error {
 
 	// Build all dependencies in parallel, then fail if any of them failed.
 	var wg sync.WaitGroup
-	for _, dep := range p.directDeps {
+	for _, dep := range p.directDeps { // directDeps 为 GoPackage 切片（数组）
 		wg.Add(1)
 		go func(dep *GoPackage) {
 			defer wg.Done()
-			dep.Compile(config, outDir)
+			dep.Compile(config, outDir) //递归调用
 		}(dep)
 	}
 	wg.Wait()
@@ -381,20 +390,34 @@ func (p *GoPackage) Compile(config *Config, outDir string) error {
 	endTrace := config.trace("check compile %s", p.Name)
 
 	p.pkgDir = filepath.Join(outDir, strings.Replace(p.Name, "/", "-", -1))
-	p.output = filepath.Join(p.pkgDir, p.Name) + ".a"
-	shaFile := p.output + ".hash"
+	p.output = filepath.Join(p.pkgDir, p.Name) + ".a" //
+	shaFile := p.output + ".hash"   //
 
 	hash := sha1.New()
 	fmt.Fprintln(hash, runtime.GOOS, runtime.GOARCH, goVersion)
 
+
+	/**
+	/work/workcodes/aosp-p9.x-auto-alpha/prebuilts/go/linux-x86/pkg/tool/linux_amd64/compile 
+	-o 
+	-p 
+	-complete
+	-pack
+	-nolocalimports
+	-trimpath  /work/workcodes/aosp-p9.x-auto-alpha
+	-I 
+	*/
 	cmd := exec.Command(filepath.Join(goToolDir, "compile"),
 		"-o", p.output,
 		"-p", p.Name,
 		"-complete", "-pack", "-nolocalimports")
-	if !isGo18 {
+
+	
+	
+	if !isGo18 { //false
 		cmd.Args = append(cmd.Args, "-c", fmt.Sprintf("%d", runtime.NumCPU()))
 	}
-	if config.Race {
+	if config.Race { //false
 		cmd.Args = append(cmd.Args, "-race")
 		fmt.Fprintln(hash, "-race")
 	}
@@ -493,6 +516,7 @@ func (p *GoPackage) Link(config *Config, out string) error {
 	}
 	endTrace := config.trace("check link %s", p.Name)
 
+	// 
 	shaFile := filepath.Join(filepath.Dir(out), "."+filepath.Base(out)+"_hash")
 
 	if !p.rebuilt {
@@ -519,9 +543,15 @@ func (p *GoPackage) Link(config *Config, out string) error {
 		return err
 	}
 
+	/**
+	/work/workcodes/aosp-p9.x-auto-alpha/prebuilts/go/linux-x86/pkg/tool/linux_amd64/link 
+	-o 
+	-L [directory]   //add specified directory to library path
+	*/
+
 	cmd := exec.Command(filepath.Join(goToolDir, "link"), "-o", out)
 	if config.Race {
-		cmd.Args = append(cmd.Args, "-race")
+		cmd.Args = append(cmd.Args, "-race") //enable race detector
 	}
 	for _, dep := range p.allDeps {
 		cmd.Args = append(cmd.Args, "-L", dep.pkgDir)
@@ -541,6 +571,31 @@ func (p *GoPackage) Link(config *Config, out string) error {
 	return ioutil.WriteFile(shaFile, p.hashResult, 0666)
 }
 
+
+// Path takes a package name, applies the path mappings and returns the resulting path.
+//
+// If the package isn't mapped, we'll return false to prevent compilation attempts.
+func (c *Config) Path(pkg string) (string, bool, error) {
+	if c == nil || c.paths == nil {
+		return "", false, fmt.Errorf("No package mappings")
+	}
+
+	/*
+	-pkg-path "github.com/google/blueprint=build/blueprint/"
+	-pkg-path "android/soong=/work/workcodes/aosp-p9.x-auto-alpha/build/soong"
+	*/
+	for _, pkgPrefix := range c.pkgs {
+		if pkg == pkgPrefix {
+			return c.paths[pkgPrefix], true, nil
+		} else if strings.HasPrefix(pkg, pkgPrefix+"/") {
+			return filepath.Join(c.paths[pkgPrefix], strings.TrimPrefix(pkg, pkgPrefix+"/")), true, nil
+		}
+	}
+
+	return "", false, nil
+}
+
+
 func Build(config *Config, out, pkg string) (*GoPackage, error) {
 	p := &GoPackage{
 		Name: "main",
@@ -558,7 +613,8 @@ func Build(config *Config, out, pkg string) (*GoPackage, error) {
 		return nil, fmt.Errorf("Error locking file (%q): %v", lockFileName, err)
 	}
 
-	path, ok, err := config.Path(pkg)
+	//这里匹配查找字符串 path= “build/blueprint/”
+	path, ok, err := config.Path(pkg)   //pkg = "github.com/google/blueprint/microfactory/main"
 	if err != nil {
 		return nil, fmt.Errorf("Error finding package %q for main: %v", pkg, err)
 	}
@@ -566,18 +622,24 @@ func Build(config *Config, out, pkg string) (*GoPackage, error) {
 		return nil, fmt.Errorf("Could not find package %q", pkg)
 	}
 
+	//	intermediates = "/work/workcodes/aosp-p9.x-auto-alpha/out/.microfactory_Linux_intermediates"
 	intermediates := filepath.Join(filepath.Dir(out), "."+filepath.Base(out)+"_intermediates")
 	if err := os.MkdirAll(intermediates, 0777); err != nil {
 		return nil, fmt.Errorf("Failed to create intermediates directory: %v", err)
 	}
 
-	if err := p.FindDeps(config, path); err != nil {
+	//
+	if err := p.FindDeps(config, path); err != nil {//	path= “build/blueprint/”
 		return nil, fmt.Errorf("Failed to find deps of %v: %v", pkg, err)
 	}
-	if err := p.Compile(config, intermediates); err != nil {
+
+	//
+	if err := p.Compile(config, intermediates); err != nil {//	intermediates = "out/.microfactory_Linux_intermediates"
 		return nil, fmt.Errorf("Failed to compile %v: %v", pkg, err)
 	}
-	if err := p.Link(config, out); err != nil {
+
+	//
+	if err := p.Link(config, out); err != nil {// out
 		return nil, fmt.Errorf("Failed to link %v: %v", pkg, err)
 	}
 	return p, nil
@@ -587,7 +649,7 @@ func Build(config *Config, out, pkg string) (*GoPackage, error) {
 // and if does, it will launch a new copy and return true. Otherwise it will return
 // false to continue executing.
 func rebuildMicrofactory(config *Config, mybin string) bool {
-	if pkg, err := Build(config, mybin, "github.com/google/blueprint/microfactory/main"); err != nil {
+	if pkg, err := Build(config, mybin /*="out/microfactory_Linux"*/, "github.com/google/blueprint/microfactory/main"); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	} else if !pkg.rebuilt {
@@ -609,17 +671,24 @@ func rebuildMicrofactory(config *Config, mybin string) bool {
 
 /*
 prebuilts/go/linux-x86/bin/go run out/.microfactory_Linux_intermediates/src/microfactory.go 
--b out/microfactory_Linux
+-b /work/workcodes/aosp-p9.x-auto-alpha/out/microfactory_Linux
 -pkg-path "github.com/google/blueprint=build/blueprint/"
 -trimpath "work/workcodes/aosp-p9.x-auto-alpha/"
--pkg-path android/soong=/work/workcodes/aosp-p9.x-auto-alpha/build/soong
--o out/soong_ui android/soong/cmd/soong_ui
+-pkg-path "android/soong=/work/workcodes/aosp-p9.x-auto-alpha/build/soong"
+-o /work/workcodes/aosp-p9.x-auto-alpha/out/soong_ui android/soong/cmd/soong_ui
 */
+
 // microfactory.bash will make a copy of this file renamed into the main package for use with `go run`
 
 /**
  func main() 是程序开始执行的函数。main 函数是每一个可执行程序所必须包含的，
  一般来说都是在启动后第一个执行的函数（如果有 init() 函数则会先执行该函数）。
+*/
+
+
+
+/**
+如果 /work/workcodes/aosp-p9.x-auto-alpha/out/microfactory_Linux 执行文件存在？？？
 */
 
 func main() { Main() }
@@ -629,24 +698,20 @@ func Main() {
 	// 构造一个pkgPathMappingVar并且赋值给 pkgMap （这个pkgMap 必须没有申明）
 	pkgMap := pkgPathMappingVar{&config}
 
+	//通过flag包创建一个flags类进行参数解析
 	flags := flag.NewFlagSet("", flag.ExitOnError)
 	flags.BoolVar(&config.Race, "race", false, "enable data race detection.")
-	fmt.Println("config.Race:%s"，config.Race);
 	flags.BoolVar(&config.Verbose, "v", false, "Verbose")
-	fmt.Println("config.Verbose:%s"，config.Verbose);
 	flags.StringVar(&output, "o", "", "Output file")
-	fmt.Println("output:%s"，output);
 	flags.StringVar(&mybin, "b", "", "Microfactory binary location")
-	fmt.Println("mybin:%s"mybin);
 	flags.StringVar(&config.TrimPath, "trimpath", "", "remove prefix from recorded source file paths")
-	fmt.Println("config.TrimPath:%s"config.TrimPath);
+
 	flags.Var(&pkgMap, "pkg-path", "Mapping of package prefixes to file paths")
 
-	
 
+	//解析输入的参数
 	err := flags.Parse(os.Args[1:])
-
-	//fmt.Println("os.Args[1:]:%s,tracePath:%s"，filepath,tracePath);
+	
 
 	if err == flag.ErrHelp || flags.NArg() != 1 || output == "" {
 		fmt.Fprintln(os.Stderr, "Usage:", os.Args[0], "-o out/binary <main-package>")
@@ -654,26 +719,35 @@ func Main() {
 		os.Exit(1)
 	}
 
+	//tracePath = “out/.soong_ui.trace”
 	tracePath := filepath.Join(filepath.Dir(output), "."+filepath.Base(output)+".trace")
-	fmt.Println("filepath:%s,tracePath:%s"，filepath,tracePath);
+
+	
+
+	//用于保存编译工具log日志信息，可以用于调试
 	if traceFile, err := os.OpenFile(tracePath, os.O_RDWR|os.O_CREATE|os.O_APPEND, 0666); err == nil {
 		defer traceFile.Close()
+
+		//这里用于函数调用轨迹
 		config.TraceFunc = func(name string) func() {
-			fmt.Fprintf(traceFile, "%d B %s\n", time.Now().UnixNano()/1000, name)
+			fmt.Fprintf(traceFile, "%d Bigen %s\n", time.Now().UnixNano()/1000, name)
 			return func() {
-				fmt.Fprintf(traceFile, "%d E %s\n", time.Now().UnixNano()/1000, name)
+				fmt.Fprintf(traceFile, "%d End %s\n", time.Now().UnixNano()/1000, name)
 			}
 		}
 	}
 	if executable, err := os.Executable(); err == nil {
-		defer un(config.trace("microfactory %s", executable))
+		//	defer语句 https://www.jianshu.com/p/5b0b36f398a2
+
+		// 	executable = "/work/workcodes/aosp-p9.x-auto-alpha/out/microfactory_Linux"
+		defer un(config.trace("microfactory %s", executable))  //un函数内部定义（执行传入参数函数）
 	} else {
 		defer un(config.trace("microfactory <unknown>"))
 	}
 
-	if mybin != "" {
+	if mybin != "" { //mybin 不为空
 		if rebuildMicrofactory(&config, mybin) {
-			return
+			return//执行成功，则直接返回
 		}
 	}
 
@@ -709,3 +783,4 @@ func (p *pkgPathMappingVar) Set(value string) error {
 
 	return p.Map(pkgPrefix, pathPrefix)
 }
+

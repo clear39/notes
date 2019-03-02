@@ -35,7 +35,7 @@ function getoutdir
 #  $2: package name
 function soong_build_go
 {
-    echo "soong_build_go" "$@"       # soong_build_go soong_ui android/soong/cmd/soong_ui
+    #echo "soong_build_go" "$@"       # soong_build_go soong_ui android/soong/cmd/soong_ui
 
     BUILDDIR=$(getoutdir) \
       SRCDIR=${TOP} \
@@ -48,7 +48,7 @@ source ${TOP}/build/blueprint/microfactory/microfactory.bash  #导入build_go sh
 
 
 
-#   @build/blueprint/microfactory/microfactory.bash  
+#   @ build/blueprint/microfactory/microfactory.bash  
 # Set of utility functions to build and run go code with microfactory
 #
 # Inputs:
@@ -77,6 +77,8 @@ function build_go
     local mf_version_file="${BUILDDIR}/.microfactory_$(uname)_version" # @out/.microfactory_Linux_version
     local built_bin="${BUILDDIR}/$1"            #   @out/soong_ui
     local from_src=1
+
+    
     
      #   @out/microfactory_Linux        # @out/.microfactory_Linux_version    
     if [ -f "${mf_bin}" ] && [ -f "${mf_version_file}" ]; then

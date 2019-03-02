@@ -5,8 +5,12 @@
 # Save the current PWD for use in soong_ui
 export ORIGINAL_PWD=${PWD}  #导入变量 ORIGINAL_PWD 为当前路径，我这里/work/workcodes/aosp-p9.x-auto-alpha/build/soong/
 export TOP=$(gettop)    
+
+#导入了soong_build_go和build_go函数
 source ${TOP}/build/soong/scripts/microfactory.bash
 
+
+#这里是生成soong_ui工具
 soong_build_go soong_ui android/soong/cmd/soong_ui
 
 cd ${TOP}

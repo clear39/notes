@@ -1,0 +1,354 @@
+
+
+1550563878741448 ================================================
+1550563878741450 config.Race: false
+1550563878741452 config.Verbose: false
+1550563878741454 output: /work/workcodes/aosp-p9.x-auto-alpha/out/soong_ui
+1550563878741456 mybin: /work/workcodes/aosp-p9.x-auto-alpha/out/microfactory_Linux
+1550563878741458 config.TrimPath: /work/workcodes/aosp-p9.x-auto-alpha
+1550563878741460 tracePath: /work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui.trace
+1550563878741461 ================================================
+
+ 
+1550563878741466 Begin microfactory /tmp/go-build096370857/b001/exe/microfactory
+
+1550563878741468 ===========rebuildMicrofactory===========================
+1550563878741472 ===========Build====/work/workcodes/aosp-p9.x-auto-alpha/out/microfactory_Linux=====github.com/google/blueprint/microfactory/main==
+
+1550563878741486 =====FindDeps==start===================================
+1550563878741488 Begin findDeps /work/workcodes/aosp-p9.x-auto-alpha/build/blueprint/microfactory/main
+
+1550563878741537 findDeps /work/workcodes/aosp-p9.x-auto-alpha/build/blueprint/microfactory/main size:1
+1550563878741541 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/blueprint/microfactory/main/main.go
+1550563878741544 astFile.Imports name : github.com/google/blueprint/microfactory
+1550563878741546 astFile.Imports pkgPath : /work/workcodes/aosp-p9.x-auto-alpha/build/blueprint/microfactory
+
+1550563878741630 findDeps /work/workcodes/aosp-p9.x-auto-alpha/build/blueprint/microfactory size:1
+1550563878741634 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/blueprint/microfactory/microfactory.go
+1550563878741636 astFile.Imports name : bytes
+1550563878741639 astFile.Imports name : crypto/sha1
+1550563878741641 astFile.Imports name : flag
+1550563878741643 astFile.Imports name : fmt
+1550563878741645 astFile.Imports name : go/ast
+1550563878741647 astFile.Imports name : go/build
+1550563878741649 astFile.Imports name : go/parser
+1550563878741651 astFile.Imports name : go/token
+1550563878741653 astFile.Imports name : io
+1550563878741655 astFile.Imports name : io/ioutil
+1550563878741657 astFile.Imports name : os
+1550563878741659 astFile.Imports name : os/exec
+1550563878741661 astFile.Imports name : path/filepath
+1550563878741664 astFile.Imports name : runtime
+1550563878741666 astFile.Imports name : sort
+1550563878741668 astFile.Imports name : strconv
+1550563878741670 astFile.Imports name : strings
+1550563878741672 astFile.Imports name : sync
+1550563878741674 astFile.Imports name : syscall
+1550563878741676 astFile.Imports name : time
+
+1550563878741678 End findDeps /work/workcodes/aosp-p9.x-auto-alpha/build/blueprint/microfactory/main
+1550563878741680 =====FindDeps==end=====================================
+
+1550563878741682 =====Compile==start===================================
+1550563878741708 Begin check compile github.com/google/blueprint/microfactory,/work/workcodes/aosp-p9.x-auto-alpha/out/.microfactory_Linux_intermediates
+1550563878741720 ==Compile==/work/workcodes/aosp-p9.x-auto-alpha/out/.microfactory_Linux_intermediates/github.com-google-blueprint-microfactory/github.com/google/blueprint/microfactory.a=github.com/google/blueprint/microfactory=
+1550563878741733 isGo18:false
+1550563878741736 NumCPU:4
+1550563878741738 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/blueprint/microfactory/microfactory.go
+1550563878741792 End check compile github.com/google/blueprint/microfactory,/work/workcodes/aosp-p9.x-auto-alpha/out/.microfactory_Linux_intermediates
+1550563878741798 Begin check compile main,/work/workcodes/aosp-p9.x-auto-alpha/out/.microfactory_Linux_intermediates
+1550563878741812 ==Compile==/work/workcodes/aosp-p9.x-auto-alpha/out/.microfactory_Linux_intermediates/main/main.a=main=
+1550563878741815 isGo18:false
+1550563878741817 NumCPU:4
+1550563878741819 Complie dep.pkgDir : /work/workcodes/aosp-p9.x-auto-alpha/out/.microfactory_Linux_intermediates/github.com-google-blueprint-microfactory
+1550563878741822 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/blueprint/microfactory/main/main.go
+1550563878741856 End check compile main,/work/workcodes/aosp-p9.x-auto-alpha/out/.microfactory_Linux_intermediates
+1550563878741859 =====Compile==end=====================================
+
+
+1550563878741860 =====Link==start===================================
+1550563878741862 Begin check link main,/work/workcodes/aosp-p9.x-auto-alpha/out/microfactory_Linux
+1550563878741865 Link shaFile:/work/workcodes/aosp-p9.x-auto-alpha/out/.microfactory_Linux_hash
+1550563878741868 End check link main,/work/workcodes/aosp-p9.x-auto-alpha/out/microfactory_Linux
+1550563878741870 Begin link main
+1550563878741900 Link dep.pkgDir:/work/workcodes/aosp-p9.x-auto-alpha/out/.microfactory_Linux_intermediates/github.com-google-blueprint-microfactory
+1550563878923113 End link main
+1550563878923122 =====Link==end=====================================
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+1550563878924086 ================================================
+1550563878924088 config.Race: false
+1550563878924090 config.Verbose: false
+1550563878924092 output: /work/workcodes/aosp-p9.x-auto-alpha/out/soong_ui
+1550563878924094 mybin: /work/workcodes/aosp-p9.x-auto-alpha/out/microfactory_Linux
+1550563878924096 config.TrimPath: /work/workcodes/aosp-p9.x-auto-alpha
+1550563878924098 tracePath: /work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui.trace
+1550563878924099 ================================================
+
+1550563878924105 Begin microfactory /work/workcodes/aosp-p9.x-auto-alpha/out/microfactory_Linux
+1550563878924107 ===========rebuildMicrofactory===========================
+1550563878924111 ===========Build====/work/workcodes/aosp-p9.x-auto-alpha/out/microfactory_Linux=====github.com/google/blueprint/microfactory/main==
+1550563878924124 =====FindDeps==start===================================
+1550563878924127 Begin findDeps /work/workcodes/aosp-p9.x-auto-alpha/build/blueprint/microfactory/main
+1550563878924181 findDeps /work/workcodes/aosp-p9.x-auto-alpha/build/blueprint/microfactory/main size:1
+1550563878924186 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/blueprint/microfactory/main/main.go
+1550563878924188 astFile.Imports name : github.com/google/blueprint/microfactory
+1550563878924191 astFile.Imports pkgPath : /work/workcodes/aosp-p9.x-auto-alpha/build/blueprint/microfactory
+1550563878924280 findDeps /work/workcodes/aosp-p9.x-auto-alpha/build/blueprint/microfactory size:1
+1550563878924284 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/blueprint/microfactory/microfactory.go
+1550563878924287 astFile.Imports name : bytes
+1550563878924289 astFile.Imports name : crypto/sha1
+1550563878924291 astFile.Imports name : flag
+1550563878924293 astFile.Imports name : fmt
+1550563878924295 astFile.Imports name : go/ast
+1550563878924297 astFile.Imports name : go/build
+1550563878924299 astFile.Imports name : go/parser
+1550563878924301 astFile.Imports name : go/token
+1550563878924304 astFile.Imports name : io
+1550563878924306 astFile.Imports name : io/ioutil
+1550563878924308 astFile.Imports name : os
+1550563878924310 astFile.Imports name : os/exec
+1550563878924312 astFile.Imports name : path/filepath
+1550563878924315 astFile.Imports name : runtime
+1550563878924318 astFile.Imports name : sort
+1550563878924320 astFile.Imports name : strconv
+1550563878924322 astFile.Imports name : strings
+1550563878924324 astFile.Imports name : sync
+1550563878924326 astFile.Imports name : syscall
+1550563878924328 astFile.Imports name : time
+1550563878924334 End findDeps /work/workcodes/aosp-p9.x-auto-alpha/build/blueprint/microfactory/main
+1550563878924337 =====FindDeps==end=====================================
+1550563878924339 =====Compile==start===================================
+1550563878924371 Begin check compile github.com/google/blueprint/microfactory,/work/workcodes/aosp-p9.x-auto-alpha/out/.microfactory_Linux_intermediates
+1550563878924385 ==Compile==/work/workcodes/aosp-p9.x-auto-alpha/out/.microfactory_Linux_intermediates/github.com-google-blueprint-microfactory/github.com/google/blueprint/microfactory.a=github.com/google/blueprint/microfactory=
+1550563878924393 isGo18:false
+1550563878924396 NumCPU:4
+1550563878924399 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/blueprint/microfactory/microfactory.go
+1550563878924467 End check compile github.com/google/blueprint/microfactory,/work/workcodes/aosp-p9.x-auto-alpha/out/.microfactory_Linux_intermediates
+1550563878924474 Begin check compile main,/work/workcodes/aosp-p9.x-auto-alpha/out/.microfactory_Linux_intermediates
+1550563878924488 ==Compile==/work/workcodes/aosp-p9.x-auto-alpha/out/.microfactory_Linux_intermediates/main/main.a=main=
+1550563878924491 isGo18:false
+1550563878924493 NumCPU:4
+1550563878924496 Complie dep.pkgDir : /work/workcodes/aosp-p9.x-auto-alpha/out/.microfactory_Linux_intermediates/github.com-google-blueprint-microfactory
+1550563878924498 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/blueprint/microfactory/main/main.go
+1550563878924521 End check compile main,/work/workcodes/aosp-p9.x-auto-alpha/out/.microfactory_Linux_intermediates
+1550563878924524 =====Compile==end=====================================
+1550563878924526 =====Link==start===================================
+1550563878924528 Begin check link main,/work/workcodes/aosp-p9.x-auto-alpha/out/microfactory_Linux
+1550563878924531 Link shaFile:/work/workcodes/aosp-p9.x-auto-alpha/out/.microfactory_Linux_hash
+1550563878924541 End check link main,/work/workcodes/aosp-p9.x-auto-alpha/out/microfactory_Linux
+1550563878924543 =====Link==end=====================================
+
+
+
+
+1550563878924554 =====Direct Build===========================================
+1550563878924556 ===========Build====/work/workcodes/aosp-p9.x-auto-alpha/out/soong_ui=====android/soong/cmd/soong_ui==
+1550563878924567 =====FindDeps==start===================================
+1550563878924569 Begin findDeps /work/workcodes/aosp-p9.x-auto-alpha/build/soong/cmd/soong_ui
+1550563878944815 findDeps /work/workcodes/aosp-p9.x-auto-alpha/build/soong/cmd/soong_ui size:1
+1550563878944822 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/cmd/soong_ui/main.go
+1550563878944825 astFile.Imports name : context
+1550563878944827 astFile.Imports name : flag
+1550563878944829 astFile.Imports name : fmt
+1550563878944831 astFile.Imports name : os
+1550563878944833 astFile.Imports name : path/filepath
+1550563878944835 astFile.Imports name : strconv
+1550563878944837 astFile.Imports name : strings
+1550563878944839 astFile.Imports name : time
+1550563878944841 astFile.Imports name : android/soong/ui/build
+1550563878944844 astFile.Imports pkgPath : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build
+1550563878945401 findDeps /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build size:1
+1550563878945405 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/proc_sync.go
+1550563878945407 astFile.Imports name : errors
+1550563878945410 astFile.Imports name : math
+1550563878945412 astFile.Imports name : syscall
+1550563878945414 astFile.Imports name : android/soong/ui/logger
+1550563878945417 astFile.Imports pkgPath : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/logger
+1550563878945480 findDeps /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/logger size:1
+1550563878945483 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/logger/logger.go
+1550563878945485 astFile.Imports name : io
+1550563878945491 astFile.Imports name : io/ioutil
+1550563878945493 astFile.Imports name : log
+1550563878945495 astFile.Imports name : sync
+1550563878945498 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/config.go
+1550563878945501 astFile.Imports name : runtime
+1550563878945504 astFile.Imports name : android/soong/shared
+1550563878945506 astFile.Imports pkgPath : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/shared
+1550563878945549 findDeps /work/workcodes/aosp-p9.x-auto-alpha/build/soong/shared size:1
+1550563878945556 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/shared/paths.go
+1550563878945559 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/environment.go
+1550563878945561 astFile.Imports name : bufio
+1550563878945564 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/kati.go
+1550563878945566 astFile.Imports name : crypto/md5
+1550563878945568 astFile.Imports name : regexp
+1550563878945571 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/sandbox_linux.go
+1550563878945574 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/build.go
+1550563878945576 astFile.Imports name : text/template
+1550563878945578 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/util.go
+1550563878945580 astFile.Imports name : bytes
+1550563878945583 astFile.Imports name : unsafe
+1550563878945585 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/context.go
+1550563878945588 astFile.Imports name : android/soong/ui/tracer
+1550563878945590 astFile.Imports pkgPath : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/tracer
+1550563878945690 findDeps /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/tracer size:1
+1550563878945693 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/tracer/tracer.go
+1550563878945695 astFile.Imports name : compress/gzip
+1550563878945701 astFile.Imports name : encoding/json
+1550563878945705 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/tracer/microfactory.go
+1550563878945707 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/tracer/ninja.go
+1550563878945709 astFile.Imports name : sort
+1550563878945713 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/ninja.go
+1550563878945716 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/finder.go
+1550563878945718 astFile.Imports name : android/soong/finder
+1550563878945720 astFile.Imports pkgPath : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/finder
+1550563878945833 findDeps /work/workcodes/aosp-p9.x-auto-alpha/build/soong/finder size:1
+1550563878945837 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/finder/finder.go
+1550563878945842 astFile.Imports name : sync/atomic
+1550563878945844 astFile.Imports name : android/soong/finder/fs
+1550563878945847 astFile.Imports pkgPath : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/finder/fs
+1550563878945985 findDeps /work/workcodes/aosp-p9.x-auto-alpha/build/soong/finder/fs size:1
+1550563878945991 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/finder/fs/fs_linux.go
+1550563878945994 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/finder/fs/fs.go
+1550563878945997 astFile.Imports name : os/user
+1550563878945999 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/finder/fs/readdir.go
+1550563878946004 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/signal.go
+1550563878946007 astFile.Imports name : os/signal
+1550563878946009 astFile.Imports name : runtime/debug
+1550563878946011 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/util_linux.go
+1550563878946014 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/test_build.go
+1550563878946016 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/exec.go
+1550563878946018 astFile.Imports name : os/exec
+1550563878946021 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/dumpvars.go
+1550563878946023 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/soong.go
+1550563878946026 astFile.Imports name : github.com/google/blueprint/microfactory
+1550563878946028 astFile.Imports pkgPath : /work/workcodes/aosp-p9.x-auto-alpha/build/blueprint/microfactory
+1550563878946115 findDeps /work/workcodes/aosp-p9.x-auto-alpha/build/blueprint/microfactory size:1
+1550563878946119 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/blueprint/microfactory/microfactory.go
+1550563878946121 astFile.Imports name : crypto/sha1
+1550563878946123 astFile.Imports name : go/ast
+1550563878946125 astFile.Imports name : go/build
+1550563878946127 astFile.Imports name : go/parser
+1550563878946129 astFile.Imports name : go/token
+1550563878946133 foundPkg.Files filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/cleanbuild.go
+1550563878946140 End findDeps /work/workcodes/aosp-p9.x-auto-alpha/build/soong/cmd/soong_ui
+1550563878946142 =====FindDeps==end=====================================
+1550563878946144 =====Compile==start===================================
+1550563878946173 Begin check compile android/soong/ui/logger,/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates
+1550563878946189 ==Compile==/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates/android-soong-ui-logger/android/soong/ui/logger.a=android/soong/ui/logger=
+1550563878946192 isGo18:false
+1550563878946195 NumCPU:%!d(string=4)
+1550563878946199 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/logger/logger.go
+1550563878946228 Begin check compile github.com/google/blueprint/microfactory,/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates
+1550563878946251 Begin check compile android/soong/shared,/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates
+1550563878946253 Begin check compile android/soong/finder/fs,/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates
+1550563878946278 ==Compile==/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates/android-soong-shared/android/soong/shared.a=android/soong/shared=
+1550563878946284 ==Compile==/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates/android-soong-finder-fs/android/soong/finder/fs.a=android/soong/finder/fs=
+1550563878946286 isGo18:false
+1550563878946292 isGo18:false
+1550563878946297 NumCPU:%!d(string=4)
+1550563878946303 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/finder/fs/fs.go
+1550563878946294 NumCPU:%!d(string=4)
+1550563878946354 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/shared/paths.go
+1550563878946363 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/finder/fs/fs_linux.go
+1550563878946257 ==Compile==/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates/github.com-google-blueprint-microfactory/github.com/google/blueprint/microfactory.a=github.com/google/blueprint/microfactory=
+1550563878946379 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/finder/fs/readdir.go
+1550563878946383 isGo18:false
+1550563878946386 NumCPU:%!d(string=4)
+1550563878946393 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/blueprint/microfactory/microfactory.go
+1550563878946467 End check compile github.com/google/blueprint/microfactory,/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates
+1550563878957665 End check compile android/soong/ui/logger,/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates
+1550563878957676 Begin check compile android/soong/ui/tracer,/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates
+1550563878957682 ==Compile==/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates/android-soong-ui-tracer/android/soong/ui/tracer.a=android/soong/ui/tracer=
+1550563878957685 isGo18:false
+1550563878957688 NumCPU:%!d(string=4)
+1550563878957690 Complie dep.pkgDir : /work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates/android-soong-ui-logger
+1550563878957693 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/tracer/microfactory.go
+1550563878957714 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/tracer/ninja.go
+1550563878957731 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/tracer/tracer.go
+1550563878968399 End check compile android/soong/shared,/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates
+1550563878995116 End check compile android/soong/ui/tracer,/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates
+1550563879006279 End check compile android/soong/finder/fs,/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates
+1550563879006290 Begin check compile android/soong/finder,/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates
+1550563879006308 ==Compile==/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates/android-soong-finder/android/soong/finder.a=android/soong/finder=
+1550563879006312 isGo18:false
+1550563879006315 NumCPU:%!d(string=4)
+1550563879006328 Complie dep.pkgDir : /work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates/android-soong-finder-fs
+1550563879006330 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/finder/finder.go
+1550563879007688 End check compile android/soong/finder,/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates
+1550563879007699 Begin check compile android/soong/ui/build,/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates
+1550563879007715 ==Compile==/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates/android-soong-ui-build/android/soong/ui/build.a=android/soong/ui/build=
+1550563879007718 isGo18:false
+1550563879007721 NumCPU:4
+1550563879007724 Complie dep.pkgDir : /work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates/android-soong-finder
+1550563879007726 Complie dep.pkgDir : /work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates/android-soong-finder-fs
+1550563879007728 Complie dep.pkgDir : /work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates/android-soong-shared
+1550563879007734 Complie dep.pkgDir : /work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates/android-soong-ui-logger
+1550563879007737 Complie dep.pkgDir : /work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates/android-soong-ui-tracer
+1550563879007748 Complie dep.pkgDir : /work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates/github.com-google-blueprint-microfactory
+1550563879007750 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/build.go
+1550563879007774 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/cleanbuild.go
+1550563879007804 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/config.go
+1550563879007837 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/context.go
+1550563879007851 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/dumpvars.go
+1550563879007869 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/environment.go
+1550563879007885 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/exec.go
+1550563879007899 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/finder.go
+1550563879007913 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/kati.go
+1550563879007935 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/ninja.go
+1550563879007953 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/proc_sync.go
+1550563879007968 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/sandbox_linux.go
+1550563879007980 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/signal.go
+1550563879007994 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/soong.go
+1550563879008009 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/test_build.go
+1550563879008023 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/util.go
+1550563879008039 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/util_linux.go
+1550563879008066 End check compile android/soong/ui/build,/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates
+1550563879008075 Begin check compile main,/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates
+1550563879008089 ==Compile==/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates/main/main.a=main=
+1550563879008092 isGo18:false
+1550563879008095 NumCPU:%!d(string=4)
+1550563879008097 Complie dep.pkgDir : /work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates/android-soong-ui-build
+1550563879008099 Complie dep.pkgDir : /work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates/android-soong-ui-logger
+1550563879008101 Complie dep.pkgDir : /work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates/android-soong-ui-tracer
+1550563879008103 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/cmd/soong_ui/main.go
+1550563879008143 End check compile main,/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates
+1550563879008149 =====Compile==end=====================================
+1550563879008151 =====Link==start===================================
+1550563879008153 Begin check link main,/work/workcodes/aosp-p9.x-auto-alpha/out/soong_ui
+1550563879008156 Link shaFile:/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_hash
+1550563879008159 End check link main,/work/workcodes/aosp-p9.x-auto-alpha/out/soong_ui
+1550563879008161 Begin link main
+1550563879008192 Link dep.pkgDir:/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates/android-soong-ui-build
+1550563879008195 Link dep.pkgDir:/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates/android-soong-ui-logger
+1550563879008197 Link dep.pkgDir:/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates/android-soong-shared
+1550563879008199 Link dep.pkgDir:/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates/android-soong-ui-tracer
+1550563879008201 Link dep.pkgDir:/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates/android-soong-finder
+1550563879008202 Link dep.pkgDir:/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates/android-soong-finder-fs
+1550563879008204 Link dep.pkgDir:/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates/github.com-google-blueprint-microfactory
+1550563879419955 End link main
+1550563879419964 =====Link==end=====================================
+1550563879419969 End microfactory /work/workcodes/aosp-p9.x-auto-alpha/out/microfactory_Linux
+1550563879420276 End microfactory /tmp/go-build096370857/b001/exe/microfactory

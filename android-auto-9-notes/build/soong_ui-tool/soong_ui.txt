@@ -1,0 +1,43 @@
+make -j4 showcommands
+showcommands 为命令展示参数，如果添加该选项则打印命令执行详细信息
+
+
+
+
+
+生成  /work/workcodes/aosp-p9.x-auto-alpha/out/microfactory_Linux 工具
+/work/workcodes/aosp-p9.x-auto-alpha/build/blueprint/microfactory/microfactory.go
+/work/workcodes/aosp-p9.x-auto-alpha/build/blueprint/microfactory/main/main.go
+
+
+
+生成 /work/workcodes/aosp-p9.x-auto-alpha/out/soong_ui工具
+/work/workcodes/aosp-p9.x-auto-alpha/build/soong/cmd/soong_ui/main.go
+/work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/logger/logger.go
+/work/workcodes/aosp-p9.x-auto-alpha/build/soong/finder/fs/fs.go
+/work/workcodes/aosp-p9.x-auto-alpha/build/soong/shared/paths.go
+/work/workcodes/aosp-p9.x-auto-alpha/build/soong/finder/fs/fs_linux.go
+/work/workcodes/aosp-p9.x-auto-alpha/build/soong/finder/fs/readdir.go
+/work/workcodes/aosp-p9.x-auto-alpha/build/blueprint/microfactory/microfactory.go
+/work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/tracer/microfactory.go
+/work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/tracer/ninja.go
+/work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/tracer/tracer.go
+/work/workcodes/aosp-p9.x-auto-alpha/build/soong/finder/finder.go
+/work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/build.go
+/work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/cleanbuild.go
+/work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/config.go
+/work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/context.go
+/work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/dumpvars.go
+/work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/environment.go
+/work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/exec.go
+/work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/finder.go
+/work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/kati.go
+/work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/ninja.go
+/work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/proc_sync.go
+/work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/sandbox_linux.go
+/work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/signal.go
+/work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/soong.go
+/work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/test_build.go
+/work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/util.go
+/work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/util_linux.go
+
