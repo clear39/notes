@@ -1,0 +1,90 @@
+学习网站地址：  https://www.w3cschool.cn/gradle/9b5m1htc.html
+
+源码分析网址：
+https://blog.51cto.com/483181/1927673
+https://blog.51cto.com/483181/1927683
+
+
+################################################
+
+
+
+Groovy为JVM的一种脚本语言，Gradle 的核心在于基于 Groovy 的丰富而可扩展的域描述语言(DSL)；
+
+Gradle安装包目录结构：
+├── bin                 //  Gradle 可执行文件
+├── docs                //  用户手册 (有 PDF 和 HTML 两种版本) 、DSL 参考指南、API 手册(Javadoc 和 Groovydoc)
+├── getting-started.html
+├── init.d
+├── lib
+├── LICENSE
+├── media
+├── NOTICE
+├── samples             //  样例，包括用户手册中的例子，一些完整的构建样例和更加复杂的构建脚本
+└── src                 //  源代码。仅供参考使用,如果你想要自己来编译 Gradle 你需要从源代码仓库中检出发行版本源码，具体请查看 Gradle 官方主页。
+
+
+查看版本：gradle -v 
+
+JVM 参数配置：
+Gradle 运行时的 JVM 参数可以通过 GRADLE_OPTS 或 JAVA_OPTS 来设置.这些参数将会同时生效。
+JAVA_OPTS 设置的参数将会同其它 JAVA 应用共享，一个典型的例子是可以在 JAVA_OPTS 中设置代理和 GRADLE_OPTS 设置内存参数。
+同时这些参数也可以在 gradle 或者 gradlew 脚本文件的开头进行设置。
+其中 gradle 和 gradlew 均为 shell 脚本 ，会将 GRADLE_OPTS 和 JAVA_OPTS 作为参数传递给 java 程序；
+
+
+
+
+Projects 和 tasks
+projects 和 tasks是 Gradle 中最重要的两个概念。
+任何一个 Gradle 构建都是由一个或多个 projects 组成。每个 project 包括许多可构建组成部分。
+每个 project 都由多个 tasks 组成。每个 task 都代表了构建执行过程中的一个原子性操作。
+
+
+
+标准目录结构如下:
+project  
+    +build                  //  所有文件都输出到 build 下，打包的文件输出到 build/libs 下
+    +src/main/java          // Gradle 默认会从 src/main/java 搜寻打包源码
+    +src/main/resources     //  src/main/resources 下的所有文件按都会被打包
+    +src/test/java          // Gradle 默认会在 src/test/java 下搜寻测试源码
+    +src/test/resources        //所有 src/test/resources 下的文件 都会被添加到类路径用以执行测试
+
+
+
+
+
+一些较常用的任务:
+gradle wrapper  
+gradle build    
+gradle clean        //  删除 build 目录以及所有构建完成的文件
+gradle assemble     //  编译并打包 jar 文件，但不会执行单元测试。一些其他插件可能会增强这个任务的功能。例如，如果采用了 War 插件，这个任务便会为你的项目打出 War 包。
+gradle check       // 编译并测试代码。一些其他插件也可能会增强这个任务的功能。例如，如果采用了 Code-quality 插件，这个任务会额外执行 Checkstyle。
+gradle properties       //查看当前构建项目有哪些属性
+
+
+外部依赖:
+添加 Maven 仓库:
+repositories {  //repositories(仓库)
+    mavenCentral()
+}
+
+
+添加依赖:
+dependencies {      //dependencies(依赖)
+    // 在android中 高版本 compile testCompile 有所更改
+    compile group: 'commons-collections', name: 'commons-collections', version: '3.2'  
+    testCompile group: 'junit', name: 'junit', version: '4.+'
+}
+
+
+
+
+
+
+
+
+
+
+
+
