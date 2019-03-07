@@ -553,10 +553,15 @@ func (p *GoPackage) Link(config *Config, out string) error {
 	if config.Race {
 		cmd.Args = append(cmd.Args, "-race") //enable race detector
 	}
+
+	
 	for _, dep := range p.allDeps {
 		cmd.Args = append(cmd.Args, "-L", dep.pkgDir)
 	}
 	cmd.Args = append(cmd.Args, p.output)
+
+
+
 	cmd.Stdin = nil
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr

@@ -1,16 +1,4 @@
-// Copyright 2017 Google Inc. All rights reserved.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//     http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
+//	@	/work/workcodes/aosp-p9.x-auto-alpha/build/soong/cmd/soong_ui/main.go
 
 package main
 
@@ -77,7 +65,9 @@ func main() {
 
 	//	
 	/**
-	context 为系统库
+	context为系统库，
+	且 Background 构建一个 默认的Context，
+	
 	*/
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -100,7 +90,7 @@ func main() {
 	trace := tracer.New(log)
 	defer trace.Close()
 
-	//	@/work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/build.go
+	//	@ /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/build.go
 	/**
 	设置信号量处理函数，以及信号出发需要所做的处理
 	*/
@@ -132,7 +122,8 @@ func main() {
 
 	//设置日志打印，可以通过make 命令传参数 showcommands，进行设置
 	log.SetVerbose(config.IsVerbose())
-	//
+	//	@ /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/build.go
+	// 
 	build.SetupOutDir(buildCtx, config)
 
 	if config.Dist() {
@@ -142,8 +133,8 @@ func main() {
 		trace.SetOutput(filepath.Join(logsDir, "build.trace"))
 	} else {
 		//默认执行这里
-		log.SetOutput(filepath.Join(config.OutDir(), "soong.log"))
-		trace.SetOutput(filepath.Join(config.OutDir(), "build.trace"))
+		log.SetOutput(filepath.Join(config.OutDir(), "soong.log"))  // @	out/soong.lgo
+		trace.SetOutput(filepath.Join(config.OutDir(), "build.trace"))	//@	out/build.trace
 	}
 
 	//查询环境变量 TRACE_BEGIN_SOONG 的值
@@ -162,11 +153,13 @@ func main() {
 	}
 
 	/**
-	@	/work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/finder.go
+	NewSourceFinder	@	/work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/finder.go
 
 	*/
 	f := build.NewSourceFinder(buildCtx, config)
 	defer f.Shutdown()
+
+	//
 	build.FindSources(buildCtx, config, f)
 
 	if os.Args[1] == "--dumpvar-mode" {
@@ -193,13 +186,13 @@ func main() {
 // Build the tree. The 'what' argument can be used to chose which components of
 // the build to run.
 func Build(ctx Context, config Config, what int = /*BuildProductConfig | BuildSoong | BuildKati | BuildNinja*/) {
-	// 打印 参数
+	// 在soong.log文件中 打印 参数
 	ctx.Verboseln("Starting build with args:", config.Arguments())
 
 	//在soong.log文件中输入日志（环境变量）
 	ctx.Verboseln("Environment:", config.Environment().Environ())
 
-	if config.SkipMake() {  //
+	if config.SkipMake() {  //false
 		ctx.Verboseln("Skipping Make/Kati as requested")
 		what = what & (BuildSoong | BuildNinja)
 	}
@@ -215,19 +208,34 @@ func Build(ctx Context, config Config, what int = /*BuildProductConfig | BuildSo
 	}
 
 	// Make sure that no other Soong process is running with the same output directory
-	buildLock := BecomeSingletonOrFail(ctx, config)
+	// 这里主要是加锁，防止多个终端编译
+	// 这里会在out目录下生成一个.lock文件，然后打开该文件，并且加锁
+	buildLock := BecomeSingletonOrFail(ctx, config)	//	@ /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/proc_sync.go
 	defer buildLock.Unlock()
 
+	// /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/build.go
+
+	//SetupOutDir 再次确认out目录是否存在，且判断 Android.mk 、CleanSpec.mk 、.soong.in_make、ninja_build、.out-dir 是否存在，不存在则创建
 	SetupOutDir(ctx, config)
 
+	// @ /work/workcodes/aosp-p9.x-auto-alpha/buildsoong/ui/build/build.go:75
+	// 这里判断当前系统是否区分大小写
+	// 主要往 out目录下 casecheck.txt 和 CaseCheck.txt 分别写入 “a” 和 “B” ，然后 读出  casecheck.txt 的字符，再与原来值比较
 	checkCaseSensitivity(ctx, config)
 
-	ensureEmptyDirectoriesExist(ctx, config.TempDir())
+	// @ /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/util.go
+	//  config.TempDir() 返回目录数组，
+	// ensureEmptyDirectoriesExist 主要是删除并重新创建所有目录
+	ensureEmptyDirectoriesExist(ctx, config.TempDir()) // TempDir为 out/soong/.temp/ (注意这里是目录)
+
+
 
 	if what&BuildProductConfig != 0 { // true
 		// Run make for product config
-		//	@/work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/dumpvars.go
-		runMakeProductConfig(ctx, config)
+		//	@ /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/dumpvars.go
+		// 这里通过 prebuilts/build-tools/linux-x86/bin/ckati 工具将 build/make/core/config.mk 的宏变量值读入系统
+		// 同时通过 config 的  
+		runMakeProductConfig(ctx, config) // 进入dumpvars-note.go 分析 可以通过 修改 Banner 将 所有参数打印控制台
 	}
 
 	if inList("installclean", config.Arguments()) {
@@ -262,6 +270,7 @@ func Build(ctx Context, config Config, what int = /*BuildProductConfig | BuildSo
 		}
 	}
 
+	//	@/work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/build.go
 	// Write combined ninja file
 	createCombinedBuildNinjaFile(ctx, config)
 
