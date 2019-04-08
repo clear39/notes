@@ -50,6 +50,7 @@
 1550563878741680 =====FindDeps==end=====================================
 
 1550563878741682 =====Compile==start===================================
+
 1550563878741708 Begin check compile github.com/google/blueprint/microfactory,/work/workcodes/aosp-p9.x-auto-alpha/out/.microfactory_Linux_intermediates
 1550563878741720 ==Compile==/work/workcodes/aosp-p9.x-auto-alpha/out/.microfactory_Linux_intermediates/github.com-google-blueprint-microfactory/github.com/google/blueprint/microfactory.a=github.com/google/blueprint/microfactory=
 1550563878741733 isGo18:false
@@ -167,6 +168,10 @@
 1550563878924531 Link shaFile:/work/workcodes/aosp-p9.x-auto-alpha/out/.microfactory_Linux_hash
 1550563878924541 End check link main,/work/workcodes/aosp-p9.x-auto-alpha/out/microfactory_Linux
 1550563878924543 =====Link==end=====================================
+
+
+
+
 
 
 
@@ -303,6 +308,10 @@
 1550563878957693 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/tracer/microfactory.go
 1550563878957714 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/tracer/ninja.go
 1550563878957731 Complie filename : /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/tracer/tracer.go
+
+
+
+
 1550563878968399 End check compile android/soong/shared,/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates
 1550563878995116 End check compile android/soong/ui/tracer,/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates
 1550563879006279 End check compile android/soong/finder/fs,/work/workcodes/aosp-p9.x-auto-alpha/out/.soong_ui_intermediates
