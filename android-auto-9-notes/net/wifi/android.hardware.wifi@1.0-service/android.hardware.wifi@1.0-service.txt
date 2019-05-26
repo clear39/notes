@@ -1,0 +1,30 @@
+//  @   /work/workcodes/aosp-p9.x-auto-alpha/hardware/interfaces/wifi/1.2/default/android.hardware.wifi@1.0-service.rc
+service vendor.wifi_hal_legacy /vendor/bin/hw/android.hardware.wifi@1.0-service
+    class hal
+    capabilities NET_ADMIN NET_RAW SYS_MODULE
+    user wifi
+    group wifi gps
+
+
+//  @   /work/workcodes/aosp-p9.x-auto-alpha/hardware/interfaces/wifi/1.2/default/service.cpp
+int main(int /*argc*/, char** argv) {
+    android::base::InitLogging(
+        argv, android::base::LogdLogger(android::base::SYSTEM));
+    LOG(INFO) << "Wifi Hal is booting up...";
+
+    configureRpcThreadpool(1, true /* callerWillJoin */);
+
+    // Setup hwbinder service
+    android::sp<android::hardware::wifi::V1_2::IWifi> service =
+        new android::hardware::wifi::V1_2::implementation::Wifi(
+            std::make_shared<WifiLegacyHal>(),
+            std::make_shared<WifiModeController>(),
+            std::make_shared<WifiFeatureFlags>());
+    CHECK_EQ(service->registerAsService(), android::NO_ERROR)
+        << "Failed to register wifi HAL";
+
+    joinRpcThreadpool();
+
+    LOG(INFO) << "Wifi Hal is terminating...";
+    return 0;
+}

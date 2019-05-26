@@ -1,0 +1,145 @@
+//  @   /work/workcodes/aosp-p9.x-auto-alpha/device/autolink/imx8q/autolink_8q/init_car.rc
+service wpa_supplicant /vendor/bin/hw/wpa_supplicant \
+    -O/data/vendor/wifi/wpa/sockets -puse_p2p_group_interface=1 \
+    -g@android:wpa_wlan0
+    interface android.hardware.wifi.supplicant@1.0::ISupplicant default
+    interface android.hardware.wifi.supplicant@1.1::ISupplicant default
+    class main
+    socket wpa_wlan0 dgram 660 wifi wifi
+    disabled
+    oneshot
+
+
+// 硬件逻辑层是否使用hidl
+
+xqli@linux:/work/workcodes/aosp-p9.x-auto-alpha/external/wpa_supplicant_8$ grep WPA_SUPPLICANT_USE_HIDL -nr .
+./wpa_supplicant/Android.mk:1471:WPA_SUPPLICANT_USE_HIDL=y  //这里定义需要CONFIG_CTRL_IFACE_HIDL定义
+./wpa_supplicant/Android.mk:1724:ifeq ($(WPA_SUPPLICANT_USE_HIDL), y)
+./wpa_supplicant/Android.mk:1768:ifeq ($(WPA_SUPPLICANT_USE_HIDL), y)
+./wpa_supplicant/Android.mk:1798:endif # WPA_SUPPLICANT_USE_HIDL == y
+
+
+xqli@linux:/work/workcodes/aosp-p9.x-auto-alpha/external/wpa_supplicant_8$ grep CONFIG_CTRL_IFACE_HIDL -nr .
+./wpa_supplicant/Android.mk:1470:ifdef CONFIG_CTRL_IFACE_HIDL   // 这里是在 android.config 文件中定义
+./wpa_supplicant/Android.mk:1472:L_CFLAGS += -DCONFIG_HIDL -DCONFIG_CTRL_IFACE_HIDL
+./wpa_supplicant/android.config:343:CONFIG_CTRL_IFACE_HIDL=y
+
+
+xqli@linux:/work/workcodes/aosp-p9.x-auto-alpha/external/wpa_supplicant_8$ grep android.config -nr .
+./wpa_supplicant/Android.mk:15:include $(LOCAL_PATH)/android.config
+./wpa_supplicant/android.config:555:include $(wildcard $(LOCAL_PATH)/android_config_*.inc)
+./hostapd/Android.mk:17:include $(LOCAL_PATH)/android.config
+
+
+
+
+//  @   /work/workcodes/aosp-p9.x-auto-alpha/external/wpa_supplicant_8/wpa_supplicant/main.c
+int main(int argc, char *argv[])
+{
+	int c, i;
+	struct wpa_interface *ifaces, *iface;
+	int iface_count, exitcode = -1;
+	struct wpa_params params;
+	struct wpa_global *global;
+
+	if (os_program_init())
+		return -1;
+
+	os_memset(&params, 0, sizeof(params));
+	params.wpa_debug_level = MSG_INFO;
+
+	iface = ifaces = os_zalloc(sizeof(struct wpa_interface));
+	if (ifaces == NULL)
+		return -1;
+	iface_count = 1;
+
+	wpa_supplicant_fd_workaround(1);
+
+	for (;;) {
+		c = getopt(argc, argv,"b:Bc:C:D:de:f:g:G:hi:I:KLMm:No:O:p:P:qsTtuvW");
+		if (c < 0)
+			break;
+		switch (c) {
+		......
+		case 'g':
+			params.ctrl_interface = optarg; //  @android:wpa_wlan0
+			break;
+		case 'O':
+			params.override_ctrl_interface = optarg;        //  /data/vendor/wifi/wpa/sockets
+			break;
+		case 'p':
+			iface->driver_param = optarg;// use_p2p_group_interface=1
+			break;
+		......
+		}
+	}
+
+	exitcode = 0;
+	global = wpa_supplicant_init(&params);
+	if (global == NULL) {
+		wpa_printf(MSG_ERROR, "Failed to initialize wpa_supplicant");
+		exitcode = -1;
+		goto out;
+	} else {
+		wpa_printf(MSG_INFO, "Successfully initialized "
+			   "wpa_supplicant");
+	}
+
+	if (fst_global_init()) {
+		wpa_printf(MSG_ERROR, "Failed to initialize FST");
+		exitcode = -1;
+		goto out;
+	}
+
+#if defined(CONFIG_FST) && defined(CONFIG_CTRL_IFACE)
+	if (!fst_global_add_ctrl(fst_ctrl_cli))
+		wpa_printf(MSG_WARNING, "Failed to add CLI FST ctrl");
+#endif
+
+	for (i = 0; exitcode == 0 && i < iface_count; i++) {
+		struct wpa_supplicant *wpa_s;
+
+		if ((ifaces[i].confname == NULL &&
+		     ifaces[i].ctrl_interface == NULL) ||
+		    ifaces[i].ifname == NULL) {
+			if (iface_count == 1 && (params.ctrl_interface ||
+#ifdef CONFIG_MATCH_IFACE
+						 params.match_iface_count ||
+#endif /* CONFIG_MATCH_IFACE */
+						 params.dbus_ctrl_interface))
+				break;
+			usage();
+			exitcode = -1;
+			break;
+		}
+		wpa_s = wpa_supplicant_add_iface(global, &ifaces[i], NULL);
+		if (wpa_s == NULL) {
+			exitcode = -1;
+			break;
+		}
+	}
+
+#ifdef CONFIG_MATCH_IFACE
+	if (exitcode == 0)
+		exitcode = wpa_supplicant_init_match(global);
+#endif /* CONFIG_MATCH_IFACE */
+
+	if (exitcode == 0)
+		exitcode = wpa_supplicant_run(global);
+
+	wpa_supplicant_deinit(global);
+
+	fst_global_deinit();
+
+out:
+	wpa_supplicant_fd_workaround(0);
+	os_free(ifaces);
+#ifdef CONFIG_MATCH_IFACE
+	os_free(params.match_ifaces);
+#endif /* CONFIG_MATCH_IFACE */
+	os_free(params.pid_file);
+
+	os_program_deinit();
+
+	return exitcode;
+}

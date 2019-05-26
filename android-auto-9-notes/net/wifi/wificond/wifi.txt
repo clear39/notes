@@ -1,0 +1,85 @@
+
+//  @   /work/workcodes/aosp-p9.x-auto-alpha/system/connectivity/wificond/wificond.rc
+service wificond /system/bin/wificond
+    class main
+    user wifi
+    group wifi net_raw net_admin
+    capabilities NET_RAW NET_ADMIN
+
+
+dumpsys wificond
+
+
+
+// 程序入口
+//  @   /work/workcodes/aosp-p9.x-auto-alpha/system/connectivity/wificond/main.cpp
+int main(int argc, char** argv) {
+  android::base::InitLogging(argv, android::base::LogdLogger(android::base::SYSTEM));
+  LOG(INFO) << "wificond is starting up...";
+
+    //构建一个c层Looper
+  unique_ptr<android::wificond::LooperBackedEventLoop> event_dispatcher(new android::wificond::LooperBackedEventLoop());
+  // 设置信号中断处理
+  ScopedSignalHandler scoped_signal_handler(event_dispatcher.get());
+
+// 获取 binder 文件描述符
+  int binder_fd = SetupBinderOrCrash();
+  //将binder 文件描述符添加到looper文件操作监控中，并且设置回调OnBinderReadReady
+  CHECK(event_dispatcher->WatchFileDescriptor(
+      binder_fd,
+      android::wificond::EventLoop::kModeInput,
+      &OnBinderReadReady)) << "Failed to watch binder FD";
+
+// 获取 hwbinder 文件描述符
+  int hw_binder_fd = SetupHwBinderOrCrash();
+  //将 hwbinder 文件描述符添加到looper文件操作监控中，并且设置回调 OnHwBinderReadReady
+  CHECK(event_dispatcher->WatchFileDescriptor(
+      hw_binder_fd, android::wificond::EventLoop::kModeInput,
+      &OnHwBinderReadReady)) << "Failed to watch Hw Binder FD";
+
+  android::wificond::NetlinkManager netlink_manager(event_dispatcher.get());
+  if (!netlink_manager.Start()) {
+    LOG(ERROR) << "Failed to start netlink manager";
+  }
+  android::wificond::NetlinkUtils netlink_utils(&netlink_manager);
+  android::wificond::ScanUtils scan_utils(&netlink_manager);
+
+  unique_ptr<android::wificond::Server> server(new android::wificond::Server(
+      unique_ptr<InterfaceTool>(new InterfaceTool),
+      unique_ptr<SupplicantManager>(new SupplicantManager()),
+      unique_ptr<HostapdManager>(new HostapdManager()),
+      &netlink_utils,
+      &scan_utils));
+
+
+
+ // 将server服务注册到 ServiceManager，服务名称 为 wificond
+  RegisterServiceOrCrash(server.get());
+
+  event_dispatcher->Poll();
+  LOG(INFO) << "wificond is about to exit";
+  return 0;
+}
+
+//  @ /work/workcodes/aosp-p9.x-auto-alpha/system/connectivity/wificond/main.cpp
+ ScopedSignalHandler::ScopedSignalHandler(android::wificond::LooperBackedEventLoop* event_loop) {
+    if (s_event_loop_ != nullptr) {
+      LOG(FATAL) << "Only instantiate one signal handler per process!";
+    }
+    s_event_loop_ = event_loop;
+    std::signal(SIGINT, &ScopedSignalHandler::LeaveLoop);
+    std::signal(SIGTERM, &ScopedSignalHandler::LeaveLoop);
+}
+
+
+static void  ScopedSignalHandler::LeaveLoop(int signal) {
+    if (s_event_loop_ != nullptr) {
+      s_event_loop_->TriggerExit();
+    }
+}
+
+
+
+
+
+
