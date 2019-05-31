@@ -1,0 +1,56 @@
+#
+# $(1): product to inherit
+#
+# Does three things:
+#  1. Inherits all of the variables from $1.
+#  2. Records the inheritance in the .INHERITS_FROM variable
+#  3. Records that we've visited this node, in ALL_PRODUCTS
+#
+define inherit-product                                                                                                                                                                                        
+  $(if $(findstring ../,$(1)),\
+    $(eval np := $(call normalize-paths,$(1))),\
+    $(eval np := $(strip $(1))))\
+  $(foreach v,$(_product_var_list), \
+    ┊ $(eval $(v) := $($(v)) $(INHERIT_TAG)$(np))) \
+  $(eval inherit_var := \
+    ┊ PRODUCTS.$(strip $(word 1,$(_include_stack))).INHERITS_FROM) \
+  $(eval $(inherit_var) := $(sort $($(inherit_var)) $(np))) \
+  $(eval inherit_var:=) \
+  $(eval ALL_PRODUCTS := $(sort $(ALL_PRODUCTS) $(word 1,$(_include_stack))))
+endef
+
+
+$(if CONDITION,THEN-PART[,ELSE-PART]) 
+函数功能：第一个参数“CONDITION” ，在函数执行时忽略其前导和结尾空字
+符，如果包含对其他变量或者函数的引用则进行展开。如果“CONDITION”的
+展开结果非空，则条件为真，就将第二个参数“THEN_PATR”作为函数的计算
+表达式；“CONDITION”的展开结果为空，将第三个参数“ELSE-PART”作为
+函数的表达式，函数的返回结果为有效表达式的计算结果。 
+ 返回值：根据条件决定函数的返回值是第一个或者第二个参数表达式的计算结
+果。当不存在第三个参数“ELSE-PART” ，并且“CONDITION”展开为空，函
+数返回空。 
+函数说明：函数的条件表达式“CONDITION”决定了函数的返回值只能是“THEN-PART”或者“ELSE-PART”两个之一的计算结果。 
+函数示例： 
+SUBDIR += $(if $(SRC_DIR) $(SRC_DIR),/home/src) 
+函数的结果是：如果“SRC_DIR”变量值不为空，则将变量“SRC_DIR”指定
+的目录作为一个子目录；否则将目录“/home/src”作为一个子目录。
+
+
+$(findstring FIND,IN) 
+函数名称：查找字符串函数—findstring。 
+函数功能：搜索字串“IN”，查找“FIND”字串。 
+返回值：如果在“IN”之中存在“FIND” ，则返回“FIND”，否则返回空。 
+函数说明：字串“IN”之中可以包含空格、[Tab]。搜索需要是严格的文本匹配。 
+示例： 
+$(findstring a,a b c) 
+$(findstring a,b c) 
+第一个函数结果是字“a”；第二个值为空字符。 
+
+
+ $(foreach <var>,<list>,<text>)
+ 这个函数的意思是，把参数<list>;中的单词逐一取出放到参数<var>;所指定的变量中，然后再执行< text>;所包含的表达式。
+ 每一次<text>;会返回一个字符串，循环过程中，<text>;的所返回的每个字符串会以空格分隔，最后当整个循环结束时，<text>
+ 所返回的每个字符串所组成的整个字符串（以空格分隔）将会是foreach函数的返回值。
+
+
+

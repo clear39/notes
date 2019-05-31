@@ -1,0 +1,51 @@
+//  @ /work/workcodes/aosp-p9.x-auto-alpha/build/core/dex_preopt_libart.mk
+
+
+//***********************************************************************************************
+# out/host/linux-x86/bin/profman
+$(warning PROFMAN : $(PROFMAN))
+
+# 通过工具 out/host/linux-x86/bin/profman 生成 out/target/product/autolink_8q/dex_bootjars/system/framework/boot.prof，
+# 并且拷贝 到 /system/etc/boot-image.prof
+
+# Code to create the boot image profile, not in dex_preopt_libart_boot.mk since the profile is the same for all archs.
+# out/target/product/autolink_8q/dex_bootjars/system/framework/boot.prof
+my_out_boot_image_profile_location := $(DEXPREOPT_BOOT_JAR_DIR_FULL_PATH)/boot.prof
+$(my_out_boot_image_profile_location): PRIVATE_PROFILE_INPUT_LOCATION := $(my_boot_image_profile_location)
+$(my_out_boot_image_profile_location): $(PROFMAN) $(LIBART_TARGET_BOOT_DEX_FILES) $(my_boot_image_profile_location)
+	@echo "target profman: $@"
+	@mkdir -p $(dir $@)
+	ANDROID_LOG_TAGS="*:e" $(PROFMAN) \
+		--create-profile-from=$(PRIVATE_PROFILE_INPUT_LOCATION) \  #    out/target/product/autolink_8q/dex_bootjars/system/framework/boot.prof
+		$(addprefix --apk=,$(LIBART_TARGET_BOOT_DEX_FILES)) \   # 所有系统启动加载jar的全路径，例如： out/target/common/obj/JAVA_LIBRARIES/framework_intermediates/javalib.jar
+		$(addprefix --dex-location=,$(LIBART_TARGET_BOOT_DEX_LOCATIONS)) \  #   所有系统启动加载jar的全路径，例如：/system/framework/framework.jar
+		--reference-profile-file=$@     #    out/target/product/autolink_8q/dex_bootjars/system/framework/boot.prof
+
+# We want to install the profile even if we are not using preopt since it is required to generate
+# the image on the device.
+my_installed_profile := $(TARGET_OUT)/etc/boot-image.prof
+$(eval $(call copy-one-file,$(my_out_boot_image_profile_location),$(my_installed_profile)))
+ALL_DEFAULT_INSTALLED_MODULES += $(my_installed_profile)
+//***********************************************************************************************
+
+
+
+
+--create-profile-from=<filename>: creates a profile(概述、简介) from a list of classes and methods.
+--dex-location=<string>: location string to use with corresponding(相应的) apk-fd to find dex files
+--apk-=<filename>: an APK to search for dex files
+
+
+--reference-profile-file=<filename>: specify a reference profile.
+The data in this file will be compared with the data obtained by merging all the files specified with --profile-file or --profile-file-fd.
+If the exit code is EXIT_COMPILE then all --profile-file will be merged into --reference-profile-file.
+
+
+
+//工具源码位置
+//  @   /work/workcodes/aosp-p9.x-auto-alpha/art/profman
+int main(int argc, char **argv) {
+  return art::profman(argc, argv);
+}
+
+

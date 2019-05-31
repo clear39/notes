@@ -1,0 +1,49 @@
+开启系统wifi日志：
+settings get global wifi_verbose_logging_enabled
+
+
+
+
+
+
+HostapdHal.java 中封装了 IHostapd.hal 调用接口；
+通过 mIServiceManager.registerForNotifications(IHostapd.kInterfaceName, "", mServiceNotificationCallback) 
+实现对当 hostapd 进程启动时 注册 IHostapd hwbinder服务监听；
+
+SupplicantP2pIfaceHal.java 封装了 ISupplicant.hal 调用接口：
+SupplicantP2pIfaceHal.java 封装了 ISupplicantP2pNetwork.hal 和 ISupplicantP2pIface.hal 调用接口
+SupplicantStaIfaceHal.java 封装了 ISupplicantStaNetwork.hal 和 ISupplicantStaIface.hal 调用接口
+
+
+
+在SystemServer.java中:
+if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_WIFI)) {
+    // Wifi Service must be started first for wifi-related services.
+    traceBeginAndSlog("StartWifi");
+    mSystemServiceManager.startService(WIFI_SERVICE_CLASS);//"com.android.server.wifi.WifiService"
+    traceEnd();
+    traceBeginAndSlog("StartWifiScanning");
+    mSystemServiceManager.startService("com.android.server.wifi.scanner.WifiScanningService");
+    traceEnd();
+}
+
+//未开启
+if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_WIFI_RTT)) {
+    traceBeginAndSlog("StartRttService");
+    mSystemServiceManager.startService("com.android.server.wifi.rtt.RttService");
+    traceEnd();
+}
+
+//未开启
+if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_WIFI_AWARE)) {
+    traceBeginAndSlog("StartWifiAware");
+    mSystemServiceManager.startService(WIFI_AWARE_SERVICE_CLASS);//"com.android.server.wifi.aware.WifiAwareService"
+    traceEnd();
+}
+
+if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_WIFI_DIRECT)) {
+    traceBeginAndSlog("StartWifiP2P");
+    mSystemServiceManager.startService(WIFI_P2P_SERVICE_CLASS);//"com.android.server.wifi.p2p.WifiP2pService"
+    traceEnd();
+}
+

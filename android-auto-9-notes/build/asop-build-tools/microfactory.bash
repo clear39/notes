@@ -1,4 +1,4 @@
-# @build/soong/scripts/microfactory.bash
+# @ build/soong/scripts/microfactory.bash
 
 case $(uname) in
     Linux)

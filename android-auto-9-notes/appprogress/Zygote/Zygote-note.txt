@@ -1,0 +1,52 @@
+//  @/work/workcodes/aosp-p9.x-auto-alpha/device/autolink/imx8q/ProductConfigCommon.mk
+
+
+# only start 64 zygote
+$(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit_only.mk)
+# start 32 and 64 zygote
+$(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
+
+
+
+
+//  @/work/workcodes/aosp-p9.x-auto-alpha/system/core/rootdir/init.zygote64.rc
+service zygote /system/bin/app_process64 -Xzygote /system/bin --zygote --start-system-server
+    class main
+    priority -20
+    user root
+    group root readproc reserved_disk
+    socket zygote stream 660 root system
+    onrestart write /sys/android_power/request_state wake
+    onrestart write /sys/power/state on
+    onrestart restart audioserver
+    onrestart restart cameraserver
+    onrestart restart media
+    onrestart restart netd
+    onrestart restart wificond
+    writepid /dev/cpuset/foreground/tasks
+
+
+//  @/work/workcodes/aosp-p9.x-auto-alpha/system/core/rootdir/init.zygote64_32.rc
+service zygote /system/bin/app_process64 -Xzygote /system/bin --zygote --start-system-server --socket-name=zygote
+    class main
+    priority -20
+    user root
+    group root readproc reserved_disk
+    socket zygote stream 660 root system
+    onrestart write /sys/android_power/request_state wake
+    onrestart write /sys/power/state on
+    onrestart restart audioserver
+    onrestart restart cameraserver
+    onrestart restart media
+    onrestart restart netd
+    onrestart restart wificond
+    writepid /dev/cpuset/foreground/tasks
+
+service zygote_secondary /system/bin/app_process32 -Xzygote /system/bin --zygote --socket-name=zygote_secondary --enable-lazy-preload
+    class main
+    priority -20
+    user root
+    group root readproc reserved_disk
+    socket zygote_secondary stream 660 root system
+    onrestart restart zygote
+    writepid /dev/cpuset/foreground/tasks

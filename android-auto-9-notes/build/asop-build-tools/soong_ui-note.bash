@@ -1,4 +1,4 @@
-# @build/soong/soong_ui.bash
+# @ /work/workcodes/aosp-p9.x-auto-alpha/build/soong/soong_ui.bash
 # 执行命令为 build/soong/soong_ui.bash --make-mode -j4
 
 # Save the current PWD for use in soong_ui

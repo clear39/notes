@@ -92,7 +92,7 @@ static status_t deserializeCollection(_xmlDoc *doc, const _xmlNode *cur,typename
         }
         while (child != NULL) {
             if (!xmlStrcmp(child->name, (const xmlChar *)Trait::tag)) {//const char *const ModuleTraits::tag = "module"
-                typename Trait::PtrElement element;							//	 typedef HwModule Element; 		typedef sp<Element> PtrElement;
+                typename Trait::PtrElement element;	//	 typedef HwModule Element; 		typedef sp<Element> PtrElement;
                 status_t status = Trait::deserialize(doc, child, element, serializingContext);
                 if (status != NO_ERROR) {
                     return status;

@@ -14,6 +14,14 @@ service hostapd /vendor/bin/hw/hostapd
     oneshot
 
 
+//日志TAG默认为 wpa_supplicant ，在Android.mk中更改为 hostapd
+external/wpa_supplicant_8/hostapd/Android.mk:25:	L_CFLAGS += -DANDROID_LOG_NAME=\"hostapd\"
+//日志更改参考 wpa_supplicant 源码分析
+
+
+
+
+
 //  @   /work/workcodes/aosp-p9.x-auto-alpha/external/wpa_supplicant_8/hostapd/main.c
 int main(int argc, char *argv[])
 {

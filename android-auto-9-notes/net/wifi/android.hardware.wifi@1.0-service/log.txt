@@ -1,0 +1,46 @@
+//没有启动zygote程序时：
+--------- beginning of system
+05-31 08:35:47.238  1826  1826 I android.hardware.wifi@1.0-service: Wifi Hal is booting up...
+05-31 08:35:47.251  1826  1826 D android.hardware.wifi@1.0-service: WifiLegacyHal create
+05-31 08:35:47.251  1826  1826 D android.hardware.wifi@1.0-service: WifiModeController Create
+05-31 08:35:47.251  1826  1826 D android.hardware.wifi@1.0-service: WifiFeatureFlags Create 0,1,0
+05-31 08:35:47.251  1826  1826 D android.hardware.wifi@1.0-service: Wifi HAL create
+--------- beginning of main
+05-31 08:35:47.251  1826  1826 I ServiceManagement: Removing namespace from process name android.hardware.wifi@1.0-service to wifi@1.0-service.
+05-31 08:35:47.252  1826  1826 E cutils-trace: Error opening trace file: No such file or directory (2)
+
+
+
+//关闭wifi
+autolink_8q:/ $ logcat --pid=1825
+--------- beginning of system
+05-31 09:30:16.428  1825  1825 I android.hardware.wifi@1.0-service: Wifi Hal is booting up...
+05-31 09:30:16.450  1825  1825 D android.hardware.wifi@1.0-service: WifiLegacyHal create
+05-31 09:30:16.450  1825  1825 D android.hardware.wifi@1.0-service: WifiModeController Create
+05-31 09:30:16.450  1825  1825 D android.hardware.wifi@1.0-service: WifiFeatureFlags Create 0,1,0
+05-31 09:30:16.450  1825  1825 D android.hardware.wifi@1.0-service: Wifi HAL create
+--------- beginning of main
+05-31 09:30:16.451  1825  1825 I ServiceManagement: Removing namespace from process name android.hardware.wifi@1.0-service to wifi@1.0-service.
+05-31 09:30:16.451  1825  1825 E cutils-trace: Error opening trace file: No such file or directory (2)
+
+
+05-31 09:30:23.648  1825  1825 D android.hardware.wifi@1.0-service: Wifi HAL registerEventCallback
+05-31 09:30:23.649  1825  1825 D android.hardware.wifi@1.0-service: Wifi HAL stop
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

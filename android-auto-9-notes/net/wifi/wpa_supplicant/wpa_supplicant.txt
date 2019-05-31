@@ -11,7 +11,6 @@ service wpa_supplicant /vendor/bin/hw/wpa_supplicant \
 
 
 // 硬件逻辑层是否使用hidl
-
 xqli@linux:/work/workcodes/aosp-p9.x-auto-alpha/external/wpa_supplicant_8$ grep WPA_SUPPLICANT_USE_HIDL -nr .
 ./wpa_supplicant/Android.mk:1471:WPA_SUPPLICANT_USE_HIDL=y  //这里定义需要CONFIG_CTRL_IFACE_HIDL定义
 ./wpa_supplicant/Android.mk:1724:ifeq ($(WPA_SUPPLICANT_USE_HIDL), y)
@@ -29,6 +28,40 @@ xqli@linux:/work/workcodes/aosp-p9.x-auto-alpha/external/wpa_supplicant_8$ grep 
 ./wpa_supplicant/Android.mk:15:include $(LOCAL_PATH)/android.config
 ./wpa_supplicant/android.config:555:include $(wildcard $(LOCAL_PATH)/android_config_*.inc)
 ./hostapd/Android.mk:17:include $(LOCAL_PATH)/android.config
+
+
+
+
+// wpa_supplicant 的日志控制
+//	日志接口函数：			wpa_printf(MSG_ERROR, "Failed to initialize FST");
+// 日志默认最小等级为 		external/wpa_supplicant_8/src/utils/wpa_debug.c:32:int wpa_debug_level = MSG_INFO;
+//	@	/work/workcodes/aosp-p9.x-auto-alpha/external/wpa_supplicant_8/src/utils/wpa_debug.c
+void wpa_printf(int level, const char *fmt, ...)
+{
+	va_list ap;
+
+	va_start(ap, fmt);
+	if (level >= wpa_debug_level) {
+#ifdef CONFIG_ANDROID_LOG
+		__android_log_vprint(wpa_to_android_level(level),ANDROID_LOG_NAME, fmt, ap);
+#else /* CONFIG_ANDROID_LOG */
+......
+#endif /* CONFIG_ANDROID_LOG */
+	}
+	va_end(ap);
+
+#ifdef CONFIG_DEBUG_LINUX_TRACING
+	if (wpa_debug_tracing_file != NULL) {
+		va_start(ap, fmt);
+		fprintf(wpa_debug_tracing_file, WPAS_TRACE_PFX, level);
+		vfprintf(wpa_debug_tracing_file, fmt, ap);
+		fprintf(wpa_debug_tracing_file, "\n");
+		fflush(wpa_debug_tracing_file);
+		va_end(ap);
+	}
+#endif /* CONFIG_DEBUG_LINUX_TRACING */
+}
+
 
 
 

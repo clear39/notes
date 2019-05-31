@@ -1,0 +1,52 @@
+//  @/work/workcodes/aosp-p9.x-auto-alpha/hardware/interfaces/cas/1.0/default/android.hardware.cas@1.0-service.rc
+service vendor.cas-hal-1-0 /vendor/bin/hw/android.hardware.cas@1.0-service
+    class hal
+    user media
+    group mediadrm drmrpc
+    ioprio rt 4
+    writepid /dev/cpuset/foreground/tasks
+
+
+/***
+为视频编解码　加解密　服务
+*/
+
+
+
+//  @/work/workcodes/aosp-p9.x-auto-alpha/hardware/interfaces/cas/1.0/default/service.cpp
+int main() {
+    ALOGD("android.hardware.cas@1.0-service starting...");
+
+    // The CAS HAL may communicate to other vendor components via
+    // /dev/vndbinder
+    android::ProcessState::initWithDriver("/dev/vndbinder");
+
+    configureRpcThreadpool(8, true /* callerWillJoin */);
+
+    // Setup hwbinder service
+    android::sp<IMediaCasService> service = new MediaCasService();
+    android::status_t status = service->registerAsService();
+    LOG_ALWAYS_FATAL_IF(status != android::OK,"Error while registering cas service: %d", status);
+    joinRpcThreadpool();
+    return 0;
+}
+
+
+// 搜索记录：
+
+xqli@linux:/work/workcodes/aosp-p9.x-auto-alpha$ grep IMediaCasService -rnw frameworks/ system/
+
+frameworks/av/media/libstagefright/mpeg2ts/CasManager.cpp:132:    sp<IMediaCasService> casService = IMediaCasService::getService("default");
+frameworks/base/media/java/android/media/MediaCas.java:102:    private static final Singleton<IMediaCasService> gDefault =
+frameworks/base/media/java/android/media/MediaCas.java:103:            new Singleton<IMediaCasService>() {
+frameworks/base/media/java/android/media/MediaCas.java:105:        protected IMediaCasService create() {
+frameworks/base/media/java/android/media/MediaCas.java:107:                return IMediaCasService.getService();
+frameworks/base/media/java/android/media/MediaCas.java:113:    static IMediaCasService getService() {
+frameworks/base/media/java/android/media/MediaCas.java:318:        IMediaCasService service = getService();
+frameworks/base/media/java/android/media/MediaCas.java:335:        IMediaCasService service = getService();
+
+
+
+
+
+

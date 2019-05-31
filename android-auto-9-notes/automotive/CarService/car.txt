@@ -1,0 +1,5 @@
+//  
+CarService 是有系统SystemServer中的CarServiceHelperService服务通过intent启动，可以通过android.hardware.type.automotive属性配置是否启动CarService；
+
+CarService启动之后，会创建  ICar 添加到 servicemanager，并且会通过 IVehicle 连接到 android.hardware.automotive.vehicle@2.0-service 服务；
+

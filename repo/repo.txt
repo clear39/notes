@@ -1,0 +1,107 @@
+repo 只是封装了下载repo的原地址
+
+REPO_URL = os.environ.get('REPO_URL', None)  #获取系统环境变量
+if not REPO_URL:
+   REPO_URL = 'http://192.168.3.7:8081/git-repo'  # 如果为空，则强制复制为 'http://192.168.3.7:8081/git-repo'
+REPO_REV = 'stable'    # repo版本
+
+真正执行的是对应工程下的 src/.repo/repo/main.py 脚本
+
+
+
+<?xml version="1.0" encoding="UTF-8"?>
+
+<manifest>
+
+  <include name="autolink-aosp-p9.0.0_1.0.1-ga.xml"/>
+
+  <remote  name="android-imx"
+           fetch="ssh://lixuqing@192.168.3.7:29418/nxp/imx8/aosp-p9.x-auto-alpha/"
+           review="" />
+
+  <remote  name="android-imx-orig"
+           fetch="ssh://lixuqing@192.168.3.7:29418/nxp/imx8/aosp-p9.x-auto-alpha/"
+           review="" />
+
+  <remote  name="imx-linux-sdk"
+           fetch="ssh://lixuqing@192.168.3.7:29418/nxp/imx8/aosp-p9.x-auto-alpha/"
+           review="" />
+
+  <project path="frameworks/opt/net/ethernet" name="platform/frameworks/opt/net/ethernet" groups="pdk-fs" remote="android-imx" />
+
+<manifest/>
+
+
+标签 include  用于包含该另外 xml文件
+
+标签 remote 用于标记有哪些远程配置地址，和标签project 匹配用；
+
+例如：
+<project path="frameworks/opt/net/ethernet" name="platform/frameworks/opt/net/ethernet" groups="pdk-fs" remote="android-imx" />
+其中remote属性对应上面标签remote中name为android-imx的远程地址为 fetch="ssh://lixuqing@192.168.3.7:29418/nxp/imx8/aosp-p9.x-auto-alpha/" 
+则工程路径为 path="frameworks/opt/net/ethernet" 完整的远程地址为 ssh://lixuqing@192.168.3.7:29418/nxp/imx8/aosp-p9.x-auto-alpha/platform/frameworks/opt/net/ethernet
+
+我们可以去工程目录下通过git remote -v
+xqli@linux:/work/workcodes/aosp-p9.x-auto-alpha/frameworks/base$ git remote -v
+android-imx	ssh://lixuqing@192.168.3.7:29418/nxp/imx8/aosp-p9.x-auto-alpha/platform/frameworks/base (fetch)
+android-imx	ssh://lixuqing@192.168.3.7:29418/nxp/imx8/aosp-p9.x-auto-alpha/platform/frameworks/base (push)
+
+
+
+manifest
+这个是配置的顶层元素，即根标志
+remote
+name：在每一个.git/config文件的remote项中用到这个name，即表示每个git的远程服务器的名字(这个名字很关键，如果多个remote属性的话，default属性中需要指定default remote)。git pull、get fetch的时候会用到这个remote name。
+alias ：可以覆盖之前定义的remote name，name必须是固定的，但是alias可以不同，可以用来指向不同的remote url
+fetch ：所有git url真正路径的前缀，所有git 的project name加上这个前缀，就是git url的真正路径
+review ：指定Gerrit的服务器名，用于repo upload操作。如果没有指定，则repo upload没有效果
+
+
+default
+设定所有projects的默认属性值，如果在project元素里没有指定一个属性，则使用default元素的属性值。
+remote ：远程服务器的名字（上面remote属性中提到过，多个remote的时候需要指定default remote，就是这里设置了）
+revision ：所有git的默认branch，后面project没有特殊指出revision的话，就用这个branch
+sync_j ： 在repo sync中默认并行的数目
+sync_c ：如果设置为true，则只同步指定的分支(revision 属性指定)，而不是所有的ref内容
+sync_s ： 如果设置为true，则会同步git的子项目
+
+
+manifest-server
+它的url属性用于指定manifest服务的URL，通常是一个XML RPC 服务
+它要支持一下RPC方法：
+GetApprovedManifest(branch, target) ：返回一个manifest用于指示所有projects的分支和编译目标。
+target参数来自环境变量TARGET_PRODUCT和TARGET_BUILD_VARIANT，组成$TARGET_PRODUCT-$TARGET_BUILD_VARIANT
+GetManifest(tag) ：返回指定tag的manifest
+
+
+project
+需要clone的单独git
+name ：git 的名称，用于生成git url。URL格式是：${remote fetch}/${project name}.git 其中的 fetch就是上面提到的remote 中的fetch元素，name 就是此处的name
+path ：clone到本地的git的工作目录，如果没有配置的话，跟name一样
+remote ：定义remote name，如果没有定义的话就用default中定义的remote name
+revision ：指定需要获取的git提交点，可以定义成固定的branch，或者是明确的commit 哈希值
+groups ：列出project所属的组，以空格或者逗号分隔多个组名。所有的project都自动属于"all"组。每一个project自动属于
+name:'name' 和path:'path'组。例如，它自动属于default, name:monkeys, and path:barrel-of组。如果一个project属于notdefault组，则，repo sync时不会下载
+sync_c ：如果设置为true，则只同步指定的分支(revision 属性指定)，而不是所有的ref内容。
+sync_s ： 如果设置为true，则会同步git的子项目
+upstream ：在哪个git分支可以找到一个SHA1。用于同步revision锁定的manifest(-c 模式)。该模式可以避免同步整个ref空间
+annotation ：可以有0个或多个annotation，格式是name-value，repo forall命令是会用来定义环境变量
+
+
+
+include
+通过name属性可以引入另外一个manifest文件(路径相对与当前的manifest.xml 的路径)
+name ：另一个需要导入的manifest文件名字
+可以在当前的路径下添加一个another_manifest.xml，这样可以在另一个xml中添加或删除project
+
+remove-project
+从内部的manifest表中删除指定的project。经常用于本地的manifest文件，用户可以替换一个project的定义
+
+
+
+
+
+
+
+
+

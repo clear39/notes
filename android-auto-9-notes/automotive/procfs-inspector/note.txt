@@ -1,0 +1,40 @@
+//  @/work/workcodes/aosp-p9.x-auto-alpha/packages/services/Car/procfs-inspector
+
+service com.android.car.procfsinspector /system/bin/com.android.car.procfsinspector
+    class core
+    user nobody
+    group readproc
+
+on boot && property:boot.car_service_created=1
+    start com.android.car.procfsinspector
+
+
+
+
+
+/***
+* 创建　com.android.car.procfsinspector　服务 ,用于查询　proc　目录下所有进程　信息
+* 其中　进程　信息包括　进程　id　和　对应目录的 用户id　
+*/
+
+int main(int, char**)
+{
+    ALOGI("starting " LOG_TAG);
+    signal(SIGPIPE, SIG_IGN);
+
+    sp<ProcessState> processSelf(ProcessState::self());
+    sp<IServiceManager> serviceManager = defaultServiceManager();
+    std::unique_ptr<procfsinspector::Impl> server(new procfsinspector::Impl());
+
+    //  #define SERVICE_NAME "com.android.car.procfsinspector"
+    serviceManager->addService(String16(SERVICE_NAME), server.get());
+
+    processSelf->startThreadPool();
+
+    ALOGI(LOG_TAG " started");
+
+    IPCThreadState::self()->joinThreadPool();
+
+    ALOGW(LOG_TAG " joined and going down");
+    return 0;
+}

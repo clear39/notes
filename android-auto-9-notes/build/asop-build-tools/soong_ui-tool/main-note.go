@@ -229,7 +229,7 @@ func Build(ctx Context, config Config, what int = /*BuildProductConfig | BuildSo
 	ensureEmptyDirectoriesExist(ctx, config.TempDir()) // TempDir为 out/soong/.temp/ (注意这里是目录)
 
 
-
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	if what&BuildProductConfig != 0 { // true
 		// Run make for product config
 		//	@ /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/dumpvars.go
@@ -282,7 +282,7 @@ func Build(ctx Context, config Config, what int = /*BuildProductConfig | BuildSo
 		if !config.SkipMake() {
 			installCleanIfNecessary(ctx, config)
 		}
-		//	@ /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/ninia.go
+		//@  /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/ninja.go
 		// Run ninja
 		runNinja(ctx, config)
 	}

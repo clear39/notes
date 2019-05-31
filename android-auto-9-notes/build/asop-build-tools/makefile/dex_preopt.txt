@@ -1,0 +1,19 @@
+xqli@linux:/work/workcodes/aosp-p9.x-auto-alpha/build/make$ grep dex_preopt.mk -rnw .
+./core/main.mk:170:include $(BUILD_SYSTEM)/dex_preopt.mk
+
+xqli@linux:/work/workcodes/aosp-p9.x-auto-alpha/build/make$ grep dex_preopt_libart.mk -nrw .
+./core/dex_preopt.mk:88:include $(BUILD_SYSTEM)/dex_preopt_libart.mk
+
+xqli@linux:/work/workcodes/aosp-p9.x-auto-alpha/build/make$ grep dex_preopt_libart_boot.mk -nrw .
+./core/dex_preopt_libart.mk:148:include $(BUILD_SYSTEM)/dex_preopt_libart_boot.mk
+./core/dex_preopt_libart.mk:157:include $(BUILD_SYSTEM)/dex_preopt_libart_boot.mk
+
+
+
+
+
+
+
+
+// /work/workcodes/aosp-p9.x-auto-alpha/build/core/dex_preopt_libart_boot.mk 
+生成*.art、*.art.rel、*.oat、*.vdex 

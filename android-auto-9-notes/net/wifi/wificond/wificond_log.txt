@@ -1,0 +1,11 @@
+//没有启动zygote程序时：
+console:/ $ logcat --pid=1854
+--------- beginning of system
+05-31 08:35:47.401  1854  1854 I wificond: wificond is starting up...
+
+
+//关闭wifi
+05-31 09:38:35.880  1853  1853 I wificond: wificond is starting up...
+05-31 09:38:35.882  1853  1853 D wificond: Server create.
+05-31 09:38:42.607  1853  1853 D wificond: tearDownInterfaces 
+05-31 09:38:42.607  1853  1853 D wificond: No wiphy is found

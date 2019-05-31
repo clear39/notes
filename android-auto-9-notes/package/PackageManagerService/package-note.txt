@@ -1,0 +1,107 @@
+目前在PackageManagerService中往ServiceManager中添加了package和package_native服务，分别对应类为PackageManagerService和PackageManagerNative；
+
+
+
+PermissionManagerService：
+
+动态权限管理封装在PermissionManagerService中，该类在 PackageManagerService 构造函数中构建；
+PermissionManagerService 封装了 SystemConfig 从系统以下目录中加载权限文件，并且 构造DefaultPermissionGrantPolicy类默认授权给对应的应用
+/**
+* 权限文件加载类
+* /system/etc/sysconfig
+* /system/etc/permissions
+* /verdor/etc/sysconfig
+* /verdor/etc/permissions
+* /odm/etc/sysconfig
+* /odm/etc/permissions
+* /oem/etc/sysconfig
+* /oem/etc/permissions
+*/
+PermissionManagerService内部实现了一个 PermissionManagerInternalImpl类 添加到LocalServices中 以提供给SystemServer内部其他类访问PermissionManagerService
+通过 PermissionManagerInternal.class key得到 PermissionManagerInternalImpl类；
+
+
+
+
+
+SystemConfig：
+
+标签 group 
+
+
+标签 permission 用于系统权限定义：
+<permission name="android.permission.BLUETOOTH_ADMIN" perUser="false">
+    <group gid="net_bt_admin" />
+</permission>
+perUser 默认为false，该权限是否只是针对某个用户
+group 属于的组
+
+
+
+
+标签 assign-permission 用于分配权限：
+<assign-permission name="android.permission.WATCH_APPOPS" uid="cameraserver" />
+给用户id为 cameraserver 分配 android.permission.WATCH_APPOPS 权限，存储在  mSystemPermissions map中；
+
+标签 privapp-permissions ：
+用于给默认对应app释放权限：
+<privapp-permissions package="com.android.tv">
+    <permission name="android.permission.CHANGE_HDMI_CEC_ACTIVE_SOURCE"/>
+    <permission name="android.permission.DVB_DEVICE"/>
+    <permission name="android.permission.GLOBAL_SEARCH"/>
+    <permission name="android.permission.HDMI_CEC"/>
+</privapp-permissions>
+
+
+标签 library
+
+标签 feature
+
+标签 unavailable-feature 用于去除 feature 已经添加的属性
+
+标签 allow-in-power-save-except-idle
+
+标签 allow-in-power-save
+
+标签 allow-in-data-usage-save
+
+标签 allow-unthrottled-location
+
+标签 allow-implicit-broadcast
+标签 app-link
+
+标签 system-user-blacklisted-app
+
+标签 default-enabled-vr-app
+
+标签 backup-transport-whitelisted-service
+
+标签 disabled-until-used-preinstalled-carrier-associated-app
+
+标签 disabled-until-used-preinstalled-carrier-app
+
+标签 oem-permissions
+
+标签 hidden-api-whitelisted-app
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -41,3 +41,53 @@ showcommands 为命令展示参数，如果添加该选项则打印命令执行�
 /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/util.go
 /work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/util_linux.go
 
+
+
+
+├── Android.mk
+├── build_date.txt
+├── build.trace.gz
+├── casecheck.txt
+├── CaseCheck.txt
+├── CleanSpec.mk
+├── microfactory_Linux
+├── ninja_build
+├── soong
+│   ├── Android-autolink_8q_car.mk
+│   ├── build.ninja
+│   ├── build.ninja.d
+│   ├── make_vars-autolink_8q_car.mk
+│   ├── soong.config
+│   └── soong.variables
+├── soong.log
+└── soong_ui
+
+
+
+├── Android.mk
+├── build_date.txt
+├── build.trace.gz
+├── casecheck.txt
+├── CaseCheck.txt
+├── CleanSpec.mk
+├── microfactory_Linux
+├── ninja_build
+├── soong
+│   └── soong.variables
+├── soong.log
+└── soong_ui
+
+
+
+
+$ cat  out/combined-autolink_8q_car.ninja
+builddir = out
+include out/build-autolink_8q_car.ninja
+include out/soong/build.ninja
+build out/combined-autolink_8q_car.ninja: phony out/soong/build.ninja
+
+
+
+
+
+

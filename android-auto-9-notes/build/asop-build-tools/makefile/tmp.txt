@@ -1,0 +1,109 @@
+DEXPREOPT_BOOT_JARS_MODULES := $(PRODUCT_BOOT_JARS)
+
+$(foreach b,$(DEXPREOPT_BOOT_JARS_MODULES),$(eval $(call _dexpreopt-boot-jar-remove-classes.dex,$(b))))
+
+
+
+# $(1): boot jar module name
+define _dexpreopt-boot-jar-remove-classes.dex
+#   out/target/product/autolink_8q/dex_bootjars/system/framework/$(1)_nodex.jar
+_dbj_jar_no_dex := $(DEXPREOPT_BOOT_JAR_DIR_FULL_PATH)/$(1)_nodex.jar
+#  
+_dbj_src_jar := $(call intermediates-dir-for,JAVA_LIBRARIES,$(1),,COMMON)/javalib.jar
+
+$(call dexpreopt-copy-jar,$$(_dbj_src_jar),$$(_dbj_jar_no_dex),$(DEX_PREOPT_DEFAULT))
+
+_dbj_jar_no_dex :=
+_dbj_src_jar :=
+endef
+
+
+
+
+
+###########################################################
+## The intermediates directory.  Where object files go for
+## a given target.  We could technically get away without
+## the "_intermediates" suffix on the directory, but it's
+## nice to be able to grep for that string to find out if
+## anyone's abusing the system.
+###########################################################
+# $(1): target class, like "APPS"
+# $(2): target name, like "NotePad"
+# $(3): { HOST, HOST_CROSS, AUX, <empty (TARGET)>, <other non-empty (HOST)> }
+# $(4): if non-empty, force the intermediates to be COMMON
+# $(5): if non-empty, force the intermediates to be for the 2nd arch
+# $(6): if non-empty, force the intermediates to be for the host cross os
+define intermediates-dir-for
+$(strip \
+    $(eval _idfClass := $(strip $(1))) \  # JAVA_LIBRARIES
+    $(if $(_idfClass),, \
+        $(error $(LOCAL_PATH): Class not defined in call to intermediates-dir-for)) \
+    $(eval _idfName := $(strip $(2))) \  # autolink-framework
+    $(if $(_idfName),, \
+        $(error $(LOCAL_PATH): Name not defined in call to intermediates-dir-for)) \
+    $(eval _idfPrefix := $(call find-idf-prefix,$(3),$(6))) \
+    $(eval _idf2ndArchPrefix := $(if $(strip $(5)),$(TARGET_2ND_ARCH_VAR_PREFIX))) \
+    $(if $(filter $(_idfPrefix)-$(_idfClass),$(COMMON_MODULE_CLASSES))$(4), \       #  $(_idfPrefix)-$(_idfClass) = TARGET-JAVA_LIBRARIES   
+        $(eval _idfIntBase := $($(_idfPrefix)_OUT_COMMON_INTERMEDIATES)) \          # _idfIntBase = TARGET_OUT_COMMON_INTERMEDIATES = out/target/common/obj
+      ,$(if $(filter $(_idfClass),$(PER_ARCH_MODULE_CLASSES)),\
+          $(eval _idfIntBase := $($(_idf2ndArchPrefix)$(_idfPrefix)_OUT_INTERMEDIATES)) \
+       ,$(eval _idfIntBase := $($(_idfPrefix)_OUT_INTERMEDIATES)) \
+       ) \
+     ) \
+    $(_idfIntBase)/$(_idfClass)/$(_idfName)_intermediates \   # out/target/common/obj/JAVA_LIBRARIES/autolink-framework_intermediates/javalib.jar
+)
+endef
+
+
+
+###########################################################
+## Returns correct _idfPrefix from the list:
+##   { HOST, HOST_CROSS, AUX, TARGET }
+###########################################################
+# the following rules checked in order:
+# ($1 is in {AUX, HOST_CROSS} => $1;
+# ($1 is empty) => TARGET;
+# ($2 is not empty) => HOST_CROSS;
+# => HOST;
+define find-idf-prefix
+$(strip \
+    $(eval _idf_pfx_:=$(strip $(filter AUX HOST_CROSS,$(1)))) \
+    $(eval _idf_pfx_:=$(if $(strip $(1)),$(if $(_idf_pfx_),$(_idf_pfx_),$(if $(strip $(2)),HOST_CROSS,HOST)),TARGET)) \
+    $(_idf_pfx_)
+)
+endef
+
+
+
+#   $(call dexpreopt-copy-jar,$$(_dbj_src_jar),$$(_dbj_jar_no_dex),$(DEX_PREOPT_DEFAULT))
+
+# Copy an apk to a target location while removing classes*.dex
+# $(1): source file
+# $(2): destination file
+# $(3): LOCAL_DEX_PREOPT, if nostripping then leave classes*.dex
+define dexpreopt-copy-jar  
+# out/target/product/autolink_8q/dex_bootjars/system/framework/$(1)_nodex.jar :  out/target/common/obj/JAVA_LIBRARIES/$(1)_intermediates/javalib.jar
+$(2): $(1)                          #   $(_dbj_jar_no_dex) :  $(_dbj_src_jar)
+        @echo "Copy: $$@"
+        $$(copy-file-to-target)     #   
+        $(if $(filter nostripping,$(3)),,$$(call dexpreopt-remove-classes.dex,$$@))
+endef
+
+
+
+# $(1): the .jar or .apk to remove classes.dex. Note that if all dex files
+# are uncompressed in the archive, then dexopt will not do a copy of the dex
+# files and we should not strip.
+define dexpreopt-remove-classes.dex
+$(hide) if (zipinfo $1 '*.dex' 2>/dev/null | grep -v ' stor ' >/dev/null) ; then \
+zip --quiet --delete $(1) classes.dex; \
+dex_index=2; \
+while zip --quiet --delete $(1) classes$${dex_index}.dex > /dev/null; do \
+  let dex_index=dex_index+1; \
+done \
+fi
+endef
+
+
+Invert the sense of matching, to select non-matching lines.

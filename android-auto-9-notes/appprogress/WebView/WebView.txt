@@ -1,0 +1,209 @@
+
+
+
+//  @   /work/workcodes/aosp-p9.x-auto-alpha/frameworks/base/services/java/com/android/server/SystemServer.java
+u:r:zygote:s0                  root          1782     1 2015028 129652 0                   0 S zygote64
+u:r:zygote:s0                  root          1783     1 1443332 129188 0                   0 S zygote
+u:r:webview_zygote:s0          webview_zygote 2151 1783 1486924  56992 0                   0 S webview_zygote
+
+//  @/work/workcodes/aosp-p9.x-auto-alpha/frameworks/base/services/core/java/com/android/server/am/ActivityManagerService.java
+private ProcessStartResult startProcess(String hostingType, String entryPoint,
+        ProcessRecord app, int uid, int[] gids, int runtimeFlags, int mountExternal,
+        String seInfo, String requiredAbi, String instructionSet, String invokeWith,
+        long startTime) {
+    Slog.i(TAG, "startProcess " + app.processName,new Throwable());
+    try {
+        Trace.traceBegin(Trace.TRACE_TAG_ACTIVITY_MANAGER, "Start proc: " + app.processName);
+        checkTime(startTime, "startProcess: asking zygote to start proc");
+        final ProcessStartResult startResult;
+        if (hostingType.equals("webview_service")) {
+            startResult = startWebView(entryPoint,
+                    app.processName, uid, uid, gids, runtimeFlags, mountExternal,
+                    app.info.targetSdkVersion, seInfo, requiredAbi, instructionSet,
+                    app.info.dataDir, null,
+                    new String[] {PROC_START_SEQ_IDENT + app.startSeq});
+        } else {
+            startResult = Process.start(entryPoint,
+                    app.processName, uid, uid, gids, runtimeFlags, mountExternal,
+                    app.info.targetSdkVersion, seInfo, requiredAbi, instructionSet,
+                    app.info.dataDir, invokeWith,
+                    new String[] {PROC_START_SEQ_IDENT + app.startSeq});
+        }
+        checkTime(startTime, "startProcess: returned from zygote!");
+        return startResult;
+    } finally {
+        Trace.traceEnd(Trace.TRACE_TAG_ACTIVITY_MANAGER);
+    }
+}
+
+
+//  @   /work/workcodes/aosp-p9.x-auto-alpha/frameworks/base/core/java/android/os/Process.java
+public static final ProcessStartResult startWebView(final String processClass,
+                                final String niceName,
+                                int uid, int gid, int[] gids,
+                                int runtimeFlags, int mountExternal,
+                                int targetSdkVersion,
+                                String seInfo,
+                                String abi,
+                                String instructionSet,
+                                String appDataDir,
+                                String invokeWith,
+                                String[] zygoteArgs) {
+    return WebViewZygote.getProcess().start(processClass, niceName, uid, gid, gids,
+                runtimeFlags, mountExternal, targetSdkVersion, seInfo,
+                abi, instructionSet, appDataDir, invokeWith, zygoteArgs);
+}
+
+
+//  @/work/workcodes/aosp-p9.x-auto-alpha/frameworks/base/core/java/android/webkit/WebViewZygote.java
+public final Process.ProcessStartResult start(final String processClass,
+                                                final String niceName,
+                                                int uid, int gid, int[] gids,
+                                                int runtimeFlags, int mountExternal,
+                                                int targetSdkVersion,
+                                                String seInfo,
+                                                String abi,
+                                                String instructionSet,
+                                                String appDataDir,
+                                                String invokeWith,
+                                                String[] zygoteArgs) {
+    try {
+        return startViaZygote(processClass, niceName, uid, gid, gids,
+                runtimeFlags, mountExternal, targetSdkVersion, seInfo,
+                abi, instructionSet, appDataDir, invokeWith, false /* startChildZygote */,
+                zygoteArgs);
+    } catch (ZygoteStartFailedEx ex) {
+        Log.e(LOG_TAG,"Starting VM process through Zygote failed");
+        throw new RuntimeException("Starting VM process through Zygote failed", ex);
+    }
+}
+
+
+private Process.ProcessStartResult startViaZygote(final String processClass,
+                                                    final String niceName,
+                                                    final int uid, final int gid,
+                                                    final int[] gids,
+                                                    int runtimeFlags, int mountExternal,
+                                                    int targetSdkVersion,
+                                                    String seInfo,
+                                                    String abi,
+                                                    String instructionSet,
+                                                    String appDataDir,
+                                                    String invokeWith,
+                                                    boolean startChildZygote,
+                                                    String[] extraArgs)
+                                                    throws ZygoteStartFailedEx {
+    ArrayList<String> argsForZygote = new ArrayList<String>();
+
+    // --runtime-args, --setuid=, --setgid=,
+    // and --setgroups= must go first
+    argsForZygote.add("--runtime-args");
+    argsForZygote.add("--setuid=" + uid);
+    argsForZygote.add("--setgid=" + gid);
+    argsForZygote.add("--runtime-flags=" + runtimeFlags);
+    if (mountExternal == Zygote.MOUNT_EXTERNAL_DEFAULT) {
+        argsForZygote.add("--mount-external-default");
+    } else if (mountExternal == Zygote.MOUNT_EXTERNAL_READ) {
+        argsForZygote.add("--mount-external-read");
+    } else if (mountExternal == Zygote.MOUNT_EXTERNAL_WRITE) {
+        argsForZygote.add("--mount-external-write");
+    }
+    argsForZygote.add("--target-sdk-version=" + targetSdkVersion);
+
+    // --setgroups is a comma-separated list
+    if (gids != null && gids.length > 0) {
+        StringBuilder sb = new StringBuilder();
+        sb.append("--setgroups=");
+
+        int sz = gids.length;
+        for (int i = 0; i < sz; i++) {
+            if (i != 0) {
+                sb.append(',');
+            }
+            sb.append(gids[i]);
+        }
+
+        argsForZygote.add(sb.toString());
+    }
+
+    if (niceName != null) {
+        argsForZygote.add("--nice-name=" + niceName);
+    }
+
+    if (seInfo != null) {
+        argsForZygote.add("--seinfo=" + seInfo);
+    }
+
+    if (instructionSet != null) {
+        argsForZygote.add("--instruction-set=" + instructionSet);
+    }
+
+    if (appDataDir != null) {
+        argsForZygote.add("--app-data-dir=" + appDataDir);
+    }
+
+    if (invokeWith != null) {
+        argsForZygote.add("--invoke-with");
+        argsForZygote.add(invokeWith);
+    }
+
+    if (startChildZygote) {
+        argsForZygote.add("--start-child-zygote");
+    }
+
+    argsForZygote.add(processClass);
+
+    if (extraArgs != null) {
+        for (String arg : extraArgs) {
+            argsForZygote.add(arg);
+        }
+    }
+
+    synchronized(mLock) {
+        return zygoteSendArgsAndGetResult(openZygoteSocketIfNeeded(abi), argsForZygote);
+    }
+}
+
+
+
+
+05-24 16:09:24.083  1936  2269 I ActivityManager: startProcessLocked org.zwanoo.android.speedtest
+05-24 16:09:24.083  1936  2269 I ActivityManager: java.lang.Throwable
+05-24 16:09:24.083  1936  2269 I ActivityManager: 	at com.android.server.am.ActivityManagerService.startProcessLocked(ActivityManagerService.java:4405)
+05-24 16:09:24.083  1936  2269 I ActivityManager: 	at com.android.server.am.ActivityManagerService.startProcessLocked(ActivityManagerService.java:4382)
+05-24 16:09:24.083  1936  2269 I ActivityManager: 	at com.android.server.am.ActivityManagerService.startProcessLocked(ActivityManagerService.java:4197)
+05-24 16:09:24.083  1936  2269 I ActivityManager: 	at com.android.server.am.ActivityManagerService.startProcessLocked(ActivityManagerService.java:4179)
+05-24 16:09:24.083  1936  2269 I ActivityManager: 	at com.android.server.am.ActivityManagerService.startProcessLocked(ActivityManagerService.java:4065)
+05-24 16:09:24.083  1936  2269 I ActivityManager: 	at com.android.server.am.ActivityStackSupervisor.startSpecificActivityLocked(ActivityStackSupervisor.java:1711)
+05-24 16:09:24.083  1936  2269 I ActivityManager: 	at com.android.server.am.ActivityStack.resumeTopActivityInnerLocked(ActivityStack.java:2764)
+05-24 16:09:24.083  1936  2269 I ActivityManager: 	at com.android.server.am.ActivityStack.resumeTopActivityUncheckedLocked(ActivityStack.java:2297)
+05-24 16:09:24.083  1936  2269 I ActivityManager: 	at com.android.server.am.ActivityStackSupervisor.resumeFocusedStackTopActivityLocked(ActivityStackSupervisor.java:2225)
+05-24 16:09:24.083  1936  2269 I ActivityManager: 	at com.android.server.am.ActivityStack.completePauseLocked(ActivityStack.java:1609)
+05-24 16:09:24.083  1936  2269 I ActivityManager: 	at com.android.server.am.ActivityStack.activityPausedLocked(ActivityStack.java:1533)
+05-24 16:09:24.083  1936  2269 I ActivityManager: 	at com.android.server.am.ActivityManagerService.activityPaused(ActivityManagerService.java:8161)
+05-24 16:09:24.083  1936  2269 I ActivityManager: 	at android.app.IActivityManager$Stub.onTransact(IActivityManager.java:224)
+05-24 16:09:24.083  1936  2269 I ActivityManager: 	at com.android.server.am.ActivityManagerService.onTransact(ActivityManagerService.java:3289)
+05-24 16:09:24.083  1936  2269 I ActivityManager: 	at android.os.Binder.execTransact(Binder.java:731)
+05-24 16:09:24.120  1936  1953 I ActivityManager: Start proc 3617:org.zwanoo.android.speedtest/u0a58 for activity org.zwanoo.android.speedtest/com.ookla.mobile4.screens.main.MainActivity
+
+
+
+
+
+
+05-24 16:09:27.592  1936  3202 I ActivityManager: startProcessLocked com.android.webview:sandboxed_process0
+05-24 16:09:27.592  1936  3202 I ActivityManager: java.lang.Throwable
+05-24 16:09:27.592  1936  3202 I ActivityManager: 	at com.android.server.am.ActivityManagerService.startProcessLocked(ActivityManagerService.java:4405)
+05-24 16:09:27.592  1936  3202 I ActivityManager: 	at com.android.server.am.ActivityManagerService.startProcessLocked(ActivityManagerService.java:4382)
+05-24 16:09:27.592  1936  3202 I ActivityManager: 	at com.android.server.am.ActivityManagerService.startProcessLocked(ActivityManagerService.java:4197)
+05-24 16:09:27.592  1936  3202 I ActivityManager: 	at com.android.server.am.ActivityManagerService.startProcessLocked(ActivityManagerService.java:4179)
+05-24 16:09:27.592  1936  3202 I ActivityManager: 	at com.android.server.am.ActivityManagerService.startProcessLocked(ActivityManagerService.java:4065)
+05-24 16:09:27.592  1936  3202 I ActivityManager: 	at com.android.server.am.ActiveServices.bringUpServiceLocked(ActiveServices.java:2382)
+05-24 16:09:27.592  1936  3202 I ActivityManager: 	at com.android.server.am.ActiveServices.bindServiceLocked(ActiveServices.java:1645)
+05-24 16:09:27.592  1936  3202 I ActivityManager: 	at com.android.server.am.ActivityManagerService.bindService(ActivityManagerService.java:20510)
+05-24 16:09:27.592  1936  3202 I ActivityManager: 	at android.app.IActivityManager$Stub.onTransact$bindService$(IActivityManager.java:10275)
+05-24 16:09:27.592  1936  3202 I ActivityManager: 	at android.app.IActivityManager$Stub.onTransact(IActivityManager.java:454)
+05-24 16:09:27.592  1936  3202 I ActivityManager: 	at com.android.server.am.ActivityManagerService.onTransact(ActivityManagerService.java:3289)
+05-24 16:09:27.592  1936  3202 I ActivityManager: 	at android.os.Binder.execTransact(Binder.java:731)
+
+

@@ -1,0 +1,20 @@
+//  电池相关服务
+//  @./nxp-opensource/imx/health/  
+
+//  @/work/workcodes/aosp-p9.x-auto-alpha/vendor/nxp-opensource/imx/health/android.hardware.health@2.0-service.imx.rc
+service vendor.health-hal-2-0 /vendor/bin/hw/android.hardware.health@2.0-service.imx                                                                                                                          
+    class hal 
+    user system
+    group system
+    capabilities WAKE_ALARM
+    file /dev/kmsg w
+
+
+int main(void) {
+    //  @/work/workcodes/aosp-p9.x-auto-alpha/hardware/interfaces/health/2.0/utils/libhealthservice/HealthServiceCommon.cpp
+    return health_service_main();
+}
+
+
+
+

@@ -8,8 +8,7 @@ service vendor.wifi_hal_legacy /vendor/bin/hw/android.hardware.wifi@1.0-service
 
 //  @   /work/workcodes/aosp-p9.x-auto-alpha/hardware/interfaces/wifi/1.2/default/service.cpp
 int main(int /*argc*/, char** argv) {
-    android::base::InitLogging(
-        argv, android::base::LogdLogger(android::base::SYSTEM));
+    android::base::InitLogging(argv, android::base::LogdLogger(android::base::SYSTEM));
     LOG(INFO) << "Wifi Hal is booting up...";
 
     configureRpcThreadpool(1, true /* callerWillJoin */);
@@ -17,14 +16,19 @@ int main(int /*argc*/, char** argv) {
     // Setup hwbinder service
     android::sp<android::hardware::wifi::V1_2::IWifi> service =
         new android::hardware::wifi::V1_2::implementation::Wifi(
-            std::make_shared<WifiLegacyHal>(),
-            std::make_shared<WifiModeController>(),
-            std::make_shared<WifiFeatureFlags>());
-    CHECK_EQ(service->registerAsService(), android::NO_ERROR)
-        << "Failed to register wifi HAL";
+            std::make_shared<WifiLegacyHal>(),              
+            std::make_shared<WifiModeController>(), // WifiModeController 中封装了 驱动加载和卸载，目前该版本不需要驱动卸载和加载，只是简单设置"wlan.driver.status"属性为“ok”或者“unload”
+            std::make_shared<WifiFeatureFlags>());   // WifiFeatureFlags 封装了 静态常量 来控制hal支持哪些功能
+    CHECK_EQ(service->registerAsService(), android::NO_ERROR) << "Failed to register wifi HAL";
 
     joinRpcThreadpool();
 
     LOG(INFO) << "Wifi Hal is terminating...";
     return 0;
 }
+
+//  @   /work/workcodes/aosp-p9.x-auto-alpha/hardware/interfaces/wifi/1.2/default/wifi_legacy_hal.cpp
+WifiLegacyHal 
+
+
+//  @   /work/workcodes/aosp-p9.x-auto-alpha/hardware/interfaces/wifi/1.2/default/wifi_mode_controller.cpp
