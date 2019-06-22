@@ -1,0 +1,4 @@
+sudo ./uuu_imx_android_flash.sh -f imx8qxp -e -D ./
+
+dumpsys acitivity service TelephonyDebugService
+

@@ -1,0 +1,11 @@
+
+//  @/work/workcodes/aosp-p9.x-auto-alpha/art/tools/hiddenapi/hiddenapi.cc
+int main(int argc, char** argv) {
+  art::HiddenApi hiddenapi;
+
+  // Parse arguments. Argument mistakes will lead to exit(EXIT_FAILURE) in UsageError.
+  hiddenapi.ParseArgs(argc, argv);
+  return hiddenapi.ProcessDexFiles() ? EXIT_SUCCESS : EXIT_FAILURE;
+}
+
+

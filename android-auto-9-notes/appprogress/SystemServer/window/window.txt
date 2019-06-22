@@ -1,0 +1,32 @@
+dumpsys window
+
+dumpsys window policy       //  WINDOW MANAGER POLICY STATE
+
+dumpsys window animator     //  WINDOW MANAGER ANIMATOR STATE 
+
+dumpsys window sessions     //  WINDOW MANAGER SESSIONS
+
+dumpsys window displays     //  WINDOW MANAGER DISPLAY CONTENTS 
+
+dumpsys window tokens       //  WINDOW MANAGER TOKENS
+
+dumpsys window windows      //  WINDOW MANAGER WINDOWS
+
+
+
+Window manager (window) commands:
+  help
+      Print this help text.
+  size [reset|WxH|WdpxHdp]
+    Return or override display size.
+    width and height in pixels unless suffixed with 'dp'.
+  density [reset|DENSITY]
+    Return or override display density.
+  overscan [reset|LEFT,TOP,RIGHT,BOTTOM]
+    Set overscan area for display.
+  scaling [off|auto]
+    Set display scaling mode.
+  dismiss-keyguard
+    Dismiss the keyguard, prompting user for auth if necessary.
+  tracing (start | stop)
+    Start or stop window tracing.

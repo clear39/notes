@@ -1,0 +1,200 @@
+// 工具 hiddenapi
+// 将dex文件中的类/方法/成员 根据对应的属性设置acess flag
+// 源码路径：	/work/workcodes/aosp-p9.x-auto-alpha/art/tools/hiddenapi
+
+
+
+// 帮助文档：
+No arguments specified
+Command: out/host/linux-x86/bin/hiddenapi
+Usage: hiddenapi [options]...
+
+  --dex=<filename>: specify dex file whose members' access flags are to be set.
+      				At least one --dex parameter must be specified.
+  --light-greylist=<filename>:
+  --dark-greylist=<filename>:
+  --blacklist=<filename>: text files with signatures of methods/fields to be marked
+      greylisted/blacklisted respectively. At least one list must be provided.
+
+  --print-hidden-api: dump a list of marked methods/fields to the standard output.
+      There is no indication which API category they belong to.
+
+
+
+
+
+
+build/make/core/config.mk:700:HIDDENAPI := $(HOST_OUT_EXECUTABLES)/hiddenapi  # out/host/linux-x86/bin/hiddenapi
+build/make/core/config.mk:1026:INTERNAL_PLATFORM_HIDDENAPI_LIGHT_GREYLIST := $(TARGET_OUT_COMMON_INTERMEDIATES)/PACKAGING/hiddenapi-light-greylist.txt
+build/make/core/config.mk:1027:INTERNAL_PLATFORM_HIDDENAPI_DARK_GREYLIST := $(TARGET_OUT_COMMON_INTERMEDIATES)/PACKAGING/hiddenapi-dark-greylist.txt
+build/make/core/config.mk:1028:INTERNAL_PLATFORM_HIDDENAPI_BLACKLIST := $(TARGET_OUT_COMMON_INTERMEDIATES)/PACKAGING/hiddenapi-blacklist.txt
+
+
+#  @ /work/workcodes/aosp-p9.x-auto-alpha/build/make/core/definitions.mk
+#   build/make/core/java.mk:558:  $(eval $(call hiddenapi-copy-dex-files,$(built_dex_intermediate),$(built_dex_hiddenapi)))
+
+define hiddenapi-copy-dex-files
+$(2): $(1) $(HIDDENAPI) $(INTERNAL_PLATFORM_HIDDENAPI_LIGHT_GREYLIST) \
+      $(INTERNAL_PLATFORM_HIDDENAPI_DARK_GREYLIST) $(INTERNAL_PLATFORM_HIDDENAPI_BLACKLIST)
+	@rm -rf $(dir $(2))
+	@mkdir -p $(dir $(2))
+	find $(dir $(1)) -maxdepth 1 -name "classes*.dex" | sort | \
+		xargs -I{} cp -f {} $(dir $(2))
+	find $(dir $(2)) -name "classes*.dex" | sort | sed 's/^/--dex=/' | \
+		xargs $(HIDDENAPI) --light-greylist=$(INTERNAL_PLATFORM_HIDDENAPI_LIGHT_GREYLIST) \
+		                   --dark-greylist=$(INTERNAL_PLATFORM_HIDDENAPI_DARK_GREYLIST) \
+		                   --blacklist=$(INTERNAL_PLATFORM_HIDDENAPI_BLACKLIST)
+endef
+
+# @  build/make/core/java.mk:558
+ifneq ($(filter $(LOCAL_MODULE),$(PRODUCT_BOOT_JARS)),) # is_boot_jar
+  $(eval $(call hiddenapi-copy-dex-files,$(built_dex_intermediate),$(built_dex_hiddenapi)))
+  built_dex_copy_from := $(built_dex_hiddenapi)
+else # !is_boot_jar
+  built_dex_copy_from := $(built_dex_intermediate)
+endif # is_boot_jar
+
+
+
+
+
+
+
+
+
+#  @ /work/workcodes/aosp-p9.x-auto-alpha/build/make/core/definitions.mk
+
+
+
+/*
+// framework 模块 打印结果为
+build/make/core/soong_java_prebuilt.mk:76: warning: LOCAL_MODULE : framework LOCAL_IS_HOST_MODULE :   
+build/make/core/soong_java_prebuilt.mk:77: warning: LOCAL_SOONG_DEX_JAR : out/soong/.intermediates/frameworks/base/framework/android_common/dex/framework.jar 
+build/make/core/soong_java_prebuilt.mk:78: warning: common_javalib.jar : out/target/common/obj/JAVA_LIBRARIES/framework_intermediates/javalib.jar 
+*/
+
+#       build/make/core/soong_java_prebuilt.mk:79:      $(eval $(call hiddenapi-copy-soong-jar,$(LOCAL_SOONG_DEX_JAR),$(common_javalib.jar)))
+
+define hiddenapi-copy-soong-jar
+$(2): PRIVATE_FOLDER := $(dir $(2))dex-hiddenapi		# out/target/common/obj/JAVA_LIBRARIES/framework_intermediates/dex-hiddenapi
+$(2): $(1) $(HIDDENAPI) $(SOONG_ZIP) $(MERGE_ZIPS) $(INTERNAL_PLATFORM_HIDDENAPI_LIGHT_GREYLIST) \
+      $(INTERNAL_PLATFORM_HIDDENAPI_DARK_GREYLIST) $(INTERNAL_PLATFORM_HIDDENAPI_BLACKLIST)
+	@echo "Hidden API: $$@"
+	$$(copy-file-to-target)   # 将第一个依赖$<拷贝到目标
+	@rm -rf $${PRIVATE_FOLDER}
+	@mkdir -p $${PRIVATE_FOLDER}
+	unzip -q $(2) 'classes*.dex' -d $${PRIVATE_FOLDER}
+	find $${PRIVATE_FOLDER} -name "classes*.dex" | sort | sed 's/^/--dex=/' | \
+		xargs $(HIDDENAPI) --light-greylist=$(INTERNAL_PLATFORM_HIDDENAPI_LIGHT_GREYLIST) \
+		                   --dark-greylist=$(INTERNAL_PLATFORM_HIDDENAPI_DARK_GREYLIST) \
+		                   --blacklist=$(INTERNAL_PLATFORM_HIDDENAPI_BLACKLIST)
+  # SOONG_ZIP out/soong/host/linux-x86/bin/soong_zip
+	$(SOONG_ZIP) -o $${PRIVATE_FOLDER}/classes.dex.jar -C $${PRIVATE_FOLDER} -D $${PRIVATE_FOLDER}
+	#	MERGE_ZIPS out/soong/host/linux-x86/bin/merge_zips
+	$(MERGE_ZIPS) -D -zipToNotStrip $${PRIVATE_FOLDER}/classes.dex.jar -stripFile "classes*.dex" \
+		$(2) $${PRIVATE_FOLDER}/classes.dex.jar $(1)
+endef
+
+
+//	@/work/workcodes/aosp-p9.x-auto-alpha/build/make/core/soong_java_prebuilt.mk
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+xqli@linux:/work/workcodes/aosp-p9.x-auto-alpha$ grep soong_java_prebuilt -nr build/
+build/soong/java/androidmk.go:31:		Include:    "$(BUILD_SYSTEM)/soong_java_prebuilt.mk",
+build/soong/java/androidmk.go:94:				fmt.Fprintln(w, "include $(BUILD_SYSTEM)/soong_java_prebuilt.mk")
+build/soong/java/androidmk.go:104:		Include:    "$(BUILD_SYSTEM)/soong_java_prebuilt.mk",
+build/soong/java/androidmk.go:119:		Include:    "$(BUILD_SYSTEM)/soong_java_prebuilt.mk",
+build/soong/java/androidmk.go:140:			Include:    "$(BUILD_SYSTEM)/soong_java_prebuilt.mk",
+build/soong/java/androidmk.go:251:		Include:    "$(BUILD_SYSTEM)/soong_java_prebuilt.mk",
+build/soong/java/androidmk.go:269:		Include:    "$(BUILD_SYSTEM)/soong_java_prebuilt.mk",
+build/make/core/soong_java_prebuilt.mk:8:  $(call pretty-error,soong_java_prebuilt.mk may only be used from Soong)
+Binary file build/make/.git/index matches
+xqli@linux:/work/workcodes/aosp-p9.x-auto-alpha$ grep soong_app_prebuilt -nr build/
+build/soong/java/androidmk.go:171:		Include:    "$(BUILD_SYSTEM)/soong_app_prebuilt.mk",
+build/make/core/soong_app_prebuilt.mk:6:  $(call pretty-error,soong_app_prebuilt.mk may only be used from Soong)
+Binary file build/make/.git/index matches
+xqli@linux:/work/workcodes/aosp-p9.x-auto-alpha$ grep soong_config.mk -nrw build/
+build/make/core/product_config.mk:451:# Make this art variable visible to soong_config.mk.
+build/make/core/config.mk:1086:include $(BUILD_SYSTEM)/soong_config.mk
+Binary file build/make/.git/index matches
+xqli@linux:/work/workcodes/aosp-p9.x-auto-alpha$ 
+
+
+
+
+
+
+xqli@linux:/work/workcodes/aosp-p9.x-auto-alpha$ /work/workcodes/aosp-p9.x-auto-alpha/out/soong/host/linux-x86/bin/soong_zip -h
+Usage of flags:
+  -C string
+    	path to use as relative root of files in following -f, -l, or -D arguments
+  -D value
+    	directory to include in zip
+  -L int
+    	deflate compression level (0-9) (default 5)
+  -P string
+    	path prefix within the zip at which to place files
+  -cpuprofile string
+    	write cpu profile to file
+  -d	include directories in zip
+  -f value
+    	file to include in zip
+  -j int
+    	number of parallel threads to use (default 4)
+  -jar
+    	modify the resultant .zip to emulate the output of 'jar'
+  -l value
+    	file containing list of .class files
+  -m string
+    	input jar manifest file name
+  -o string
+    	file to write zip file to
+  -s value
+    	file path to be stored within the zip without compression
+  -trace string
+    	write trace to file
+  -write_if_changed
+    	only update resultant .zip if it has changed
+
+
+
+
+xqli@linux:/work/workcodes/aosp-p9.x-auto-alpha$ /work/workcodes/aosp-p9.x-auto-alpha/out/soong/host/linux-x86/bin/merge_zips -h
+usage: merge_zips [-jpsD] [-m manifest] [-e entrypoint] output [inputs...]
+  -D	strip(除去) directory entries from the output zip file   // 从输出zip文件中删除目录项
+  -e string
+    	par entrypoint file to insert in par
+  -ignore-duplicates
+    	take each entry from the first zip it exists in and don't warn
+  -j	sort zip entries using jar ordering (META-INF first)
+  -m string
+    	manifest file to insert in jar   // 将 manifest file 插入 jar 包中
+  -p	merge zip entries based on par format
+  -s	sort entries (defaults to the order from the input zip files)
+  -stripDir value
+    	the prefix of file path to be excluded from the output zip
+  -stripFile value
+    	filenames to be excluded from the output zip, accepts wildcards  # 要从输出zip中排除的文件名，接受通配符
+  -zipToNotStrip value
+    	the input zip file which is not applicable for stripping   // 不适用于剥离的输入zip文件
+

@@ -133,7 +133,10 @@ wifi_error init_wifi_vendor_hal_func_table(wifi_hal_fn *fn) {
 
 
 
-
+/**
+ * 
+ * 这里是在WifiChip中调用
+ */ 
 wifi_error WifiLegacyHal::start() {
     // Ensure that we're starting in a good state.
     CHECK(global_func_table_.wifi_initialize && !global_handle_ && iface_name_to_handle_.empty() && !awaiting_event_loop_termination_);

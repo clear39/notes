@@ -1,0 +1,152 @@
+
+
+//编译路径
+
+
+/work/workcodes/aosp-p9.x-auto-ga/build/make/target/product/vndk/
+
+添加新的hw动态库，由于hw动态库大部分为vndk共享库，所以需要在build/make/target/product/vndk/目录的 28.txt或者current.txt
+具体使用那个文件请参考build/make/target/product/vndk/Android.mk文件
+
+如果需要修改已经定义好hw hal接口或者类型，需要修改对应目录下的current.txt文件（如果接口和类型被冻结了，编译时会有一个hash码校验）
+下面以gnss为例（源码路径：hardware/interfaces）：
+
+手动修改 hardware/interfaces/current.txt 文件中hashcode 是在编译时报错会打印新的hashcode 得来，
+这里我修改了 hardware/interfaces/gnss/1.0/IGnss.hal 和 hardware/interfaces/gnss/1.0/types.hal
+hardware/interfaces$ git diff current.txt
+diff --git a/current.txt b/current.txt
+index 4f574e9ed..482115edf 100644
+--- a/current.txt
++++ b/current.txt
+@@ -70,7 +70,7 @@ da13bd69282fb275767abb18704c57ff8038e6c139ad17157dc702810f70d06a android.hardwar
+-5ac7edad06d76064b882be161f3f9d9692a997ec72e9f36addb7fe8918f49992 android.hardware.gnss@1.0::IGnss
++66deba28ff1ab39ba9592d947481ec724fb5edd1195efc0ebbe1d5a4a6306384 android.hardware.gnss@1.0::IGnss
+
+@@ -86,7 +86,7 @@ af85aa0f48ae99a39f4688c344e4419304f681f9af818a5c8d759286fc4418de android.hardwar
+-881bc2f94026784d194cffbff166c6e8bf911de4e02abe96fc7d89ec75b0574a android.hardware.gnss@1.0::types
++c051362b14cc26becdd546e58f972fb6b843d45a003e04f575b2d287d21c48e0 android.hardware.gnss@1.0::types  
+
+
+注意：
+如果修改对应的hal文件，请在删除out/soong/.intermediates/hardware/interfaces/gnss/ 生成的源文件，然后再使用工具
+development/vndk/tools/header-checker/utils/create_reference_dumps.py -l android.hardware.gnss@1.0，这样才能过编译
+
+
+
+
+
+
+
+
+
+
+ro.vndk.version 系统属性将自动添加到 /vendor/default.prop。
+
+autolink_8q:/data/system # cat /vendor/default.prop
+# ADDITIONAL VENDOR DEFAULT PROPERTIES
+ro.vndk.version=28
+ro.vndk.lite=true
+ro.zygote=zygote64_32
+ro.logd.size.stats=64K
+log.tag.stats_log=I
+
+VNDK 共享库将安装到 /system/lib[64]/vndk-${ro.vndk.version} 中。
+VNDK-SP 共享库将安装到 /system/lib[64]/vndk-sp-${ro.vndk.version} 中。
+
+
+1)  供应商模块: [bp] vendor:true  
+不具有 vendor:true 的模块依赖于具有 vendor:true 的模块，或
+具有 vendor:true 的模块依赖于既不具有 vendor:true 也不具有 vendor_available:true 的非 llndk_library 模块。
+
+2)  LL-NDK: 共享库是具有稳定 ABI 的共享库。框架模块 和 供应商模块 均具有相同的最新实现;
+llndk_library {
+    name: "libvndksupport",
+    symbol_file: "libvndksupport.map.txt",
+}
+
+3) VNDK:
+如果 vendor_available 或 vndk.enabled 为 true，则可以编译两种变体（核心变体和供应商变体）
+
+
+
+
+
+
+
+
+cc_library_shared {
+    name: "libexample",
+
+    vendor_available: true,  # 属性表示   框架模块  和  供应商模块  均可能依赖于 libexample
+    vndk: {
+        enabled: true,
+        support_system_process: true,
+    },
+}
+
+或者
+
+cc_library {
+    name: "libexample",
+
+    vendor_available: true,  # 属性表示   框架模块  和  供应商模块  均可能依赖于 libexample
+    vndk: {   
+        enabled: true,      供应商变体将安装到 /system/lib[64]/vndk[-sp-28]/libexample.so 中，因为 vndk.enabled 为 true
+        support_system_process: true,
+    },
+}
+
+
+
+autolink_8q:/system/lib64 # ls vndk-sp-28/ -al                                                                                                                                                                    
+total 8432
+drwxr-xr-x 3 root root    4096 2019-05-29 12:47 .
+drwxr-xr-x 7 root root   12288 2019-05-30 16:41 ..
+-rw-r--r-- 1 root root   67992 2019-05-29 12:28 android.hardware.graphics.common@1.0.so
+-rw-r--r-- 1 root root   67992 2019-05-29 12:28 android.hardware.graphics.common@1.1.so
+-rw-r--r-- 1 root root  136312 2019-05-29 12:29 android.hardware.graphics.mapper@2.0.so
+-rw-r--r-- 1 root root  136536 2019-05-29 12:29 android.hardware.graphics.mapper@2.1.so
+-rw-r--r-- 1 root root  466560 2019-05-29 12:27 android.hardware.renderscript@1.0.so
+-rw-r--r-- 1 root root  135696 2019-05-29 12:29 android.hidl.memory.token@1.0.so
+-rw-r--r-- 1 root root  201840 2019-05-29 12:29 android.hidl.memory@1.0.so
+drwxr-xr-x 2 root root    4096 2019-05-29 12:29 hw
+-rw-r--r-- 1 root root 1388240 2019-05-29 12:47 libRSCpuRef.so
+-rw-r--r-- 1 root root  265248 2019-05-29 12:47 libRSDriver.so
+-rw-r--r-- 1 root root  332096 2019-05-29 12:47 libRS_internal.so
+-rw-r--r-- 1 root root  134592 2019-05-29 12:34 libbacktrace.so
+-rw-r--r-- 1 root root  134912 2019-05-29 12:22 libbase.so
+-rw-r--r-- 1 root root 1274784 2019-05-29 12:22 libbcinfo.so
+-rw-r--r-- 1 root root 1189184 2019-05-29 12:21 libblas.so
+-rw-r--r-- 1 root root  926864 2019-05-29 12:21 libc++.so
+-rw-r--r-- 1 root root  200752 2019-05-29 12:26 libcompiler_rt.so
+-rw-r--r-- 1 root root  134944 2019-05-29 12:22 libcutils.so
+-rw-r--r-- 1 root root  316336 2019-05-29 12:33 libdexfile.so
+-rw-r--r-- 1 root root   68176 2019-05-29 12:26 libhardware.so
+-rw-r--r-- 1 root root  201040 2019-05-29 12:26 libhidlbase.so
+-rw-r--r-- 1 root root   68792 2019-05-29 12:29 libhidlmemory.so
+-rw-r--r-- 1 root root  468392 2019-05-29 12:27 libhidltransport.so
+-rw-r--r-- 1 root root  201784 2019-05-29 12:27 libhwbinder.so
+-rw-r--r-- 1 root root  201112 2019-05-29 12:27 libhwbinder_noltopgo.so
+-rw-r--r-- 1 root root   68192 2019-05-29 12:22 libion.so
+-rw-r--r-- 1 root root  200312 2019-05-29 12:21 liblzma.so
+-rw-r--r-- 1 root root  135120 2019-05-29 12:25 libunwind.so
+-rw-r--r-- 1 root root  332024 2019-05-29 12:34 libunwindstack.so
+-rw-r--r-- 1 root root  134920 2019-05-29 12:26 libutils.so
+-rw-r--r-- 1 root root   68952 2019-05-29 12:35 libutilscallstack.so
+autolink_8q:/system/lib64 # ls vndk-sp-28/hw/                                                                                                                                                                     
+android.hidl.memory@1.0-impl.so
+
+
+
+
+
+动态链接器配置文件将安装到 /system/etc/ld.config.${ro.vndk.version}.txt 中。
+
+
+
+
+
+xqli@linux:/work/workcodes/aosp-p9.x-auto-ga/system/core/rootdir/etc$ ls -al
+-rw-r--r-- 1 xqli xqli  1588 5月  27 16:41 ld.config.legacy.txt
+-rw-r--r-- 1 xqli xqli 16325 5月  27 16:41 ld.config.txt
+-rw-r--r-- 1 xqli xqli 11492 5月  27 16:41 ld.config.vndk_lite.txt
