@@ -9,11 +9,15 @@ else
 	exit
 fi
 
-command git  checkout autolink-aosp-o8.1.0_1.2.0_8qxp-beta2.xml autolink-imx-o8.1.0_1.2.0_8qxp-beta2.xml
+file1=aosp-p9.0.0_2.0.0-ga.xml
+file2=imx-p9.0.0_2.1.0-auto-ga.xml
+
+
+command git  checkout ${file1}  ${file2}
 command git pull 
-command sed -i "5s/jenkins/$1/g" autolink-aosp-o8.1.0_1.2.0_8qxp-beta2.xml
-command sed -i "6,28s/jenkins/$1/g" autolink-imx-o8.1.0_1.2.0_8qxp-beta2.xml
+command sed -i "5s/jenkins/$1/g" ${file1}
+command sed -i "6,28s/jenkins/$1/g" ${file2}
 
-command git diff  autolink-aosp-o8.1.0_1.2.0_8qxp-beta2.xml
+command git diff  ${file1}
 
-command git diff  autolink-imx-o8.1.0_1.2.0_8qxp-beta2.xml
+command git diff  ${file2}
