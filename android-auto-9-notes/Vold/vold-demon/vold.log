@@ -1,0 +1,163 @@
+autolink_8q:/ $ ps -e | grep vold
+root          1928     1   29176   8336 0                   0 S vold
+autolink_8q:/ $ logcat --pid=1928
+--------- beginning of system
+06-24 17:04:31.068  1928  1934 V vold    : ----------------
+06-24 17:04:31.068  1928  1934 V vold    : handleBlockEvent with action 1
+06-24 17:04:31.068  1928  1934 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b110000.usb3/xhci-cdns3/usb1/1-1/1-1.2/1-1.2.3/1-1.2.3:1.0/host0/target0:0:0/0:0:0:0/block/sda'
+06-24 17:04:31.068  1928  1934 D NetlinkEvent: NL param 'MAJOR=8'
+06-24 17:04:31.068  1928  1934 D NetlinkEvent: NL param 'MINOR=0'
+06-24 17:04:31.068  1928  1934 D NetlinkEvent: NL param 'DEVNAME=sda'
+06-24 17:04:31.068  1928  1934 D NetlinkEvent: NL param 'DEVTYPE=disk'
+06-24 17:04:31.068  1928  1934 D vold    : Disk at 8:0 add
+06-24 17:04:31.069  1928  1934 D vold    : mSysPattern :/devices/platform/5b110000.usb3/xhci-cdns3/usb1/1-1/1-1.1/*
+06-24 17:04:31.069  1928  1934 D vold    : sysPath : /devices/platform/5b110000.usb3/xhci-cdns3/usb1/1-1/1-1.2/1-1.2.3/1-1.2.3:1.0/host0/target0:0:0/0:0:0:0/block/sda
+06-24 17:04:31.069  1928  1934 D vold    : mSysPattern :/devices/platform/5b110000.usb3/xhci-cdns3/usb1/1-1/1-1.2/*
+06-24 17:04:31.069  1928  1934 D vold    : sysPath : /devices/platform/5b110000.usb3/xhci-cdns3/usb1/1-1/1-1.2/1-1.2.3/1-1.2.3:1.0/host0/target0:0:0/0:0:0:0/block/sda
+06-24 17:04:31.071  1928  1934 D vold    : handleDiskAdded mSecureKeyguardShowing:0
+06-24 17:04:31.073  1928  1934 V vold    : /system/bin/sgdisk
+06-24 17:04:31.073  1928  1934 V vold    :     --android-dump
+06-24 17:04:31.073  1928  1934 V vold    :     /dev/block/vold/disk:8,0
+06-24 17:04:31.108  1928  1934 V vold    : DISK mbr
+06-24 17:04:31.108  1928  1934 V vold    : 
+06-24 17:04:31.108  1928  1934 V vold    : PART 4 b
+06-24 17:04:31.108  1928  1934 V vold    : 
+06-24 17:04:31.110  1928  1934 V vold    : ----------------
+06-24 17:04:31.110  1928  1934 V vold    : handleBlockEvent with action 1
+06-24 17:04:31.110  1928  1934 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b110000.usb3/xhci-cdns3/usb1/1-1/1-1.2/1-1.2.3/1-1.2.3:1.0/host0/target0:0:0/0:0:0:0/block/sda/sda4'
+06-24 17:04:31.110  1928  1934 D NetlinkEvent: NL param 'MAJOR=8'
+06-24 17:04:31.110  1928  1934 D NetlinkEvent: NL param 'MINOR=4'
+06-24 17:04:31.110  1928  1934 D NetlinkEvent: NL param 'DEVNAME=sda4'
+06-24 17:04:31.110  1928  1934 D NetlinkEvent: NL param 'DEVTYPE=partition'
+06-24 17:04:31.110  1928  1934 D NetlinkEvent: NL param 'PARTN=4'
+06-24 17:04:31.110  1928  3394 V vold    : /system/bin/blkid
+06-24 17:04:31.111  1928  3394 V vold    :     -c
+06-24 17:04:31.111  1928  3394 V vold    :     /dev/null
+06-24 17:04:31.111  1928  3394 V vold    :     -s
+06-24 17:04:31.111  1928  3394 V vold    :     TYPE
+06-24 17:04:31.111  1928  3394 V vold    :     -s
+06-24 17:04:31.111  1928  3394 V vold    :     UUID
+06-24 17:04:31.111  1928  3394 V vold    :     -s
+06-24 17:04:31.111  1928  3394 V vold    :     LABEL
+06-24 17:04:31.111  1928  3394 V vold    :     /dev/block/vold/public:8,4
+06-24 17:04:31.155  1928  3394 V vold    : /dev/block/vold/public:8,4: UUID="B4FE-5315" TYPE="vfat" 
+06-24 17:04:31.155  1928  3394 V vold    : 
+06-24 17:04:31.158  1928  3394 V vold    : /system/bin/fsck_msdos
+06-24 17:04:31.158  1928  3394 V vold    :     -p
+06-24 17:04:31.159  1928  3394 V vold    :     -f
+06-24 17:04:31.159  1928  3394 V vold    :     /dev/block/vold/public:8,4
+--------- beginning of main
+06-24 17:04:31.177  1928  3394 I fsck_msdos: ** /dev/block/vold/public:8,4
+06-24 17:04:31.178  1928  3394 I fsck_msdos: ** Phase 1 - Read and Compare FATs
+06-24 17:04:31.178  1928  3394 I fsck_msdos: Attempting to allocate 3840 KB for FAT
+06-24 17:04:31.412  1928  3394 I fsck_msdos: Attempting to allocate 3840 KB for FAT
+06-24 17:04:31.657  1928  3394 I fsck_msdos: ** Phase 2 - Check Cluster Chains
+06-24 17:04:31.696  1928  3394 I fsck_msdos: ** Phase 3 - Checking Directories
+06-24 17:04:31.724  1928  3394 I fsck_msdos: ** Phase 4 - Checking for Lost Files
+06-24 17:04:31.735  1928  3394 I fsck_msdos: 178 files, 1569764 free (392441 clusters)
+06-24 17:04:31.748  1928  3394 I vold    : Filesystem check completed OK
+06-24 17:04:31.763  1928  1928 W Binder:1928_5: type=1400 audit(0.0:14000): avc: denied { dac_read_search } for capability=2 scontext=u:r:vold:s0 tcontext=u:r:vold:s0 tclass=capability permissive=0
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+06-24 17:04:41.893  1928  1934 V vold    : ----------------
+06-24 17:04:41.893  1928  1934 V vold    : handleBlockEvent with action 1
+06-24 17:04:41.893  1928  1934 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b110000.usb3/xhci-cdns3/usb1/1-1/1-1.2/1-1.2.1/1-1.2.1:1.0/host1/target1:0:0/1:0:0:0/block/sdb'
+06-24 17:04:41.893  1928  1934 D NetlinkEvent: NL param 'MAJOR=8'
+06-24 17:04:41.893  1928  1934 D NetlinkEvent: NL param 'MINOR=16'
+06-24 17:04:41.893  1928  1934 D NetlinkEvent: NL param 'DEVNAME=sdb'
+06-24 17:04:41.893  1928  1934 D NetlinkEvent: NL param 'DEVTYPE=disk'
+06-24 17:04:41.893  1928  1934 D vold    : Disk at 8:16 add
+06-24 17:04:41.893  1928  1934 D vold    : mSysPattern :/devices/platform/5b110000.usb3/xhci-cdns3/usb1/1-1/1-1.1/*
+06-24 17:04:41.893  1928  1934 D vold    : sysPath : /devices/platform/5b110000.usb3/xhci-cdns3/usb1/1-1/1-1.2/1-1.2.1/1-1.2.1:1.0/host1/target1:0:0/1:0:0:0/block/sdb
+06-24 17:04:41.893  1928  1934 D vold    : mSysPattern :/devices/platform/5b110000.usb3/xhci-cdns3/usb1/1-1/1-1.2/*
+06-24 17:04:41.893  1928  1934 D vold    : sysPath : /devices/platform/5b110000.usb3/xhci-cdns3/usb1/1-1/1-1.2/1-1.2.1/1-1.2.1:1.0/host1/target1:0:0/1:0:0:0/block/sdb
+06-24 17:04:41.894  1928  1934 D vold    : handleDiskAdded mSecureKeyguardShowing:0
+06-24 17:04:41.912  1928  1934 V vold    : /system/bin/sgdisk
+06-24 17:04:41.912  1928  1934 V vold    :     --android-dump
+06-24 17:04:41.912  1928  1934 V vold    :     /dev/block/vold/disk:8,16
+06-24 17:04:41.946  1928  1934 V vold    : DISK mbr
+06-24 17:04:41.946  1928  1934 V vold    : 
+06-24 17:04:41.946  1928  1934 V vold    : PART 4 c
+06-24 17:04:41.946  1928  1934 V vold    : 
+06-24 17:04:41.949  1928  1934 V vold    : ----------------
+06-24 17:04:41.949  1928  1934 V vold    : handleBlockEvent with action 1
+06-24 17:04:41.949  1928  1934 D NetlinkEvent: NL param 'DEVPATH=/devices/platform/5b110000.usb3/xhci-cdns3/usb1/1-1/1-1.2/1-1.2.1/1-1.2.1:1.0/host1/target1:0:0/1:0:0:0/block/sdb/sdb4'
+06-24 17:04:41.949  1928  1934 D NetlinkEvent: NL param 'MAJOR=8'
+06-24 17:04:41.949  1928  1934 D NetlinkEvent: NL param 'MINOR=20'
+06-24 17:04:41.949  1928  1934 D NetlinkEvent: NL param 'DEVNAME=sdb4'
+06-24 17:04:41.949  1928  1934 D NetlinkEvent: NL param 'DEVTYPE=partition'
+06-24 17:04:41.949  1928  1934 D NetlinkEvent: NL param 'PARTN=4'
+06-24 17:04:41.949  1928  3394 V vold    : /system/bin/blkid
+06-24 17:04:41.949  1928  3394 V vold    :     -c
+06-24 17:04:41.949  1928  3394 V vold    :     /dev/null
+06-24 17:04:41.949  1928  3394 V vold    :     -s
+06-24 17:04:41.949  1928  3394 V vold    :     TYPE
+06-24 17:04:41.949  1928  3394 V vold    :     -s
+06-24 17:04:41.949  1928  3394 V vold    :     UUID
+06-24 17:04:41.949  1928  3394 V vold    :     -s
+06-24 17:04:41.949  1928  3394 V vold    :     LABEL
+06-24 17:04:41.949  1928  3394 V vold    :     /dev/block/vold/public:8,20
+06-24 17:04:41.996  1928  3394 V vold    : /dev/block/vold/public:8,20: LABEL="Ubuntu 14.0" UUID="B4FE-5315" TYPE="vfat" 
+06-24 17:04:41.996  1928  3394 V vold    : 
+06-24 17:04:41.998  1928  3394 V vold    : /system/bin/fsck_msdos
+06-24 17:04:41.998  1928  3394 V vold    :     -p
+06-24 17:04:41.998  1928  3394 V vold    :     -f
+06-24 17:04:41.998  1928  3394 V vold    :     /dev/block/vold/public:8,20
+06-24 17:04:42.016  1928  3394 I fsck_msdos: ** /dev/block/vold/public:8,20
+06-24 17:04:42.017  1928  3394 I fsck_msdos: Primary/Backup bootblock miscompare
+06-24 17:04:42.017  1928  3394 I fsck_msdos: Primary:
+06-24 17:04:42.017  1928  3394 I fsck_msdos: 00 02 10 00 01 02 00 00 00 00 f8 00 00 3f 00 ff 00 00 01 00 00 5a 19 cd 01 00 3a 00 00 00 00 00 00 02 00 00 00 01 00 06 00 00 00 00 00 00 00 00 00 00 00 00 00 80 01 29 15 53 fe b4 55 62 75 6e 74 75 20 31 34 2e 30 46 41 54 33 32 20 20 20 
+06-24 17:04:42.017  1928  3394 I fsck_msdos: Backup:
+06-24 17:04:42.017  1928  3394 I fsck_msdos: 00 02 10 00 01 02 00 00 00 00 f8 00 00 3f 00 ff 00 00 01 00 00 5a 19 cd 01 00 3a 00 00 00 00 00 00 02 00 00 00 01 00 06 00 00 00 00 00 00 00 00 00 00 00 00 00 80 01 29 15 53 fe b4 4e 4f 20 4e 41 4d 45 20 20 20 20 46 41 54 33 32 20 20 20 
+06-24 17:04:42.017  1928  3394 I fsck_msdos: ** Phase 1 - Read FAT (compare skipped)
+06-24 17:04:42.017  1928  3394 I fsck_msdos: Attempting to allocate 7424 KB for FAT
+06-24 17:04:42.448  1928  3394 I fsck_msdos: ** Phase 2 - Check Cluster Chains
+06-24 17:04:42.520  1928  3394 I fsck_msdos: ** Phase 3 - Checking Directories
+06-24 17:04:42.603  1928  3394 I fsck_msdos: ** Phase 4 - Checking for Lost Files
+06-24 17:04:42.623  1928  3394 I fsck_msdos: 650 files, 1989720 free (773003 clusters)
+06-24 17:04:42.643  1928  3394 I vold    : Filesystem check completed OK
+06-24 17:04:42.643  1928  3394 E cutils  : Failed to chown(/mnt/media_rw/B4FE-5315, 0, 0): Operation not permitted
+06-24 17:04:42.644  1928  3394 E vold    : public:8,20 failed to create mount points: Operation not permitted
