@@ -414,8 +414,7 @@ static int parse_flags(char *flags, struct flag_list *fl,struct fs_mgr_flag_valu
                     label_start = strchr(p, '=') + 1;
                     label_end = strchr(p, ':');
                     if (label_end) {
-                        flag_vals->label = strndup(label_start,
-                                                   (int) (label_end - label_start));
+                        flag_vals->label = strndup(label_start,(int) (label_end - label_start));
                         part_start = strchr(p, ':') + 1;
                         if (!strcmp(part_start, "auto")) {
                             flag_vals->partnum = -1;

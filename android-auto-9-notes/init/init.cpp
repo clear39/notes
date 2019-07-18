@@ -66,6 +66,7 @@ int main(int argc, char** argv) {
 
         LOG(INFO) << "init first stage started!";
 
+        //  @   /work/workcodes/aosp-p9.x-auto-ga/system/core/init/init_first_stage.cpp
         if (!DoFirstStageMount()) {
             LOG(FATAL) << "Failed to mount required partitions early ...";
         }
@@ -112,11 +113,20 @@ int main(int argc, char** argv) {
     // Indicate that booting is in progress to background fw loaders, etc.
     close(open("/dev/.booting", O_WRONLY | O_CREAT | O_CLOEXEC, 0000));
 
+    //  @   system/core/init/property_service.cpp
     property_init();
 
     // If arguments are passed both on the command line and in DT,
     // properties set in DT always have priority over the command-line ones.
+    //  @   system/core/init/init.cpp
+    /**
+     * 实际啥事没有干
+     */
     process_kernel_dt();
+    /**
+     * 将内核中传入的参数 /proc/cmdline 中的 以"androidboot."开头的键值对写入prop中，
+     * 且名称以 ro.boot. 开头
+     */
     process_kernel_cmdline();
 
     // Propagate the kernel variables to internal variables
@@ -156,25 +166,43 @@ int main(int argc, char** argv) {
     }
 
     property_load_boot_defaults();
+    /**
+     * 啥事没干
+     */
     export_oem_lock_status();
+    /**
+     * 启动socket，并且加入到epoll中
+     */
     start_property_service();
+    /**
+     * lrwxrwxrwx  1 root root 0 1970-01-01 12:56 ci_hdrc.0 -> ../../devices/platform/5b0d0000.usb/ci_hdrc.0/udc/ci_hdrc.0
+     */
     set_usb_controller();
 
+    /**
+     * 这里注意了
+     * 在 Action::AddCommand 会调用 function_map
+     */
     const BuiltinFunctionMap function_map;
     Action::set_function_map(&function_map);
 
-    //  @system/core/init/subcontext.cpp
+    //  @ system/core/init/subcontext.cpp
     subcontexts = InitializeSubcontexts();
 
     ActionManager& am = ActionManager::GetInstance();
     ServiceList& sm = ServiceList::GetInstance();
 
+    /**
+     * 加载所有的init.*.rc文件
+     */
     LoadBootScripts(am, sm);
 
     // Turning this on and letting the INFO logging be discarded adds 0.2s to
     // Nexus 9 boot time, so it's disabled by default.
     if (false) DumpState();
 
+
+    // Trigger(触发)
     am.QueueEventTrigger("early-init");
 
     // Queue an action that waits for coldboot done so we know ueventd has set up all of /dev...
@@ -194,11 +222,11 @@ int main(int argc, char** argv) {
     am.QueueBuiltinAction(MixHwrngIntoLinuxRngAction, "MixHwrngIntoLinuxRng");
 
     // Don't mount filesystems or start core system services in charger mode.
-    std::string bootmode = GetProperty("ro.bootmode", "");
+    std::string bootmode = GetProperty("ro.bootmode", "");// unknown
     if (bootmode == "charger") {
         am.QueueEventTrigger("charger");
     } else {
-        am.QueueEventTrigger("late-init");
+        am.QueueEventTrigger("late-init");//执行这里
     }
 
     // Run all property triggers based on current state of the properties.
@@ -210,11 +238,21 @@ int main(int argc, char** argv) {
 
         if (do_shutdown && !shutting_down) {
             do_shutdown = false;
+            /**
+             * @ system/core/init/reboot.cpp
+             */
             if (HandlePowerctlMessage(shutdown_command)) {
                 shutting_down = true;
             }
         }
-
+        /**
+         * waiting_for_prop（默认为nullptr）为 在init.*.rc文件中 （例：wait_for_prop sys.all.early_init.ready 1） 触发等待，
+         * 等待该属性设置对应的值时，被重置为空
+         * 
+         * Service::is_exec_service_running() 返回变量 bool Service::is_exec_service_running_ = false; 的值，默认为false
+         * 
+         * 
+         */
         if (!(waiting_for_prop || Service::is_exec_service_running())) {
             am.ExecuteOneCommand();
         }
@@ -224,17 +262,23 @@ int main(int argc, char** argv) {
 
                 // If there's a process that needs restarting, wake up in time for that.
                 if (next_process_restart_time) {
-                    epoll_timeout_ms = std::chrono::ceil<std::chrono::milliseconds>(
-                                           *next_process_restart_time - boot_clock::now())
-                                           .count();
-                    if (epoll_timeout_ms < 0) epoll_timeout_ms = 0;
+                    epoll_timeout_ms = std::chrono::ceil<std::chrono::milliseconds>(*next_process_restart_time - boot_clock::now()).count();
+                    if (epoll_timeout_ms < 0){
+                        epoll_timeout_ms = 0;
+                    } 
                 }
             }
 
             // If there's more work to do, wake up again immediately.
+            /**
+             * 判断am中是否有消息队列中是否有消息
+             */
             if (am.HasMoreCommands()) epoll_timeout_ms = 0;
         }
 
+        /**
+         * 事件监听
+         */
         epoll_event ev;
         int nr = TEMP_FAILURE_RETRY(epoll_wait(epoll_fd, &ev, 1, epoll_timeout_ms));
         if (nr == -1) {
@@ -246,6 +290,54 @@ int main(int argc, char** argv) {
 
     return 0;
 }
+
+//  @   /work/workcodes/aosp-p9.x-auto-ga/system/core/init/init_first_stage.cpp
+// Public functions
+// ----------------
+// Mounts partitions specified by fstab in device tree.
+bool DoFirstStageMount() {
+    LOG(INFO) << "DoFirstStageMount ... ";
+    // Skips first stage mount if we're in recovery mode.
+    /**
+     * //  @   /work/workcodes/aosp-p9.x-auto-ga/system/core/init/init_first_stage.cpp
+     * 判断　/sbin/recovery　是否存在 
+     */
+    if (IsRecoveryMode()) {
+        LOG(INFO) << "First stage mount skipped (recovery mode)";
+        return true;
+    }
+
+     /**
+     * //  "/proc/device-tree/firmware/android/fstab/compatible" 中的内容是否为　android,fstab
+     */
+    // Firstly checks if device tree fstab entries are compatible.
+    if (!is_android_dt_value_expected("fstab/compatible", "android,fstab")) {　// true
+        LOG(INFO) << "First stage mount skipped (missing/incompatible fstab in device tree)";
+        return true;
+    }
+
+     /**
+     * //  "/proc/device-tree/firmware/android/vbmeta/compatible" 中的内容是否为　android,vbmeta
+     */
+    std::unique_ptr<FirstStageMount> handle = FirstStageMount::Create();　  //  FirstStageMountVBootV2
+    if (!handle) {
+        LOG(ERROR) << "Failed to create FirstStageMount";
+        return false;
+    }
+    return handle->DoFirstStageMount();
+}
+
+
+std::unique_ptr<FirstStageMount> FirstStageMount::Create() {
+    LOG(INFO) << "FirstStageMount::Create ... ";
+   
+    if (IsDtVbmetaCompatible()) { // true
+        return std::make_unique<FirstStageMountVBootV2>();
+    } else {
+        return std::make_unique<FirstStageMountVBootV1>();
+    }
+}
+
 
 
 
@@ -285,6 +377,153 @@ Parser CreateParser(ActionManager& action_manager, ServiceList& service_list) {
     parser.AddSectionParser("import", std::make_unique<ImportParser>(&parser)); // init.rc 文件导入
 
     return parser;
+}
+
+
+
+static void process_kernel_dt() {
+    //  @   system/core/init/util.cpp
+    if (!is_android_dt_value_expected("compatible", "android,firmware")) { // true
+        return;
+    }
+
+    //  get_android_dt_dir() 得到 /proc/device-tree/firmware/android/    
+    std::unique_ptr<DIR, int (*)(DIR*)> dir(opendir(get_android_dt_dir().c_str()), closedir);
+    if (!dir) return;
+
+
+/***
+ * autolink_8q:/ # ls -al /proc/device-tree/firmware/android/
+    -r--r--r-- 1 root root 17 1970-01-01 09:07 compatible
+    drwxr-xr-x 3 root root  0 1970-01-01 09:07 fstab
+    -r--r--r-- 1 root root  8 1970-01-01 11:00 name
+    drwxr-xr-x 2 root root  0 1970-01-01 09:07 vbmeta
+ */
+    std::string dt_file;
+    struct dirent *dp;
+    while ((dp = readdir(dir.get())) != NULL) {
+        /**
+         * dp->d_type 必须为文件，且不能为 compatible 和 name
+         */
+        if (dp->d_type != DT_REG || !strcmp(dp->d_name, "compatible") || !strcmp(dp->d_name, "name")) {
+            continue;
+        }
+
+        std::string file_name = get_android_dt_dir() + dp->d_name;
+
+        android::base::ReadFileToString(file_name, &dt_file);
+        std::replace(dt_file.begin(), dt_file.end(), ',', '.');
+
+        property_set("ro.boot."s + dp->d_name, dt_file);
+    }
+}
+
+
+bool is_android_dt_value_expected(const std::string& sub_path, const std::string& expected_content) {
+    std::string dt_content;
+    if (read_android_dt_file(sub_path, &dt_content)) {//    android,firmware
+        if (dt_content == expected_content) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+// Reads the content of device tree file under the platform's Android DT directory.
+// Returns true if the read is success, false otherwise.
+bool read_android_dt_file(const std::string& sub_path, std::string* dt_content) {
+    const std::string file_name = get_android_dt_dir() + sub_path;  //  /proc/device-tree/firmware/android/compatible
+    if (android::base::ReadFileToString(file_name, dt_content)) {
+        if (!dt_content->empty()) {
+            dt_content->pop_back();  // Trims the trailing '\0' out.
+            return true;
+        }
+    }
+    return false;
+}
+
+
+// FIXME: The same logic is duplicated in system/core/fs_mgr/
+const std::string& get_android_dt_dir() {
+    // Set once and saves time for subsequent calls to this function
+    static const std::string kAndroidDtDir = init_android_dt_dir();  // "/proc/device-tree/firmware/android/"
+    return kAndroidDtDir;
+}
+
+static std::string init_android_dt_dir() {
+    //  const std::string kDefaultAndroidDtDir("/proc/device-tree/firmware/android/");
+    // Use the standard procfs-based path by default
+    std::string android_dt_dir = kDefaultAndroidDtDir;
+    // The platform may specify a custom Android DT path in kernel cmdline
+    import_kernel_cmdline(false,
+                          [&](const std::string& key, const std::string& value, bool in_qemu) {
+                              if (key == "androidboot.android_dt_dir") {
+                                  android_dt_dir = value;
+                              }
+                          });
+    LOG(INFO) << "Using Android DT directory " << android_dt_dir;
+    return android_dt_dir;
+}
+
+
+void import_kernel_cmdline(bool in_qemu,const std::function<void(const std::string&, const std::string&, bool)>& fn) {
+    std::string cmdline;
+    android::base::ReadFileToString("/proc/cmdline", &cmdline);
+
+    for (const auto& entry : android::base::Split(android::base::Trim(cmdline), " ")) {
+        std::vector<std::string> pieces = android::base::Split(entry, "=");
+        if (pieces.size() == 2) {
+            fn(pieces[0], pieces[1], in_qemu);
+        }
+    }
+}
+
+
+static void process_kernel_cmdline() {
+    // The first pass does the common stuff, and finds if we are in qemu.
+    // The second pass is only necessary for qemu to export all kernel params
+    // as properties.
+    import_kernel_cmdline(false, import_kernel_nv);
+    if (qemu[0]) import_kernel_cmdline(true, import_kernel_nv);
+}
+
+static void import_kernel_nv(const std::string& key, const std::string& value, bool for_emulator) {
+    if (key.empty()) return;
+
+    if (for_emulator) {
+        // In the emulator, export any kernel option with the "ro.kernel." prefix.
+        property_set("ro.kernel." + key, value);
+        return;
+    }
+
+    if (key == "qemu") {
+        strlcpy(qemu, value.c_str(), sizeof(qemu));
+    } else if (android::base::StartsWith(key, "androidboot.")) {
+        property_set("ro.boot." + key.substr(12), value);
+    }
+}
+
+
+
+bool IsRebootCapable() {
+    if (!CAP_IS_SUPPORTED(CAP_SYS_BOOT)) {
+        PLOG(WARNING) << "CAP_SYS_BOOT is not supported";
+        return true;
+    }
+
+    ScopedCaps caps(cap_get_proc());
+    if (!caps) {
+        PLOG(WARNING) << "cap_get_proc() failed";
+        return true;
+    }
+
+    cap_flag_value_t value = CAP_SET;
+    if (cap_get_flag(caps.get(), CAP_SYS_BOOT, CAP_EFFECTIVE, &value) != 0) {
+        PLOG(WARNING) << "cap_get_flag(CAP_SYS_BOOT, EFFECTIVE) failed";
+        return true;
+    }
+    return value == CAP_SET;
 }
 
  

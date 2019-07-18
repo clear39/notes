@@ -99,4 +99,39 @@ Return<sp<IEvsDisplay>> EvsEnumerator::openDisplay() {
 }
 
 
+Return<sp<IEvsCamera>> EvsEnumerator::openCamera(const hidl_string& cameraId) {
+    ALOGD("openCamera [%s]",cameraId.c_str());
+
+    // Is this a recognized camera id?
+    CameraRecord *pRecord = findCameraById(cameraId);
+    if (!pRecord) {
+        ALOGE("Requested camera %s not found", cameraId.c_str());
+        return nullptr;
+    }
+
+    // Has this camera already been instantiated by another caller?
+    sp<EvsCamera> pActiveCamera = pRecord->activeInstance.promote();
+    if (pActiveCamera != nullptr) {
+        ALOGW("Killing previous camera because of new caller");
+        closeCamera(pActiveCamera);
+    }
+
+    // Construct a camera instance for the caller
+    std::string fakeCamera(EVS_FAKE_NAME);
+    if (fakeCamera == pRecord->desc.cameraId) {
+        pActiveCamera = new FakeCapture(pRecord->desc.cameraId.c_str());
+    }
+    else {
+        pActiveCamera = new V4l2Capture(pRecord->desc.cameraId.c_str());
+    }
+    pActiveCamera->openup(pRecord->desc.cameraId.c_str());
+    pRecord->activeInstance = pActiveCamera;
+    if (pActiveCamera == nullptr) {
+        ALOGE("Failed to allocate new EvsCamera object for %s\n", cameraId.c_str());
+    }
+
+    return pActiveCamera;
+}
+
+
 

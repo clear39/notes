@@ -1,10 +1,10 @@
-//  @/work/workcodes/aosp-p9.x-auto-alpha/hardware/interfaces/automotive/vehicle/2.0/
+//  @/work/workcodes/aosp-p9.x-auto-ga/hardware/interfaces/automotive/vehicle/2.0/default/VehicleService.cpp
 
 int main(int /* argc */, char* /* argv */ []) {
     //  @/work/workcodes/aosp-p9.x-auto-alpha/hardware/interfaces/automotive/vehicle/2.0/default/common/src/VehiclePropertyStore.cpp
     //  VehiclePropertyStore 默认构造函数，没有实现部分
     auto store = std::make_unique<VehiclePropertyStore>();
-    //  /work/workcodes/aosp-p9.x-auto-alpha/hardware/interfaces/automotive/vehicle/2.0/default/impl/vhal_v2_0/EmulatedVehicleHal.cpp
+    //  /work/workcodes/aosp-p9.x-auto-ga/vendor/nxp-opensource/imx/vehicle/impl/vhal_v2_0/EmulatedVehicleHal.cpp
     auto hal = std::make_unique<impl::EmulatedVehicleHal>(store.get());
     auto emulator = std::make_unique<impl::VehicleEmulator>(hal.get());
     auto service = std::make_unique<VehicleHalManager>(hal.get());

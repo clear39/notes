@@ -1,0 +1,75 @@
+07-16 16:06:21.068  1716  1716 I EvsDriver: EVS Hardware Enumerator service is starting
+07-16 16:06:21.068  1716  1716 D EvsDriver: EvsEnumerator created
+07-16 16:06:21.068  1716  1716 I EvsDriver: Starting dev/video* enumeration
+07-16 16:06:21.141  1716  1716 I EvsDriver: Found 0 qualified video capture devices of 2 checked
+07-16 16:06:21.145  1716  1716 D EvsDriver: EvsEnumeratorHw is ready.
+07-16 16:06:31.145  1716  1735 I EvsDriver: Starting dev/video* enumeration
+07-16 16:06:31.158  1716  1735 I EvsDriver: enum name:mxc_isi.0.m2m
+07-16 16:06:31.158  1716  1735 I EvsDriver:  path:/dev/video4
+07-16 16:06:31.164  1716  1735 I EvsDriver: enum name:mxc_isi.3.capture
+07-16 16:06:31.164  1716  1735 I EvsDriver:  path:/dev/video3
+07-16 16:06:31.170  1716  1735 I EvsDriver: enum name:mxc_isi.2.capture
+07-16 16:06:31.170  1716  1735 I EvsDriver:  path:/dev/video2
+07-16 16:06:31.176  1716  1735 I EvsDriver: enum name:mxc_isi.1.capture
+07-16 16:06:31.176  1716  1735 I EvsDriver:  path:/dev/video1
+07-16 16:06:31.182  1716  1735 I EvsDriver: enum name:mxc_isi.0.capture
+07-16 16:06:31.182  1716  1735 I EvsDriver:  path:/dev/video0
+07-16 16:06:31.198  1716  1735 I EvsDriver: Found 5 qualified video capture devices of 7 checked
+
+
+
+
+//  @   device/autolink/imx8q/autolink_8q/init_car.rc
+service evs_driver /vendor/bin/android.hardware.automotive.evs@1.0-EvsEnumeratorHw
+    user graphics
+    group automotive_evs camera
+    onrestart restart evs_manager
+
+service evs_app /system/bin/evs_app --hw
+    user automotive_evs
+    group automotive_evs
+
+
+on property:vendor.vehicle.event=1 && property:vendor.evs.video.ready=1
+    start evs_app
+
+on property:vendor.vehicle.event=0
+    stop evs_app
+
+
+
+
+
+setprop vendor.vehicle.event 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

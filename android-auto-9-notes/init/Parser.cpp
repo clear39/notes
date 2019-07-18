@@ -99,6 +99,7 @@ void Parser::ParseData(const std::string& filename, const std::string& data, siz
     };
 
     for (;;) {
+        //  @system/core/init/tokenizer.cpp
         switch (next_token(&state)) {
             case T_EOF:
                 end_section();

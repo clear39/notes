@@ -1,5 +1,4 @@
 //  @   /work/workcodes/aosp-p9.x-auto-ga/vendor/nxp-opensource/imx/evs/EvsDisplay.cpp
-
 class EvsDisplay : public IEvsDisplay {}
 
 EvsDisplay::EvsDisplay()

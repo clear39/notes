@@ -2,3 +2,46 @@ sudo ./uuu_imx_android_flash.sh -f imx8qxp -e -D ./
 
 dumpsys acitivity service TelephonyDebugService
 
+
+setprop  selinux.restorecon_recursive  file
+
+// reboot 命令 是通过:
+setprop sys.powerctl reboot,shell
+
+
+
+
+console=ttyLP0,115200 earlycon=lpuart32,0x5a060000,115200 androidboot.console=ttyLP0 androidboot.xen_boot=default init=/init androidboot.hardware=freescale androidboot.fbTileSupport=enable cma=800M@0x960M-0xe00M
+ androidboot.primary_display=imx-drm firmware_class.path=/vendor/firmware transparent_hugepage=never androidboot.wificountrycode=CN galcore.contiguousSize=33554432 video=HDMI-A-2:d buildvariant=userdebug android
+boot.serialno=0f1c380e82964091 androidboot.btmacaddr=0f:1c:38:0e:82:96 androidboot.soc_type=imx8qxp androidboot.storage_type=emmc androidboot.boottime=1BLL:0,1BLE:2219379,KL:0,KD:0,AVB:359,ODT:0,SW:0 androidboot
+.bootreason=reboot androidboot.verifiedbootstate=orange androidboot.slot_suffix=_a dm="1 vroot none ro 1,0 3611944 verity 1 PARTUUID=dfb7a73f-75df-4050-ad76-3b97d10bfb6b PARTUUID=dfb7a73f-75df-4050-ad76-3b97d10b
+fb6b 4096 4096 451493 451493 sha1 079a4c686a8426dee45e0be9c936efec6ae855cb b6bfb722d6396ef9aff7f8b1fd22926c78907d4d 10 restart_on_corruption ignore_zero_blocks use_fec_from_device PARTUUID=dfb7a73f-75df-4050-ad7
+6-3b97d10bfb6b fec_roots 2 fec_blocks 455050 fec_start 455050" root=/dev/dm-0 androidboot.vbmeta.device=PARTUUID=65846b06-f75f-4c10-a67f-9ce13b1bb9dc androidboot.vbmeta.avb_version=1.1 androidboot.vbmeta.device_
+state=unlocked androidboot.vbmeta.hash_alg=sha256 androidboot.vbmeta.size=3264 androidboot.vbmeta.digest=3b8bbe3c4b7e8d3648a3a7e7926ac7321f17f1e6349de25633c75714e0854a8c androidboot.vbmeta.invalidate_on_error=ye
+s androidboot.veritymode=enforcing skip_initramfs rootwait androidboot.dtbo_idx=0 androidboot.keystore=software
+
+
+
+
+
+
+service early_init_sh /vendor/bin/init.insmod.sh /vendor/etc/early.init.cfg sys.all.early_init.ready
+    class main
+    user root
+    group root system
+    disabled
+    oneshot
+
+service boot_completed_core_sh /vendor/bin/init.insmod.sh /vendor/etc/setup.core.cfg vendor.all.setup_core.ready
+    class main
+    user root
+    group root system
+    disabled
+    oneshot
+
+service boot_completed_main_sh /vendor/bin/init.insmod.sh /vendor/etc/setup.main.cfg vendor.all.setup_main.ready
+    class main
+    user root
+    group root system
+    disabled
+    oneshot

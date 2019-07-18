@@ -1,8 +1,11 @@
-//  @/work/workcodes/aosp-p9.x-auto-alpha/hardware/interfaces/automotive/vehicle/2.0/default/impl/vhal_v2_0/EmulatedVehicleHal.cpp
+//  @/work/workcodes/aosp-p9.x-auto-ga/vendor/nxp-opensource/imx/vehicle/impl/vhal_v2_0/EmulatedVehicleHal.cpp
 
 class EmulatedVehicleHal : public EmulatedVehicleHalIface {}
 
-// VehicleHal @/work/workcodes/aosp-p9.x-auto-alpha/hardware/interfaces/automotive/vehicle/2.0/default/common/include/vhal_v2_0/VehicleHal.h
+/**
+ * EmulatedVehicleHalIface  @   vendor/nxp-opensource/imx/vehicle/impl/vhal_v2_0/VehicleEmulator.h
+ * VehicleHal @/work/workcodes/aosp-p9.x-auto-alpha/hardware/interfaces/automotive/vehicle/2.0/default/common/include/vhal_v2_0/VehicleHal.h
+ *  */ 
 class EmulatedVehicleHalIface : public VehicleHal {}
 
 

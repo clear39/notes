@@ -1,3 +1,40 @@
+//  @ /work/workcodes/aosp-p9.x-auto-ga/hardware/interfaces/automotive/vehicle/2.0/IVehicleCallback.hal
+interface IVehicleCallback {
+    oneway onPropertyEvent(vec<VehiclePropValue> propValues);
+    oneway onPropertySet(VehiclePropValue propValue);
+    oneway onPropertySetError(StatusCode errorCode,int32_t propId,int32_t areaId);
+};
+
+
+
+interface IVehicle {
+  getAllPropConfigs() generates (vec<VehiclePropConfig> propConfigs);
+  getPropConfigs(vec<int32_t> props) generates (StatusCode status, vec<VehiclePropConfig> propConfigs);
+  get(VehiclePropValue requestedPropValue) generates (StatusCode status, VehiclePropValue propValue);
+  set(VehiclePropValue propValue) generates (StatusCode status);
+  subscribe(IVehicleCallback callback, vec<SubscribeOptions> options)  generates (StatusCode status);
+  unsubscribe(IVehicleCallback callback, int32_t propId)generates (StatusCode status);
+  debugDump() generates (string s);
+};
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //  @/work/workcodes/aosp-p9.x-auto-alpha/hardware/interfaces/automotive/vehicle/2.0/default/common/src/VehicleHalManager.cpp
 class VehicleHalManager : public IVehicle {}
 
@@ -29,4 +66,17 @@ void VehicleHalManager::init() {
     for (const auto& config : supportedPropConfigs) {
         supportedProperties.push_back(config.prop);
     }
+}
+
+
+Return<void> VehicleHalManager::getAllPropConfigs(getAllPropConfigs_cb _hidl_cb) {
+    ALOGI("getAllPropConfigs called");
+    hidl_vec<VehiclePropConfig> hidlConfigs;
+    auto& halConfig = mConfigIndex->getAllConfigs();
+
+    hidlConfigs.setToExternal(const_cast<VehiclePropConfig *>(halConfig.data()),halConfig.size());
+
+    _hidl_cb(hidlConfigs);
+
+    return Void();
 }
