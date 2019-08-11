@@ -1,0 +1,585 @@
+From b38f56bca8ced52f8da676fa3f65f61a06c66acd Mon Sep 17 00:00:00 2001
+From: lixuqing <lixuqing2007@126.com>
+Date: Sun, 11 Aug 2019 23:58:41 +0800
+Subject: [PATCH] debug LOCAL_PREBUILT_JNI_LIBS
+
+---
+ core/definitions.mk               |   1 +
+ core/install_jni_libs.mk          |  36 +++++
+ core/install_jni_libs_internal.mk |  29 ++++
+ core/prebuilt_internal.mk         |  38 ++++++
+ temp.patch                        | 281 ++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 385 insertions(+)
+ create mode 100644 temp.patch
+
+diff --git a/core/definitions.mk b/core/definitions.mk
+index 599ab49..a4c5c1d 100644
+--- a/core/definitions.mk
++++ b/core/definitions.mk
+@@ -2589,6 +2589,7 @@ endef
+ # Uncompress shared libraries embedded in an apk.
+ #
+ define uncompress-shared-libs
++$(warning uncompress-shared-libs $@ $(PRIVATE_EMBEDDED_JNI_LIBS))
+ $(hide) if (zipinfo $@ $(PRIVATE_EMBEDDED_JNI_LIBS) 2>/dev/null | grep -v ' stor ' >/dev/null) ; then \
+   rm -rf $(dir $@)uncompressedlibs && mkdir $(dir $@)uncompressedlibs; \
+   unzip -q $@ $(PRIVATE_EMBEDDED_JNI_LIBS) -d $(dir $@)uncompressedlibs && \
+diff --git a/core/install_jni_libs.mk b/core/install_jni_libs.mk
+index b7d83dc..e660d4f 100644
+--- a/core/install_jni_libs.mk
++++ b/core/install_jni_libs.mk
+@@ -34,6 +34,8 @@ jni_shared_libraries_abis :=
+ jni_shared_libraries_with_abis :=
+ embedded_prebuilt_jni_libs :=
+ 
++$(warning LOCAL_MODULE : $(LOCAL_MODULE))
++
+ #######################################
+ # For TARGET_ARCH
+ my_2nd_arch_prefix :=
+@@ -42,15 +44,30 @@ my_add_jni :=
+ ifeq ($(my_2nd_arch_prefix),$(LOCAL_2ND_ARCH_VAR_PREFIX))
+ my_add_jni := true
+ endif
++
++$(warning my_2nd_arch_prefix : $(my_2nd_arch_prefix))
++$(warning LOCAL_2ND_ARCH_VAR_PREFIX : $(LOCAL_2ND_ARCH_VAR_PREFIX))
++
++
++
+ # Or it explicitly requires both
+ ifeq ($(my_module_multilib),both)
+ my_add_jni := true
+ endif
++
++$(warning LOCAL_MODULE: $(LOCAL_MODULE) , my_add_jni: $(my_add_jni))
++
++
++
+ ifeq ($(my_add_jni),true)
+ my_prebuilt_jni_libs := $(LOCAL_PREBUILT_JNI_LIBS_$(TARGET_ARCH))
++
++
+ ifndef my_prebuilt_jni_libs
+ my_prebuilt_jni_libs := $(LOCAL_PREBUILT_JNI_LIBS)
+ endif
++
++
+ include $(BUILD_SYSTEM)/install_jni_libs_internal.mk
+ jni_shared_libraries += $(my_jni_shared_libraries)
+ jni_shared_libraries_abis += $(my_jni_shared_libraries_abi)
+@@ -70,20 +87,32 @@ endif  # my_add_jni
+ ifdef TARGET_2ND_ARCH
+ my_2nd_arch_prefix := $(TARGET_2ND_ARCH_VAR_PREFIX)
+ my_add_jni :=
++
++
++
+ # The module is built for TARGET_2ND_ARCH
+ ifeq ($(my_2nd_arch_prefix),$(LOCAL_2ND_ARCH_VAR_PREFIX))
+ my_add_jni := true
+ endif
++
++
++
+ # Or it explicitly requires both
+ ifeq ($(my_module_multilib),both)
+ my_add_jni := true
+ endif
++
++
+ ifeq ($(my_add_jni),true)
+ my_prebuilt_jni_libs := $(LOCAL_PREBUILT_JNI_LIBS_$(TARGET_2ND_ARCH))
+ ifndef my_prebuilt_jni_libs
+ my_prebuilt_jni_libs := $(LOCAL_PREBUILT_JNI_LIBS)
+ endif
++
++
++
+ include $(BUILD_SYSTEM)/install_jni_libs_internal.mk
++
+ jni_shared_libraries += $(my_jni_shared_libraries)
+ jni_shared_libraries_abis += $(my_jni_shared_libraries_abi)
+ jni_shared_libraries_with_abis += $(addprefix $(my_jni_shared_libraries_abi):,\
+@@ -96,3 +125,10 @@ jni_shared_libraries := $(strip $(jni_shared_libraries))
+ jni_shared_libraries_abis := $(sort $(jni_shared_libraries_abis))
+ jni_shared_libraries_with_abis := $(strip $(jni_shared_libraries_with_abis))
+ embedded_prebuilt_jni_libs := $(strip $(embedded_prebuilt_jni_libs))
++
++$(warning jni_shared_libraries : $(jni_shared_libraries))
++$(warning jni_shared_libraries_abis : $(jni_shared_libraries_abis))
++$(warning jni_shared_libraries_with_abis : $(jni_shared_libraries_with_abis))
++$(warning embedded_prebuilt_jni_libs : $(embedded_prebuilt_jni_libs))
++
++
+diff --git a/core/install_jni_libs_internal.mk b/core/install_jni_libs_internal.mk
+index a99d88a..54f380d 100644
+--- a/core/install_jni_libs_internal.mk
++++ b/core/install_jni_libs_internal.mk
+@@ -21,7 +21,11 @@ my_jni_shared_libraries := \
+ my_app_lib_path := $(dir $(LOCAL_INSTALLED_MODULE))lib/$(TARGET_$(my_2nd_arch_prefix)ARCH)
+ my_embedded_prebuilt_jni_libs :=
+ 
++$(warning LOCAL_MODULE: $(LOCAL_MODULE) , my_embed_jni: $(my_embed_jni))
++
+ ifdef my_embed_jni
++
++
+ # App explicitly requires the prebuilt NDK stl shared libraies.
+ # The NDK stl shared libraries should never go to the system image.
+ ifeq ($(LOCAL_NDK_STL_VARIANT),c++_shared)
+@@ -44,6 +48,8 @@ endif
+ 
+ else  # not my_embed_jni
+ 
++$(warning LOCAL_MODULE: $(LOCAL_MODULE) , not my_embed_jni)
++
+ my_jni_shared_libraries := $(strip $(my_jni_shared_libraries))
+ ifneq ($(my_jni_shared_libraries),)
+ # The jni libaries will be installed to the system.img.
+@@ -51,6 +57,10 @@ my_jni_filenames := $(notdir $(my_jni_shared_libraries))
+ # Make sure the JNI libraries get installed
+ my_shared_library_path := $(call get_non_asan_path,\
+   $($(my_2nd_arch_prefix)TARGET_OUT$(partition_tag)_SHARED_LIBRARIES))
++
++
++$(warning LOCAL_MODULE: $(LOCAL_MODULE) , my_shared_library_path: $(my_shared_library_path))
++
+ # Do not use order-only dependency, because we want to rebuild the image if an jni is updated.
+ $(LOCAL_INSTALLED_MODULE) : $(addprefix $(my_shared_library_path)/, $(my_jni_filenames))
+ 
+@@ -79,20 +89,35 @@ my_jni_shared_libraries :=
+ endif  # $(my_jni_shared_libraries) not empty
+ endif  # my_embed_jni
+ 
++
++$(warning LOCAL_MODULE: $(LOCAL_MODULE) , my_prebuilt_jni_libs: $(my_prebuilt_jni_libs))
++
+ ifdef my_prebuilt_jni_libs
+ # Files like @lib/<abi>/libfoo.so (path inside the apk) are JNI libs embedded prebuilt apk;
+ # Files like path/to/libfoo.so (path relative to LOCAL_PATH) are prebuilts in the source tree.
+ my_embedded_prebuilt_jni_libs := $(patsubst @%,%, \
+     $(filter @%, $(my_prebuilt_jni_libs)))
+ 
++$(warning LOCAL_MODULE: $(LOCAL_MODULE) , my_embedded_prebuilt_jni_libs: $(my_embedded_prebuilt_jni_libs))
++
+ # prebuilt JNI exsiting as separate source files.
+ my_prebuilt_jni_libs := $(addprefix $(LOCAL_PATH)/, \
+     $(filter-out @%, $(my_prebuilt_jni_libs)))
++
++$(warning LOCAL_MODULE: $(LOCAL_MODULE) , filter-out my_prebuilt_jni_libs: $(my_prebuilt_jni_libs))
++
+ ifdef my_prebuilt_jni_libs
+ ifdef my_embed_jni
+ # Embed my_prebuilt_jni_libs to the apk
+ my_jni_shared_libraries += $(my_prebuilt_jni_libs)
+ else # not my_embed_jni
++
++$(warning LOCAL_MODULE: $(LOCAL_MODULE) , 2 my_embed_jni: not my_embed_jni)
++
++$(warning LOCAL_INSTALLED_MODULE: $(LOCAL_INSTALLED_MODULE))
++
++$(warning my_app_lib_path: $(my_app_lib_path) )
++
+ # Install my_prebuilt_jni_libs as separate files.
+ $(foreach lib, $(my_prebuilt_jni_libs), \
+     $(eval $(call copy-one-file, $(lib), $(my_app_lib_path)/$(notdir $(lib)))))
+@@ -100,6 +125,10 @@ $(foreach lib, $(my_prebuilt_jni_libs), \
+ $(LOCAL_INSTALLED_MODULE) : $(addprefix $(my_app_lib_path)/, $(notdir $(my_prebuilt_jni_libs)))
+ endif  # my_embed_jni
+ endif  # inner my_prebuilt_jni_libs
++
++
++
++
+ endif  # outer my_prebuilt_jni_libs
+ 
+ # Verify that all included libraries are built against the NDK
+diff --git a/core/prebuilt_internal.mk b/core/prebuilt_internal.mk
+index 0efda57..be65bcc 100644
+--- a/core/prebuilt_internal.mk
++++ b/core/prebuilt_internal.mk
+@@ -304,6 +304,11 @@ dex_preopt_profile_src_file := $(my_prebuilt_src_file)
+ rs_compatibility_jni_libs :=
+ include $(BUILD_SYSTEM)/install_jni_libs.mk
+ 
++
++
++
++
++
+ ifeq ($(LOCAL_CERTIFICATE),EXTERNAL)
+   # The magic string "EXTERNAL" means this package will be signed with
+   # the default dev key throughout the build process, but we expect
+@@ -363,12 +368,23 @@ endif
+ # defines built_odex along with rule to install odex
+ include $(BUILD_SYSTEM)/dex_preopt_odex_install.mk
+ #######################################
++
++
++
++
+ ifneq ($(LOCAL_REPLACE_PREBUILT_APK_INSTALLED),)
++
++$(warning LOCAL_REPLACE_PREBUILT_APK_INSTALLED is empty)
++
+ # There is a replacement for the prebuilt .apk we can install without any processing.
+ $(built_module) : $(LOCAL_REPLACE_PREBUILT_APK_INSTALLED)
+ 	$(transform-prebuilt-to-target)
+ 
+ else  # ! LOCAL_REPLACE_PREBUILT_APK_INSTALLED
++
++
++$(warning !LOCAL_REPLACE_PREBUILT_APK_INSTALLED)
++
+ # Sign and align non-presigned .apks.
+ # The embedded prebuilt jni to uncompress.
+ ifeq ($(LOCAL_CERTIFICATE),PRESIGNED)
+@@ -377,28 +393,47 @@ ifeq ($(LOCAL_CERTIFICATE),PRESIGNED)
+ # we can't strip the file.
+ embedded_prebuilt_jni_libs := 'lib/*.so'
+ endif
++
++
++
+ ifndef embedded_prebuilt_jni_libs
+ # No LOCAL_PREBUILT_JNI_LIBS, uncompress all.
+ embedded_prebuilt_jni_libs := 'lib/*.so'
+ endif
++
++$(warning embedded_prebuilt_jni_libs:$(embedded_prebuilt_jni_libs))
++
+ $(built_module): PRIVATE_EMBEDDED_JNI_LIBS := $(embedded_prebuilt_jni_libs)
+ 
+ ifdef LOCAL_COMPRESSED_MODULE
+ $(built_module) : $(MINIGZIP)
+ endif
+ 
++$(warning built_module:$(built_module))
++$(warning PRIVATE_EMBEDDED_JNI_LIBS:$(PRIVATE_EMBEDDED_JNI_LIBS))
++$(warning my_prebuilt_src_file:$(my_prebuilt_src_file))
++$(warning ZIPALIGN:$(ZIPALIGN))
++$(warning SIGNAPK_JAR:$(SIGNAPK_JAR))
++
+ $(built_module) : $(my_prebuilt_src_file) | $(ZIPALIGN) $(SIGNAPK_JAR)
+ 	$(transform-prebuilt-to-target)
+ 	$(uncompress-shared-libs)
++
++
++
+ ifeq (true, $(LOCAL_UNCOMPRESS_DEX))
+ 	$(uncompress-dexs)
+ endif  # LOCAL_UNCOMPRESS_DEX
++
+ ifdef LOCAL_DEX_PREOPT
+ ifneq ($(BUILD_PLATFORM_ZIP),)
+ 	@# Keep a copy of apk with classes.dex unstripped
+ 	$(hide) cp -f $@ $(dir $@)package.dex.apk
+ endif  # BUILD_PLATFORM_ZIP
+ endif  # LOCAL_DEX_PREOPT
++
++
++
+ ifneq ($(LOCAL_CERTIFICATE),PRESIGNED)
+ 	@# Only strip out files if we can re-sign the package.
+ ifdef LOCAL_DEX_PREOPT
+@@ -414,6 +449,9 @@ endif  # LOCAL_CERTIFICATE
+ ifdef LOCAL_COMPRESSED_MODULE
+ 	$(compress-package)
+ endif  # LOCAL_COMPRESSED_MODULE
++
++
++
+ endif  # ! LOCAL_REPLACE_PREBUILT_APK_INSTALLED
+ 
+ ###############################
+diff --git a/temp.patch b/temp.patch
+new file mode 100644
+index 0000000..be144a8
+--- /dev/null
++++ b/temp.patch
+@@ -0,0 +1,281 @@
++diff --git a/core/definitions.mk b/core/definitions.mk
++index 599ab49..a4c5c1d 100644
++--- a/core/definitions.mk
+++++ b/core/definitions.mk
++@@ -2589,6 +2589,7 @@ endef
++ # Uncompress shared libraries embedded in an apk.
++ #
++ define uncompress-shared-libs
+++$(warning uncompress-shared-libs $@ $(PRIVATE_EMBEDDED_JNI_LIBS))
++ $(hide) if (zipinfo $@ $(PRIVATE_EMBEDDED_JNI_LIBS) 2>/dev/null | grep -v ' stor ' >/dev/null) ; then \
++   rm -rf $(dir $@)uncompressedlibs && mkdir $(dir $@)uncompressedlibs; \
++   unzip -q $@ $(PRIVATE_EMBEDDED_JNI_LIBS) -d $(dir $@)uncompressedlibs && \
++diff --git a/core/install_jni_libs.mk b/core/install_jni_libs.mk
++index b7d83dc..e660d4f 100644
++--- a/core/install_jni_libs.mk
+++++ b/core/install_jni_libs.mk
++@@ -34,6 +34,8 @@ jni_shared_libraries_abis :=
++ jni_shared_libraries_with_abis :=
++ embedded_prebuilt_jni_libs :=
++ 
+++$(warning LOCAL_MODULE : $(LOCAL_MODULE))
+++
++ #######################################
++ # For TARGET_ARCH
++ my_2nd_arch_prefix :=
++@@ -42,15 +44,30 @@ my_add_jni :=
++ ifeq ($(my_2nd_arch_prefix),$(LOCAL_2ND_ARCH_VAR_PREFIX))
++ my_add_jni := true
++ endif
+++
+++$(warning my_2nd_arch_prefix : $(my_2nd_arch_prefix))
+++$(warning LOCAL_2ND_ARCH_VAR_PREFIX : $(LOCAL_2ND_ARCH_VAR_PREFIX))
+++
+++
+++
++ # Or it explicitly requires both
++ ifeq ($(my_module_multilib),both)
++ my_add_jni := true
++ endif
+++
+++$(warning LOCAL_MODULE: $(LOCAL_MODULE) , my_add_jni: $(my_add_jni))
+++
+++
+++
++ ifeq ($(my_add_jni),true)
++ my_prebuilt_jni_libs := $(LOCAL_PREBUILT_JNI_LIBS_$(TARGET_ARCH))
+++
+++
++ ifndef my_prebuilt_jni_libs
++ my_prebuilt_jni_libs := $(LOCAL_PREBUILT_JNI_LIBS)
++ endif
+++
+++
++ include $(BUILD_SYSTEM)/install_jni_libs_internal.mk
++ jni_shared_libraries += $(my_jni_shared_libraries)
++ jni_shared_libraries_abis += $(my_jni_shared_libraries_abi)
++@@ -70,20 +87,32 @@ endif  # my_add_jni
++ ifdef TARGET_2ND_ARCH
++ my_2nd_arch_prefix := $(TARGET_2ND_ARCH_VAR_PREFIX)
++ my_add_jni :=
+++
+++
+++
++ # The module is built for TARGET_2ND_ARCH
++ ifeq ($(my_2nd_arch_prefix),$(LOCAL_2ND_ARCH_VAR_PREFIX))
++ my_add_jni := true
++ endif
+++
+++
+++
++ # Or it explicitly requires both
++ ifeq ($(my_module_multilib),both)
++ my_add_jni := true
++ endif
+++
+++
++ ifeq ($(my_add_jni),true)
++ my_prebuilt_jni_libs := $(LOCAL_PREBUILT_JNI_LIBS_$(TARGET_2ND_ARCH))
++ ifndef my_prebuilt_jni_libs
++ my_prebuilt_jni_libs := $(LOCAL_PREBUILT_JNI_LIBS)
++ endif
+++
+++
+++
++ include $(BUILD_SYSTEM)/install_jni_libs_internal.mk
+++
++ jni_shared_libraries += $(my_jni_shared_libraries)
++ jni_shared_libraries_abis += $(my_jni_shared_libraries_abi)
++ jni_shared_libraries_with_abis += $(addprefix $(my_jni_shared_libraries_abi):,\
++@@ -96,3 +125,10 @@ jni_shared_libraries := $(strip $(jni_shared_libraries))
++ jni_shared_libraries_abis := $(sort $(jni_shared_libraries_abis))
++ jni_shared_libraries_with_abis := $(strip $(jni_shared_libraries_with_abis))
++ embedded_prebuilt_jni_libs := $(strip $(embedded_prebuilt_jni_libs))
+++
+++$(warning jni_shared_libraries : $(jni_shared_libraries))
+++$(warning jni_shared_libraries_abis : $(jni_shared_libraries_abis))
+++$(warning jni_shared_libraries_with_abis : $(jni_shared_libraries_with_abis))
+++$(warning embedded_prebuilt_jni_libs : $(embedded_prebuilt_jni_libs))
+++
+++
++diff --git a/core/install_jni_libs_internal.mk b/core/install_jni_libs_internal.mk
++index a99d88a..54f380d 100644
++--- a/core/install_jni_libs_internal.mk
+++++ b/core/install_jni_libs_internal.mk
++@@ -21,7 +21,11 @@ my_jni_shared_libraries := \
++ my_app_lib_path := $(dir $(LOCAL_INSTALLED_MODULE))lib/$(TARGET_$(my_2nd_arch_prefix)ARCH)
++ my_embedded_prebuilt_jni_libs :=
++ 
+++$(warning LOCAL_MODULE: $(LOCAL_MODULE) , my_embed_jni: $(my_embed_jni))
+++
++ ifdef my_embed_jni
+++
+++
++ # App explicitly requires the prebuilt NDK stl shared libraies.
++ # The NDK stl shared libraries should never go to the system image.
++ ifeq ($(LOCAL_NDK_STL_VARIANT),c++_shared)
++@@ -44,6 +48,8 @@ endif
++ 
++ else  # not my_embed_jni
++ 
+++$(warning LOCAL_MODULE: $(LOCAL_MODULE) , not my_embed_jni)
+++
++ my_jni_shared_libraries := $(strip $(my_jni_shared_libraries))
++ ifneq ($(my_jni_shared_libraries),)
++ # The jni libaries will be installed to the system.img.
++@@ -51,6 +57,10 @@ my_jni_filenames := $(notdir $(my_jni_shared_libraries))
++ # Make sure the JNI libraries get installed
++ my_shared_library_path := $(call get_non_asan_path,\
++   $($(my_2nd_arch_prefix)TARGET_OUT$(partition_tag)_SHARED_LIBRARIES))
+++
+++
+++$(warning LOCAL_MODULE: $(LOCAL_MODULE) , my_shared_library_path: $(my_shared_library_path))
+++
++ # Do not use order-only dependency, because we want to rebuild the image if an jni is updated.
++ $(LOCAL_INSTALLED_MODULE) : $(addprefix $(my_shared_library_path)/, $(my_jni_filenames))
++ 
++@@ -79,20 +89,35 @@ my_jni_shared_libraries :=
++ endif  # $(my_jni_shared_libraries) not empty
++ endif  # my_embed_jni
++ 
+++
+++$(warning LOCAL_MODULE: $(LOCAL_MODULE) , my_prebuilt_jni_libs: $(my_prebuilt_jni_libs))
+++
++ ifdef my_prebuilt_jni_libs
++ # Files like @lib/<abi>/libfoo.so (path inside the apk) are JNI libs embedded prebuilt apk;
++ # Files like path/to/libfoo.so (path relative to LOCAL_PATH) are prebuilts in the source tree.
++ my_embedded_prebuilt_jni_libs := $(patsubst @%,%, \
++     $(filter @%, $(my_prebuilt_jni_libs)))
++ 
+++$(warning LOCAL_MODULE: $(LOCAL_MODULE) , my_embedded_prebuilt_jni_libs: $(my_embedded_prebuilt_jni_libs))
+++
++ # prebuilt JNI exsiting as separate source files.
++ my_prebuilt_jni_libs := $(addprefix $(LOCAL_PATH)/, \
++     $(filter-out @%, $(my_prebuilt_jni_libs)))
+++
+++$(warning LOCAL_MODULE: $(LOCAL_MODULE) , filter-out my_prebuilt_jni_libs: $(my_prebuilt_jni_libs))
+++
++ ifdef my_prebuilt_jni_libs
++ ifdef my_embed_jni
++ # Embed my_prebuilt_jni_libs to the apk
++ my_jni_shared_libraries += $(my_prebuilt_jni_libs)
++ else # not my_embed_jni
+++
+++$(warning LOCAL_MODULE: $(LOCAL_MODULE) , 2 my_embed_jni: not my_embed_jni)
+++
+++$(warning LOCAL_INSTALLED_MODULE: $(LOCAL_INSTALLED_MODULE))
+++
+++$(warning my_app_lib_path: $(my_app_lib_path) )
+++
++ # Install my_prebuilt_jni_libs as separate files.
++ $(foreach lib, $(my_prebuilt_jni_libs), \
++     $(eval $(call copy-one-file, $(lib), $(my_app_lib_path)/$(notdir $(lib)))))
++@@ -100,6 +125,10 @@ $(foreach lib, $(my_prebuilt_jni_libs), \
++ $(LOCAL_INSTALLED_MODULE) : $(addprefix $(my_app_lib_path)/, $(notdir $(my_prebuilt_jni_libs)))
++ endif  # my_embed_jni
++ endif  # inner my_prebuilt_jni_libs
+++
+++
+++
+++
++ endif  # outer my_prebuilt_jni_libs
++ 
++ # Verify that all included libraries are built against the NDK
++diff --git a/core/prebuilt_internal.mk b/core/prebuilt_internal.mk
++index 0efda57..be65bcc 100644
++--- a/core/prebuilt_internal.mk
+++++ b/core/prebuilt_internal.mk
++@@ -304,6 +304,11 @@ dex_preopt_profile_src_file := $(my_prebuilt_src_file)
++ rs_compatibility_jni_libs :=
++ include $(BUILD_SYSTEM)/install_jni_libs.mk
++ 
+++
+++
+++
+++
+++
++ ifeq ($(LOCAL_CERTIFICATE),EXTERNAL)
++   # The magic string "EXTERNAL" means this package will be signed with
++   # the default dev key throughout the build process, but we expect
++@@ -363,12 +368,23 @@ endif
++ # defines built_odex along with rule to install odex
++ include $(BUILD_SYSTEM)/dex_preopt_odex_install.mk
++ #######################################
+++
+++
+++
+++
++ ifneq ($(LOCAL_REPLACE_PREBUILT_APK_INSTALLED),)
+++
+++$(warning LOCAL_REPLACE_PREBUILT_APK_INSTALLED is empty)
+++
++ # There is a replacement for the prebuilt .apk we can install without any processing.
++ $(built_module) : $(LOCAL_REPLACE_PREBUILT_APK_INSTALLED)
++ 	$(transform-prebuilt-to-target)
++ 
++ else  # ! LOCAL_REPLACE_PREBUILT_APK_INSTALLED
+++
+++
+++$(warning !LOCAL_REPLACE_PREBUILT_APK_INSTALLED)
+++
++ # Sign and align non-presigned .apks.
++ # The embedded prebuilt jni to uncompress.
++ ifeq ($(LOCAL_CERTIFICATE),PRESIGNED)
++@@ -377,28 +393,47 @@ ifeq ($(LOCAL_CERTIFICATE),PRESIGNED)
++ # we can't strip the file.
++ embedded_prebuilt_jni_libs := 'lib/*.so'
++ endif
+++
+++
+++
++ ifndef embedded_prebuilt_jni_libs
++ # No LOCAL_PREBUILT_JNI_LIBS, uncompress all.
++ embedded_prebuilt_jni_libs := 'lib/*.so'
++ endif
+++
+++$(warning embedded_prebuilt_jni_libs:$(embedded_prebuilt_jni_libs))
+++
++ $(built_module): PRIVATE_EMBEDDED_JNI_LIBS := $(embedded_prebuilt_jni_libs)
++ 
++ ifdef LOCAL_COMPRESSED_MODULE
++ $(built_module) : $(MINIGZIP)
++ endif
++ 
+++$(warning built_module:$(built_module))
+++$(warning PRIVATE_EMBEDDED_JNI_LIBS:$(PRIVATE_EMBEDDED_JNI_LIBS))
+++$(warning my_prebuilt_src_file:$(my_prebuilt_src_file))
+++$(warning ZIPALIGN:$(ZIPALIGN))
+++$(warning SIGNAPK_JAR:$(SIGNAPK_JAR))
+++
++ $(built_module) : $(my_prebuilt_src_file) | $(ZIPALIGN) $(SIGNAPK_JAR)
++ 	$(transform-prebuilt-to-target)
++ 	$(uncompress-shared-libs)
+++
+++
+++
++ ifeq (true, $(LOCAL_UNCOMPRESS_DEX))
++ 	$(uncompress-dexs)
++ endif  # LOCAL_UNCOMPRESS_DEX
+++
++ ifdef LOCAL_DEX_PREOPT
++ ifneq ($(BUILD_PLATFORM_ZIP),)
++ 	@# Keep a copy of apk with classes.dex unstripped
++ 	$(hide) cp -f $@ $(dir $@)package.dex.apk
++ endif  # BUILD_PLATFORM_ZIP
++ endif  # LOCAL_DEX_PREOPT
+++
+++
+++
++ ifneq ($(LOCAL_CERTIFICATE),PRESIGNED)
++ 	@# Only strip out files if we can re-sign the package.
++ ifdef LOCAL_DEX_PREOPT
++@@ -414,6 +449,9 @@ endif  # LOCAL_CERTIFICATE
++ ifdef LOCAL_COMPRESSED_MODULE
++ 	$(compress-package)
++ endif  # LOCAL_COMPRESSED_MODULE
+++
+++
+++
++ endif  # ! LOCAL_REPLACE_PREBUILT_APK_INSTALLED
++ 
++ ###############################
+-- 
+2.7.4
+
