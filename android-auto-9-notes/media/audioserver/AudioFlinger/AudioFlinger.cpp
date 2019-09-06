@@ -86,11 +86,15 @@ void AudioFlinger::onFirstRef()
             mStandbyTimeInNsecs = milliseconds(int_val);
             ALOGI("Using %u mSec as standby time.", int_val);
         } else {
+            //  09-06 10:47:46.344  3229  3229 I AudioFlinger: Using default 3000 mSec as standby time.
             mStandbyTimeInNsecs = kDefaultStandbyTimeInNsecs;
             ALOGI("Using default %u mSec as standby time.",(uint32_t)(mStandbyTimeInNsecs / 1000000));
         }
     }
 
+    /**
+     * 
+    */
     mPatchPanel = new PatchPanel(this);
 
     mMode = AUDIO_MODE_NORMAL;
@@ -98,7 +102,9 @@ void AudioFlinger::onFirstRef()
     gAudioFlinger = this;
 }
 
-
+/** 这里由 AudioPolicyService 中构造 AudioPolicyManager 触发调用，根据模块调用创建
+ * 
+*/
 audio_module_handle_t AudioFlinger::loadHwModule(const char *name)
 {
     if (name == NULL) {
@@ -110,7 +116,13 @@ audio_module_handle_t AudioFlinger::loadHwModule(const char *name)
     Mutex::Autolock _l(mLock);
     return loadHwModule_l(name);
 }
-
+/***
+ *
+ * 09-06 10:47:46.404  3229  3229 I AudioFlinger: loadHwModule() Loaded primary audio interface, handle 10
+ * 09-06 10:47:46.436  3229  3229 I AudioFlinger: loadHwModule() Loaded a2dp audio interface, handle 18
+ * 09-06 10:47:46.438  3229  3229 I AudioFlinger: loadHwModule() Loaded usb audio interface, handle 26
+ * 09-06 10:47:46.441  3229  3229 I AudioFlinger: loadHwModule() Loaded r_submix audio interface, handle 34
+ * */ 
 // loadHwModule_l() must be called with AudioFlinger::mLock held
 audio_module_handle_t AudioFlinger::loadHwModule_l(const char *name)
 {
@@ -173,6 +185,9 @@ audio_module_handle_t AudioFlinger::loadHwModule_l(const char *name)
         mHardwareStatus = AUDIO_HW_IDLE;
     }
 
+    /**
+     * 创建一个句柄id 并赋值给 handle
+     * */
     audio_module_handle_t handle = (audio_module_handle_t) nextUniqueId(AUDIO_UNIQUE_ID_USE_MODULE);
     mAudioHwDevs.add(handle, new AudioHwDevice(handle, name, dev, flags));
 
@@ -180,6 +195,180 @@ audio_module_handle_t AudioFlinger::loadHwModule_l(const char *name)
 
     return handle;
 
+}
+
+
+status_t AudioFlinger::openOutput(audio_module_handle_t module,
+                                  audio_io_handle_t *output,
+                                  audio_config_t *config,
+                                  audio_devices_t *devices,
+                                  const String8& address,
+                                  uint32_t *latencyMs,
+                                  audio_output_flags_t flags)
+{
+    ALOGI("openOutput() this %p, module %d Device %#x, SamplingRate %d, Format %#08x, "
+              "Channels %#x, flags %#x",
+              this, module,
+              (devices != NULL) ? *devices : 0,
+              config->sample_rate,
+              config->format,
+              config->channel_mask,
+              flags);
+
+    if (devices == NULL || *devices == AUDIO_DEVICE_NONE) {
+        return BAD_VALUE;
+    }
+
+    Mutex::Autolock _l(mLock);
+
+    sp<ThreadBase> thread = openOutput_l(module, output, config, *devices, address, flags);
+    if (thread != 0) {
+        if ((flags & AUDIO_OUTPUT_FLAG_MMAP_NOIRQ) == 0) {
+            PlaybackThread *playbackThread = (PlaybackThread *)thread.get();
+            *latencyMs = playbackThread->latency();
+
+            // notify client processes of the new output creation
+            playbackThread->ioConfigChanged(AUDIO_OUTPUT_OPENED);
+
+            // the first primary output opened designates the primary hw device
+            if ((mPrimaryHardwareDev == NULL) && (flags & AUDIO_OUTPUT_FLAG_PRIMARY)) {
+                ALOGI("Using module %d as the primary audio interface", module);
+                mPrimaryHardwareDev = playbackThread->getOutput()->audioHwDev;
+
+                AutoMutex lock(mHardwareLock);
+                mHardwareStatus = AUDIO_HW_SET_MODE;
+                mPrimaryHardwareDev->hwDevice()->setMode(mMode);
+                mHardwareStatus = AUDIO_HW_IDLE;
+            }
+        } else {
+            MmapThread *mmapThread = (MmapThread *)thread.get();
+            mmapThread->ioConfigChanged(AUDIO_OUTPUT_OPENED);
+        }
+        return NO_ERROR;
+    }
+
+    return NO_INIT;
+}
+
+
+sp<AudioFlinger::ThreadBase> AudioFlinger::openOutput_l(audio_module_handle_t module,
+                                                            audio_io_handle_t *output,
+                                                            audio_config_t *config,
+                                                            audio_devices_t devices,
+                                                            const String8& address,
+                                                            audio_output_flags_t flags)
+{
+    AudioHwDevice *outHwDev = findSuitableHwDev_l(module, devices);
+    if (outHwDev == NULL) {
+        return 0;
+    }
+
+    if (*output == AUDIO_IO_HANDLE_NONE) {
+        *output = nextUniqueId(AUDIO_UNIQUE_ID_USE_OUTPUT);
+    } else {
+        // Audio Policy does not currently request a specific output handle.
+        // If this is ever needed, see openInput_l() for example code.
+        ALOGE("openOutput_l requested output handle %d is not AUDIO_IO_HANDLE_NONE", *output);
+        return 0;
+    }
+
+    mHardwareStatus = AUDIO_HW_OUTPUT_OPEN;
+
+    // FOR TESTING ONLY:
+    // This if statement allows overriding the audio policy settings
+    // and forcing a specific format or channel mask to the HAL/Sink device for testing.
+    if (!(flags & (AUDIO_OUTPUT_FLAG_COMPRESS_OFFLOAD | AUDIO_OUTPUT_FLAG_DIRECT))) {
+        // Check only for Normal Mixing mode
+        if (kEnableExtendedPrecision) {
+            // Specify format (uncomment one below to choose)
+            //config->format = AUDIO_FORMAT_PCM_FLOAT;
+            //config->format = AUDIO_FORMAT_PCM_24_BIT_PACKED;
+            //config->format = AUDIO_FORMAT_PCM_32_BIT;
+            //config->format = AUDIO_FORMAT_PCM_8_24_BIT;
+            // ALOGV("openOutput_l() upgrading format to %#08x", config->format);
+        }
+        if (kEnableExtendedChannels) {
+            // Specify channel mask (uncomment one below to choose)
+            //config->channel_mask = audio_channel_out_mask_from_count(4);  // for USB 4ch
+            //config->channel_mask = audio_channel_mask_from_representation_and_bits(
+            //        AUDIO_CHANNEL_REPRESENTATION_INDEX, (1 << 4) - 1);  // another 4ch example
+        }
+    }
+
+    AudioStreamOut *outputStream = NULL;
+    status_t status = outHwDev->openOutputStream(
+            &outputStream,
+            *output,
+            devices,
+            flags,
+            config,
+            address.string());
+
+    mHardwareStatus = AUDIO_HW_IDLE;
+
+    if (status == NO_ERROR) {
+        if (flags & AUDIO_OUTPUT_FLAG_MMAP_NOIRQ) {
+            sp<MmapPlaybackThread> thread = new MmapPlaybackThread(this, *output, outHwDev, outputStream,devices, AUDIO_DEVICE_NONE, mSystemReady);
+            mMmapThreads.add(*output, thread);
+            ALOGV("openOutput_l() created mmap playback thread: ID %d thread %p", *output, thread.get());
+            return thread;
+        } else {
+            sp<PlaybackThread> thread;
+            if (flags & AUDIO_OUTPUT_FLAG_COMPRESS_OFFLOAD) {
+                thread = new OffloadThread(this, outputStream, *output, devices, mSystemReady);
+                ALOGV("openOutput_l() created offload output: ID %d thread %p",*output, thread.get());
+            } else if ((flags & AUDIO_OUTPUT_FLAG_DIRECT)
+                    || !isValidPcmSinkFormat(config->format)
+                    || !isValidPcmSinkChannelMask(config->channel_mask)) {
+                thread = new DirectOutputThread(this, outputStream, *output, devices, mSystemReady);
+                ALOGV("openOutput_l() created direct output: ID %d thread %p",*output, thread.get());
+            } else {
+                thread = new MixerThread(this, outputStream, *output, devices, mSystemReady);
+                ALOGV("openOutput_l() created mixer output: ID %d thread %p",*output, thread.get());
+            }
+            mPlaybackThreads.add(*output, thread);
+            return thread;
+        }
+    }
+
+    return 0;
+}
+
+
+/**
+static const char * const audio_interfaces[] = {
+    AUDIO_HARDWARE_MODULE_ID_PRIMARY,
+    AUDIO_HARDWARE_MODULE_ID_A2DP,
+    AUDIO_HARDWARE_MODULE_ID_USB,
+};
+*/
+AudioHwDevice* AudioFlinger::findSuitableHwDev_l(audio_module_handle_t module,audio_devices_t devices)
+{
+    // if module is 0, the request comes from an old policy manager and we should load
+    // well known modules
+    if (module == 0) {
+        ALOGW("findSuitableHwDev_l() loading well know audio hw modules");
+        for (size_t i = 0; i < arraysize(audio_interfaces); i++) {
+            loadHwModule_l(audio_interfaces[i]);
+        }
+        // then try to find a module supporting the requested device.
+        for (size_t i = 0; i < mAudioHwDevs.size(); i++) {
+            AudioHwDevice *audioHwDevice = mAudioHwDevs.valueAt(i);
+            sp<DeviceHalInterface> dev = audioHwDevice->hwDevice();
+            uint32_t supportedDevices;
+            if (dev->getSupportedDevices(&supportedDevices) == OK && (supportedDevices & devices) == devices) {
+                return audioHwDevice;
+            }
+        }
+    } else {
+        // check a match for the requested module handle
+        AudioHwDevice *audioHwDevice = mAudioHwDevs.valueFor(module);
+        if (audioHwDevice != NULL) {
+            return audioHwDevice;
+        }
+    }
+
+    return NULL;
 }
 
 
@@ -205,6 +394,154 @@ status_t AudioFlinger::systemReady()
     for (size_t i = 0; i < mRecordThreads.size(); i++) {
         ThreadBase *thread = (ThreadBase *)mRecordThreads.valueAt(i).get();
         thread->systemReady();
+    }
+    return NO_ERROR;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * dumpsys media.audio_flinger [-m] [--unreachable]
+ * -m 打印内存
+ * */
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+status_t AudioFlinger::dump(int fd, const Vector<String16>& args)
+{
+    if (!dumpAllowed()) {
+        dumpPermissionDenial(fd, args);
+    } else {
+        // get state of hardware lock
+        bool hardwareLocked = dumpTryLock(mHardwareLock);
+        if (!hardwareLocked) {
+            String8 result(kHardwareLockedString);
+            write(fd, result.string(), result.size());
+        } else {
+            mHardwareLock.unlock();
+        }
+
+        bool locked = dumpTryLock(mLock);
+
+        // failed to lock - AudioFlinger is probably deadlocked
+        if (!locked) {
+            String8 result(kDeadlockedString);
+            write(fd, result.string(), result.size());
+        }
+
+        bool clientLocked = dumpTryLock(mClientLock);
+        if (!clientLocked) {
+            String8 result(kClientLockedString);
+            write(fd, result.string(), result.size());
+        }
+
+        if (mEffectsFactoryHal != 0) {
+            mEffectsFactoryHal->dumpEffects(fd);
+        } else {
+            String8 result(kNoEffectsFactory);
+            write(fd, result.string(), result.size());
+        }
+
+        dumpClients(fd, args);
+        if (clientLocked) {
+            mClientLock.unlock();
+        }
+
+        dumpInternals(fd, args);
+
+        // dump playback threads
+        for (size_t i = 0; i < mPlaybackThreads.size(); i++) {
+            mPlaybackThreads.valueAt(i)->dump(fd, args);
+        }
+
+        // dump record threads
+        for (size_t i = 0; i < mRecordThreads.size(); i++) {
+            mRecordThreads.valueAt(i)->dump(fd, args);
+        }
+
+        // dump mmap threads
+        for (size_t i = 0; i < mMmapThreads.size(); i++) {
+            mMmapThreads.valueAt(i)->dump(fd, args);
+        }
+
+        // dump orphan effect chains
+        if (mOrphanEffectChains.size() != 0) {
+            write(fd, "  Orphan Effect Chains\n", strlen("  Orphan Effect Chains\n"));
+            for (size_t i = 0; i < mOrphanEffectChains.size(); i++) {
+                mOrphanEffectChains.valueAt(i)->dump(fd, args);
+            }
+        }
+        // dump all hardware devs
+        for (size_t i = 0; i < mAudioHwDevs.size(); i++) {
+            sp<DeviceHalInterface> dev = mAudioHwDevs.valueAt(i)->hwDevice();
+            dev->dump(fd);
+        }
+
+#ifdef TEE_SINK
+        // dump the serially shared record tee sink
+        if (mRecordTeeSource != 0) {
+            dumpTee(fd, mRecordTeeSource, AUDIO_IO_HANDLE_NONE, 'C');
+        }
+#endif
+
+        BUFLOG_RESET;
+
+        if (locked) {
+            mLock.unlock();
+        }
+
+        // append a copy of media.log here by forwarding fd to it, but don't attempt
+        // to lookup the service if it's not running, as it will block for a second
+        if (sMediaLogServiceAsBinder != 0) {
+            dprintf(fd, "\nmedia.log:\n");
+            Vector<String16> args;
+            sMediaLogServiceAsBinder->dump(fd, args);
+        }
+
+        // check for optional arguments
+        bool dumpMem = false;
+        bool unreachableMemory = false;
+        for (const auto &arg : args) {
+            if (arg == String16("-m")) {
+                dumpMem = true;
+            } else if (arg == String16("--unreachable")) {
+                unreachableMemory = true;
+            }
+        }
+
+        if (dumpMem) {
+            dprintf(fd, "\nDumping memory:\n");
+            std::string s = dumpMemoryAddresses(100 /* limit */);
+            write(fd, s.c_str(), s.size());
+        }
+
+
+
+        if (unreachableMemory) {
+            dprintf(fd, "\nDumping unreachable memory:\n");
+            // TODO - should limit be an argument parameter?
+            std::string s = GetUnreachableMemoryString(true /* contents */, 100 /* limit */);
+            write(fd, s.c_str(), s.size());
+        }
     }
     return NO_ERROR;
 }

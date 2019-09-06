@@ -96,6 +96,7 @@ static status_t deserializeAudioPolicyXmlConfig(AudioPolicyConfig &config) {
 #endif
 
 status_t AudioPolicyManager::initialize() {
+    //  @   /work/workcodes/aosp-p9.0.0_2.1.0-auto-ga/frameworks/av/services/audiopolicy/common/managerdefinitions/src/StreamDescriptor.cpp
     mVolumeCurves->initializeVolumeCurves(getConfig().isSpeakerDrcEnabled());
 
     //  @ frameworks/av/services/audiopolicy/engineconfigurable/src/EngineInstance.cpp
@@ -172,6 +173,11 @@ status_t AudioPolicyManager::initialize() {
             const DeviceVector &devicesForType = supportedDevices.getDevicesFromType(profileType);
             String8 address = devicesForType.size() > 0 ? devicesForType.itemAt(0)->mAddress : String8("");
             audio_io_handle_t output = AUDIO_IO_HANDLE_NONE;
+
+            /**
+             * 
+             * 之类内部会 调用 AudioFlinger::openOutput 接口
+             * */
             status_t status = outputDesc->open(nullptr, profileType, address,AUDIO_STREAM_DEFAULT, AUDIO_OUTPUT_FLAG_NONE, &output);
 
             if (status != NO_ERROR) {
@@ -240,9 +246,7 @@ status_t AudioPolicyManager::initialize() {
                 }
                 inputDesc->close();
             } else {
-                ALOGW("Cannot open input stream for device %08x on hw module %s",
-                      profileType,
-                      hwModule->getName());
+                ALOGW("Cannot open input stream for device %08x on hw module %s",profileType,hwModule->getName());
             }
         }
     }
@@ -293,4 +297,13 @@ status_t AudioPolicyManager::initialize() {
 
     updateDevicesAndOutputs();
     return status;
+}
+
+
+void AudioPolicyManager::updateDevicesAndOutputs()
+{
+    for (int i = 0; i < NUM_STRATEGIES; i++) {
+        mDeviceForStrategy[i] = getDeviceForStrategy((routing_strategy)i, false /*fromCache*/);
+    }
+    mPreviousOutputs = mOutputs;
 }
