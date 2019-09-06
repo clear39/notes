@@ -117,9 +117,12 @@ static status_t deserializeCollection(_xmlDoc *doc, const _xmlNode *cur,typename
     return NO_ERROR;
 }
 
-
+/*
+    <module name="primary" halVersion="2.0">
+    ......
+    </module>
+*/
 //status_t ModuleTraits::deserialize(xmlDocPtr doc, const xmlNode *root, sp<HwModule> &module,PtrSerializingCtx ctx)
-
 status_t ModuleTraits::deserialize(xmlDocPtr doc, const xmlNode *root, PtrElement &module,PtrSerializingCtx ctx)
 {
     string name = getXmlAttribute(root, Attributes::name);//	const char ModuleTraits::Attributes::name[] = "name";
@@ -204,6 +207,7 @@ status_t ModuleTraits::deserialize(xmlDocPtr doc, const xmlNode *root, PtrElemen
 
 /***
     MixPortTraits::Collection mixPorts;
+    // 将 IOProfile 成员添加到 mixPorts 列表上
     deserializeCollection<MixPortTraits>(doc, root, mixPorts, NULL);
     module->setProfiles(mixPorts);
 
@@ -224,6 +228,45 @@ status_t ModuleTraits::deserialize(xmlDocPtr doc, const xmlNode *root, PtrElemen
         。。。。。。
     </module>
 */
+
+//  deserializeCollection<MixPortTraits>(doc, root, mixPorts, NULL);
+static status_t deserializeCollection(_xmlDoc *doc, const _xmlNode *cur,
+                                      typename MixPortTraits::Collection &collection,
+                                      typename MixPortTraits::PtrSerializingCtx serializingContext)
+{
+    const xmlNode *root = cur->xmlChildrenNode;
+    while (root != NULL) {
+        //  const char *const MixPortTraits::collectionTag = "mixPorts";
+        //  const char *const MixPortTraits::tag = "mixPort";
+        if (xmlStrcmp(root->name, (const xmlChar *)Trait::collectionTag) && xmlStrcmp(root->name, (const xmlChar *)Trait::tag)) {
+            root = root->next;
+            continue;
+        }
+        const xmlNode *child = root;
+        if (!xmlStrcmp(child->name, (const xmlChar *)Trait::collectionTag)) {// MixPortTraits::collectionTag = "mixPorts";
+            child = child->xmlChildrenNode;
+        }
+        while (child != NULL) {
+            if (!xmlStrcmp(child->name, (const xmlChar *)Trait::tag)) { // MixPortTraits::tag = "mixPort";
+                typename Trait::PtrElement element; // MixPortTraits::sp<IOProfile>
+                // MixPortTraits::deserialize(doc, child, element, serializingContext);
+                status_t status = Trait::deserialize(doc, child, element, serializingContext);
+                if (status != NO_ERROR) {
+                    return status;
+                }
+                if (collection.add(element) < 0) {  // MixPortTraits::Collection &collection
+                    ALOGE("%s: could not add element to %s collection", __FUNCTION__,Trait::collectionTag);
+                }
+            }
+            child = child->next;
+        }
+        if (!xmlStrcmp(root->name, (const xmlChar *)Trait::tag)) {// MixPortTraits::tag = "mixPort";
+            return NO_ERROR;
+        }
+        root = root->next;
+    }
+    return NO_ERROR;
+}
 
 //  status_t MixPortTraits::deserialize(_xmlDoc *doc, const _xmlNode *child, sp<IOProfile> &mixPort,PtrSerializingCtx /*serializingContext*/)
 status_t MixPortTraits::deserialize(_xmlDoc *doc, const _xmlNode *child, PtrElement &mixPort,PtrSerializingCtx /*serializingContext*/)
