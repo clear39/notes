@@ -22,12 +22,15 @@ void AudioPolicyService::onFirstRef()
         mOutputCommandThread = new AudioCommandThread(String8("ApmOutput"), this);
 
         /***
+         * 封装 毁掉给 AudioPolicyService 的接口
          * 
+         * @    frameworks/av/services/audiopolicy/service/AudioPolicyClientImpl.cpp
          */ 
         mAudioPolicyClient = new AudioPolicyClient(this);
         //  @   /work/workcodes/aosp-p9.x-auto-alpha/frameworks/av/services/audiopolicy/manager/AudioPolicyFactory.cpp
         /***
-         * createAudioPolicyManager 只是new AudioPolicyManager 类并将 mAudioPolicyClient 传递给他
+         * createAudioPolicyManager 只是new AudioPolicyManager 类并将 mAudioPolicyClient 传递给AudioPolicyManager
+         * AudioPolicyClient 用于 AudioPolicyManager 回调 AudioPolicyService 的接口封装
          */ 
         mAudioPolicyManager = createAudioPolicyManager(mAudioPolicyClient);
     }
@@ -41,6 +44,9 @@ void AudioPolicyService::onFirstRef()
         mAudioPolicyEffects = audioPolicyEffects;
     }
 
+    /**
+     * 由于多用户管理，和ActivityManagerService交互
+     */ 
     mUidPolicy = new UidPolicy(this);
     mUidPolicy->registerSelf();
 }

@@ -108,11 +108,17 @@ int main(int argc __unused, char **argv)
         // This prevents a client from misusing AAudioService when it is not supported.
 
         //  @frameworks/av/media/libaaudio/src/utility/AAudioUtilities.h:245:   #define AAUDIO_PROP_MMAP_POLICY           "aaudio.mmap_policy"
+        /**
+         * 默认改值为空，mmapPolicy = AAUDIO_POLICY_NEVER
+         */ 
         aaudio_policy_t mmapPolicy = property_get_int32(AAUDIO_PROP_MMAP_POLICY,AAUDIO_POLICY_NEVER);
         if (mmapPolicy == AAUDIO_POLICY_AUTO || mmapPolicy == AAUDIO_POLICY_ALWAYS) {
             AAudioService::instantiate();
         }
 
+        /**
+         * 当前版本没有实际作用
+        */
         SoundTriggerHwService::instantiate();
 
         ProcessState::self()->startThreadPool();
