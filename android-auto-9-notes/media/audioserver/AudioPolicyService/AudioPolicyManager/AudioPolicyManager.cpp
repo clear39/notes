@@ -65,7 +65,10 @@ static status_t deserializeAudioPolicyXmlConfig(AudioPolicyConfig &config) {
     char audioPolicyXmlConfigFile[AUDIO_POLICY_XML_CONFIG_FILE_PATH_MAX_LENGTH];
     std::vector<const char*> fileNames;
     status_t ret;
-
+    /**
+     * 当前平台由于 ro.bluetooth.a2dp_offload.supported 和 persist.bluetooth.a2dp_offload.disabled 属性均为空
+     * 所以 audio_policy_configuration_a2dp_offload_disabled.xml 不会添加到 fileNames 集合中
+    */
     if (property_get_bool("ro.bluetooth.a2dp_offload.supported", false) && property_get_bool("persist.bluetooth.a2dp_offload.disabled", false)) {
         // A2DP offload supported but disabled: try to use special XML file
         //  #define AUDIO_POLICY_A2DP_OFFLOAD_DISABLED_XML_CONFIG_FILE_NAME "audio_policy_configuration_a2dp_offload_disabled.xml"
@@ -75,16 +78,23 @@ static status_t deserializeAudioPolicyXmlConfig(AudioPolicyConfig &config) {
     //  #define AUDIO_POLICY_XML_CONFIG_FILE_NAME "audio_policy_configuration.xml"
     fileNames.push_back(AUDIO_POLICY_XML_CONFIG_FILE_NAME);
 
+    
+    /**
+     * 这里 fileNames 集合中只有一个成员 audio_policy_configuration.xml 
+     * 当前平台只有 /vendor/etc/audio_policy_configuration.xml 存在
+     * 
+     */ 
     for (const char* fileName : fileNames) {
         for (int i = 0; i < kConfigLocationListSize; i++) {
             //  @frameworks/av/services/audiopolicy/common/managerdefinitions/src/Serializer.cpp
             /***
              * 通过 PolicySerializer 解析 xml文件，并且把数据存入 AudioPolicyConfig
-             * 
+             * 具体的解析流程详细信息再 Serializer 文件夹下
              * 
              * */
             PolicySerializer serializer;
             snprintf(audioPolicyXmlConfigFile, sizeof(audioPolicyXmlConfigFile),"%s/%s", kConfigLocationList[i], fileName);
+
             ret = serializer.deserialize(audioPolicyXmlConfigFile, config);
             if (ret == NO_ERROR) {
                 return ret;
@@ -97,6 +107,9 @@ static status_t deserializeAudioPolicyXmlConfig(AudioPolicyConfig &config) {
 
 status_t AudioPolicyManager::initialize() {
     //  @   /work/workcodes/aosp-p9.0.0_2.1.0-auto-ga/frameworks/av/services/audiopolicy/common/managerdefinitions/src/StreamDescriptor.cpp
+    /*
+    
+    */
     mVolumeCurves->initializeVolumeCurves(getConfig().isSpeakerDrcEnabled());
 
     //  @ frameworks/av/services/audiopolicy/engineconfigurable/src/EngineInstance.cpp
@@ -115,6 +128,7 @@ status_t AudioPolicyManager::initialize() {
 
     //设置观察这模式回调接口
     mEngine->setObserver(this);
+    
     status_t status = mEngine->initCheck();
     if (status != NO_ERROR) {
         LOG_FATAL("Policy engine not initialized(err=%d)", status);
