@@ -318,8 +318,29 @@ status_t AudioPolicyManager::initialize() {
 
 void AudioPolicyManager::updateDevicesAndOutputs()
 {
+    //  frameworks/av/services/audiopolicy/common/include/RoutingStrategy.h:35:    NUM_STRATEGIES
     for (int i = 0; i < NUM_STRATEGIES; i++) {
         mDeviceForStrategy[i] = getDeviceForStrategy((routing_strategy)i, false /*fromCache*/);
     }
     mPreviousOutputs = mOutputs;
+}
+
+audio_devices_t AudioPolicyManager::getDeviceForStrategy(routing_strategy strategy,bool fromCache)
+{
+    // Check if an explicit routing request exists for a stream type corresponding to the
+    // specified strategy and use it in priority over default routing rules.
+    for (int stream = 0; stream < AUDIO_STREAM_FOR_POLICY_CNT; stream++) {
+        if (getStrategy((audio_stream_type_t)stream) == strategy) {
+            audio_devices_t forcedDevice = mOutputRoutes.getActiveDeviceForStream((audio_stream_type_t)stream, mAvailableOutputDevices);
+            if (forcedDevice != AUDIO_DEVICE_NONE) {
+                return forcedDevice;
+            }
+        }
+    }
+
+    if (fromCache) {
+        ALOGVV("getDeviceForStrategy() from cache strategy %d, device %x", strategy, mDeviceForStrategy[strategy]);
+        return mDeviceForStrategy[strategy];
+    }
+    return mEngine->getDeviceForStrategy(strategy);
 }

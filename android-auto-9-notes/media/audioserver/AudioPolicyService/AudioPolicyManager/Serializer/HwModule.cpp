@@ -127,15 +127,38 @@ void HwModule::refreshSupportedDevices()
          *  <mixPort name="primary input" role="sink">
                 <profile name="" format="AUDIO_FORMAT_PCM_16_BIT" samplingRates="8000,11025,16000,22050,24000,32000,44100,48000" channelMasks="AUDIO_CHANNEL_IN_MONO,AUDIO_CHANNEL_IN_STEREO"/>
             </mixPort>
+
+            <devicePort tagName="Built-In Mic" type="AUDIO_DEVICE_IN_BUILTIN_MIC" role="source">
+            </devicePort>
+
             解析到这个route时，会通过 addRoutes 添加
             <route type="mix" sink="primary input" sources="Built-In Mic"/>
+
+            由于 当前配置文件中只会导致 mInputProfiles 有一个成员，而 route 只能通过sink属性值查找到 AudioPort ，
+            并且将 AudioPort 通过 Route的setSink方法进行设置
+
         */
         for (const auto& route : stream->getRoutes()) {
+            /**
+             *  这里得到的就是
+                <mixPort name="primary input" role="sink">
+                    <profile name="" format="AUDIO_FORMAT_PCM_16_BIT" samplingRates="8000,11025,16000,22050,24000,32000,44100,48000" channelMasks="AUDIO_CHANNEL_IN_MONO,AUDIO_CHANNEL_IN_STEREO"/>
+                </mixPort>
+            */
             sp<AudioPort> sink = route->getSink();
             if (sink == 0 || stream != sink) {
                 ALOGE("%s: Invalid route attached to input stream", __FUNCTION__);
                 continue;
             }
+            /**
+             *  <route type="mix" sink="primary input" sources="Built-In Mic"/>
+             * 
+                <devicePort tagName="Built-In Mic" type="AUDIO_DEVICE_IN_BUILTIN_MIC" role="source">
+                </devicePort>
+
+                由于 getRouteSourceDevices 函数中 type为 AUDIO_PORT_TYPE_DEVICE 才为有效数据，所以这里
+                sourceDevicesForRoute 为空
+            */
             DeviceVector sourceDevicesForRoute = getRouteSourceDevices(route);
             if (sourceDevicesForRoute.isEmpty()) {
                 ALOGE("%s: invalid source devices for %s", __FUNCTION__, stream->getName().string());
@@ -150,6 +173,29 @@ void HwModule::refreshSupportedDevices()
         stream->setSupportedDevices(sourceDevices);
     }
 
+    /***
+        <mixPort name="mixport_bus0_media_out" role="source" flags="AUDIO_OUTPUT_FLAG_PRIMARY">
+            <!--AudioProfile-->
+            <profile name="" format="AUDIO_FORMAT_PCM_16_BIT" samplingRates="48000" channelMasks="AUDIO_CHANNEL_OUT_STEREO"/>
+        </mixPort>
+        <mixPort name="mixport_bus1_system_sound_out" role="source" flags="AUDIO_OUTPUT_FLAG_PRIMARY">
+            <profile name="" format="AUDIO_FORMAT_PCM_16_BIT" samplingRates="48000" channelMasks="AUDIO_CHANNEL_OUT_STEREO"/>
+        </mixPort>
+
+        <devicePort tagName="bus0_media_out" role="sink" type="AUDIO_DEVICE_OUT_BUS" address="bus0_media_out">
+            <gains>
+                <gain name="" mode="AUDIO_GAIN_MODE_JOINT" minValueMB="-3200" maxValueMB="600" defaultValueMB="0" stepValueMB="100"/>
+            </gains>
+        </devicePort>
+        <devicePort tagName="bus1_system_sound_out" role="sink" type="AUDIO_DEVICE_OUT_BUS" address="bus1_system_sound_out">
+            <gains>
+                <gain name="" mode="AUDIO_GAIN_MODE_JOINT" minValueMB="-3200" maxValueMB="600" defaultValueMB="0" stepValueMB="100"/>
+            </gains>
+        </devicePort>
+
+        <route type="mix" sink="bus0_media_out" sources="mixport_bus0_media_out"/>
+        <route type="mix" sink="bus1_system_sound_out" sources="mixport_bus1_system_sound_out"/>
+     * */
     for (const auto& stream : mOutputProfiles) {
         DeviceVector sinkDevices;
         for (const auto& route : stream->getRoutes()) {
@@ -179,6 +225,16 @@ DeviceVector HwModule::getRouteSourceDevices(const sp<AudioRoute> &route) const
     }
     return sourceDevices;
 }
+
+sp<DeviceDescriptor> HwModule::getRouteSinkDevice(const sp<AudioRoute> &route) const
+{
+    sp<DeviceDescriptor> sinkDevice = 0;
+    if (route->getSink()->getType() == AUDIO_PORT_TYPE_DEVICE) {
+        sinkDevice = mDeclaredDevices.getDeviceFromTagName(route->getSink()->getTagName());
+    }
+    return sinkDevice;
+}
+
 
 
 const OutputProfileCollection &getOutputProfiles() const {
