@@ -40,18 +40,6 @@ status_t HwModule::addProfile(const sp<IOProfile> &profile)
     return BAD_VALUE;
 }
 
-status_t HwModule::addOutputProfile(const String8& name, const audio_config_t *config,audio_devices_t device, const String8& address)
-{
-    sp<IOProfile> profile = new OutputProfile(name);
-
-    profile->addAudioProfile(new AudioProfile(config->format, config->channel_mask,config->sample_rate));
-
-    sp<DeviceDescriptor> devDesc = new DeviceDescriptor(device);
-    devDesc->mAddress = address;
-    profile->addSupportedDevice(devDesc);
-
-    return addOutputProfile(profile);
-}
 
 status_t HwModule::addOutputProfile(const sp<IOProfile> &profile)
 {
@@ -88,8 +76,38 @@ void HwModule::setDeclaredDevices(const DeviceVector &devices)
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+sp<AudioPort> findPortByTagName(const String8 &tagName) const
+{
+    /**
+     * mPorts 通过 setDeclaredDevices 以及 addInputProfile 和 addOutputProfile 添加 
+     * @    frameworks/av/services/audiopolicy/common/managerdefinitions/include/AudioCollections.h
+    */
+    return mPorts.findByTagName(tagName);
+}
+
+//  @    frameworks/av/services/audiopolicy/common/managerdefinitions/include/AudioCollections.h
+sp<AudioPort> AudioPortVector::findByTagName(const String8 &tagName) const
+{
+    for (const auto& port : *this) {
+        /**
+         * 如果为 IOProfile 这里 getTagName 获取的是 mixPort 标签的 name 属性值
+         * 
+         * 如果为 DeviceDescriptor 这里 getTagName 获取的是 devicePort 标签的 tagName 属性值 
+        */
+        if (port->getTagName() == tagName) {
+            return port;
+        }
+    }
+    return nullptr;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * 解析 route 标签
+ * 解析 route 标签 
+ * 在解析配置文件 route 标签 时 会通过 findPortByTagName 查找对应的 AudioPort 通过 addRoute 方法 进行添加 AudioRoute 设置
+ * 同时 会通过 setSink 和 setSources 方法将 AudioPort 设置进 AudioRoute 中
  * */ 
 void HwModule::setRoutes(const AudioRouteVector &routes)
 {
@@ -143,32 +161,25 @@ void HwModule::refreshSupportedDevices()
     }
 }
 
-
-/////////////////////////////////////////////////////////////////////////////////////////////////////////
-sp<AudioPort> findPortByTagName(const String8 &tagName) const
+DeviceVector HwModule::getRouteSourceDevices(const sp<AudioRoute> &route) const
 {
-    /**
-     * mPorts 通过 setDeclaredDevices 以及 addInputProfile 和 addOutputProfile 添加 
-     * @    frameworks/av/services/audiopolicy/common/managerdefinitions/include/AudioCollections.h
-    */
-    return mPorts.findByTagName(tagName);
-}
-
-//  @    frameworks/av/services/audiopolicy/common/managerdefinitions/include/AudioCollections.h
-sp<AudioPort> AudioPortVector::findByTagName(const String8 &tagName) const
-{
-    for (const auto& port : *this) {
-        /**
-         * 这里 getTagName 获取的是 mixPort 标签的 name 属性值
-        */
-        if (port->getTagName() == tagName) {
-            return port;
+    DeviceVector sourceDevices;
+    for (const auto& source : route->getSources()) {
+        if (source->getType() == AUDIO_PORT_TYPE_DEVICE) {
+            sourceDevices.add(mDeclaredDevices.getDeviceFromTagName(source->getTagName()));
         }
     }
-    return nullptr;
+    return sourceDevices;
 }
 
 
+const OutputProfileCollection &getOutputProfiles() const {
+     return mOutputProfiles; 
+}
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  * 在 AudioPolicyManager::initialize()  中通过 AudioFlinger的loadHwModule 加载之后，进行设置
  */ 
@@ -178,9 +189,6 @@ void HwModule::setHandle(audio_module_handle_t handle) {
 }
 
 
-const OutputProfileCollection &getOutputProfiles() const {
-     return mOutputProfiles; 
-}
 
 
 

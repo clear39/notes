@@ -6,8 +6,7 @@ class AudioOutputDescriptor: public AudioPortConfig{
 /***
  * port 为 mixport 标签
  * */
-AudioOutputDescriptor::AudioOutputDescriptor(const sp<AudioPort>& port,
-                                             AudioPolicyClientInterface *clientInterface)
+AudioOutputDescriptor::AudioOutputDescriptor(const sp<AudioPort>& port,AudioPolicyClientInterface *clientInterface)
     : mPort(port), mDevice(AUDIO_DEVICE_NONE),
       mClientInterface(clientInterface), mPatchHandle(AUDIO_PATCH_HANDLE_NONE), mId(0)
 {
@@ -29,8 +28,23 @@ AudioOutputDescriptor::AudioOutputDescriptor(const sp<AudioPort>& port,
     }
 }
 
+SwAudioOutputDescriptor::SwAudioOutputDescriptor(const sp<IOProfile>& profile,AudioPolicyClientInterface *clientInterface)
+    : AudioOutputDescriptor(profile, clientInterface),
+    mProfile(profile), mIoHandle(AUDIO_IO_HANDLE_NONE), mLatency(0),
+    mFlags((audio_output_flags_t)0), mPolicyMix(NULL),
+    mOutput1(0), mOutput2(0), mDirectOpenCount(0),
+    mDirectClientSession(AUDIO_SESSION_NONE), mGlobalRefCount(0)
+{
+    if (profile != NULL) {
+        mFlags = (audio_output_flags_t)profile->getFlags();
+    }
+}
+
+
 /**
  * AudioPolicyManager::initialize() 中调用 config 为 nullptr
+ * 
+ * status_t status = outputDesc->open(nullptr, profileType, address,AUDIO_STREAM_DEFAULT, AUDIO_OUTPUT_FLAG_NONE, &output);
 */
 status_t SwAudioOutputDescriptor::open(const audio_config_t *config,
                                        audio_devices_t device,
@@ -52,14 +66,15 @@ status_t SwAudioOutputDescriptor::open(const audio_config_t *config,
     mDevice = device;
     // if the selected profile is offloaded and no offload info was specified,
     // create a default one
-    if ((mProfile->getFlags() & AUDIO_OUTPUT_FLAG_COMPRESS_OFFLOAD) &&
-            lConfig.offload_info.format == AUDIO_FORMAT_DEFAULT) {
+    if ((mProfile->getFlags() & AUDIO_OUTPUT_FLAG_COMPRESS_OFFLOAD) && lConfig.offload_info.format == AUDIO_FORMAT_DEFAULT) {
+        //
         flags = (audio_output_flags_t)(flags | AUDIO_OUTPUT_FLAG_COMPRESS_OFFLOAD);
+
         lConfig.offload_info = AUDIO_INFO_INITIALIZER;
         lConfig.offload_info.sample_rate = lConfig.sample_rate;
         lConfig.offload_info.channel_mask = lConfig.channel_mask;
         lConfig.offload_info.format = lConfig.format;
-        lConfig.offload_info.stream_type = stream;
+        lConfig.offload_info.stream_type = stream; //
         lConfig.offload_info.duration_us = -1;
         lConfig.offload_info.has_video = true; // conservative
         lConfig.offload_info.is_streaming = true; // likely
@@ -68,6 +83,10 @@ status_t SwAudioOutputDescriptor::open(const audio_config_t *config,
     mFlags = (audio_output_flags_t)(mFlags | flags);
 
     ALOGV("opening output for device %08x address %s profile %p name %s", mDevice, address.string(), mProfile.get(), mProfile->getName().string());
+
+    /**
+     * 这里 mProfile->getModuleHandle() 是由 AudioFlinger::loadHwModule 调用加载得到的 audio_module_handle_t
+     * */
 
     status_t status = mClientInterface->openOutput(mProfile->getModuleHandle(),
                                                    output,

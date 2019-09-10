@@ -134,7 +134,9 @@ audio_module_handle_t AudioFlinger::loadHwModule_l(const char *name)
     }
 
     sp<DeviceHalInterface> dev;
-
+    /***
+     * 这里通过 hwbinder 
+     * */
     int rc = mDevicesFactoryHal->openDevice(name, &dev);
     if (rc) {
         ALOGE("loadHwModule() error %d loading module %s", rc, name);
@@ -187,6 +189,7 @@ audio_module_handle_t AudioFlinger::loadHwModule_l(const char *name)
 
     /**
      * 创建一个句柄id 并赋值给 handle
+     * system/media/audio/include/system/audio.h:87:    AUDIO_UNIQUE_ID_USE_MODULE = 2,
      * */
     audio_module_handle_t handle = (audio_module_handle_t) nextUniqueId(AUDIO_UNIQUE_ID_USE_MODULE);
     mAudioHwDevs.add(handle, new AudioHwDevice(handle, name, dev, flags));
@@ -197,7 +200,16 @@ audio_module_handle_t AudioFlinger::loadHwModule_l(const char *name)
 
 }
 
-
+/**
+ * 这里是在 AudioPolicyManager::initialize() ---> SwAudioOutputDescriptor::open(...) 方法中调用
+ * module 为 上面 AudioFlinger::loadHwModule(const char *name) 调用得到
+ * output 初始化为 AUDIO_IO_HANDLE_NONE
+ * config 
+ * devices 
+ * address 
+ * latencyMs
+ * flags
+*/
 status_t AudioFlinger::openOutput(audio_module_handle_t module,
                                   audio_io_handle_t *output,
                                   audio_config_t *config,
@@ -206,6 +218,10 @@ status_t AudioFlinger::openOutput(audio_module_handle_t module,
                                   uint32_t *latencyMs,
                                   audio_output_flags_t flags)
 {
+    /**
+     * 09-10 15:30:23.202  3307  3307 I AudioFlinger: openOutput() this 0xf2abe000, module 10 Device 0x1000000, SamplingRate 48000, Format 0x000001, Channels 0x3, flags 0x2
+     * 09-10 15:30:23.216  3307  3307 I AudioFlinger: openOutput() this 0xf2abe000, module 10 Device 0x1000000, SamplingRate 48000, Format 0x000001, Channels 0x3, flags 0x2
+    */
     ALOGI("openOutput() this %p, module %d Device %#x, SamplingRate %d, Format %#08x, "
               "Channels %#x, flags %#x",
               this, module,
@@ -262,8 +278,12 @@ sp<AudioFlinger::ThreadBase> AudioFlinger::openOutput_l(audio_module_handle_t mo
     if (outHwDev == NULL) {
         return 0;
     }
-
+    /**
+     * output 初始值 为 AUDIO_IO_HANDLE_NONE
+     * */
     if (*output == AUDIO_IO_HANDLE_NONE) {
+        // 执行这里
+        //  system/media/audio/include/system/audio.h:90:    AUDIO_UNIQUE_ID_USE_OUTPUT = 5,
         *output = nextUniqueId(AUDIO_UNIQUE_ID_USE_OUTPUT);
     } else {
         // Audio Policy does not currently request a specific output handle.
@@ -370,6 +390,176 @@ AudioHwDevice* AudioFlinger::findSuitableHwDev_l(audio_module_handle_t module,au
 
     return NULL;
 }
+
+
+status_t AudioFlinger::openInput(audio_module_handle_t module,
+                                          audio_io_handle_t *input,
+                                          audio_config_t *config,
+                                          audio_devices_t *devices,
+                                          const String8& address,
+                                          audio_source_t source,
+                                          audio_input_flags_t flags)
+{
+    Mutex::Autolock _l(mLock);
+
+    if (*devices == AUDIO_DEVICE_NONE) {
+        return BAD_VALUE;
+    }
+
+    sp<ThreadBase> thread = openInput_l(module, input, config, *devices, address, source, flags);
+
+    if (thread != 0) {
+        // notify client processes of the new input creation
+        thread->ioConfigChanged(AUDIO_INPUT_OPENED);
+        return NO_ERROR;
+    }
+    return NO_INIT;
+}
+
+sp<AudioFlinger::ThreadBase> AudioFlinger::openInput_l(audio_module_handle_t module,
+                                                         audio_io_handle_t *input,
+                                                         audio_config_t *config,
+                                                         audio_devices_t devices,
+                                                         const String8& address,
+                                                         audio_source_t source,
+                                                         audio_input_flags_t flags)
+{
+    // findSuitableHwDev_l 在上面的已经分析
+    AudioHwDevice *inHwDev = findSuitableHwDev_l(module, devices);
+    if (inHwDev == NULL) {
+        *input = AUDIO_IO_HANDLE_NONE;
+        return 0;
+    }
+
+    // Audio Policy can request a specific handle for hardware hotword.
+    // The goal here is not to re-open an already opened input.
+    // It is to use a pre-assigned I/O handle.
+    /**
+     * input 初始化 AUDIO_IO_HANDLE_NONE
+     * */
+    if (*input == AUDIO_IO_HANDLE_NONE) {
+        *input = nextUniqueId(AUDIO_UNIQUE_ID_USE_INPUT);
+    } else if (audio_unique_id_get_use(*input) != AUDIO_UNIQUE_ID_USE_INPUT) {
+        ALOGE("openInput_l() requested input handle %d is invalid", *input);
+        return 0;
+    } else if (mRecordThreads.indexOfKey(*input) >= 0) {
+        // This should not happen in a transient state with current design.
+        ALOGE("openInput_l() requested input handle %d is already assigned", *input);
+        return 0;
+    }
+
+    audio_config_t halconfig = *config;
+    sp<DeviceHalInterface> inHwHal = inHwDev->hwDevice();
+    sp<StreamInHalInterface> inStream;
+    status_t status = inHwHal->openInputStream(*input, devices, &halconfig, flags, address.string(), source, &inStream);
+    ALOGV("openInput_l() openInputStream returned input %p, devices %#x, SamplingRate %d"
+           ", Format %#x, Channels %#x, flags %#x, status %d addr %s",
+            inStream.get(),
+            devices,
+            halconfig.sample_rate,
+            halconfig.format,
+            halconfig.channel_mask,
+            flags,
+            status, address.string());
+
+    // If the input could not be opened with the requested parameters and we can handle the
+    // conversion internally, try to open again with the proposed parameters.
+    if (status == BAD_VALUE &&
+        audio_is_linear_pcm(config->format) &&
+        audio_is_linear_pcm(halconfig.format) &&
+        (halconfig.sample_rate <= AUDIO_RESAMPLER_DOWN_RATIO_MAX * config->sample_rate) &&
+        (audio_channel_count_from_in_mask(halconfig.channel_mask) <= FCC_8) &&
+        (audio_channel_count_from_in_mask(config->channel_mask) <= FCC_8)) {
+        // FIXME describe the change proposed by HAL (save old values so we can log them here)
+        ALOGV("openInput_l() reopening with proposed sampling rate and channel mask");
+        inStream.clear();
+        status = inHwHal->openInputStream(*input, devices, &halconfig, flags, address.string(), source, &inStream);
+        // FIXME log this new status; HAL should not propose any further changes
+    }
+
+    if (status == NO_ERROR && inStream != 0) {
+        AudioStreamIn *inputStream = new AudioStreamIn(inHwDev, inStream, flags);
+        if ((flags & AUDIO_INPUT_FLAG_MMAP_NOIRQ) != 0) {
+            sp<MmapCaptureThread> thread = new MmapCaptureThread(this, *input,inHwDev, inputStream,primaryOutputDevice_l(), devices, mSystemReady);
+            mMmapThreads.add(*input, thread);
+            ALOGV("openInput_l() created mmap capture thread: ID %d thread %p", *input,thread.get());
+            return thread;
+        } else {
+#ifdef TEE_SINK
+            // Try to re-use most recently used Pipe to archive a copy of input for dumpsys,
+            // or (re-)create if current Pipe is idle and does not match the new format
+            sp<NBAIO_Sink> teeSink;
+            enum {
+                TEE_SINK_NO,    // don't copy input
+                TEE_SINK_NEW,   // copy input using a new pipe
+                TEE_SINK_OLD,   // copy input using an existing pipe
+            } kind;
+            NBAIO_Format format = Format_from_SR_C(halconfig.sample_rate,
+                    audio_channel_count_from_in_mask(halconfig.channel_mask), halconfig.format);
+            if (!mTeeSinkInputEnabled) {
+                kind = TEE_SINK_NO;
+            } else if (!Format_isValid(format)) {
+                kind = TEE_SINK_NO;
+            } else if (mRecordTeeSink == 0) {
+                kind = TEE_SINK_NEW;
+            } else if (mRecordTeeSink->getStrongCount() != 1) {
+                kind = TEE_SINK_NO;
+            } else if (Format_isEqual(format, mRecordTeeSink->format())) {
+                kind = TEE_SINK_OLD;
+            } else {
+                kind = TEE_SINK_NEW;
+            }
+            switch (kind) {
+            case TEE_SINK_NEW: {
+                Pipe *pipe = new Pipe(mTeeSinkInputFrames, format);
+                size_t numCounterOffers = 0;
+                const NBAIO_Format offers[1] = {format};
+                ssize_t index = pipe->negotiate(offers, 1, NULL, numCounterOffers);
+                ALOG_ASSERT(index == 0);
+                PipeReader *pipeReader = new PipeReader(*pipe);
+                numCounterOffers = 0;
+                index = pipeReader->negotiate(offers, 1, NULL, numCounterOffers);
+                ALOG_ASSERT(index == 0);
+                mRecordTeeSink = pipe;
+                mRecordTeeSource = pipeReader;
+                teeSink = pipe;
+                }
+                break;
+            case TEE_SINK_OLD:
+                teeSink = mRecordTeeSink;
+                break;
+            case TEE_SINK_NO:
+            default:
+                break;
+            }
+#endif
+
+            // Start record thread
+            // RecordThread requires both input and output device indication to forward to audio
+            // pre processing modules
+            sp<RecordThread> thread = new RecordThread(this,
+                                      inputStream,
+                                      *input,
+                                      primaryOutputDevice_l(),
+                                      devices,
+                                      mSystemReady
+#ifdef TEE_SINK
+                                      , teeSink
+#endif
+                                      );
+            mRecordThreads.add(*input, thread);*
+            ALOGV("openInput_l() created record thread: ID %d thread %p", *input, thread.get());
+            return thread;
+        }
+    }
+
+    *input = AUDIO_IO_HANDLE_NONE;
+    return 0;
+}
+
+
+
+
 
 
 

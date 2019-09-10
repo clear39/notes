@@ -38,7 +38,6 @@ void setMode(audio_gain_mode_t mode) {
     对应 gain 标签的 channel_mask 属性值
 
 */
-
 void setChannelMask(audio_channel_mask_t mask) { 
     mGain.channel_mask = mask; 
 }

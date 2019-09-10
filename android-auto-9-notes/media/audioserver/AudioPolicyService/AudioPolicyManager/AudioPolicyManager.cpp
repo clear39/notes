@@ -160,10 +160,15 @@ status_t AudioPolicyManager::initialize() {
                 ALOGE("Invalid Output profile max open count %u for profile %s",outProfile->maxOpenCount, outProfile->getTagName().c_str());
                 continue;
             }
+
+            /**
+             * 这里 HwModule::setRoutes -----> HwModule::refreshSupportedDevices() 进行设置 SupportedDevices
+             * */
             if (!outProfile->hasSupportedDevices()) {
                 ALOGW("Output profile contains no device on module %s", hwModule->getName());
                 continue;
             }
+
             if ((outProfile->getFlags() & AUDIO_OUTPUT_FLAG_TTS) != 0) {
                 mTtsOutputAvailable = true;
             }
@@ -171,6 +176,7 @@ status_t AudioPolicyManager::initialize() {
             if ((outProfile->getFlags() & AUDIO_OUTPUT_FLAG_DIRECT) != 0) {
                 continue;
             }
+
             audio_devices_t profileType = outProfile->getSupportedDevicesType();
             if ((profileType & mDefaultOutputDevice->type()) != AUDIO_DEVICE_NONE) {
                 profileType = mDefaultOutputDevice->type();
@@ -215,8 +221,7 @@ status_t AudioPolicyManager::initialize() {
         // mAvailableInputDevices list
         for (const auto& inProfile : hwModule->getInputProfiles()) {
             if (!inProfile->canOpenNewIo()) {
-                ALOGE("Invalid Input profile max open count %u for profile %s",
-                      inProfile->maxOpenCount, inProfile->getTagName().c_str());
+                ALOGE("Invalid Input profile max open count %u for profile %s", inProfile->maxOpenCount, inProfile->getTagName().c_str());
                 continue;
             }
             if (!inProfile->hasSupportedDevices()) {
@@ -239,12 +244,7 @@ status_t AudioPolicyManager::initialize() {
             ALOGE_IF(inputDevices.size() == 0, "Input device list is empty!");
 
             audio_io_handle_t input = AUDIO_IO_HANDLE_NONE;
-            status_t status = inputDesc->open(nullptr,
-                                              profileType,
-                                              address,
-                                              AUDIO_SOURCE_MIC,
-                                              AUDIO_INPUT_FLAG_NONE,
-                                              &input);
+            status_t status = inputDesc->open(nullptr,profileType,address,AUDIO_SOURCE_MIC,AUDIO_INPUT_FLAG_NONE,&input);
 
             if (status == NO_ERROR) {
                 for (const auto& dev : inProfile->getSupportedDevices()) {
