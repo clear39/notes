@@ -122,6 +122,14 @@ void HwModule::refreshSupportedDevices()
     // Now updating the streams (aka IOProfile until now) supported devices
     for (const auto& stream : mInputProfiles) {
         DeviceVector sourceDevices;
+        /**
+         * 这里对于 mInputProfiles 有一个以下mixport
+         *  <mixPort name="primary input" role="sink">
+                <profile name="" format="AUDIO_FORMAT_PCM_16_BIT" samplingRates="8000,11025,16000,22050,24000,32000,44100,48000" channelMasks="AUDIO_CHANNEL_IN_MONO,AUDIO_CHANNEL_IN_STEREO"/>
+            </mixPort>
+            解析到这个route时，会通过 addRoutes 添加
+            <route type="mix" sink="primary input" sources="Built-In Mic"/>
+        */
         for (const auto& route : stream->getRoutes()) {
             sp<AudioPort> sink = route->getSink();
             if (sink == 0 || stream != sink) {

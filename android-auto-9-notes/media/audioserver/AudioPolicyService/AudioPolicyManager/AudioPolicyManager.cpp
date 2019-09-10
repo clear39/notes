@@ -220,6 +220,8 @@ status_t AudioPolicyManager::initialize() {
         // open input streams needed to access attached devices to validate
         // mAvailableInputDevices list
         for (const auto& inProfile : hwModule->getInputProfiles()) {
+            /*
+            */
             if (!inProfile->canOpenNewIo()) {
                 ALOGE("Invalid Input profile max open count %u for profile %s", inProfile->maxOpenCount, inProfile->getTagName().c_str());
                 continue;
