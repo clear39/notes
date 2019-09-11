@@ -18,6 +18,14 @@ IOProfile::IOProfile(const String8 &name, audio_port_role_t role)
         
 }
 
+
+bool IOProfile::canOpenNewIo() {
+    if (maxOpenCount == 0 || curOpenCount < maxOpenCount) {
+        return true;
+    }
+    return false;
+}
+
 //  @   /work/workcodes/aosp-p9.0.0_2.1.0-auto-ga/frameworks/av/services/audiopolicy/common/managerdefinitions/include/AudioPort.h
 void AudioPort::setAudioProfiles(const AudioProfileVector &profiles) { mProfiles = profiles; }
 
@@ -43,6 +51,14 @@ virtual void AudioPort::setFlags(uint32_t flags)
 //  @   /work/workcodes/aosp-p9.0.0_2.1.0-auto-ga/frameworks/av/services/audiopolicy/common/managerdefinitions/include/AudioPort.h
 void setGains(const AudioGainCollection &gains) { 
     mGains = gains; 
+}
+
+/**
+ * 这里是 HwModule::setRoutes(const AudioRouteVector &routes) --> HwModule::refreshSupportedDevices()
+*/
+void IOProfile::setSupportedDevices(const DeviceVector &devices)
+{
+    mSupportedDevices = devices;
 }
 
 
@@ -76,11 +92,13 @@ void IOProfile::dump(int fd)
     }
     result.append("\n");
     write(fd, result.string(), result.size());
+    
     mSupportedDevices.dump(fd, String8("Supported"), 4, false);
 
     result.clear();
     snprintf(buffer, SIZE, "\n    - maxOpenCount: %u - curOpenCount: %u\n",maxOpenCount, curOpenCount);
     result.append(buffer);
+
     snprintf(buffer, SIZE, "    - maxActiveCount: %u - curActiveCount: %u\n",maxActiveCount, curActiveCount);
     result.append(buffer);
 

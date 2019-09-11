@@ -189,11 +189,12 @@ status_t ModuleTraits::deserialize(xmlDocPtr doc, const xmlNode *root, PtrElemen
      *  
      *  <module>
             ....
-            <attachedDevices>
-                <item>Speaker</item>
+             <attachedDevices>
+                <item>bus0_media_out</item>
+                <item>bus1_system_sound_out</item>
                 <item>Built-In Mic</item>
             </attachedDevices>
-            <defaultOutputDevice>Speaker</defaultOutputDevice>
+            <defaultOutputDevice>bus0_media_out</defaultOutputDevice>
             ....
         </module>
      * */
@@ -821,6 +822,7 @@ status_t RouteTraits::deserialize(_xmlDoc /*doc*/, const _xmlNode *root, sp<Audi
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /***
+    // typedef VolumeCurvesCollection Collection;
     VolumeTraits::Collection volumes;
     deserializeCollection<VolumeTraits>(doc, cur, volumes, &config);
     config.setVolumes(volumes);
@@ -848,8 +850,8 @@ status_t RouteTraits::deserialize(_xmlDoc /*doc*/, const _xmlNode *root, sp<Audi
     </volumes>
 
 */
-template <class Trait>
-static status_t deserializeCollection(_xmlDoc *doc, const _xmlNode *cur,typename Trait::Collection &collection,typename Trait::PtrSerializingCtx serializingContext)
+// deserializeCollection<VolumeTraits>(doc, cur, volumes, &config);
+static status_t deserializeCollection(_xmlDoc *doc, const _xmlNode *cur,typename VolumeTraits::Collection &collection,typename VolumeTraits::PtrSerializingCtx serializingContext)
 {
     const xmlNode *root = cur->xmlChildrenNode;
     while (root != NULL) {

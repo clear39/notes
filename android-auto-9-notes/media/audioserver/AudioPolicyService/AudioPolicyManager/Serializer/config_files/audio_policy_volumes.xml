@@ -24,6 +24,7 @@ volume index from 0 to 100.
 
 <volumes>
     <volume stream="AUDIO_STREAM_VOICE_CALL" deviceCategory="DEVICE_CATEGORY_HEADSET">
+        <!--mIndex , mAttenuationInMb-->
         <point>0,-4200</point>
         <point>33,-2800</point>
         <point>66,-1400</point>

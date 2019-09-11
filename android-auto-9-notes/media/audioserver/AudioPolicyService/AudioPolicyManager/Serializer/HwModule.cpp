@@ -116,11 +116,46 @@ void HwModule::setRoutes(const AudioRouteVector &routes)
     // Now updating the streams (aka IOProfile until now) supported devices
     refreshSupportedDevices();
 }
+/*
+09-11 11:30:10.175  1791  1791 V APM::HwModule: refreshSupportedDevices mInputProfiles primary input
+09-11 11:30:10.175  1791  1791 V APM::HwModule: refreshSupportedDevices mInputProfiles sourceDevices.size 1
+09-11 11:30:10.175  1791  1791 V APM::HwModule: refreshSupportedDevices mOutputProfiles mixport_bus0_media_out
+09-11 11:30:10.175  1791  1791 V APM::HwModule: refreshSupportedDevices mOutputProfiles sinkDevices.size 1
+09-11 11:30:10.175  1791  1791 V APM::HwModule: refreshSupportedDevices mOutputProfiles mixport_bus1_system_sound_out
+09-11 11:30:10.175  1791  1791 V APM::HwModule: refreshSupportedDevices mOutputProfiles sinkDevices.size 1
 
+
+
+09-11 11:30:10.175  1791  1791 V APM::HwModule: refreshSupportedDevices mInputProfiles a2dp input
+09-11 11:30:10.175  1791  1791 V APM::HwModule: refreshSupportedDevices mInputProfiles sourceDevices.size 1
+09-11 11:30:10.175  1791  1791 V APM::HwModule: refreshSupportedDevices mOutputProfiles a2dp output
+09-11 11:30:10.175  1791  1791 V APM::HwModule: refreshSupportedDevices mOutputProfiles sinkDevices.size 1
+09-11 11:30:10.175  1791  1791 V APM::HwModule: refreshSupportedDevices mOutputProfiles sinkDevices.size 2
+09-11 11:30:10.175  1791  1791 V APM::HwModule: refreshSupportedDevices mOutputProfiles sinkDevices.size 3
+
+
+09-11 11:30:10.176  1791  1791 V APM::HwModule: refreshSupportedDevices mInputProfiles usb_device input
+09-11 11:30:10.176  1791  1791 V APM::HwModule: refreshSupportedDevices mInputProfiles sourceDevices.size 2
+09-11 11:30:10.176  1791  1791 V APM::HwModule: refreshSupportedDevices mOutputProfiles usb_accessory output
+09-11 11:30:10.176  1791  1791 V APM::HwModule: refreshSupportedDevices mOutputProfiles sinkDevices.size 1
+09-11 11:30:10.176  1791  1791 V APM::HwModule: refreshSupportedDevices mOutputProfiles usb_device output
+09-11 11:30:10.176  1791  1791 V APM::HwModule: refreshSupportedDevices mOutputProfiles sinkDevices.size 1
+09-11 11:30:10.176  1791  1791 V APM::HwModule: refreshSupportedDevices mOutputProfiles sinkDevices.size 2
+
+
+
+
+09-11 11:30:10.176  1791  1791 V APM::HwModule: refreshSupportedDevices mInputProfiles r_submix input
+09-11 11:30:10.176  1791  1791 V APM::HwModule: refreshSupportedDevices mInputProfiles sourceDevices.size 1
+09-11 11:30:10.176  1791  1791 V APM::HwModule: refreshSupportedDevices mOutputProfiles r_submix output
+09-11 11:30:10.176  1791  1791 V APM::HwModule: refreshSupportedDevices mOutputProfiles sinkDevices.size 1
+
+*/
 void HwModule::refreshSupportedDevices()
 {
     // Now updating the streams (aka IOProfile until now) supported devices
     for (const auto& stream : mInputProfiles) {
+        ALOGV("refreshSupportedDevices mInputProfiles %s",stream->getName().string());
         DeviceVector sourceDevices;
         /**
          * 这里对于 mInputProfiles 有一个以下mixport
@@ -156,8 +191,15 @@ void HwModule::refreshSupportedDevices()
                 <devicePort tagName="Built-In Mic" type="AUDIO_DEVICE_IN_BUILTIN_MIC" role="source">
                 </devicePort>
 
-                由于 getRouteSourceDevices 函数中 type为 AUDIO_PORT_TYPE_DEVICE 才为有效数据，所以这里
-                sourceDevicesForRoute 为空
+                //  @   system/media/audio/include/system/audio-base.h:431:    AUDIO_PORT_TYPE_DEVICE = 1
+                由于 getRouteSourceDevices 函数中 查找都是 DeviceDescriptor type为 AUDIO_PORT_TYPE_DEVICE 才为有效数据，
+                这里注意 DeviceDescriptor 由俩个type ：
+                一个是AudioPort继承过来的mType，这个mType是DeviceDescriptor在构造是传递强制设置的值为 AUDIO_PORT_TYPE_DEVICE
+                一个是自身的mDeviceType，dumpsys 命令打印的和配置文件中是这个属性的值
+                sourceDevicesForRoute 这里是有一个匹配的成员
+                这里返回一个成员为：
+                <devicePort tagName="Built-In Mic" type="AUDIO_DEVICE_IN_BUILTIN_MIC" role="source">
+                </devicePort>
             */
             DeviceVector sourceDevicesForRoute = getRouteSourceDevices(route);
             if (sourceDevicesForRoute.isEmpty()) {
@@ -165,6 +207,7 @@ void HwModule::refreshSupportedDevices()
                 continue;
             }
             sourceDevices.add(sourceDevicesForRoute);
+            ALOGV("refreshSupportedDevices mInputProfiles sourceDevicesForRoute.size %zu sourceDevices.size %zu",sourceDevicesForRoute.size(),sourceDevices.size());
         }
         if (sourceDevices.isEmpty()) {
             ALOGE("%s: invalid source devices for %s", __FUNCTION__, stream->getName().string());
@@ -197,6 +240,7 @@ void HwModule::refreshSupportedDevices()
         <route type="mix" sink="bus1_system_sound_out" sources="mixport_bus1_system_sound_out"/>
      * */
     for (const auto& stream : mOutputProfiles) {
+        ALOGV("refreshSupportedDevices mOutputProfiles %s",stream->getName().string());
         DeviceVector sinkDevices;
         for (const auto& route : stream->getRoutes()) {
             sp<AudioPort> source = route->getSources().findByTagName(stream->getTagName());
@@ -210,6 +254,7 @@ void HwModule::refreshSupportedDevices()
                 continue;
             }
             sinkDevices.add(sinkDevice);
+            ALOGV("refreshSupportedDevices mOutputProfiles sinkDevice:%s,sinkDevices.size %zu",sinkDevice->getTagName().string(),sinkDevices.size());
         }
         stream->setSupportedDevices(sinkDevices);
     }
@@ -219,6 +264,11 @@ DeviceVector HwModule::getRouteSourceDevices(const sp<AudioRoute> &route) const
 {
     DeviceVector sourceDevices;
     for (const auto& source : route->getSources()) {
+        ALOGV("getRouteSourceDevices name:%s,source->getType():%d,AUDIO_PORT_TYPE_DEVICE:%d",source->getTagName().string(),source->getType(),AUDIO_PORT_TYPE_DEVICE);
+        /*
+        getType 获取的属性是有 AudioPort 继承得来，其值 等于 AUDIO_PORT_TYPE_DEVICE
+        只要是 DeviceDescriptor 构造 AudioPort 的 mType 强制设置为 
+        */
         if (source->getType() == AUDIO_PORT_TYPE_DEVICE) {
             sourceDevices.add(mDeclaredDevices.getDeviceFromTagName(source->getTagName()));
         }
@@ -229,6 +279,12 @@ DeviceVector HwModule::getRouteSourceDevices(const sp<AudioRoute> &route) const
 sp<DeviceDescriptor> HwModule::getRouteSinkDevice(const sp<AudioRoute> &route) const
 {
     sp<DeviceDescriptor> sinkDevice = 0;
+    
+    ALOGV("getRouteSinkDevice name:%s,route->getSink()->getType():%d,AUDIO_PORT_TYPE_DEVICE:%d",route->getSink()->getTagName().string(),route->getSink()->getType(),AUDIO_PORT_TYPE_DEVICE);
+    /*
+        getType 获取的属性是有 AudioPort 继承得来，其值 等于 AUDIO_PORT_TYPE_DEVICE
+        只要是 DeviceDescriptor 构造 AudioPort 的 mType 强制设置为 AUDIO_PORT_TYPE_DEVICE
+    */    
     if (route->getSink()->getType() == AUDIO_PORT_TYPE_DEVICE) {
         sinkDevice = mDeclaredDevices.getDeviceFromTagName(route->getSink()->getTagName());
     }

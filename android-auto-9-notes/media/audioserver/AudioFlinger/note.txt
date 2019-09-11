@@ -77,8 +77,8 @@ Libraries loaded:
 XML effect configuration loaded successfully.
 Clients:
 Notification Clients:
-  pid: 1725
-  pid: 1738
+  pid: 1725                                                         //  system_server
+  pid: 1738                                                         //  audioserver
 Global session refs:
   session   pid count
 Hardware status: 0

@@ -24,6 +24,7 @@ AudioPolicyManager::AudioPolicyManager(AudioPolicyClientInterface *clientInterfa
     mLimitRingtoneVolume(false), mLastVoiceVolume(-1.0f),
     mA2dpSuspended(false),
 #ifdef USE_XML_AUDIO_POLICY_CONF
+    //  VolumeCurvesCollection @ /work/workcodes/aosp-p9.0.0_2.1.0-auto-ga/frameworks/av/services/audiopolicy/common/managerdefinitions/include/VolumeCurve.h
     mVolumeCurves(new VolumeCurvesCollection()),
     //注意这里创建的 AudioPolicyConfig
     mConfig(mHwModulesAll, mAvailableOutputDevices, mAvailableInputDevices,mDefaultOutputDevice, static_cast<VolumeCurvesCollection*>(mVolumeCurves.get())),
@@ -108,7 +109,8 @@ static status_t deserializeAudioPolicyXmlConfig(AudioPolicyConfig &config) {
 status_t AudioPolicyManager::initialize() {
     //  @   /work/workcodes/aosp-p9.0.0_2.1.0-auto-ga/frameworks/av/services/audiopolicy/common/managerdefinitions/src/StreamDescriptor.cpp
     /*
-    
+        @   frameworks/av/services/audiopolicy/common/managerdefinitions/include/IVolumeCurvesCollection.h
+        initializeVolumeCurves 函数空实现
     */
     mVolumeCurves->initializeVolumeCurves(getConfig().isSpeakerDrcEnabled());
 
@@ -135,10 +137,22 @@ status_t AudioPolicyManager::initialize() {
         return status;
     }
 
+    /**
+     * mAvailableOutputDevices 和 mAvailableInputDevices 是  从 mDeclaredDevices 中查找到的
+     * 即可得到 mAvailableOutputDevices 和 mAvailableInputDevices 为 DeviceDescriptor ，
+     * outputDeviceTypes 为 AUDIO_DEVICE_OUT_BUS
+     * inputDeviceTypes 为 AUDIO_DEVICE_IN_BUILTIN_MIC
+     * 
+     * 
+     * system/media/audio/include/system/audio-base.h:290:    AUDIO_DEVICE_NONE                          = 0x0u
+     * 注意这里 mAvailableOutputDevices 和 mAvailableInputDevices 默认 AUDIO_DEVICE_NONE
+     * 除了 primary module 和 r_submix module 有 成员
+     * 
+    */
     // mAvailableOutputDevices and mAvailableInputDevices now contain all attached devices
     // open all output streams needed to access attached devices
-    audio_devices_t outputDeviceTypes = mAvailableOutputDevices.types();
-    audio_devices_t inputDeviceTypes = mAvailableInputDevices.types() & ~AUDIO_DEVICE_BIT_IN;
+    audio_devices_t outputDeviceTypes = mAvailableOutputDevices.types();  //    AUDIO_DEVICE_OUT_BUS
+    audio_devices_t inputDeviceTypes = mAvailableInputDevices.types() & ~AUDIO_DEVICE_BIT_IN;  // AUDIO_DEVICE_IN_BUILTIN_MIC
 
     for (const auto& hwModule : mHwModulesAll) {
 
@@ -177,8 +191,21 @@ status_t AudioPolicyManager::initialize() {
                 continue;
             }
 
+            /**
+             * HwModule::setRoutes(const AudioRouteVector &routes) --> HwModule::refreshSupportedDevices() --> IOProfile::setSupportedDevices(const DeviceVector &devices)
+             * 这里 getSupportedDevicesType 是调用 DeviceDescriptor 的 mDeviceType（匹配配置文件中 type 属性值）
+             * 
+             * profileType 为 AUDIO_DEVICE_IN_BUILTIN_MIC
+            */
             audio_devices_t profileType = outProfile->getSupportedDevicesType();
+
+            /**
+             * mDefaultOutputDevice 是 通过 <defaultOutputDevice>bus0_media_out</defaultOutputDevice> 从 mDeclaredDevices 中查找到的
+             * 即可得到 mDefaultOutputDevice 为 DeviceDescriptor ，type() 返回值为 mDeviceType 为 AUDIO_DEVICE_IN_BUILTIN_MIC
+             * 
+            */
             if ((profileType & mDefaultOutputDevice->type()) != AUDIO_DEVICE_NONE) {
+                // 执行这里  profileType = AUDIO_DEVICE_IN_BUILTIN_MIC
                 profileType = mDefaultOutputDevice->type();
             } else {
                 // chose first device present in profile's SupportedDevices also part of
@@ -210,10 +237,18 @@ status_t AudioPolicyManager::initialize() {
                         mAvailableOutputDevices[index]->attach(hwModule);
                     }
                 }
+
                 if (mPrimaryOutput == 0 && outProfile->getFlags() & AUDIO_OUTPUT_FLAG_PRIMARY) {
                     mPrimaryOutput = outputDesc;
                 }
+
+                /**
+                 * 
+                */
                 addOutput(output, outputDesc);
+                /**
+                 * 
+                */
                 setOutputDevice(outputDesc,profileType,true,0,NULL,address);
             }
         }
@@ -230,6 +265,13 @@ status_t AudioPolicyManager::initialize() {
                 ALOGW("Input profile contains no device on module %s", hwModule->getName());
                 continue;
             }
+
+             /**
+             * HwModule::setRoutes(const AudioRouteVector &routes) --> HwModule::refreshSupportedDevices() --> IOProfile::setSupportedDevices(const DeviceVector &devices)
+             * 这里 getSupportedDevicesType 是调用 DeviceDescriptor 的 mDeviceType（匹配配置文件中 type 属性值）
+             * 
+             * profileType 为 AUDIO_DEVICE_IN_BUILTIN_MIC
+            */
             // chose first device present in profile's SupportedDevices also part of
             // inputDeviceTypes
             audio_devices_t profileType = inProfile->getSupportedDeviceForType(inputDeviceTypes);
@@ -314,6 +356,306 @@ status_t AudioPolicyManager::initialize() {
     updateDevicesAndOutputs();
     return status;
 }
+
+void AudioPolicyManager::addOutput(audio_io_handle_t output, const sp<SwAudioOutputDescriptor>& outputDesc)
+{
+    mOutputs.add(output, outputDesc);
+    applyStreamVolumes(outputDesc, AUDIO_DEVICE_NONE, 0 /* delayMs */, true /* force */);
+    updateMono(output); // update mono status when adding to output list
+    selectOutputForMusicEffects();
+    nextAudioPortGeneration();
+}
+
+void AudioPolicyManager::applyStreamVolumes(const sp<AudioOutputDescriptor>& outputDesc, audio_devices_t device, int delayMs, bool force)
+{
+    ALOGVV("applyStreamVolumes() for device %08x", device);
+    /***
+     * 音频流类型
+     * system/media/audio/include/system/audio-base.h:36:    AUDIO_STREAM_REROUTING = 11,
+     * 
+     * system/media/audio/include/system/audio-base-utils.h:33:    AUDIO_STREAM_FOR_POLICY_CNT= AUDIO_STREAM_REROUTING + 1,
+     * */
+    for (int stream = 0; stream < AUDIO_STREAM_FOR_POLICY_CNT; stream++) {
+        checkAndSetVolume((audio_stream_type_t)stream,
+                          mVolumeCurves->getVolumeIndex((audio_stream_type_t)stream, device) /*=AUDIO_DEVICE_OUT_DEFAULT_FOR_VOLUME*/,
+                          outputDesc,
+                          device,
+                          delayMs,
+                          force);
+    }
+}
+
+status_t AudioPolicyManager::checkAndSetVolume(audio_stream_type_t stream,int index,
+                                                   const sp<AudioOutputDescriptor>& outputDesc,
+                                                   audio_devices_t device,
+                                                   int delayMs,bool force)
+{   
+    /*
+    这里默认为 0 ，在构造函数中初始化
+    */
+    // do not change actual stream volume if the stream is muted
+    if (outputDesc->mMuteCount[stream] != 0) {
+        ALOGVV("checkAndSetVolume() stream %d muted count %d",stream, outputDesc->mMuteCount[stream]);
+        return NO_ERROR;
+    }
+
+    /**
+     * 
+    */
+    audio_policy_forced_cfg_t forceUseForComm = mEngine->getForceUse(AUDIO_POLICY_FORCE_FOR_COMMUNICATION);
+    // do not change in call volume if bluetooth is connected and vice versa
+    if ((stream == AUDIO_STREAM_VOICE_CALL && forceUseForComm == AUDIO_POLICY_FORCE_BT_SCO) ||
+        (stream == AUDIO_STREAM_BLUETOOTH_SCO && forceUseForComm != AUDIO_POLICY_FORCE_BT_SCO)) {
+        ALOGV("checkAndSetVolume() cannot set stream %d volume with force use = %d for comm", stream, forceUseForComm);
+        return INVALID_OPERATION;
+    }
+
+    /**
+     * 这里执行
+     * */
+    if (device == AUDIO_DEVICE_NONE) {
+        /*
+        */
+        device = outputDesc->device();
+    }
+
+    float volumeDb = computeVolume(stream, index, device);
+    if (outputDesc->isFixedVolume(device) ||
+            // Force VoIP volume to max for bluetooth SCO
+            ((stream == AUDIO_STREAM_VOICE_CALL || stream == AUDIO_STREAM_BLUETOOTH_SCO) &&
+             (device & AUDIO_DEVICE_OUT_ALL_SCO) != 0)) {
+        volumeDb = 0.0f;
+    }
+
+    /**
+     * 
+    */
+    outputDesc->setVolume(volumeDb, stream, device, delayMs, force);
+
+    if (stream == AUDIO_STREAM_VOICE_CALL || stream == AUDIO_STREAM_BLUETOOTH_SCO) {
+        float voiceVolume;
+        // Force voice volume to max for bluetooth SCO as volume is managed by the headset
+        if (stream == AUDIO_STREAM_VOICE_CALL) {
+            voiceVolume = (float)index/(float)mVolumeCurves->getVolumeIndexMax(stream);
+        } else {
+            voiceVolume = 1.0;
+        }
+
+        if (voiceVolume != mLastVoiceVolume) {
+            mpClientInterface->setVoiceVolume(voiceVolume, delayMs);
+            mLastVoiceVolume = voiceVolume;
+        }
+    }
+
+    return NO_ERROR;
+}
+
+
+void AudioPolicyManager::updateMono(audio_io_handle_t output) {
+    AudioParameter param;
+    param.addInt(String8(AudioParameter::keyMonoOutput), (int)mMasterMono);
+    mpClientInterface->setParameters(output, param.toString());
+}
+
+
+audio_io_handle_t AudioPolicyManager::selectOutputForMusicEffects()
+{
+    // select one output among several suitable for global effects.
+    // The priority is as follows:
+    // 1: An offloaded output. If the effect ends up not being offloadable,
+    //    AudioFlinger will invalidate the track and the offloaded output
+    //    will be closed causing the effect to be moved to a PCM output.
+    // 2: A deep buffer output
+    // 3: The primary output
+    // 4: the first output in the list
+
+    routing_strategy strategy = getStrategy(AUDIO_STREAM_MUSIC);
+    audio_devices_t device = getDeviceForStrategy(strategy, false /*fromCache*/);
+    SortedVector<audio_io_handle_t> outputs = getOutputsForDevice(device, mOutputs);
+
+    if (outputs.size() == 0) {
+        return AUDIO_IO_HANDLE_NONE;
+    }
+
+    audio_io_handle_t output = AUDIO_IO_HANDLE_NONE;
+    bool activeOnly = true;
+
+    while (output == AUDIO_IO_HANDLE_NONE) {
+        audio_io_handle_t outputOffloaded = AUDIO_IO_HANDLE_NONE;
+        audio_io_handle_t outputDeepBuffer = AUDIO_IO_HANDLE_NONE;
+        audio_io_handle_t outputPrimary = AUDIO_IO_HANDLE_NONE;
+
+        for (audio_io_handle_t output : outputs) {
+            sp<SwAudioOutputDescriptor> desc = mOutputs.valueFor(output);
+            if (activeOnly && !desc->isStreamActive(AUDIO_STREAM_MUSIC)) {
+                continue;
+            }
+            ALOGV("selectOutputForMusicEffects activeOnly %d output %d flags 0x%08x",activeOnly, output, desc->mFlags);
+            if ((desc->mFlags & AUDIO_OUTPUT_FLAG_COMPRESS_OFFLOAD) != 0) {
+                outputOffloaded = output;
+            }
+            if ((desc->mFlags & AUDIO_OUTPUT_FLAG_DEEP_BUFFER) != 0) {
+                outputDeepBuffer = output;
+            }
+            if ((desc->mFlags & AUDIO_OUTPUT_FLAG_PRIMARY) != 0) {
+                outputPrimary = output;
+            }
+        }
+        if (outputOffloaded != AUDIO_IO_HANDLE_NONE) {
+            output = outputOffloaded;
+        } else if (outputDeepBuffer != AUDIO_IO_HANDLE_NONE) {
+            output = outputDeepBuffer;
+        } else if (outputPrimary != AUDIO_IO_HANDLE_NONE) {
+            output = outputPrimary;
+        } else {
+            output = outputs[0];
+        }
+        activeOnly = false;
+    }
+
+    if (output != mMusicEffectOutput) {
+        mpClientInterface->moveEffects(AUDIO_SESSION_OUTPUT_MIX, mMusicEffectOutput, output);
+        mMusicEffectOutput = output;
+    }
+
+    ALOGV("selectOutputForMusicEffects selected output %d", output);
+    return output;
+}
+
+uint32_t AudioPolicyManager::nextAudioPortGeneration()
+{
+    return mAudioPortGeneration++;
+}
+
+
+
+uint32_t AudioPolicyManager::setOutputDevice(const sp<AudioOutputDescriptor>& outputDesc,
+                                             audio_devices_t device,
+                                             bool force,
+                                             int delayMs,
+                                             audio_patch_handle_t *patchHandle,
+                                             const char *address,
+                                             bool requiresMuteCheck)
+{
+    ALOGV("setOutputDevice() device %04x delayMs %d", device, delayMs);
+    AudioParameter param;
+    uint32_t muteWaitMs;
+
+    if (outputDesc->isDuplicated()) {
+        muteWaitMs = setOutputDevice(outputDesc->subOutput1(), device, force, delayMs, nullptr /* patchHandle */, nullptr /* address */, requiresMuteCheck);
+        muteWaitMs += setOutputDevice(outputDesc->subOutput2(), device, force, delayMs, nullptr /* patchHandle */, nullptr /* address */, requiresMuteCheck);
+        return muteWaitMs;
+    }
+    // no need to proceed if new device is not AUDIO_DEVICE_NONE and not supported by current
+    // output profile
+    if ((device != AUDIO_DEVICE_NONE) && ((device & outputDesc->supportedDevices()) == AUDIO_DEVICE_NONE)) {
+        return 0;
+    }
+
+    // filter devices according to output selected
+    device = (audio_devices_t)(device & outputDesc->supportedDevices());
+
+    audio_devices_t prevDevice = outputDesc->mDevice;
+
+    ALOGV("setOutputDevice() prevDevice 0x%04x", prevDevice);
+
+    if (device != AUDIO_DEVICE_NONE) {
+        outputDesc->mDevice = device;
+    }
+
+    // if the outputs are not materially active, there is no need to mute.
+    if (requiresMuteCheck) {
+        muteWaitMs = checkDeviceMuteStrategies(outputDesc, prevDevice, delayMs);
+    } else {
+        ALOGV("%s: suppressing checkDeviceMuteStrategies", __func__);
+        muteWaitMs = 0;
+    }
+
+    // Do not change the routing if:
+    //      the requested device is AUDIO_DEVICE_NONE
+    //      OR the requested device is the same as current device
+    //  AND force is not specified
+    //  AND the output is connected by a valid audio patch.
+    // Doing this check here allows the caller to call setOutputDevice() without conditions
+    if ((device == AUDIO_DEVICE_NONE || device == prevDevice) &&
+        !force &&
+        outputDesc->getPatchHandle() != 0) {
+        ALOGV("setOutputDevice() setting same device 0x%04x or null device", device);
+        return muteWaitMs;
+    }
+
+    ALOGV("setOutputDevice() changing device");
+
+    // do the routing
+    if (device == AUDIO_DEVICE_NONE) {
+        resetOutputDevice(outputDesc, delayMs, NULL);
+    } else {
+        DeviceVector deviceList;
+        if ((address == NULL) || (strlen(address) == 0)) {
+            deviceList = mAvailableOutputDevices.getDevicesFromType(device);
+        } else {
+            deviceList = mAvailableOutputDevices.getDevicesFromTypeAddr(device, String8(address));
+        }
+
+        if (!deviceList.isEmpty()) {
+            struct audio_patch patch;
+            outputDesc->toAudioPortConfig(&patch.sources[0]);
+            patch.num_sources = 1;
+            patch.num_sinks = 0;
+            for (size_t i = 0; i < deviceList.size() && i < AUDIO_PATCH_PORTS_MAX; i++) {
+                deviceList.itemAt(i)->toAudioPortConfig(&patch.sinks[i]);
+                patch.num_sinks++;
+            }
+            ssize_t index;
+            if (patchHandle && *patchHandle != AUDIO_PATCH_HANDLE_NONE) {
+                index = mAudioPatches.indexOfKey(*patchHandle);
+            } else {
+                index = mAudioPatches.indexOfKey(outputDesc->getPatchHandle());
+            }
+            sp< AudioPatch> patchDesc;
+            audio_patch_handle_t afPatchHandle = AUDIO_PATCH_HANDLE_NONE;
+            if (index >= 0) {
+                patchDesc = mAudioPatches.valueAt(index);
+                afPatchHandle = patchDesc->mAfPatchHandle;
+            }
+
+            status_t status = mpClientInterface->createAudioPatch(&patch,&afPatchHandle,delayMs);
+            ALOGV("setOutputDevice() createAudioPatch returned %d patchHandle %d""num_sources %d num_sinks %d",status, afPatchHandle, patch.num_sources, patch.num_sinks);
+            if (status == NO_ERROR) {
+                if (index < 0) {
+                    patchDesc = new AudioPatch(&patch, mUidCached);
+                    addAudioPatch(patchDesc->mHandle, patchDesc);
+                } else {
+                    patchDesc->mPatch = patch;
+                }
+                patchDesc->mAfPatchHandle = afPatchHandle;
+                if (patchHandle) {
+                    *patchHandle = patchDesc->mHandle;
+                }
+                outputDesc->setPatchHandle(patchDesc->mHandle);
+                nextAudioPortGeneration();
+                mpClientInterface->onAudioPatchListUpdate();
+            }
+        }
+
+        // inform all input as well
+        for (size_t i = 0; i < mInputs.size(); i++) {
+            const sp<AudioInputDescriptor>  inputDescriptor = mInputs.valueAt(i);
+            if (!is_virtual_input_device(inputDescriptor->mDevice)) {
+                AudioParameter inputCmd = AudioParameter();
+                ALOGV("%s: inform input %d of device:%d", __func__, inputDescriptor->mIoHandle, device);
+                inputCmd.addInt(String8(AudioParameter::keyRouting),device);
+                mpClientInterface->setParameters(inputDescriptor->mIoHandle,inputCmd.toString(),delayMs);
+            }
+        }
+    }
+
+    // update stream volumes according to new device
+    applyStreamVolumes(outputDesc, device, delayMs);
+
+    return muteWaitMs;
+}
+
 
 
 void AudioPolicyManager::updateDevicesAndOutputs()

@@ -54,10 +54,27 @@ status_t AudioInputDescriptor::open(const audio_config_t *config,
         mChannelMask = lConfig.channel_mask;
         mFormat = lConfig.format;
         mId = AudioPort::getNextUniqueId();
+        // 用于后面的close
         mIoHandle = *input;
         mProfile->curOpenCount++;
     }
 
     return status;
+}
+
+void AudioInputDescriptor::close()
+{
+    if (mIoHandle != AUDIO_IO_HANDLE_NONE) {
+        mClientInterface->closeInput(mIoHandle);
+        LOG_ALWAYS_FATAL_IF(mProfile->curOpenCount < 1, "%s profile open count %u",__FUNCTION__, mProfile->curOpenCount);
+        // do not call stop() here as stop() is supposed to be called after
+        // AudioSession::changeActiveCount(-1) and we don't know how many sessions
+        // are still active at this time
+        if (isActive()) {
+            mProfile->curActiveCount--;
+        }
+        mProfile->curOpenCount--;
+        mIoHandle = AUDIO_IO_HANDLE_NONE;
+    }
 }
 

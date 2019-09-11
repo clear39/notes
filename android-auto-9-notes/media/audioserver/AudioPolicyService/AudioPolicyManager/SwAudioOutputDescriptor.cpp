@@ -87,7 +87,6 @@ status_t SwAudioOutputDescriptor::open(const audio_config_t *config,
     /**
      * 这里 mProfile->getModuleHandle() 是由 AudioFlinger::loadHwModule 调用加载得到的 audio_module_handle_t
      * */
-
     status_t status = mClientInterface->openOutput(mProfile->getModuleHandle(),
                                                    output,
                                                    &lConfig,
@@ -95,14 +94,10 @@ status_t SwAudioOutputDescriptor::open(const audio_config_t *config,
                                                    address,
                                                    &mLatency,
                                                    mFlags);
-    LOG_ALWAYS_FATAL_IF(mDevice != device,
-                        "%s openOutput returned device %08x when given device %08x",
-                        __FUNCTION__, mDevice, device);
+    LOG_ALWAYS_FATAL_IF(mDevice != device,"%s openOutput returned device %08x when given device %08x",__FUNCTION__, mDevice, device);
 
     if (status == NO_ERROR) {
-        LOG_ALWAYS_FATAL_IF(*output == AUDIO_IO_HANDLE_NONE,
-                            "%s openOutput returned output handle %d for device %08x",
-                            __FUNCTION__, *output, device);
+        LOG_ALWAYS_FATAL_IF(*output == AUDIO_IO_HANDLE_NONE,"%s openOutput returned output handle %d for device %08x",__FUNCTION__, *output, device);
         mSamplingRate = lConfig.sample_rate;
         mChannelMask = lConfig.channel_mask;
         mFormat = lConfig.format;
@@ -112,4 +107,18 @@ status_t SwAudioOutputDescriptor::open(const audio_config_t *config,
     }
 
     return status;
+}
+
+
+bool AudioOutputDescriptor::setVolume(float volume, audio_stream_type_t stream,audio_devices_t device __unused, uint32_t delayMs,bool force)
+{
+    // We actually change the volume if:
+    // - the float value returned by computeVolume() changed
+    // - the force flag is set
+    if (volume != mCurVolume[stream] || force) {
+        ALOGV("setVolume() for stream %d, volume %f, delay %d", stream, volume, delayMs);
+        mCurVolume[stream] = volume;
+        return true;
+    }
+    return false;
 }
