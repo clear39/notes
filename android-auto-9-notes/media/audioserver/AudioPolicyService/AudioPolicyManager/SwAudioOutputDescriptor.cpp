@@ -45,16 +45,21 @@ SwAudioOutputDescriptor::SwAudioOutputDescriptor(const sp<IOProfile>& profile,Au
  * AudioPolicyManager::initialize() 中调用 config 为 nullptr
  * 
  * status_t status = outputDesc->open(nullptr, profileType, address,AUDIO_STREAM_DEFAULT, AUDIO_OUTPUT_FLAG_NONE, &output);
+ * 
+ * 
+ * device 为 system/media/audio/include/system/audio-base.h:319:    AUDIO_DEVICE_OUT_BUS                       = 0x1000000u
+ * 
 */
 status_t SwAudioOutputDescriptor::open(const audio_config_t *config,
-                                       audio_devices_t device,
+                                       audio_devices_t device, // profileType
                                        const String8& address,
-                                       audio_stream_type_t stream,
-                                       audio_output_flags_t flags,
+                                       audio_stream_type_t stream, // AUDIO_STREAM_DEFAULT
+                                       audio_output_flags_t flags, //   AUDIO_OUTPUT_FLAG_NONE
                                        audio_io_handle_t *output)
 {
     audio_config_t lConfig;
     if (config == nullptr) {
+        // 执行这里
         lConfig = AUDIO_CONFIG_INITIALIZER;
         lConfig.sample_rate = mSamplingRate;
         lConfig.channel_mask = mChannelMask;

@@ -219,6 +219,8 @@ status_t AudioFlinger::openOutput(audio_module_handle_t module,
                                   audio_output_flags_t flags)
 {
     /**
+     * system/media/audio/include/system/audio-base.h:319:    AUDIO_DEVICE_OUT_BUS                       = 0x1000000u
+     * 
      * 09-10 15:30:23.202  3307  3307 I AudioFlinger: openOutput() this 0xf2abe000, module 10 Device 0x1000000, SamplingRate 48000, Format 0x000001, Channels 0x3, flags 0x2
      * 09-10 15:30:23.216  3307  3307 I AudioFlinger: openOutput() this 0xf2abe000, module 10 Device 0x1000000, SamplingRate 48000, Format 0x000001, Channels 0x3, flags 0x2
     */
@@ -842,9 +844,7 @@ sp<IAudioTrack> AudioFlinger::createTrack(const CreateTrackInput& input,
     const uid_t callingUid = IPCThreadState::self()->getCallingUid();
     uid_t clientUid = input.clientInfo.clientUid;
     if (!isTrustedCallingUid(callingUid)) {
-        ALOGW_IF(clientUid != callingUid,
-                "%s uid %d tried to pass itself off as %d",
-                __FUNCTION__, callingUid, clientUid);
+        ALOGW_IF(clientUid != callingUid,"%s uid %d tried to pass itself off as %d",__FUNCTION__, callingUid, clientUid);
         clientUid = callingUid;
         updatePid = true;
     }
@@ -944,12 +944,20 @@ sp<IAudioTrack> AudioFlinger::createTrack(const CreateTrackInput& input,
         output.notificationFrameCount = input.notificationFrameCount;
         output.flags = input.flags;
 
+        /***
+         * 
+         * @    frameworks/av/services/audioflinger/Threads.cpp:1862
+         * 任何线程都只有 PlaybackThread::createTrack_l 一个方法
+         * sp<AudioFlinger::PlaybackThread::Track> AudioFlinger::PlaybackThread::createTrack_l
+         * 
+         * */
         track = thread->createTrack_l(client, streamType, input.attr, &output.sampleRate,
                                       input.config.format, input.config.channel_mask,
                                       &output.frameCount, &output.notificationFrameCount,
                                       input.notificationsPerBuffer, input.speed,
                                       input.sharedBuffer, sessionId, &output.flags,
                                       input.clientInfo.clientTid, clientUid, &lStatus, portId);
+
         LOG_ALWAYS_FATAL_IF((lStatus == NO_ERROR) && (track == 0));
         // we don't abort yet if lStatus != NO_ERROR; there is still work to be done regardless
 

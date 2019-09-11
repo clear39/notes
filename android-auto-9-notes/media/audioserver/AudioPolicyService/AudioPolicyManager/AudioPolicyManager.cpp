@@ -212,6 +212,10 @@ status_t AudioPolicyManager::initialize() {
                 // outputDeviceTypes
                 profileType = outProfile->getSupportedDeviceForType(outputDeviceTypes);
             }
+
+            /**
+             * 如果 mAvailableOutputDevices 为空，则  outputDeviceTypes = AUDIO_DEVICE_NONE = 0
+            */
             if ((profileType & outputDeviceTypes) == 0) {
                 continue;
             }
