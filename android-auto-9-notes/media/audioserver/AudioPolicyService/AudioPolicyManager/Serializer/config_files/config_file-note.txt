@@ -277,6 +277,9 @@ HW Modules dump:
 
     - maxOpenCount: 1 - curOpenCount: 0
     - maxActiveCount: 1 - curActiveCount: 0
+
+
+
   - inputs:
     input 0:
     - name: a2dp input
@@ -293,6 +296,9 @@ HW Modules dump:
 
     - maxOpenCount: 0 - curOpenCount: 0
     - maxActiveCount: 1 - curActiveCount: 0
+
+
+
   - Declared devices:
     Device 1:
     - tag name: BT A2DP Out
@@ -352,6 +358,9 @@ HW Modules dump:
     - Sources: 
         BT A2DP In 
 
+
+        
+
 - HW Module 3:
   - name: usb
   - handle: 26
@@ -387,6 +396,8 @@ HW Modules dump:
 
     - maxOpenCount: 1 - curOpenCount: 0
     - maxActiveCount: 1 - curActiveCount: 0
+
+    
   - inputs:
     input 0:
     - name: usb_device input
