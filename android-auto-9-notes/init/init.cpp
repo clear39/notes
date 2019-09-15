@@ -203,8 +203,22 @@ int main(int argc, char** argv) {
 
 
     // Trigger(触发)
+    /***
+     * QueueEventTrigger 仅仅往事件消息队列(event_queue_)中插入第一个处理的事件"early-init"
+     * */
     am.QueueEventTrigger("early-init");
 
+
+    /**
+     * QueueBuiltinAction 内部构建一个 Action 
+     * 同时将 Action 插入事件消息队列(event_queue_)中 待处理
+     * 也将该 Action 压如 actions_ 记录队列中
+     * 
+     * 第一个参数是函数指针 为命令回调函数
+     * 第二文本参数 为 event_trigger 名称
+     * 
+     * 
+    */
     // Queue an action that waits for coldboot done so we know ueventd has set up all of /dev...
     am.QueueBuiltinAction(wait_for_coldboot_done_action, "wait_for_coldboot_done");
     // ... so that we can start queuing up actions that require stuff from /dev.
@@ -271,7 +285,7 @@ int main(int argc, char** argv) {
 
             // If there's more work to do, wake up again immediately.
             /**
-             * 判断am中是否有消息队列中是否有消息
+             * 判断am中消息队列中是否有未处理的消息
              */
             if (am.HasMoreCommands()) epoll_timeout_ms = 0;
         }

@@ -1,5 +1,15 @@
 {
     "files.associations": {
-        "*.tcc": "cpp"
+        "*.tcc": "cpp",
+        "array": "cpp",
+        "memory": "cpp",
+        "istream": "cpp",
+        "tuple": "cpp",
+        "utility": "cpp",
+        "variant": "cpp",
+        "deque": "cpp",
+        "vector": "cpp",
+        "string_view": "cpp",
+        "typeinfo": "cpp"
     }
 }
