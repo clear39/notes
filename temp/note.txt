@@ -1,0 +1,148 @@
+xqli@linux:/work/workcodes/aosp-p9.x-auto-ga$ grep PACKAGE_OVERLAYS -nr build
+
+build/kati/shellutil_test.go:28:			in:   "PRODUCT_PACKAGE_OVERLAYS",
+build/make/core/product-graph.mk:112:	$(hide) echo 'PRODUCT_PACKAGE_OVERLAYS=$$(PRODUCTS.$(strip $(1)).PRODUCT_PACKAGE_OVERLAYS)' >> $$@
+build/make/core/product-graph.mk:113:	$(hide) echo 'DEVICE_PACKAGE_OVERLAYS=$$(PRODUCTS.$(strip $(1)).DEVICE_PACKAGE_OVERLAYS)' >> $$@
+build/make/core/product_config.mk:376:PRODUCT_PACKAGE_OVERLAYS := \
+build/make/core/product_config.mk:377:    $(strip $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_PACKAGE_OVERLAYS))
+build/make/core/product_config.mk:378:DEVICE_PACKAGE_OVERLAYS := \
+build/make/core/product_config.mk:379:        $(strip $(PRODUCTS.$(INTERNAL_PRODUCT).DEVICE_PACKAGE_OVERLAYS))
+build/make/core/product.mk:96:    PRODUCT_PACKAGE_OVERLAYS \
+build/make/core/product.mk:97:    DEVICE_PACKAGE_OVERLAYS \
+build/make/core/package_internal.mk:91:    $(wildcard $(foreach dir, $(PRODUCT_PACKAGE_OVERLAYS), \
+build/make/core/package_internal.mk:93:    $(wildcard $(foreach dir, $(DEVICE_PACKAGE_OVERLAYS), \
+build/make/core/tasks/vendor_module_check.mk:80:    $(filter vendor/%, $(PRODUCT_PACKAGE_OVERLAYS) $(DEVICE_PACKAGE_OVERLAYS)))
+build/make/core/soong_config.mk:81:$(call add_json_list, ResourceOverlays,                  $(PRODUCT_PACKAGE_OVERLAYS) $(DEVICE_PACKAGE_OVERLAYS))
+build/make/target/product/emulator.mk:39:PRODUCT_PACKAGE_OVERLAYS := device/generic/goldfish/overlay
+build/make/target/product/sdk_base.mk:77:PRODUCT_PACKAGE_OVERLAYS := development/sdk_overlay
+
+
+
+build/make/core/soong_config.mk:81:$(call add_json_list, ResourceOverlays,                  $(PRODUCT_PACKAGE_OVERLAYS) $(DEVICE_PACKAGE_OVERLAYS))
+
+
+//add_json_list = $(call add_json_val,ResourceOverlays,$(call json_list,$(patsubst %,%,$(PRODUCT_PACKAGE_OVERLAYS) $(DEVICE_PACKAGE_OVERLAYS))))
+add_json_list = $(call add_json_val,$(1),$(call json_list,$(patsubst %,%,$(2))))
+
+
+
+add_json_val = $(eval _contents := $$(_contents)    "$$(strip $$(1))":$$(space)$$(strip $$(2))$$(comma)$$(newline))
+
+
+/**
+*/
+//	$(call json_list,$(patsubst %,%,$(PRODUCT_PACKAGE_OVERLAYS) $(DEVICE_PACKAGE_OVERLAYS)))
+$(call json_list,$(patsubst %,%,$(2)))
+
+# Converts a space-separated list to a JSON list.
+json_list = $(call _json_list,$(space),$(1))
+
+
+
+//	$(call _json_list,$(space),$(PRODUCT_PACKAGE_OVERLAYS) $(DEVICE_PACKAGE_OVERLAYS))
+$(call _json_list,$(space),$(1))
+
+
+# Converts a list to a JSON list.
+# $1: List separator.
+# $2: List.
+_json_list = [$(if $(2),"$(subst $(1),"$(comma)",$(2))")]
+
+
+
+//	@	/work/workcodes/aosp-p9.x-auto-ga/build/core/soong_config.mk
+
+SOONG_VARIABLES := $(SOONG_OUT_DIR)/soong.variables
+
+
+
+
+
+
+
+
+
+
+build/make/core/config.mk:1085:include $(BUILD_SYSTEM)/soong_config.mk
+
+
+build/soong/ui/build/dumpvars.go:43:		"-f", "build/make/core/config.mk",
+
+main	//	@	build/soong/cmd/soong_ui/main.go	
+	Build	//	@	build/soong/ui/build/build.go
+		runMakeProductConfig	//	@	build/soong/ui/build/dumpvars.go
+			dumpMakeVars		//	@	build/soong/ui/build/dumpvars.go
+
+
+
+
+build/soong/android/config.go:38:const productVariablesFileName = "soong.variables"
+
+
+
+build/soong/cmd/soong_build/main.go:61:	configuration, err := android.NewConfig(srcDir, bootstrap.BuildDir)
+
+
+
+xqli@linux:/work/workcodes/aosp-p9.x-auto-ga$ grep "soong.variables" -nr build
+build/soong/android/config.go:38:const productVariablesFileName = "soong.variables"
+build/soong/scripts/build-ndk-prebuilts.sh:46:cat > ${SOONG_OUT}/soong.variables << EOF
+build/make/core/soong_config.mk:6:SOONG_VARIABLES := $(SOONG_OUT_DIR)/soong.variables
+build/make/core/soong_config.mk:38:# Create soong.variables with copies of makefile settings.  Runs every build,
+build/make/core/soong_config.mk:39:# but only updates soong.variables if it changes
+xqli@linux:/work/workcodes/aosp-p9.x-auto-ga$ 
+xqli@linux:/work/workcodes/aosp-p9.x-auto-ga$ 
+xqli@linux:/work/workcodes/aosp-p9.x-auto-ga$ 
+xqli@linux:/work/workcodes/aosp-p9.x-auto-ga$ grep productVariablesFileName -nrw build
+build/soong/android/config.go:38:const productVariablesFileName = "soong.variables"
+build/soong/android/config.go:253:		ProductVariablesFileName: filepath.Join(buildDir, productVariablesFileName),
+xqli@linux:/work/workcodes/aosp-p9.x-auto-ga$ 
+xqli@linux:/work/workcodes/aosp-p9.x-auto-ga$ 
+xqli@linux:/work/workcodes/aosp-p9.x-auto-ga$ grep NewConfig -nrw build
+build/blueprint/bootstrap/doc.go:68://       config := logic.NewConfig(srcDir)
+build/soong/android/config.go:249:func NewConfig(srcDir, buildDir string) (Config, error) {
+build/soong/ui/build/config.go:55:func NewConfig(ctx Context, args ...string) Config {
+build/soong/cmd/soong_ui/main.go:76:	//NewConfig	@	build/soong/ui/build/config.go
+build/soong/cmd/soong_ui/main.go:82:		config = build.NewConfig(buildCtx)
+build/soong/cmd/soong_ui/main.go:85:		config = build.NewConfig(buildCtx, os.Args[1:]...)
+build/soong/cmd/soong_build/main.go:61:	configuration, err := android.NewConfig(srcDir, bootstrap.BuildDir)
+build/soong/cmd/multiproduct_kati/main.go:222:	config := build.NewConfig(buildCtx)
+build/soong/cmd/multiproduct_kati/main.go:347:			productConfig := build.NewConfig(productCtx)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

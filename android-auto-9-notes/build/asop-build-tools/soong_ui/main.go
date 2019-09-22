@@ -46,7 +46,7 @@ func main() {
 	}
 
 	logger.New(os.Stderr) 主要创建 stdLogger 结构体，并且初始化了stderr *log.Logger 和 fileLogger *log.Logger ；
-	其中log库为外部库（不是android自己实现）
+	其中log库为外部库（不是谷歌android自己实现）
 	*/
 	log := logger.New(os.Stderr)
 	defer log.Cleanup()
