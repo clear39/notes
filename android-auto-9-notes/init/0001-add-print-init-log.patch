@@ -1,0 +1,270 @@
+From b9c4baaea78e80dc690f3c6191abdc9bc6fcf7a3 Mon Sep 17 00:00:00 2001
+From: lixuqing <lixuqing@auto-link.com.cn>
+Date: Thu, 19 Sep 2019 16:30:58 +0800
+Subject: [PATCH] add print init log
+
+Change-Id: I4b40c0233a6f1ca057969e7e5e1840fc73715be3
+---
+ fs_mgr/fs_mgr.cpp         |  2 +-
+ fs_mgr/fs_mgr_fstab.cpp   |  6 +++++-
+ init/builtins.cpp         |  7 +++++++
+ init/init.cpp             |  5 ++++-
+ init/init.h               |  2 ++
+ init/init_first_stage.cpp |  6 ++++++
+ init/log.cpp              | 32 ++++++++++++++++++++++++++++++++
+ init/log.h                |  8 ++++++++
+ init/selinux.cpp          |  6 ++++++
+ 9 files changed, 71 insertions(+), 3 deletions(-)
+
+diff --git a/fs_mgr/fs_mgr.cpp b/fs_mgr/fs_mgr.cpp
+index 73c7da6bf..7c64865d7 100644
+--- a/fs_mgr/fs_mgr.cpp
++++ b/fs_mgr/fs_mgr.cpp
+@@ -581,7 +581,7 @@ static int fs_match(const char *in1, const char *in2)
+  */
+ static int mount_with_alternatives(struct fstab *fstab, int start_idx, int *end_idx, int *attempted_idx)
+ {
+-    LDEBUG << "mount_with_alternatives()...";
++    LINFO << "mount_with_alternatives()...";
+     int i;
+     int mount_errno = 0;
+     int mounted = 0;
+diff --git a/fs_mgr/fs_mgr_fstab.cpp b/fs_mgr/fs_mgr_fstab.cpp
+index 8d9e5f135..fcdf18fb5 100644
+--- a/fs_mgr/fs_mgr_fstab.cpp
++++ b/fs_mgr/fs_mgr_fstab.cpp
+@@ -715,6 +715,7 @@ static std::set<std::string> extract_boot_devices(const fstab& fstab) {
+         if (!android::base::StartsWith(blk_device, "/dev/block") ||
+             android::base::StartsWith(blk_device, "/dev/block/by-name") ||
+             android::base::StartsWith(blk_device, "/dev/block/bootdevice/by-name")) {
++            PINFO << __FUNCTION__ << "(blk_device=" << fstab.recs[i].blk_device << ") skip.";
+             continue;
+         }
+         // Skips non-by_name blk_device.
+@@ -733,7 +734,10 @@ static std::set<std::string> extract_boot_devices(const fstab& fstab) {
+         if (first_slash == std::string::npos) continue;
+ 
+         auto boot_device = blk_device.substr(first_slash + 1);
+-        if (!boot_device.empty()) boot_devices.insert(std::move(boot_device));
++        if (!boot_device.empty()) {
++            PINFO << __FUNCTION__ << "insert (boot_device=" << boot_device << ") .";
++            boot_devices.insert(std::move(boot_device));
++        }
+     }
+ 
+     return boot_devices;
+diff --git a/init/builtins.cpp b/init/builtins.cpp
+index 8bd92ccdd..6b1281cec 100644
+--- a/init/builtins.cpp
++++ b/init/builtins.cpp
+@@ -421,6 +421,7 @@ static void import_late(const std::vector<std::string>& args, size_t start_index
+  *  Call fs_mgr_mount_all() to mount the given fstab
+  */
+ static Result<int> mount_fstab(const char* fstabfile, int mount_mode) {
++    PLOG(INFO) << "mount_fstab()" ;
+     /*
+      * Call fs_mgr_mount_all() to mount all filesystems.  We fork(2) and
+      * do the call in the child to provide protection to the main init
+@@ -562,6 +563,8 @@ static Result<Success> do_mount_all(const BuiltinArguments& args) {
+         }
+     }
+ 
++     LOG(INFO) << "do_mount_all "<< prop_post_fix;
++
+     std::string prop_name = "ro.boottime.init.mount_all."s + prop_post_fix;
+     android::base::Timer t;
+     auto mount_fstab_return_code = mount_fstab(fstabfile, mount_mode);
+@@ -824,6 +827,7 @@ static Result<Success> do_copy(const BuiltinArguments& args) {
+ }
+ 
+ static Result<Success> do_chown(const BuiltinArguments& args) {
++    LOG(INFO) << "do_chown()..." ;
+     auto uid = DecodeUid(args[1]);
+     if (!uid) {
+         return Error() << "Unable to decode UID for '" << args[1] << "': " << uid.error();
+@@ -861,6 +865,7 @@ static mode_t get_mode(const char *s) {
+ }
+ 
+ static Result<Success> do_chmod(const BuiltinArguments& args) {
++    LOG(INFO) << "do_chmod() "<< args[1].c_str() << ","<< args[2].c_str();
+     mode_t mode = get_mode(args[1].c_str());
+     if (fchmodat(AT_FDCWD, args[2].c_str(), mode, AT_SYMLINK_NOFOLLOW) < 0) {
+         return ErrnoError() << "fchmodat() failed";
+@@ -869,6 +874,7 @@ static Result<Success> do_chmod(const BuiltinArguments& args) {
+ }
+ 
+ static Result<Success> do_restorecon(const BuiltinArguments& args) {
++    LOG(INFO) << "do_restorecon()....";
+     int ret = 0;
+ 
+     struct flag_type {const char* name; int value;};
+@@ -899,6 +905,7 @@ static Result<Success> do_restorecon(const BuiltinArguments& args) {
+                 return Error() << "bad flag " << args[i];
+             }
+         } else {
++            LOG(INFO) << "do_restorecon() " << args[i].c_str();
+             in_flags = false;
+             if (selinux_android_restorecon(args[i].c_str(), flag) < 0) {
+                 ret = errno;
+diff --git a/init/init.cpp b/init/init.cpp
+index 7d23060c9..8863e5bd0 100644
+--- a/init/init.cpp
++++ b/init/init.cpp
+@@ -605,7 +605,10 @@ int main(int argc, char** argv) {
+         // /mnt/vendor is used to mount vendor-specific partitions that can not be
+         // part of the vendor partition, e.g. because they are mounted read-write.
+         mkdir("/mnt/vendor", 0755);
+-
++/*
++        mount("/dev/block/platform/5b010000.usdhc/by-name/cust", "/cust", "ext4", MS_NOEXEC | MS_NOSUID | MS_NODEV,
++                      "mode=0755,uid=1000,gid=1000");
++*/
+         // Now that tmpfs is mounted on /dev and we have /dev/kmsg, we can actually
+         // talk to the outside world...
+         InitKernelLogging(argv);
+diff --git a/init/init.h b/init/init.h
+index d4a0e963b..5efe666e7 100644
+--- a/init/init.h
++++ b/init/init.h
+@@ -27,6 +27,8 @@
+ #include "parser.h"
+ #include "service.h"
+ 
++
++
+ namespace android {
+ namespace init {
+ 
+diff --git a/init/init_first_stage.cpp b/init/init_first_stage.cpp
+index 8b9868e2f..ddc697725 100644
+--- a/init/init_first_stage.cpp
++++ b/init/init_first_stage.cpp
+@@ -123,9 +123,14 @@ FirstStageMount::FirstStageMount()
+         LOG(INFO) << "Failed to read fstab from device tree";
+         return;
+     }
++
++    LOG(INFO) << "device_tree_fstab_ num_entries：" << device_tree_fstab_->num_entries;
++
+     // Stores device_tree_fstab_->recs[] into mount_fstab_recs_ (vector<fstab_rec*>)
+     // for easier manipulation later, e.g., range-base for loop.
+     for (int i = 0; i < device_tree_fstab_->num_entries; i++) {
++        LOG(INFO) << "pushback device_tree_fstab_->recs["<<i<<"]=["<<device_tree_fstab_->recs[i].blk_device<<","
++            << device_tree_fstab_->recs[i].mount_point<<"]";
+         mount_fstab_recs_.push_back(&device_tree_fstab_->recs[i]);
+     }
+ 
+@@ -493,6 +498,7 @@ bool FirstStageMountVBootV2::InitAvbHandle() {
+ // ----------------
+ // Mounts partitions specified by fstab in device tree.
+ bool DoFirstStageMount() {
++    LOG(INFO) << "DoFirstStageMount()...";
+     // Skips first stage mount if we're in recovery mode.
+     if (IsRecoveryMode()) {
+         LOG(INFO) << "First stage mount skipped (recovery mode)";
+diff --git a/init/log.cpp b/init/log.cpp
+index 6198fc25f..02be771f4 100644
+--- a/init/log.cpp
++++ b/init/log.cpp
+@@ -15,6 +15,7 @@
+  */
+ 
+ #include "log.h"
++#include <syscall.h>
+ 
+ #include <fcntl.h>
+ #include <linux/audit.h>
+@@ -51,8 +52,37 @@ static void InitAborter(const char* abort_message) {
+         RebootSystem(ANDROID_RB_RESTART2, "bootloader");
+     }
+ }
++#ifdef INIT_PRINT_LOG
++void StdoutLogger(android::base::LogId id, android::base::LogSeverity severity, const char* tag, const char* file, unsigned int line,const char* message) {
++  struct tm now;
++  time_t t = time(nullptr);
++  localtime_r(&t, &now);
++
++  char timestamp[32];
++  strftime(timestamp, sizeof(timestamp), "%m-%d %H:%M:%S", &now);
++
++  static const char log_characters[] = "VDIWEFF";
++  static_assert(arraysize(log_characters) - 1 == android::base::FATAL + 1,
++                "Mismatch in size of log_characters and values in LogSeverity");
++  char severity_char = log_characters[severity];
++  /*
++  fprintf(stdout, "%s %c %s %5d %5d %s:%u] %s\n", tag ? tag : "nullptr", severity_char, timestamp,
++          getpid(), (int)syscall(__NR_gettid), file, line, message);
++  */
++
++  fprintf(stdout, "[%s] %s %c %5d %s\n", timestamp, tag ? tag : "nullptr", severity_char,getpid(),message);
++}
++#endif
+ 
+ void InitKernelLogging(char* argv[]) {
++
++#ifdef INIT_PRINT_LOG
++     setenv("ANDROID_LOG_TAGS", "*:v", 1);
++     android::base::InitLogging(argv, &StdoutLogger, InitAborter);
++     LOG(INFO) << "LogSeverity:" << android::base::GetMinimumLogSeverity() ;
++     return;
++#endif
++
+     // Make stdin/stdout/stderr all point to /dev/null.
+     int fd = open("/sys/fs/selinux/null", O_RDWR);
+     if (fd == -1) {
+@@ -81,7 +111,9 @@ int selinux_klog_callback(int type, const char *fmt, ...) {
+     va_start(ap, fmt);
+     vsnprintf(buf, sizeof(buf), fmt, ap);
+     va_end(ap);
++
+     android::base::KernelLogger(android::base::MAIN, severity, "selinux", nullptr, 0, buf);
++
+     return 0;
+ }
+ 
+diff --git a/init/log.h b/init/log.h
+index 5a4eba6b5..ba5abc739 100644
+--- a/init/log.h
++++ b/init/log.h
+@@ -19,6 +19,14 @@
+ 
+ #include <sys/cdefs.h>
+ 
++#define INIT_PRINT_LOG 1
++
++#ifdef INIT_PRINT_LOG
++
++//#define CLOSE_SELINUX 1
++
++#endif
++
+ namespace android {
+ namespace init {
+ 
+diff --git a/init/selinux.cpp b/init/selinux.cpp
+index 0ba5c4ae3..98ef0db7c 100644
+--- a/init/selinux.cpp
++++ b/init/selinux.cpp
+@@ -76,6 +76,8 @@ selabel_handle* sehandle = nullptr;
+ enum EnforcingStatus { SELINUX_PERMISSIVE, SELINUX_ENFORCING };
+ 
+ EnforcingStatus StatusFromCmdline() {
++
++
+     EnforcingStatus status = SELINUX_ENFORCING;
+ 
+     import_kernel_cmdline(false,
+@@ -89,6 +91,10 @@ EnforcingStatus StatusFromCmdline() {
+ }
+ 
+ bool IsEnforcing() {
++#if CLOSE_SELINUX
++    return false;
++#endif
++
+     if (ALLOW_PERMISSIVE_SELINUX) {
+         return StatusFromCmdline() == SELINUX_ENFORCING;
+     }
+-- 
+2.23.0
+

@@ -1,0 +1,114 @@
+lixuqing1@AutoLink:~/aosp-p9.x-auto-ga/build$ grep PRODUCT_PACKAGE_OVERLAYS  -nrw ./
+./kati/shellutil_test.go:28:			in:   "PRODUCT_PACKAGE_OVERLAYS",
+./make/core/product.mk:96:    PRODUCT_PACKAGE_OVERLAYS \
+./make/core/product_config.mk:376:PRODUCT_PACKAGE_OVERLAYS := \
+./make/core/product_config.mk:377:    $(strip $(PRODUCTS.$(INTERNAL_PRODUCT).PRODUCT_PACKAGE_OVERLAYS))
+./make/core/tasks/vendor_module_check.mk:80:    $(filter vendor/%, $(PRODUCT_PACKAGE_OVERLAYS) $(DEVICE_PACKAGE_OVERLAYS)))
+
+./make/core/soong_config.mk:81:$(call add_json_list, ResourceOverlays,                  $(PRODUCT_PACKAGE_OVERLAYS) $(DEVICE_PACKAGE_OVERLAYS))
+
+
+./make/core/package_internal.mk:91:    $(wildcard $(foreach dir, $(PRODUCT_PACKAGE_OVERLAYS), \
+./make/core/product-graph.mk:112:	$(hide) echo 'PRODUCT_PACKAGE_OVERLAYS=$$(PRODUCTS.$(strip $(1)).PRODUCT_PACKAGE_OVERLAYS)' >> $$@
+./make/target/product/sdk_base.mk:77:PRODUCT_PACKAGE_OVERLAYS := development/sdk_overlay
+./make/target/product/emulator.mk:39:PRODUCT_PACKAGE_OVERLAYS := device/generic/goldfish/overlay
+
+
+
+/** 
+*  @    build/make/core/soong_config.mk:81:$(call add_json_list, ResourceOverlays,                  $(PRODUCT_PACKAGE_OVERLAYS) $(DEVICE_PACKAGE_OVERLAYS))
+*  @    build/make/core/soong_config.mk:32
+
+$(call add_json_val,ResourceOverlays,$(call json_list,$(patsubst %,%,$(PRODUCT_PACKAGE_OVERLAYS) $(DEVICE_PACKAGE_OVERLAYS)) ) )
+*/
+add_json_list = $(call add_json_val,$(1),$(call json_list,$(patsubst %,%,$(2))))
+
+
+
+# $(call _json_list,$(space),$(PRODUCT_PACKAGE_OVERLAYS) $(DEVICE_PACKAGE_OVERLAYS) )
+# Converts a space-separated list to a JSON list.
+json_list = $(call _json_list,$(space),$(1))
+
+
+# Converts a list to a JSON list.
+# $1: List separator.
+# $2: List.
+_json_list = [$(if $(2),"$(subst $(1),"$(comma)",$(2))")]
+
+
+
+add_json_val = $(eval _contents := $$(_contents)    "$$(strip $$(1))":$$(space)$$(strip $$(2))$$(comma)$$(newline))
+
+
+
+
+//  @   /work/workcodes/aosp-p9.0.0_2.1.0-auto-ga/build/soong/java/android_resources.go
+
+var androidResourceIgnoreFilenames = []string{
+	".svn",
+	".git",
+	".ds_store",
+	"*.scc",
+	".*",
+	"CVS",
+	"thumbs.db",
+	"picasa.ini",
+	"*~",
+}
+
+//  @   /work/workcodes/aosp-p9.0.0_2.1.0-auto-ga/build/soong/java/android_resources.go
+//  build/soong/android/singleton.go:23:type SingletonContext interface {
+    
+func (overlaySingleton) GenerateBuildActions(ctx android.SingletonContext) {
+	var overlayData []overlayGlobResult
+	overlayDirs := ctx.Config().ResourceOverlays()
+	for i := range overlayDirs {
+		// Iterate backwards through the list of overlay directories so that the later, lower-priority
+		// directories in the list show up earlier in the command line to aapt2.
+		overlay := overlayDirs[len(overlayDirs)-1-i]
+		var result overlayGlobResult
+		result.dir = overlay
+
+		// Mark overlays that will not have Runtime Resource Overlays enforced on them
+		// based on the product config
+		result.excludeFromRRO = ctx.Config().EnforceRROExcludedOverlay(overlay)
+
+		files, err := ctx.GlobWithDeps(filepath.Join(overlay, "**/*"), androidResourceIgnoreFilenames)
+		if err != nil {
+			ctx.Errorf("failed to glob resource dir %q: %s", overlay, err.Error())
+			continue
+		}
+		var paths android.Paths
+		for _, f := range files {
+			if !strings.HasSuffix(f, "/") {
+				paths = append(paths, android.PathForSource(ctx, f))
+			}
+		}
+		result.paths = android.PathsToDirectorySortedPaths(paths)
+		overlayData = append(overlayData, result)
+	}
+
+	ctx.Config().Once(overlayDataKey, func() interface{} {
+		return overlayData
+	})
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -21,6 +21,7 @@ static int process_config(VolumeManager* vm, bool* has_adoptable, bool* has_quot
         }
 
         if (fs_mgr_is_voldmanaged(rec)) {
+
             if (fs_mgr_is_nonremovable(rec)) {
                 LOG(WARNING) << "nonremovable no longer supported; ignoring volume";
                 continue;
@@ -39,8 +40,7 @@ static int process_config(VolumeManager* vm, bool* has_adoptable, bool* has_quot
                 flags |= android::vold::Disk::Flags::kDefaultPrimary;
             }
 
-            vm->addDiskSource(std::shared_ptr<VolumeManager::DiskSource>(
-                    new VolumeManager::DiskSource(sysPattern, nickname, flags)));
+            vm->addDiskSource(std::shared_ptr<VolumeManager::DiskSource>(new VolumeManager::DiskSource(sysPattern, nickname, flags)));
         }
     }
     return 0;
@@ -64,7 +64,6 @@ struct fstab *fs_mgr_read_fstab_default()
 
     struct fstab* fstab = nullptr;
     if (!default_fstab.empty()) {
-
         //  @   system/core/fs_mgr/fs_mgr_fstab.cpp
         fstab = fs_mgr_read_fstab(default_fstab.c_str());
     } else {
@@ -89,7 +88,7 @@ static std::string get_fstab_path()
         if (!fs_mgr_get_boot_config(prop, &hw)) continue;
 
 
-        //目前系统 只有 /fstab.freescale 文件存在
+        //目前系统 只有 /vendor/etc/fstab.freescale 文件存在
         for (const char* prefix : {"/odm/etc/fstab.", "/vendor/etc/fstab.", "/fstab."}) {
             std::string fstab_path = prefix + hw;
             if (access(fstab_path.c_str(), F_OK) == 0) {
@@ -272,6 +271,7 @@ e
             goto err;
         }
         tmp_fs_options[0] = '\0';
+        //  @   system/core/fs_mgr/fs_mgr_fstab.cpp:61
         fstab->recs[cnt].flags = parse_flags(p, mount_flags, NULL,tmp_fs_options, FS_OPTIONS_LEN);
 
         /* fs_options are optional */
@@ -285,6 +285,7 @@ e
             LERROR << "Error parsing fs_mgr_options";
             goto err;
         }
+        //  @   system/core/fs_mgr/fs_mgr_fstab.cpp:80
         fstab->recs[cnt].fs_mgr_flags = parse_flags(p, fs_mgr_flags,&flag_vals, NULL, 0);
         fstab->recs[cnt].key_loc = flag_vals.key_loc;
         fstab->recs[cnt].key_dir = flag_vals.key_dir;

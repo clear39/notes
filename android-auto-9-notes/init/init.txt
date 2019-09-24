@@ -1,0 +1,6 @@
+
+
+printk.devkmsg 在内核 vendor/nxp-opensource/kernel_imx/Documentation/admin-guide/kernel-parameters.txt
+
+BOARD_KERNEL_CMDLINE += printk.devkmsg=on
+BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive

@@ -1,0 +1,17 @@
+
+private void startOtherServices() {
+    if (mPackageManager.hasSystemFeature(PackageManager.FEATURE_USB_HOST) || mPackageManager.hasSystemFeature(PackageManager.FEATURE_USB_ACCESSORY) || isEmulator) {
+        // Manage USB host and device support
+        traceBeginAndSlog("StartUsbService");
+        //  private static final String USB_SERVICE_CLASS =　 "com.android.server.usb.UsbService$Lifecycle";
+        mSystemServiceManager.startService(USB_SERVICE_CLASS);
+        traceEnd();
+    }
+}
+
+
+//  @   /work/workcodes/aosp-p9.0.0_2.1.0-auto-ga/frameworks/base/services/usb/java/com/android/server/usb/UsbService.java
+
+public class UsbService extends IUsbManager.Stub {
+
+}
