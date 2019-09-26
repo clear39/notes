@@ -1,0 +1,129 @@
+//  @   hardware/interfaces/usb/gadget/1.0/type.hal
+enum GadgetFunction : uint64_t {
+    /**
+     * Removes all the functions and pulls down the gadget.
+     */
+    NONE = 0,
+
+    /**
+     * Android Debug Bridge function.
+     */
+    ADB = 1 << 0,
+
+    /**
+     * Android open accessory protocol function.
+     */
+    ACCESSORY = 1 << 1,
+
+    /**
+     * Media Transfer protocol function.
+     */
+    MTP = 1 << 2,
+
+    /**
+     * Peripheral mode USB Midi function.
+     */
+    MIDI = 1 << 3,
+
+    /**
+     * Picture transfer protocol function.
+     */
+    PTP = 1 << 4,
+
+    /**
+     * Tethering function.
+     */
+    RNDIS = 1 << 5,
+
+    /**
+     * AOAv2.0 - Audio Source function.
+     */
+    AUDIO_SOURCE = 1 << 6,
+};
+
+enum Status : uint32_t {
+    SUCCESS = 0,
+
+    /**
+     * Error value when the HAL operation fails for reasons not listed here.
+     */
+    ERROR = 1,
+
+    /**
+     * USB configuration applied successfully.
+     */
+    FUNCTIONS_APPLIED = 2,
+
+    /**
+     * USB confgiuration failed to apply.
+     */
+    FUNCTIONS_NOT_APPLIED = 3,
+
+    /**
+     * USB configuration not supported.
+     */
+    CONFIGURATION_NOT_SUPPORTED = 4,
+};
+
+
+
+//  @   hardware/interfaces/usb/gadget/1.0/IUsbGadget.hal
+
+interface IUsbGadget {
+    /**
+     * This function is used to set the current USB gadget configuration.
+     * Usb gadget needs to teared down if an USB configuration is already
+     * active.
+     *
+     * @param functions list of functions defined by GadgetFunction to be
+     *                  included in the gadget composition.
+     * @param callback IUsbGadgetCallback::setCurrentUsbFunctionsCb used to
+     *                 propagate back the status.
+     * @param timeout The maximum time (in milliseconds) within which the
+     *                IUsbGadgetCallback needs to be returned.
+     */
+    oneway setCurrentUsbFunctions(bitfield<GadgetFunction> functions,IUsbGadgetCallback callback,uint64_t timeout);
+
+    /**
+     * This function is used to query the USB functions included in the
+     * current USB configuration.
+     *
+     * @param callback IUsbGadgetCallback::getCurrentUsbFunctionsCb used to
+     *                 propagate the current functions list.
+     */
+    oneway getCurrentUsbFunctions(IUsbGadgetCallback callback);
+};
+
+
+
+
+
+//  @   hardware/interfaces/usb/gadget/1.0/IUsbGadget.hal
+interface IUsbGadgetCallback {
+    /**
+     * Callback function used to propagate the status of configuration
+     * switch to the caller.
+     *
+     * @param functions list of functions defined by GadgetFunction
+     *                  included in the current USB gadget composition.
+     * @param status SUCCESS when the functions are applied.
+     *               FUNCTIONS_NOT_SUPPORTED when the configuration is
+     *                                       not supported.
+     *               ERROR otherwise.
+     */
+    oneway setCurrentUsbFunctionsCb(bitfield<GadgetFunction> functions,Status status);
+
+    /**
+     * Callback function used to propagate the current USB gadget
+     * configuration.
+     * @param functions list of functions defined by GadgetFunction
+     *                  included in the current USB gadget composition.
+     * @param status FUNCTIONS_APPLIED when list of functions have been
+     *                                 applied.
+     *               FUNCTIONS_NOT_APPLIED when the functions have not
+     *                                     been applied.
+     *               ERROR otherwise.
+     */
+    oneway getCurrentUsbFunctionsCb(bitfield<GadgetFunction> functions,Status status);
+};
+

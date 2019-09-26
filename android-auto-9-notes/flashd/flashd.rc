@@ -1,0 +1,4 @@
+service flashd /system/bin/flashd
+    class main
+    user root
+    group shell

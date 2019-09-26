@@ -1,0 +1,100 @@
+
+
+
+
+
+//  @   hardware/interfaces/usb/1.1/IUsb.hal
+interface IUsb extends android.hardware.usb@1.0::IUsb {};
+
+//  @   hardware/interfaces/usb/1.0/IUsb.hal
+interface IUsb {
+    /**
+     * This function is used to change the port role of a specific port.
+     * For example, when PD_SWAP or PR_SWAP is supported.
+     * This is function is asynchronous. The status of the role switch
+     * will be informed through IUsbCallback object's notifyPortStatusChange
+     * method.
+     *
+     * @param portName name of the port for which the role has to be changed
+     * @param role the new port role.
+     */
+    oneway switchRole(string portName, PortRole role);
+
+    /**
+     * This function is used to register a callback function which is
+     * called by the HAL whenever there is a change in the port state.
+     * i.e. DATA_ROLE, POWER_ROLE or MODE.
+     *
+     * Also the same callback object would be called to inform the caller
+     * of the roleSwitch status.
+     *
+     * @param callback IUsbCallback object used to convey status to the
+     * userspace.
+     */
+    oneway setCallback(IUsbCallback callback);
+
+    /**
+     * This functions is used to request the hal for the current status
+     * status of the Type-C ports. This method is async/oneway. The result of the
+     * query would be sent through the IUsbCallback object's notifyRoleSwitchStatus
+     * to the caller. This api would would let the caller know of the number
+     * of type-c ports that are present and their connection status through the
+     * PortStatus type.
+     */
+    oneway queryPortStatus();
+};
+
+
+
+
+//  @   hardware/interfaces/usb/1.1/IUsbCallback.hal
+/**
+ * Callback object used for all the IUsb async methods which expects a result.
+ * Caller is expected to register the callback object using setCallback method
+ * to receive updates on the PortStatus.
+ */
+interface IUsbCallback extends @1.0::IUsbCallback {
+    /**
+     * Used to convey the current port status to the caller.
+     * Must be called either when PortState changes due to the port partner or
+     * when caller requested for the PortStatus update through queryPortStatus.
+     *
+     * @param currentPortStatus vector object of current status(PortStatus_1_1
+     * of all the typeC ports in the device.
+     * @param retval SUCCESS when the required information was enquired form
+     *               kernel and the PortStatus_1_1 object was built.
+     *               ERROR otherwise.
+     */
+    oneway notifyPortStatusChange_1_1(vec<PortStatus_1_1> currentPortStatus,
+        Status retval);
+};
+
+
+//  @   hardware/interfaces/usb/1.0/IUsbCallback.hal
+/**
+ * Callback object used for all the IUsb async methods which expects a result.
+ * Caller is expected to register the callback object using setCallback method
+ * to receive updates on the PortStatus.
+ */
+interface IUsbCallback {
+    /**
+     * Used to convey the current port status to the caller.
+     * Called either when PortState changes due to the port partner (or)
+     * when caller requested for the PortStatus update through queryPortStatus.
+     *
+     * @param currentPortStatus vector object of current status of all the
+     * typeC ports in the device.
+     * @param retval SUCCESS when query was done successfully.
+     * ERROR otherwise.
+     */
+    oneway notifyPortStatusChange(vec<PortStatus> currentPortStatus, Status retval);
+
+    /**
+     * Used to notify the result of the switchRole call to the caller.
+     *
+     * @param portName name of the port for which the roleswap is requested.
+     * @param newRole the new role requested by the caller.
+     * @param retval SUCCESS if the role switch succeeded. FAILURE otherwise.
+     */
+    oneway notifyRoleSwitchStatus(string portName, PortRole newRole, Status retval);
+};
