@@ -25,12 +25,12 @@ int main(int /* argc */, char* /* argv */ []) {
     android::ProcessState::self()->startThreadPool();
     configureRpcThreadpool(16, true /*callerWillJoin*/);
 
-    //  @/work/workcodes/aosp-p9.x-auto-alpha/hardware/interfaces/audio/4.0/IDevicesFactory.hal
-    //  @/work/workcodes/aosp-p9.x-auto-alpha/hardware/interfaces/audio/core/4.0/default/DevicesFactory.cpp
-    //  @/work/workcodes/aosp-p9.x-auto-alpha/hardware/interfaces/audio/2.0/IDevicesFactory.hal
-    //  @/work/workcodes/aosp-p9.x-auto-alpha/hardware/interfaces/audio/core/2.0/default/DevicesFactory.cpp
+    //  @   hardware/interfaces/audio/4.0/IDevicesFactory.hal
+    //  @   hardware/interfaces/audio/core/4.0/default/DevicesFactory.cpp
+    //  @   hardware/interfaces/audio/2.0/IDevicesFactory.hal
+    //  @   hardware/interfaces/audio/core/2.0/default/DevicesFactory.cpp
 
-    //registerPassthroughServiceImplementation  @/work/workcodes/aosp-p9.x-auto-alpha/system/libhidl/transport/include/hidl/LegacySupport.h
+    //registerPassthroughServiceImplementation  @   system/libhidl/transport/include/hidl/LegacySupport.h
     bool fail = registerPassthroughServiceImplementation<audio::V4_0::IDevicesFactory>() != OK &&
                 registerPassthroughServiceImplementation<audio::V2_0::IDevicesFactory>() != OK;
     LOG_ALWAYS_FATAL_IF(fail, "Could not register audio core API 2.0 nor 4.0");
