@@ -103,7 +103,17 @@ func main() {
 	/***
 	构建一个Context变量，并且存储buildCtx
 	type Context struct{ *ContextImpl }
+	type ContextImpl struct {
+		context.Context
+		logger.Logger
+
+		StdioInterface
+
+		Thread tracer.Thread
+		Tracer tracer.Tracer
+	}
 	*/
+
 	buildCtx := build.Context{&build.ContextImpl{
 		Context:        ctx,
 		Logger:         log,
@@ -126,15 +136,23 @@ func main() {
 	// 
 	build.SetupOutDir(buildCtx, config)
 
+	/**
+	在 build.NewConfig --> configImpl.parseArgs 中可知道 是否有参数 "dist"
+	如果有 则 config.Dist() 为true，否则为false
+	*/
 	if config.Dist() {
+		// out/dist/logs
 		logsDir := filepath.Join(config.DistDir(), "logs")
 		os.MkdirAll(logsDir, 0777)
+		//	out/dist/logs/soong.log
 		log.SetOutput(filepath.Join(logsDir, "soong.log"))
+		//	out/dist/logs/build.trace
 		trace.SetOutput(filepath.Join(logsDir, "build.trace"))
 	} else {
-		//默认执行这里
-		log.SetOutput(filepath.Join(config.OutDir(), "soong.log"))  // @	out/soong.lgo
-		trace.SetOutput(filepath.Join(config.OutDir(), "build.trace"))	//@	out/build.trace
+		// out/soong.log
+		log.SetOutput(filepath.Join(config.OutDir(), "soong.log"))
+		// out/build.trace
+		trace.SetOutput(filepath.Join(config.OutDir(), "build.trace"))
 	}
 
 	//查询环境变量 TRACE_BEGIN_SOONG 的值
@@ -153,7 +171,7 @@ func main() {
 	}
 
 	/**
-	NewSourceFinder	@	/work/workcodes/aosp-p9.x-auto-alpha/build/soong/ui/build/finder.go
+	NewSourceFinder	@	build/soong/ui/build/finder.go
 
 	*/
 	f := build.NewSourceFinder(buildCtx, config)
