@@ -180,13 +180,13 @@ AudioRecord::AudioRecord(
         callback_t cbf,
         void* user,
         uint32_t notificationFrames,
-        audio_session_t sessionId,
-        transfer_type transferType,
-        audio_input_flags_t flags,
+        audio_session_t sessionId /*=AUDIO_SESSION_ALLOCATE*/,
+        transfer_type transferType /*=AudioRecord::TRANSFER_DEFAULT*/,
+        audio_input_flags_t flags /*=AUDIO_INPUT_FLAG_NONE*/,
         uid_t uid,
         pid_t pid,
-        const audio_attributes_t* pAttributes,  // NULL
-        audio_port_handle_t selectedDeviceId)
+        const audio_attributes_t* pAttributes,  /* = NULL*/
+        audio_port_handle_t selectedDeviceId /*= AUDIO_PORT_HANDLE_NONE*/)
     : mActive(false),
       mStatus(NO_INIT),
       mOpPackageName(opPackageName),
@@ -232,11 +232,11 @@ status_t AudioRecord::set(
     mSelectedDeviceId = selectedDeviceId; //    AUDIO_PORT_HANDLE_NONE
 
     switch (transferType) {
-    case TRANSFER_DEFAULT:
+    case TRANSFER_DEFAULT:  // 执行这里
         if (cbf == NULL || threadCanCallJava) {
             transferType = TRANSFER_SYNC;
         } else {
-            transferType = TRANSFER_CALLBACK;
+            transferType = TRANSFER_CALLBACK;// 执行这里
         }
         break;
     case TRANSFER_CALLBACK:
@@ -254,7 +254,7 @@ status_t AudioRecord::set(
         status = BAD_VALUE;
         goto exit;
     }
-    mTransfer = transferType;
+    mTransfer = transferType; //    TRANSFER_CALLBACK
 
     /*
 	if(mServiceProxy != NULL && mServiceProxy->isValid()){
@@ -276,7 +276,9 @@ status_t AudioRecord::set(
     }
 
     if (pAttributes == NULL) {
-        // 执行这里
+        /**
+         *  执行这里
+         * */
         memset(&mAttributes, 0, sizeof(audio_attributes_t));
         mAttributes.source = inputSource;
     } else {
@@ -736,7 +738,15 @@ status_t AudioSystem::getInputForAttr(const audio_attributes_t *attr,
             config, flags, selectedDeviceId, portId);
 }
 
-
+/**
+ * 
+ * 
+ * @    system/media/audio/include/system/audio.h:312:typedef struct audio_config_base audio_config_base_t;
+ * audio_config_base    @    system/media/audio/include/system/audio.h
+ * 
+ * 
+ * system/media/audio/include/system/audio.h:45:typedef int audio_io_handle_t;
+*/
 status_t AudioPolicyService::getInputForAttr(const audio_attributes_t *attr,
                                              audio_io_handle_t *input,
                                              audio_session_t session,
@@ -864,73 +874,260 @@ status_t AudioPolicyService::getInputForAttr(const audio_attributes_t *attr,
     return NO_ERROR;
 }
 
+/**
+ * frameworks/av/services/audiopolicy/managerdefault/AudioPolicyManager.cpp
+*/
+status_t AudioPolicyManager::getInputForAttr(const audio_attributes_t *attr,
+                                             audio_io_handle_t *input,
+                                             audio_session_t session,
+                                             uid_t uid,
+                                             const audio_config_base_t *config,
+                                             audio_input_flags_t flags,
+                                             audio_port_handle_t *selectedDeviceId,
+                                             input_type_t *inputType,
+                                             audio_port_handle_t *portId)
+{
+    ALOGV("getInputForAttr() source %d, sampling rate %d, format %#x, channel mask %#x,"
+            "session %d, flags %#x",
+          attr->source, config->sample_rate, config->format, config->channel_mask, session, flags);
 
+    status_t status = NO_ERROR;
+    // handle legacy remote submix case where the address was not always specified
+    String8 address = String8("");
+    audio_source_t halInputSource;
+    audio_source_t inputSource = attr->source;
+    AudioMix *policyMix = NULL;
+    DeviceVector inputDevices;
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-status_t AudioSource::read(MediaBufferBase **out, const ReadOptions * /* options */) {
-    Mutex::Autolock autoLock(mLock);
-    *out = NULL;
-
-    if (mInitCheck != OK) {
-        return NO_INIT;
+    if (inputSource == AUDIO_SOURCE_DEFAULT) {
+        inputSource = AUDIO_SOURCE_MIC;
     }
 
-    while (mStarted && mBuffersReceived.empty()) {
-        mFrameAvailableCondition.wait(mLock);
-        if (mNoMoreFramesToRead) {
-            return OK;
+    // Explicit routing?
+    sp<DeviceDescriptor> deviceDesc;
+    if (*selectedDeviceId != AUDIO_PORT_HANDLE_NONE) {
+        deviceDesc = mAvailableInputDevices.getDeviceFromId(*selectedDeviceId);
+    }
+    mInputRoutes.addRoute(session, SessionRoute::STREAM_TYPE_NA, inputSource, deviceDesc, uid);
+
+    // special case for mmap capture: if an input IO handle is specified, we reuse this input if
+    // possible
+    if ((flags & AUDIO_INPUT_FLAG_MMAP_NOIRQ) == AUDIO_INPUT_FLAG_MMAP_NOIRQ &&
+            *input != AUDIO_IO_HANDLE_NONE) {
+        ssize_t index = mInputs.indexOfKey(*input);
+        if (index < 0) {
+            ALOGW("getInputForAttr() unknown MMAP input %d", *input);
+            status = BAD_VALUE;
+            goto error;
+        }
+        sp<AudioInputDescriptor> inputDesc = mInputs.valueAt(index);
+        sp<AudioSession> audioSession = inputDesc->getAudioSession(session);
+        if (audioSession == 0) {
+            ALOGW("getInputForAttr() unknown session %d on input %d", session, *input);
+            status = BAD_VALUE;
+            goto error;
+        }
+        // For MMAP mode, the first call to getInputForAttr() is made on behalf of audioflinger.
+        // The second call is for the first active client and sets the UID. Any further call
+        // corresponds to a new client and is only permitted from the same UID.
+        // If the first UID is silenced, allow a new UID connection and replace with new UID
+        if (audioSession->openCount() == 1) {
+            audioSession->setUid(uid);
+        } else if (audioSession->uid() != uid) {
+            if (!audioSession->isSilenced()) {
+                ALOGW("getInputForAttr() bad uid %d for session %d uid %d",
+                      uid, session, audioSession->uid());
+                status = INVALID_OPERATION;
+                goto error;
+            }
+            audioSession->setUid(uid);
+            audioSession->setSilenced(false);
+        }
+        audioSession->changeOpenCount(1);
+        *inputType = API_INPUT_LEGACY;
+        if (*portId == AUDIO_PORT_HANDLE_NONE) {
+            *portId = AudioPort::getNextUniqueId();
+        }
+        inputDevices = mAvailableInputDevices.getDevicesFromType(inputDesc->mDevice);
+        *selectedDeviceId = inputDevices.size() > 0 ? inputDevices.itemAt(0)->getId()
+                : AUDIO_PORT_HANDLE_NONE;
+        ALOGI("%s reusing MMAP input %d for session %d", __FUNCTION__, *input, session);
+
+        return NO_ERROR;
+    }
+
+    *input = AUDIO_IO_HANDLE_NONE;
+    *inputType = API_INPUT_INVALID;
+
+    halInputSource = inputSource;
+
+    // TODO: check for existing client for this port ID
+    if (*portId == AUDIO_PORT_HANDLE_NONE) {
+        *portId = AudioPort::getNextUniqueId();
+    }
+
+    audio_devices_t device;
+
+    ALOGV("getInputForAttr() tags %s",attr->tags);
+
+    if (inputSource == AUDIO_SOURCE_REMOTE_SUBMIX &&
+            strncmp(attr->tags, "addr=", strlen("addr=")) == 0) {
+        status = mPolicyMixes.getInputMixForAttr(*attr, &policyMix);
+        if (status != NO_ERROR) {
+            goto error;
+        }
+        *inputType = API_INPUT_MIX_EXT_POLICY_REROUTE;
+        device = AUDIO_DEVICE_IN_REMOTE_SUBMIX;
+        address = String8(attr->tags + strlen("addr="));
+    } else {
+        device = getDeviceAndMixForInputSource(inputSource, &policyMix);
+        ALOGV("getInputForAttr() device %d",device);
+        if (device == AUDIO_DEVICE_NONE) {
+            ALOGW("getInputForAttr() could not find device for source %d", inputSource);
+            status = BAD_VALUE;
+            goto error;
+        }
+        if (policyMix != NULL) {
+            address = policyMix->mDeviceAddress;
+            ALOGV("getInputForAttr() address %s mMixType %d",address.c_str(),policyMix->mMixType );
+            if (policyMix->mMixType == MIX_TYPE_RECORDERS) {
+                // there is an external policy, but this input is attached to a mix of recorders,
+                // meaning it receives audio injected into the framework, so the recorder doesn't
+                // know about it and is therefore considered "legacy"
+                *inputType = API_INPUT_LEGACY;
+            } else {
+                // recording a mix of players defined by an external policy, we're rerouting for
+                // an external policy
+                *inputType = API_INPUT_MIX_EXT_POLICY_REROUTE;
+            }
+        } else if (audio_is_remote_submix_device(device)) {
+            address = String8("0");
+            *inputType = API_INPUT_MIX_CAPTURE;
+        } else if (device == AUDIO_DEVICE_IN_TELEPHONY_RX) {
+            *inputType = API_INPUT_TELEPHONY_RX;
+        } else {
+            *inputType = API_INPUT_LEGACY;
+        }
+
+    }
+
+    *input = getInputForDevice(device, address, session, uid, inputSource,
+                               config, flags,
+                               policyMix);
+    if (*input == AUDIO_IO_HANDLE_NONE) {
+        status = INVALID_OPERATION;
+        goto error;
+    }
+
+    inputDevices = mAvailableInputDevices.getDevicesFromType(device);
+    *selectedDeviceId = inputDevices.size() > 0 ? inputDevices.itemAt(0)->getId()
+            : AUDIO_PORT_HANDLE_NONE;
+
+    ALOGV("getInputForAttr() returns input %d type %d selectedDeviceId %d",
+            *input, *inputType, *selectedDeviceId);
+
+    return NO_ERROR;
+
+error:
+    mInputRoutes.removeRoute(session);
+    return status;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////
+status_t AudioRecord::start(AudioSystem::sync_event_t event, audio_session_t triggerSession)
+{
+    ALOGV("start, sync event %d trigger session %d", event, triggerSession);
+    /*
+	if(mServiceProxy != NULL && mServiceProxy->isValid()){
+		mServiceProxy->start();
+		if(mTransfer == TRANSFER_SYNC){
+			return NO_ERROR;
+		}
+	}
+    */
+    AutoMutex lock(mLock);
+    if (mActive) {
+        return NO_ERROR;
+    }
+
+    // discard data in buffer
+    const uint32_t framesFlushed = mProxy->flush();
+    mFramesReadServerOffset -= mFramesRead + framesFlushed;
+    mFramesRead = 0;
+    mProxy->clearTimestamp();  // timestamp is invalid until next server push
+
+    // reset current position as seen by client to 0
+    mProxy->setEpoch(mProxy->getEpoch() - mProxy->getPosition());
+    // force refresh of remaining frames by processAudioBuffer() as last
+    // read before stop could be partial.
+    mRefreshRemaining = true;
+
+    mNewPosition = mProxy->getPosition() + mUpdatePeriod;
+    int32_t flags = android_atomic_acquire_load(&mCblk->mFlags);
+
+    // we reactivate markers (mMarkerPosition != 0) as the position is reset to 0.
+    // This is legacy behavior.  This is not done in stop() to avoid a race condition
+    // where the last marker event is issued twice.
+    mMarkerReached = false;
+    mActive = true;
+
+    status_t status = NO_ERROR;
+    if (!(flags & CBLK_INVALID)) {
+        status = mAudioRecord->start(event, triggerSession).transactionError();
+        if (status == DEAD_OBJECT) {
+            flags |= CBLK_INVALID;
         }
     }
-    if (!mStarted) {
-        return OK;
-    }
-    MediaBuffer *buffer = *mBuffersReceived.begin();
-    mBuffersReceived.erase(mBuffersReceived.begin());
-    ++mNumClientOwnedBuffers;
-    buffer->setObserver(this);
-    buffer->add_ref();
-
-    // Mute/suppress the recording sound
-    int64_t timeUs;
-    CHECK(buffer->meta_data().findInt64(kKeyTime, &timeUs));
-    int64_t elapsedTimeUs = timeUs - mStartTimeUs;
-    if (elapsedTimeUs < kAutoRampStartUs) {
-        memset((uint8_t *) buffer->data(), 0, buffer->range_length());
-    } else if (elapsedTimeUs < kAutoRampStartUs + kAutoRampDurationUs) {
-        int32_t autoRampDurationFrames = ((int64_t)kAutoRampDurationUs * mSampleRate + 500000LL) / 1000000LL; //Need type casting
-
-        int32_t autoRampStartFrames =  ((int64_t)kAutoRampStartUs * mSampleRate + 500000LL) / 1000000LL; //Need type casting
-
-        int32_t nFrames = mNumFramesReceived - autoRampStartFrames;
-        rampVolume(nFrames, autoRampDurationFrames, (uint8_t *) buffer->data(), buffer->range_length());
+    if (flags & CBLK_INVALID) {
+        status = restoreRecord_l("start");
     }
 
-    // Track the max recording signal amplitude.
-    if (mTrackMaxAmplitude) {
-        trackMaxAmplitude( (int16_t *) buffer->data(), buffer->range_length() >> 1);
+    if (status != NO_ERROR) {
+        mActive = false;
+        ALOGE("start() status %d", status);
+    } else {
+        sp<AudioRecordThread> t = mAudioRecordThread;
+        if (t != 0) {
+            t->resume();
+        } else {
+            mPreviousPriority = getpriority(PRIO_PROCESS, 0);
+            get_sched_policy(0, &mPreviousSchedulingGroup);
+            androidSetThreadPriority(0, ANDROID_PRIORITY_AUDIO);
+        }
+
+        // we've successfully started, log that time
+        mMediaMetrics.logStart(systemTime());
     }
 
-    if (mSampleRate != mOutSampleRate) {
-            timeUs *= (int64_t)mSampleRate / (int64_t)mOutSampleRate;
-            buffer->meta_data().setInt64(kKeyTime, timeUs);
+    if (status != NO_ERROR) {
+        mMediaMetrics.markError(status, __FUNCTION__);
     }
-
-    *out = buffer;
-    return OK;
+    return status;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+

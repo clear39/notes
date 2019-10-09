@@ -212,6 +212,9 @@ status_t AudioSource::start(MetaData *params) {
     if (params && params->findInt64(kKeyTime, &startTimeUs)) {
         mStartTimeUs = startTimeUs;
     }
+    /**
+     *  status_t    start(AudioSystem::sync_event_t event = AudioSystem::SYNC_EVENT_NONE,audio_session_t triggerSession = AUDIO_SESSION_NONE);
+    */
     status_t err = mRecord->start();
     if (err == OK) {
         mStarted = true;

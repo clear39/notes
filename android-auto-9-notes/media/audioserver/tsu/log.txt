@@ -1,522 +1,153 @@
-10-08 14:10:01.459  4151  4151 E PLAT_AUDIO_OUT: 93::++Entered
-10-08 14:10:01.459  4151  4151 E PLAT_AUDIO_OUT: 49::MTU ioctl() on usb0 failed. Defaulting to 7168
-10-08 14:10:01.459  4151  4151 E PLAT_AUDIO_OUT: 58::Calculated audio packet size 7168
-10-08 14:10:01.459  4151  4151 E OSAL_SOCKET: 607::Socket shutdown Failed. Errno: 0X6B.
-10-08 14:10:01.459  4151  4151 E PLAT_AUDIO_OUT: 64::Shutting down the server socket failed:107
-10-08 14:10:01.460  4151  4151 E PLAT_AUDIO_OUT: 80::ales_osal_socket_close succeeded
-10-08 14:10:01.460  4151  4151 E PLAT_AUDIO_OUT: 183::Creating AudioSourceMls with Rate:48000 Channels:2 Source:8
-10-08 14:10:01.460  4151  4151 V AudioSource: sampleRate: 48000, outSampleRate: 0, channelCount: 2
-10-08 14:10:01.463  4151  4151 V AudioRecord: set(): inputSource 8, sampleRate 48000, format 0x1, channelMask 0xc, frameCount 1024, notificationFrames 512, sessionId 0, transferType 0, flags 0, opPackageName MLS_AUDIO_RECORD uid -1, pid -1
-10-08 14:10:01.463  4151  4151 V AudioRecord: set(): mSessionId 0
+10-09 10:42:46.639  3462  3484 V AudioFlinger: registerClient() client 0xe771e228, pid 3495
+10-09 10:42:46.642  3462  3484 V APM_AudioPolicyManager: getInputForAttr() source 8, sampling rate 48000, format 0x1, channel mask 0xc,session 9, flags 0
+10-09 10:42:46.642  3462  3484 I AudioFlinger: openInput() this 0xe7abe000, module 34 Device 0x80000100, SamplingRate 48000, Format 0x000001, Channels 0xc, flags 0,addr 0
+10-09 10:42:46.643  3462  3484 V AudioFlinger: openInput_l() openInputStream returned input 0xe7726190, devices 0x80000100, SamplingRate 48000, Format 0x1, Channels 0xc, flags 0, status 0 addr 0
+10-09 10:42:46.644  3462  3484 V AudioFlinger: openInput_l() created record thread: ID 30 thread 0xe5a03f80
+10-09 10:42:46.644  3462  3484 V APM_AudioPolicyManager: getInputForAttr() returns input 30 type 1 selectedDeviceId 10
 
 
 
 
 
 
-
-
-
-
-
-
-
-10-08 14:50:49.205  1776  4556 V AudioFlinger: registerClient() client 0xf1494828, pid 4566
-10-08 14:50:49.207  1776  4556 V APM_AudioPolicyManager: getInputForAttr() source 8, sampling rate 48000, format 0x1, channel mask 0xc,session 65, flags 0
-10-08 14:50:49.207  1776  4556 I AudioFlinger: openInput() this 0xf14be000, module 34 Device 0x80000100, SamplingRate 48000, Format 0x000001, Channels 0xc, flags 0,addr 0
-10-08 14:50:49.208  1776  4556 V AudioFlinger: openInput_l() openInputStream returned input 0xf149ef40, devices 0x80000100, SamplingRate 48000, Format 0x1, Channels 0xc, flags 0, status 0 addr 0
-10-08 14:50:49.209  1776  4556 V AudioFlinger: openInput_l() created record thread: ID 38 thread 0xf0683600
-10-08 14:50:49.210  1776  4556 V APM_AudioPolicyManager: getInputForAttr() returns input 38 type 1 selectedDeviceId 10
-
-
-
-
-
-10-08 14:50:49.210  1776  4556 V AudioFlinger: createRecord() lSessionId: 65 input 38
-
-
-10-08 14:50:49.210  1776  4572 I AudioFlinger: AudioFlinger's thread 0xf0683600 tid=4572 ready to run
-10-08 14:50:49.210  1776  4556 V AudioFlinger: getOrphanEffectChain_l session 65 index -2
-10-08 14:50:49.210  1776  1804 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 0 ports 0xf1115060
-10-08 14:50:49.210  1776  1804 V APM_AudioPolicyManager: listAudioPorts() got 0 ports needed 7
-10-08 14:50:49.211  1776  1805 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 7 ports 0xf0b85800
-10-08 14:50:49.211  1776  1805 V APM_AudioPolicyManager: listAudioPorts() got 7 ports needed 7
-10-08 14:50:49.211  1776  1805 V AudioFlinger: acquiring 65 from 4566, for -1
-10-08 14:50:49.211  1776  1805 V AudioFlinger:  added new entry for 65
-10-08 14:50:49.211  1776  1805 V APM_AudioPolicyManager: AudioPolicyManager::startInput(input:38, session:65, silenced:0, concurrency:0)
-10-08 14:50:49.214  1776  1805 V APM_AudioPolicyManager: setInputDevice() createAudioPatch returned 0 patchHandle 44
-10-08 14:50:49.214  1776  1805 V APM_AudioPolicyManager: setDeviceConnectionStateInt() device: 0x8000, state 1, address 0 name remote-submix
-10-08 14:50:49.214  1776  1805 V APM_AudioPolicyManager: setDeviceConnectionState() connecting device 8000
-10-08 14:50:49.214  1776  1801 V AudioFlinger: setParameters(): io 0, keyvalue 0=;connect=32768, calling pid 1776 calling uid 1041
-10-08 14:50:49.214  1776  1801 V AudioFlinger: setParameters: filtered keyvalue 0=;connect=32768
-10-08 14:50:49.215  1776  1805 V APM_AudioPolicyManager: checkOutputsForDevice(): adding profile 0 from module r_submix
-10-08 14:50:49.215  1776  1805 V APM_AudioPolicyManager:   found 1 profiles, 0 outputs
-10-08 14:50:49.215  1776  1805 V APM_AudioPolicyManager: opening output for device 00008000 with params 0 profile 0xf14c3640 name r_submix output
-10-08 14:50:49.216  1776  1805 I AudioFlinger: openOutput() this 0xf14be000, module 34 Device 0x8000, SamplingRate 48000, Format 0x000001, Channels 0x3, flags 0,addr 0
-10-08 14:50:49.216  1776  1805 V AudioFlinger: openOutput_l() openOutputStream returned output 0xf1116268, devices 0x8000, SamplingRate 48000, Format 0x1, Channels 0x3, flags 0, status 0 addr 0
-10-08 14:50:49.217  1776  1805 I AudioFlinger: HAL output buffer size 1024 frames, normal sink buffer size 1024 frames
-10-08 14:50:49.217  1776  1805 V AudioFlinger: openOutput_l() created mixer output: ID 45 thread 0xeea83200
-10-08 14:50:49.218  1776  1801 V AudioFlinger: setParameters(): io 45, keyvalue mix=0, calling pid 1776 calling uid 1041
-10-08 14:50:49.218  1776  1801 V AudioFlinger: setParameters: filtered keyvalue mix=0
-10-08 14:50:49.219  1776  4574 I AudioFlinger: AudioFlinger's thread 0xeea83200 tid=4574 ready to run
-10-08 14:50:49.220  1776  4574 D AudioFlinger: ro.audio.silent will be ignored for threads on AUDIO_DEVICE_OUT_REMOTE_SUBMIX
-10-08 14:50:49.221  1776  4574 D AudioFlinger: ro.audio.silent will be ignored for threads on AUDIO_DEVICE_OUT_REMOTE_SUBMIX
-10-08 14:50:49.222  1776  1805 V APM_AudioPolicyManager: checkAndSetVolume() cannot set stream 6 volume with force use = 0 for comm
-10-08 14:50:49.224  1776  1801 V AudioFlinger: setParameters(): io 45, keyvalue mono_output=0, calling pid 1776 calling uid 1041
-10-08 14:50:49.224  1776  1801 V AudioFlinger: setParameters: filtered keyvalue mono_output=0
-10-08 14:50:49.224  1776  1805 V AudioFlinger: moveEffects() session 0, srcOutput 13, dstOutput 45
-10-08 14:50:49.224  1776  1805 V AudioFlinger: moveEffectChain_l() session 0 from thread 0xf0a03fc0 to thread 0xeea83200
-10-08 14:50:49.224  1776  1805 W AudioFlinger: moveEffectChain_l() effect chain for session 0 not on source thread 0xf0a03fc0
-10-08 14:50:49.224  1776  1805 V APM_AudioPolicyManager: selectOutputForMusicEffects selected output 45
-10-08 14:50:49.226  1776  1805 I AudioFlinger: HAL output buffer size 1024 frames, normal sink buffer size 1024 frames
-10-08 14:50:49.227  1776  4575 I AudioFlinger: AudioFlinger's thread 0xeeb83d00 tid=4575 ready to run
-10-08 14:50:49.229  1776  4575 D AudioFlinger: ro.audio.silent will be ignored for threads on AUDIO_DEVICE_OUT_REMOTE_SUBMIX
-10-08 14:50:49.231  1776  1805 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 14:50:49.231  1776  1805 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 14:50:49.232  1776  4575 D AudioFlinger: ro.audio.silent will be ignored for threads on AUDIO_DEVICE_OUT_REMOTE_SUBMIX
-10-08 14:50:49.232  1776  1805 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 14:50:49.233  1776  1805 I chatty  : uid=1041(audioserver) Binder:1776_2 identical 2 lines
-10-08 14:50:49.234  1776  1805 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 14:50:49.234  1776  1805 V APM_AudioPolicyManager: checkAndSetVolume() cannot set stream 6 volume with force use = 0 for comm
-10-08 14:50:49.234  1776  1805 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 14:50:49.234  1776  1805 I chatty  : uid=1041(audioserver) Binder:1776_2 identical 3 lines
-10-08 14:50:49.234  1776  1805 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 14:50:49.235  1776  1801 V AudioFlinger: setParameters(): io 53, keyvalue mono_output=0, calling pid 1776 calling uid 1041
-10-08 14:50:49.235  1776  1801 V AudioFlinger: setParameters: filtered keyvalue mono_output=0
-10-08 14:50:49.235  1776  1805 V APM_AudioPolicyManager: selectOutputForMusicEffects selected output 45
-10-08 14:50:49.235  1776  1805 V APM_AudioPolicyManager: checkOutputsForDevice(): setOutputDevice(dev=0x8000, addr=0)
-10-08 14:50:49.235  1776  1805 V APM_AudioPolicyManager: setOutputDevice() device 8000 delayMs 0
-10-08 14:50:49.235  1776  1805 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x8000
-10-08 14:50:49.235  1776  1805 V APM_AudioPolicyManager: setOutputDevice() changing device
-10-08 14:50:49.237  1776  1805 V APM_AudioPolicyManager: setOutputDevice() createAudioPatch returned 0 patchHandle 52num_sources 1 num_sinks 1
-10-08 14:50:49.238  1776  1805 V APM_AudioPolicyManager: checkAndSetVolume() cannot set stream 6 volume with force use = 0 for comm
-10-08 14:50:49.238  1776  1805 V APM_AudioPolicyManager: checkOutputsForDevice(): adding output 45
-10-08 14:50:49.238  1776  1805 V APM_AudioPolicyManager: setDeviceConnectionState() checkOutputsForDevice() returned 1 outputs
-10-08 14:50:49.238  1776  1805 V APM_AudioPolicyManager: checkOutputForStrategy() strategy 1, moving from output 13 to output 13
-10-08 14:50:49.238  1776  1805 V AudioFlinger: invalidateStream() stream 0
-10-08 14:50:49.238  1776  1805 V AudioFlinger: invalidateStream() stream 6
-10-08 14:50:49.238  1776  1805 V APM_AudioPolicyManager: checkOutputForStrategy() strategy 5, moving from output 13 to output 13
-10-08 14:50:49.238  1776  1805 V AudioFlinger: invalidateStream() stream 7
-10-08 14:50:49.238  1776  1805 V APM_AudioPolicyManager: checkOutputForStrategy() strategy 2, moving from output 13 to output 13
-10-08 14:50:49.238  1776  1805 V AudioFlinger: invalidateStream() stream 2
-10-08 14:50:49.238  1776  1805 V AudioFlinger: invalidateStream() stream 4
-10-08 14:50:49.238  1776  1805 V APM_AudioPolicyManager: checkOutputForStrategy() strategy 3, moving from output 13 to output 13
-10-08 14:50:49.238  1776  1805 V AudioFlinger: invalidateStream() stream 5
-10-08 14:50:49.238  1776  1805 V APM_AudioPolicyManager: checkOutputForStrategy() strategy 7, moving from output 13 to output 13
-10-08 14:50:49.238  1776  1805 V AudioFlinger: invalidateStream() stream 10
-10-08 14:50:49.238  1776  1805 V APM_AudioPolicyManager: checkOutputForStrategy() strategy 0, moving from output 13 to output 13
-10-08 14:50:49.238  1776  1805 V APM_AudioPolicyManager: selectOutputForMusicEffects selected output 45
-10-08 14:50:49.238  1776  1805 V AudioFlinger: invalidateStream() stream 1
-10-08 14:50:49.238  1776  1805 V AudioFlinger: invalidateStream() stream 3
-10-08 14:50:49.238  1776  1805 V APM_AudioPolicyManager: checkOutputForStrategy() strategy 4, moving from output 13 to output 13
-10-08 14:50:49.238  1776  1805 V AudioFlinger: invalidateStream() stream 8
-10-08 14:50:49.238  1776  1805 V APM_AudioPolicyManager: checkOutputForStrategy() strategy 8, moving from output 13 to output 13
-10-08 14:50:49.238  1776  1805 V AudioFlinger: invalidateStream() stream 11
-10-08 14:50:49.239  1776  1805 V APM_AudioPolicyManager: getNewOutputDevice() selected device 0
-10-08 14:50:49.239  1776  1805 V APM_AudioPolicyManager: setOutputDevice() device 0000 delayMs 0
-10-08 14:50:49.239  1776  1805 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x1000000
-10-08 14:50:49.239  1776  1805 V APM_AudioPolicyManager: setOutputDevice() changing device
-10-08 14:50:49.239  1776  1805 V APM_AudioPolicyManager: checkAndSetVolume() cannot set stream 6 volume with force use = 0 for comm
-10-08 14:50:49.239  1776  1805 V APM_AudioPolicyManager: getNewOutputDevice() selected device 0
-10-08 14:50:49.239  1776  1805 V APM_AudioPolicyManager: setOutputDevice() device 0000 delayMs 0
-10-08 14:50:49.239  1776  1805 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x1000000
-10-08 14:50:49.239  1776  1805 V APM_AudioPolicyManager: setOutputDevice() changing device
-10-08 14:50:49.239  1776  1805 V APM_AudioPolicyManager: checkAndSetVolume() cannot set stream 6 volume with force use = 0 for comm
-10-08 14:50:49.239  1776  1805 V APM_AudioPolicyManager: getNewOutputDevice() selected device 0
-10-08 14:50:49.239  1776  1805 V APM_AudioPolicyManager: setOutputDevice() device 0000 delayMs 0
-10-08 14:50:49.239  1776  1805 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x8000
-10-08 14:50:49.239  1776  1805 V APM_AudioPolicyManager: setOutputDevice() setting same device 0x0000 or null device
-10-08 14:50:49.239  1776  1805 V APM_AudioPolicyManager: getNewOutputDevice() selected device 0
-10-08 14:50:49.239  1776  1805 V APM_AudioPolicyManager: setOutputDevice() device 0000 delayMs 0
-10-08 14:50:49.239  1776  1805 V APM_AudioPolicyManager: setOutputDevice() device 0000 delayMs 0
-10-08 14:50:49.239  1776  1805 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x1000000
-10-08 14:50:49.239  1776  1805 V APM_AudioPolicyManager: setOutputDevice() changing device
-10-08 14:50:49.239  1776  1805 V APM_AudioPolicyManager: checkAndSetVolume() cannot set stream 6 volume with force use = 0 for comm
-10-08 14:50:49.239  1776  1805 V APM_AudioPolicyManager: setOutputDevice() device 0000 delayMs 0
-10-08 14:50:49.239  1776  1805 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x8000
-10-08 14:50:49.239  1776  1805 V APM_AudioPolicyManager: setOutputDevice() setting same device 0x0000 or null device
-10-08 14:50:49.240  1776  1805 V APM_AudioPolicyManager: AudioPolicyManager::startInput() input source = 8
-10-08 14:50:49.240  1776  4556 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 0 ports 0xf14971d0
-10-08 14:50:49.240  1776  4556 V APM_AudioPolicyManager: listAudioPorts() got 0 ports needed 9
-10-08 14:50:49.241  1776  1804 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 9 ports 0xf00a2000
-10-08 14:50:49.241  1776  1804 V APM_AudioPolicyManager: listAudioPorts() got 9 ports needed 9
-10-08 14:50:49.242  1776  4556 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 0 ports 0xf14971d0
-10-08 14:50:49.242  1776  4556 V APM_AudioPolicyManager: listAudioPorts() got 0 ports needed 9
-10-08 14:50:49.243  1776  4556 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 9 ports 0xeec66000
-10-08 14:50:49.243  1776  4556 V APM_AudioPolicyManager: listAudioPorts() got 9 ports needed 9
-10-08 14:50:49.244  1776  1804 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 0 ports 0xf1115060
-10-08 14:50:49.244  1776  1804 V APM_AudioPolicyManager: listAudioPorts() got 0 ports needed 9
-10-08 14:50:49.245  1776  1804 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 9 ports 0xf00a2000
-10-08 14:50:49.245  1776  1804 V APM_AudioPolicyManager: listAudioPorts() got 9 ports needed 9
-10-08 14:50:49.245  1776  4556 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 0 ports 0xf14971d0
-10-08 14:50:49.245  1776  4556 V APM_AudioPolicyManager: listAudioPorts() got 0 ports needed 9
-10-08 14:50:49.247  1776  4556 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 9 ports 0xeec66000
-10-08 14:50:49.247  1776  4556 V APM_AudioPolicyManager: listAudioPorts() got 9 ports needed 9
-10-08 14:50:49.249  1776  4556 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 0 ports 0xf14971d0
-10-08 14:50:49.249  1776  4556 V APM_AudioPolicyManager: listAudioPorts() got 0 ports needed 9
-10-08 14:50:49.249  1776  4556 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 9 ports 0xeec66000
-10-08 14:50:49.249  1776  4556 V APM_AudioPolicyManager: listAudioPorts() got 9 ports needed 9
-10-08 14:50:49.343  1776  4556 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 0 ports 0xf14971d0
-10-08 14:50:49.343  1776  4556 V APM_AudioPolicyManager: listAudioPorts() got 0 ports needed 9
-10-08 14:50:49.343  1776  4556 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 9 ports 0xeec66000
-10-08 14:50:49.343  1776  4556 V APM_AudioPolicyManager: listAudioPorts() got 9 ports needed 9
-
-
-
-10-08 17:14:00.162  8861  8861 I FastMixerState: sMaxFastTracks = 8
-10-08 17:14:00.164  8861  8861 V MediaUtils: physMem: 2916405248
-10-08 17:14:00.164  8861  8861 V MediaUtils: requested limit: 536870912
-10-08 17:14:00.164  8861  8861 V MediaUtils: actual limit: 536870912
-10-08 17:14:00.164  8861  8861 V MediaUtils: original limits: 4294967295/4294967295
-10-08 17:14:00.164  8861  8861 V MediaUtils: new limits: 536870912/4294967295
-10-08 17:14:00.165  8861  8861 I audioserver: ServiceManager: 0xf2e1c100
-10-08 17:14:00.178  8861  8861 I AudioFlinger: Using default 3000 mSec as standby time.
-10-08 17:14:00.180  8861  8861 E APM::Serializer: deserialize: Could not parse /odm/etc/audio_policy_configuration.xml document.
-10-08 17:14:00.195  8861  8861 V APM::HwModule: refreshSupportedDevices mInputProfiles primary input
-10-08 17:14:00.195  8861  8861 V APM::HwModule: getRouteSourceDevices name:Built-In Mic,source->getType():1,AUDIO_PORT_TYPE_DEVICE:1
-10-08 17:14:00.195  8861  8861 V APM::HwModule: refreshSupportedDevices mInputProfiles sourceDevicesForRoute.size 1 sourceDevices.size 1
-10-08 17:14:00.195  8861  8861 V APM::HwModule: refreshSupportedDevices mOutputProfiles mixport_bus0_media_out
-10-08 17:14:00.195  8861  8861 V APM::HwModule: getRouteSinkDevice name:bus0_media_out,route->getSink()->getType():1,AUDIO_PORT_TYPE_DEVICE:1
-10-08 17:14:00.195  8861  8861 V APM::HwModule: refreshSupportedDevices mOutputProfiles sinkDevice:bus0_media_out,sinkDevices.size 1
-10-08 17:14:00.195  8861  8861 V APM::HwModule: refreshSupportedDevices mOutputProfiles mixport_bus1_system_sound_out
-10-08 17:14:00.195  8861  8861 V APM::HwModule: getRouteSinkDevice name:bus1_system_sound_out,route->getSink()->getType():1,AUDIO_PORT_TYPE_DEVICE:1
-10-08 17:14:00.195  8861  8861 V APM::HwModule: refreshSupportedDevices mOutputProfiles sinkDevice:bus1_system_sound_out,sinkDevices.size 1
-10-08 17:14:00.196  8861  8861 V APM::HwModule: refreshSupportedDevices mInputProfiles a2dp input
-10-08 17:14:00.196  8861  8861 V APM::HwModule: getRouteSourceDevices name:BT A2DP In,source->getType():1,AUDIO_PORT_TYPE_DEVICE:1
-10-08 17:14:00.196  8861  8861 V APM::HwModule: refreshSupportedDevices mInputProfiles sourceDevicesForRoute.size 1 sourceDevices.size 1
-10-08 17:14:00.196  8861  8861 V APM::HwModule: refreshSupportedDevices mOutputProfiles a2dp output
-10-08 17:14:00.196  8861  8861 V APM::HwModule: getRouteSinkDevice name:BT A2DP Out,route->getSink()->getType():1,AUDIO_PORT_TYPE_DEVICE:1
-10-08 17:14:00.196  8861  8861 V APM::HwModule: refreshSupportedDevices mOutputProfiles sinkDevice:BT A2DP Out,sinkDevices.size 1
-10-08 17:14:00.196  8861  8861 V APM::HwModule: getRouteSinkDevice name:BT A2DP Headphones,route->getSink()->getType():1,AUDIO_PORT_TYPE_DEVICE:1
-10-08 17:14:00.196  8861  8861 V APM::HwModule: refreshSupportedDevices mOutputProfiles sinkDevice:BT A2DP Headphones,sinkDevices.size 2
-10-08 17:14:00.196  8861  8861 V APM::HwModule: getRouteSinkDevice name:BT A2DP Speaker,route->getSink()->getType():1,AUDIO_PORT_TYPE_DEVICE:1
-10-08 17:14:00.196  8861  8861 V APM::HwModule: refreshSupportedDevices mOutputProfiles sinkDevice:BT A2DP Speaker,sinkDevices.size 3
-10-08 17:14:00.196  8861  8861 V APM::HwModule: refreshSupportedDevices mInputProfiles usb_device input
-10-08 17:14:00.196  8861  8861 V APM::HwModule: getRouteSourceDevices name:USB Device In,source->getType():1,AUDIO_PORT_TYPE_DEVICE:1
-10-08 17:14:00.196  8861  8861 V APM::HwModule: getRouteSourceDevices name:USB Headset In,source->getType():1,AUDIO_PORT_TYPE_DEVICE:1
-10-08 17:14:00.196  8861  8861 V APM::HwModule: refreshSupportedDevices mInputProfiles sourceDevicesForRoute.size 2 sourceDevices.size 2
-10-08 17:14:00.196  8861  8861 V APM::HwModule: refreshSupportedDevices mOutputProfiles usb_accessory output
-10-08 17:14:00.196  8861  8861 V APM::HwModule: getRouteSinkDevice name:USB Host Out,route->getSink()->getType():1,AUDIO_PORT_TYPE_DEVICE:1
-10-08 17:14:00.196  8861  8861 V APM::HwModule: refreshSupportedDevices mOutputProfiles sinkDevice:USB Host Out,sinkDevices.size 1
-10-08 17:14:00.196  8861  8861 V APM::HwModule: refreshSupportedDevices mOutputProfiles usb_device output
-10-08 17:14:00.196  8861  8861 V APM::HwModule: getRouteSinkDevice name:USB Device Out,route->getSink()->getType():1,AUDIO_PORT_TYPE_DEVICE:1
-10-08 17:14:00.196  8861  8861 V APM::HwModule: refreshSupportedDevices mOutputProfiles sinkDevice:USB Device Out,sinkDevices.size 1
-10-08 17:14:00.196  8861  8861 V APM::HwModule: getRouteSinkDevice name:USB Headset Out,route->getSink()->getType():1,AUDIO_PORT_TYPE_DEVICE:1
-10-08 17:14:00.196  8861  8861 V APM::HwModule: refreshSupportedDevices mOutputProfiles sinkDevice:USB Headset Out,sinkDevices.size 2
-10-08 17:14:00.197  8861  8861 V APM::HwModule: refreshSupportedDevices mInputProfiles r_submix input
-10-08 17:14:00.197  8861  8861 V APM::HwModule: getRouteSourceDevices name:Remote Submix In,source->getType():1,AUDIO_PORT_TYPE_DEVICE:1
-10-08 17:14:00.197  8861  8861 V APM::HwModule: refreshSupportedDevices mInputProfiles sourceDevicesForRoute.size 1 sourceDevices.size 1
-10-08 17:14:00.197  8861  8861 V APM::HwModule: refreshSupportedDevices mOutputProfiles r_submix output
-10-08 17:14:00.197  8861  8861 V APM::HwModule: getRouteSinkDevice name:Remote Submix Out,route->getSink()->getType():1,AUDIO_PORT_TYPE_DEVICE:1
-10-08 17:14:00.197  8861  8861 V APM::HwModule: refreshSupportedDevices mOutputProfiles sinkDevice:Remote Submix Out,sinkDevices.size 1
-10-08 17:14:00.205  8861  8861 V AudioFlinger: registerClient() client 0xf2e148a0, pid 8861
-10-08 17:14:00.247  8861  8861 I AudioFlinger: loadHwModule() Loaded primary audio interface, handle 10
-10-08 17:14:00.247  8861  8861 I AudioFlinger: openOutput() this 0xf2e3e000, module 10 Device 0x1000000, SamplingRate 48000, Format 0x000001, Channels 0x3, flags 0x2,addr bus0_media_out
-10-08 17:14:00.248  8861  8861 V AudioFlinger: openOutput_l() openOutputStream returned output 0xf2e49f80, devices 0x1000000, SamplingRate 48000, Format 0x1, Channels 0x3, flags 0x2, status 0 addr bus0_media_out
-10-08 17:14:00.249  8861  8861 I AudioFlinger: HAL output buffer size 1024 frames, normal sink buffer size 1024 frames
-10-08 17:14:00.259  8861  8861 I BufferProvider: found effect "Multichannel Downmix To Stereo" from The Android Open Source Project
-10-08 17:14:00.260  8861  8861 V AudioFlinger: openOutput_l() created mixer output: ID 13 thread 0xf2383400
-10-08 17:14:00.260  8861  8876 I AudioFlinger: AudioFlinger's thread 0xf2383400 tid=8876 ready to run
-10-08 17:14:00.260  8861  8876 W AudioFlinger: no wake lock to update, system not ready yet
-10-08 17:14:00.261  8861  8861 I AudioFlinger: Using module 10 as the primary audio interface
-10-08 17:14:00.261  8861  8876 W AudioFlinger: no wake lock to update, system not ready yet
-10-08 17:14:00.262  8861  8861 V APM_AudioPolicyManager: checkAndSetVolume() cannot set stream 6 volume with force use = 0 for comm
-10-08 17:14:00.263  8861  8870 V AudioFlinger: setParameters(): io 13, keyvalue mono_output=0, calling pid 8861 calling uid 1041
-10-08 17:14:00.263  8861  8870 V AudioFlinger: setParameters: filtered keyvalue mono_output=0
-10-08 17:14:00.263  8861  8861 V AudioFlinger: moveEffects() session 0, srcOutput 0, dstOutput 13
-10-08 17:14:00.263  8861  8861 W AudioFlinger: moveEffects() bad srcOutput 0
-10-08 17:14:00.263  8861  8861 V APM_AudioPolicyManager: selectOutputForMusicEffects selected output 13
-10-08 17:14:00.263  8861  8861 V APM_AudioPolicyManager: setOutputDevice() device 1000000 delayMs 0
-10-08 17:14:00.263  8861  8861 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x1000000
-10-08 17:14:00.263  8861  8861 V APM_AudioPolicyManager: setOutputDevice() changing device
-10-08 17:14:00.264  8861  8861 V APM_AudioPolicyManager: setOutputDevice() createAudioPatch returned 0 patchHandle 12num_sources 1 num_sinks 1
-10-08 17:14:00.264  8861  8861 V APM_AudioPolicyManager: checkAndSetVolume() cannot set stream 6 volume with force use = 0 for comm
-10-08 17:14:00.264  8861  8861 I AudioFlinger: openOutput() this 0xf2e3e000, module 10 Device 0x1000000, SamplingRate 48000, Format 0x000001, Channels 0x3, flags 0x2,addr bus1_system_sound_out
-10-08 17:14:00.265  8861  8861 V AudioFlinger: openOutput_l() openOutputStream returned output 0xf2e49f48, devices 0x1000000, SamplingRate 48000, Format 0x1, Channels 0x3, flags 0x2, status 0 addr bus1_system_sound_out
-10-08 17:14:00.266  8861  8861 I AudioFlinger: HAL output buffer size 1024 frames, normal sink buffer size 1024 frames
-10-08 17:14:00.266  8861  8861 V AudioFlinger: openOutput_l() created mixer output: ID 21 thread 0xf2203200
-10-08 17:14:00.267  8861  8877 I AudioFlinger: AudioFlinger's thread 0xf2203200 tid=8877 ready to run
-10-08 17:14:00.267  8861  8877 W AudioFlinger: no wake lock to update, system not ready yet
-10-08 17:14:00.267  8861  8877 W AudioFlinger: no wake lock to update, system not ready yet
-10-08 17:14:00.268  8861  8861 V APM_AudioPolicyManager: checkAndSetVolume() cannot set stream 6 volume with force use = 0 for comm
-10-08 17:14:00.268  8861  8870 V AudioFlinger: setParameters(): io 21, keyvalue mono_output=0, calling pid 8861 calling uid 1041
-10-08 17:14:00.268  8861  8870 V AudioFlinger: setParameters: filtered keyvalue mono_output=0
-10-08 17:14:00.268  8861  8861 V APM_AudioPolicyManager: selectOutputForMusicEffects selected output 13
-10-08 17:14:00.268  8861  8861 V APM_AudioPolicyManager: setOutputDevice() device 1000000 delayMs 0
-10-08 17:14:00.268  8861  8861 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x1000000
-10-08 17:14:00.269  8861  8861 V APM_AudioPolicyManager: setOutputDevice() changing device
-10-08 17:14:00.270  8861  8861 V APM_AudioPolicyManager: setOutputDevice() createAudioPatch returned 0 patchHandle 20num_sources 1 num_sinks 1
-10-08 17:14:00.270  8861  8861 V APM_AudioPolicyManager: checkAndSetVolume() cannot set stream 6 volume with force use = 0 for comm
-10-08 17:14:00.270  8861  8861 V APM_AudioPolicyManager:   for input device 0x80000004 using address 
-10-08 17:14:00.270  8861  8861 I AudioFlinger: openInput() this 0xf2e3e000, module 10 Device 0x80000004, SamplingRate 48000, Format 0x000001, Channels 0xc, flags 0,addr 
-10-08 17:14:00.270  8861  8861 V AudioFlinger: openInput_l() openInputStream returned input 0xf2e1deb0, devices 0x80000004, SamplingRate 48000, Format 0x1, Channels 0xc, flags 0, status 0 addr 
-10-08 17:14:00.272  8861  8861 V AudioFlinger: openInput_l() created record thread: ID 14 thread 0xf2083000
-10-08 17:14:00.272  8861  8879 I AudioFlinger: AudioFlinger's thread 0xf2083000 tid=8879 ready to run
-10-08 17:14:00.272  8861  8861 V AudioFlinger: closeInput() 14
-10-08 17:14:00.272  8861  8879 W AudioFlinger: no wake lock to update, system not ready yet
-10-08 17:14:00.273  8861  8878 E FastThread: did not receive expected priority boost on time
-10-08 17:14:00.291  8861  8861 I bt_a2dp_hw: adev_open:  adev_open in A2dp_hw module
-10-08 17:14:00.291  8861  8861 I AudioFlinger: loadHwModule() Loaded a2dp audio interface, handle 18
-10-08 17:14:00.293  8861  8861 I AudioFlinger: loadHwModule() Loaded usb audio interface, handle 26
-10-08 17:14:00.298  8861  8861 I AudioFlinger: loadHwModule() Loaded r_submix audio interface, handle 34
-10-08 17:14:00.298  8861  8861 V APM_AudioPolicyManager:   for input device 0x80000100 using address 0
-10-08 17:14:00.298  8861  8861 I AudioFlinger: openInput() this 0xf2e3e000, module 34 Device 0x80000100, SamplingRate 48000, Format 0x000001, Channels 0xc, flags 0,addr 0
-10-08 17:14:00.298  8861  8861 V AudioFlinger: openInput_l() openInputStream returned input 0xf2e1e1d0, devices 0x80000100, SamplingRate 48000, Format 0x1, Channels 0xc, flags 0, status 0 addr 0
-10-08 17:14:00.299  8861  8861 V AudioFlinger: openInput_l() created record thread: ID 22 thread 0xf2083140
-10-08 17:14:00.299  8861  8861 V AudioFlinger: closeInput() 22
-10-08 17:14:00.299  8861  8880 I AudioFlinger: AudioFlinger's thread 0xf2083140 tid=8880 ready to run
-10-08 17:14:00.304  8861  8861 E SoundTriggerHwService: could not read implementation properties
-10-08 17:14:00.468  8861  8861 V AudioFlinger: registerClient() client 0xf2e14ae0, pid 5039
-10-08 17:14:00.469  8861  8872 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 0 ports 0xf2a95040
-10-08 17:14:00.469  8861  8872 V APM_AudioPolicyManager: listAudioPorts() got 0 ports needed 6
-10-08 17:14:00.469  8861  8872 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 0 ports 0xf2a95040
-10-08 17:14:00.469  8861  8872 V APM_AudioPolicyManager: listAudioPorts() got 0 ports needed 6
-10-08 17:14:00.469  8861  8861 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 6 ports 0xf2e0c000
-10-08 17:14:00.469  8861  8861 V APM_AudioPolicyManager: listAudioPorts() got 6 ports needed 6
-10-08 17:14:00.470  8861  8873 V APM_AudioPolicyManager: getInputForAttr() source 8, sampling rate 48000, format 0x1, channel mask 0xc,session 73, flags 0
-10-08 17:14:00.470  8861  8873 I AudioFlinger: openInput() this 0xf2e3e000, module 34 Device 0x80000100, SamplingRate 48000, Format 0x000001, Channels 0xc, flags 0,addr 0
-10-08 17:14:00.471  8861  8873 V AudioFlinger: openInput_l() openInputStream returned input 0xf2e1ec20, devices 0x80000100, SamplingRate 48000, Format 0x1, Channels 0xc, flags 0, status 0 addr 0
-10-08 17:14:00.472  8861  8873 V AudioFlinger: openInput_l() created record thread: ID 30 thread 0xf20836c0
-10-08 17:14:00.472  8861  8884 I AudioFlinger: AudioFlinger's thread 0xf20836c0 tid=8884 ready to run
-10-08 17:14:00.472  8861  8873 V APM_AudioPolicyManager: getInputForAttr() returns input 30 type 1 selectedDeviceId 10
-10-08 17:14:00.472  8861  8882 V AudioFlinger: registerClient() client 0xf2a9e060, pid 1763
-10-08 17:14:00.472  8861  8873 V AudioFlinger: createRecord() lSessionId: 73 input 30
-10-08 17:14:00.473  8861  8873 V AudioFlinger: getOrphanEffectChain_l session 73 index -2
-10-08 17:14:00.473  8861  8884 W AudioFlinger: no wake lock to update, system not ready yet
-10-08 17:14:00.473  8861  8872 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 6 ports 0xf2afd000
-10-08 17:14:00.473  8861  8872 V APM_AudioPolicyManager: listAudioPorts() got 6 ports needed 7
-10-08 17:14:00.473  8861  8885 V AudioFlinger: setParameters(): io 0, keyvalue restarting=true, calling pid 1763 calling uid 1000
-10-08 17:14:00.473  8861  8861 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 0 ports 0xf2e17138
-10-08 17:14:00.473  8861  8861 V APM_AudioPolicyManager: listAudioPorts() got 0 ports needed 7
-10-08 17:14:00.474  8861  8861 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 7 ports 0xf2e77000
-10-08 17:14:00.474  8861  8861 V APM_AudioPolicyManager: listAudioPorts() got 7 ports needed 7
-10-08 17:14:00.474  8861  8885 D PermissionCache: checking android.permission.MODIFY_AUDIO_SETTINGS for uid=1000 => granted (702 us)
-10-08 17:14:00.474  8861  8885 V AudioFlinger: setParameters: filtered keyvalue restarting=true
-10-08 17:14:00.474  8861  8861 V APM_AudioPolicyManager: AudioPolicyManager::startInput(input:30, session:73, silenced:0, concurrency:0)
-10-08 17:14:00.475  8861  8884 W AudioFlinger: no wake lock to update, system not ready yet
-10-08 17:14:00.477  8861  8861 V APM_AudioPolicyManager: setInputDevice() createAudioPatch returned 0 patchHandle 28
-10-08 17:14:00.477  8861  8882 D AudioFlinger: isLowRamDevice:false totalMemory:2916405248 mClientSharedHeapSize:8388608
-10-08 17:14:00.477  8861  8861 V APM_AudioPolicyManager: setDeviceConnectionStateInt() device: 0x8000, state 1, address 0 name remote-submix
-10-08 17:14:00.477  8861  8861 V APM_AudioPolicyManager: setDeviceConnectionState() connecting device 8000
-10-08 17:14:00.477  8861  8870 V AudioFlinger: setParameters(): io 0, keyvalue 0=;connect=32768, calling pid 8861 calling uid 1041
-10-08 17:14:00.477  8861  8870 V AudioFlinger: setParameters: filtered keyvalue 0=;connect=32768
-10-08 17:14:00.478  8861  8861 V APM_AudioPolicyManager: checkOutputsForDevice(): adding profile 0 from module r_submix
-10-08 17:14:00.478  8861  8861 V APM_AudioPolicyManager:   found 1 profiles, 0 outputs
-10-08 17:14:00.478  8861  8861 V APM_AudioPolicyManager: opening output for device 00008000 with params 0 profile 0xf2e43640 name r_submix output
-10-08 17:14:00.478  8861  8861 I AudioFlinger: openOutput() this 0xf2e3e000, module 34 Device 0x8000, SamplingRate 48000, Format 0x000001, Channels 0x3, flags 0,addr 0
-10-08 17:14:00.479  8861  8861 V AudioFlinger: openOutput_l() openOutputStream returned output 0xf2e49e68, devices 0x8000, SamplingRate 48000, Format 0x1, Channels 0x3, flags 0, status 0 addr 0
-10-08 17:14:00.479  8861  8861 I AudioFlinger: HAL output buffer size 1024 frames, normal sink buffer size 1024 frames
-10-08 17:14:00.480  8861  8861 V AudioFlinger: openOutput_l() created mixer output: ID 29 thread 0xf150a500
-10-08 17:14:00.480  8861  8888 I AudioFlinger: AudioFlinger's thread 0xf150a500 tid=8888 ready to run
-10-08 17:14:00.480  8861  8870 V AudioFlinger: setParameters(): io 29, keyvalue mix=0, calling pid 8861 calling uid 1041
-10-08 17:14:00.480  8861  8870 V AudioFlinger: setParameters: filtered keyvalue mix=0
-10-08 17:14:00.480  8861  8888 W AudioFlinger: no wake lock to update, system not ready yet
-10-08 17:14:00.480  8861  8888 D AudioFlinger: ro.audio.silent will be ignored for threads on AUDIO_DEVICE_OUT_REMOTE_SUBMIX
-10-08 17:14:00.481  8861  8888 W AudioFlinger: no wake lock to update, system not ready yet
-10-08 17:14:00.481  8861  8888 D AudioFlinger: ro.audio.silent will be ignored for threads on AUDIO_DEVICE_OUT_REMOTE_SUBMIX
-10-08 17:14:00.482  8861  8861 V APM_AudioPolicyManager: checkAndSetVolume() cannot set stream 6 volume with force use = 0 for comm
-10-08 17:14:00.482  8861  8870 V AudioFlinger: setParameters(): io 29, keyvalue mono_output=0, calling pid 8861 calling uid 1041
-10-08 17:14:00.482  8861  8870 V AudioFlinger: setParameters: filtered keyvalue mono_output=0
-10-08 17:14:00.483  8861  8861 V AudioFlinger: moveEffects() session 0, srcOutput 13, dstOutput 29
-10-08 17:14:00.483  8861  8861 V AudioFlinger: moveEffectChain_l() session 0 from thread 0xf2383400 to thread 0xf150a500
-10-08 17:14:00.483  8861  8861 W AudioFlinger: moveEffectChain_l() effect chain for session 0 not on source thread 0xf2383400
-10-08 17:14:00.483  8861  8861 V APM_AudioPolicyManager: selectOutputForMusicEffects selected output 29
-10-08 17:14:00.483  8861  8861 I AudioFlinger: HAL output buffer size 1024 frames, normal sink buffer size 1024 frames
-10-08 17:14:00.484  8861  8861 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 17:14:00.484  8861  8889 I AudioFlinger: AudioFlinger's thread 0xf1383d40 tid=8889 ready to run
-10-08 17:14:00.484  8861  8889 W AudioFlinger: no wake lock to update, system not ready yet
-10-08 17:14:00.484  8861  8889 D AudioFlinger: ro.audio.silent will be ignored for threads on AUDIO_DEVICE_OUT_REMOTE_SUBMIX
-10-08 17:14:00.484  8861  8861 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 17:14:00.485  8861  8889 W AudioFlinger: no wake lock to update, system not ready yet
-10-08 17:14:00.485  8861  8861 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 17:14:00.485  8861  8889 D AudioFlinger: ro.audio.silent will be ignored for threads on AUDIO_DEVICE_OUT_REMOTE_SUBMIX
-10-08 17:14:00.485  8861  8861 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 17:14:00.485  8861  8861 I chatty  : uid=1041(audioserver) /system/bin/audioserver identical 4 lines
-10-08 17:14:00.485  8861  8861 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 17:14:00.485  8861  8861 V APM_AudioPolicyManager: checkAndSetVolume() cannot set stream 6 volume with force use = 0 for comm
-10-08 17:14:00.485  8861  8861 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 17:14:00.485  8861  8861 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 17:14:00.485  8861  8870 V AudioFlinger: setParameters(): io 37, keyvalue mono_output=0, calling pid 8861 calling uid 1041
-10-08 17:14:00.486  8861  8870 V AudioFlinger: setParameters: filtered keyvalue mono_output=0
-10-08 17:14:00.486  8861  8861 V APM_AudioPolicyManager: selectOutputForMusicEffects selected output 29
-10-08 17:14:00.486  8861  8861 V APM_AudioPolicyManager: checkOutputsForDevice(): setOutputDevice(dev=0x8000, addr=0)
-10-08 17:14:00.486  8861  8861 V APM_AudioPolicyManager: setOutputDevice() device 8000 delayMs 0
-10-08 17:14:00.486  8861  8861 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x8000
-10-08 17:14:00.486  8861  8861 V APM_AudioPolicyManager: setOutputDevice() changing device
-10-08 17:14:00.487  8861  8861 V APM_AudioPolicyManager: setOutputDevice() createAudioPatch returned 0 patchHandle 36num_sources 1 num_sinks 1
-10-08 17:14:00.487  8861  8861 V APM_AudioPolicyManager: checkAndSetVolume() cannot set stream 6 volume with force use = 0 for comm
-10-08 17:14:00.487  8861  8861 V APM_AudioPolicyManager: checkOutputsForDevice(): adding output 29
-10-08 17:14:00.487  8861  8861 V APM_AudioPolicyManager: setDeviceConnectionState() checkOutputsForDevice() returned 1 outputs
-10-08 17:14:00.487  8861  8861 V APM_AudioPolicyManager: checkOutputForStrategy() strategy 1, moving from output 13 to output 13
-10-08 17:14:00.487  8861  8861 V AudioFlinger: invalidateStream() stream 0
-10-08 17:14:00.487  8861  8861 V AudioFlinger: invalidateStream() stream 6
-10-08 17:14:00.487  8861  8861 V APM_AudioPolicyManager: checkOutputForStrategy() strategy 5, moving from output 13 to output 29
-10-08 17:14:00.487  8861  8861 V AudioFlinger: invalidateStream() stream 7
-10-08 17:14:00.487  8861  8861 V APM_AudioPolicyManager: checkOutputForStrategy() strategy 2, moving from output 13 to output 13
-10-08 17:14:00.487  8861  8861 V AudioFlinger: invalidateStream() stream 2
-10-08 17:14:00.487  8861  8861 V AudioFlinger: invalidateStream() stream 4
-10-08 17:14:00.487  8861  8861 V APM_AudioPolicyManager: checkOutputForStrategy() strategy 3, moving from output 13 to output 29
-10-08 17:14:00.487  8861  8861 V AudioFlinger: invalidateStream() stream 5
-10-08 17:14:00.488  8861  8861 V APM_AudioPolicyManager: checkOutputForStrategy() strategy 7, moving from output 13 to output 29
-10-08 17:14:00.488  8861  8861 V AudioFlinger: invalidateStream() stream 10
-10-08 17:14:00.488  8861  8861 V APM_AudioPolicyManager: checkOutputForStrategy() strategy 0, moving from output 13 to output 29
-10-08 17:14:00.488  8861  8861 V APM_AudioPolicyManager: selectOutputForMusicEffects selected output 29
-10-08 17:14:00.488  8861  8861 V AudioFlinger: invalidateStream() stream 1
-10-08 17:14:00.488  8861  8861 V AudioFlinger: invalidateStream() stream 3
-10-08 17:14:00.488  8861  8861 V APM_AudioPolicyManager: checkOutputForStrategy() strategy 4, moving from output 13 to output 29
-10-08 17:14:00.488  8861  8861 V AudioFlinger: invalidateStream() stream 8
-10-08 17:14:00.488  8861  8861 V APM_AudioPolicyManager: checkOutputForStrategy() strategy 8, moving from output 13 to output 29
-10-08 17:14:00.488  8861  8861 V AudioFlinger: invalidateStream() stream 11
-10-08 17:14:00.488  8861  8861 V APM_AudioPolicyManager: getNewOutputDevice() selected device 0
-10-08 17:14:00.488  8861  8861 V APM_AudioPolicyManager: setOutputDevice() device 0000 delayMs 0
-10-08 17:14:00.488  8861  8861 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x1000000
-10-08 17:14:00.488  8861  8861 V APM_AudioPolicyManager: setOutputDevice() setting same device 0x0000 or null device
-10-08 17:14:00.488  8861  8861 V APM_AudioPolicyManager: getNewOutputDevice() selected device 0
-10-08 17:14:00.488  8861  8861 V APM_AudioPolicyManager: setOutputDevice() device 0000 delayMs 0
-10-08 17:14:00.488  8861  8861 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x1000000
-10-08 17:14:00.488  8861  8861 V APM_AudioPolicyManager: setOutputDevice() setting same device 0x0000 or null device
-10-08 17:14:00.488  8861  8861 V APM_AudioPolicyManager: getNewOutputDevice() selected device 0
-10-08 17:14:00.488  8861  8861 V APM_AudioPolicyManager: setOutputDevice() device 0000 delayMs 0
-10-08 17:14:00.488  8861  8861 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x8000
-10-08 17:14:00.488  8861  8861 V APM_AudioPolicyManager: setOutputDevice() setting same device 0x0000 or null device
-10-08 17:14:00.488  8861  8861 V APM_AudioPolicyManager: getNewOutputDevice() selected device 0
-10-08 17:14:00.488  8861  8861 V APM_AudioPolicyManager: setOutputDevice() device 0000 delayMs 0
-10-08 17:14:00.489  8861  8861 V APM_AudioPolicyManager: setOutputDevice() device 0000 delayMs 0
-10-08 17:14:00.489  8861  8861 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x1000000
-10-08 17:14:00.489  8861  8861 V APM_AudioPolicyManager: setOutputDevice() setting same device 0x0000 or null device
-10-08 17:14:00.489  8861  8861 V APM_AudioPolicyManager: setOutputDevice() device 0000 delayMs 0
-10-08 17:14:00.489  8861  8861 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x8000
-10-08 17:14:00.489  8861  8861 V APM_AudioPolicyManager: setOutputDevice() setting same device 0x0000 or null device
-10-08 17:14:00.489  8861  8861 V APM_AudioPolicyManager: AudioPolicyManager::startInput() input source = 8
-10-08 17:14:00.490  8861  8883 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 0 ports 0xf2e17268
-10-08 17:14:00.490  8861  8883 V APM_AudioPolicyManager: listAudioPorts() got 0 ports needed 9
-10-08 17:14:00.490  8861  8885 V APM_AudioPolicyManager: setPhoneState() state 0
-10-08 17:14:00.491  8861  8885 W APM::AudioPolicyEngine: setPhoneState() setting same state 0
-10-08 17:14:00.491  8861  8885 W APM_AudioPolicyManager: setPhoneState() invalid or same state 0
-10-08 17:14:00.491  8861  8883 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 9 ports 0xf1225000
-10-08 17:14:00.491  8861  8883 V APM_AudioPolicyManager: listAudioPorts() got 9 ports needed 9
-10-08 17:14:00.491  8861  8885 D PermissionCache: checking android.permission.MODIFY_AUDIO_ROUTING for uid=1000 => granted (247 us)
-10-08 17:14:00.491  8861  8885 V APM_AudioPolicyManager: setForceUse() usage 0, config 0, mPhoneState 0
-10-08 17:14:00.492  8861  8885 V APM_AudioPolicyManager: setForceUse() usage 2, config 0, mPhoneState 0
-10-08 17:14:00.492  8861  8885 V APM_AudioPolicyManager: setForceUse() usage 4, config 0, mPhoneState 0
-10-08 17:14:00.492  8861  8883 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 0 ports 0xf2e17268
-10-08 17:14:00.493  8861  8883 V APM_AudioPolicyManager: listAudioPorts() got 0 ports needed 9
-10-08 17:14:00.495  8861  8885 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 0 ports 0xf2a95080
-10-08 17:14:00.495  8861  8885 V APM_AudioPolicyManager: listAudioPorts() got 0 ports needed 9
-10-08 17:14:00.495  8861  8885 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 9 ports 0xf19c7000
-10-08 17:14:00.495  8861  8885 V APM_AudioPolicyManager: listAudioPorts() got 9 ports needed 9
-10-08 17:14:00.495  8861  8861 V APM_AudioPolicyManager: initStreamVolume() stream 10, min 0, max 15
-10-08 17:14:00.495  8861  8885 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 9 ports 0xf19c7000
-10-08 17:14:00.495  8861  8885 V APM_AudioPolicyManager: listAudioPorts() got 9 ports needed 9
-10-08 17:14:00.495  8861  8861 V APM_AudioPolicyManager: setStreamVolumeIndex() stream 10, device 00000004, index 5
-10-08 17:14:00.495  8861  8861 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 17:14:00.496  8861  8861 V APM_AudioPolicyManager: setStreamVolumeIndex() stream 10, device 00000008, index 5
-10-08 17:14:00.496  8861  8861 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 17:14:00.497  8861  8887 V APM_AudioPolicyManager: setStreamVolumeIndex() stream 10, device 04000000, index 4
-10-08 17:14:00.497  8861  8887 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 17:14:00.497  8861  8861 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 0 ports 0xf2e17140
-10-08 17:14:00.497  8861  8861 V APM_AudioPolicyManager: listAudioPorts() got 0 ports needed 9
-10-08 17:14:00.497  8861  8887 V APM_AudioPolicyManager: setStreamVolumeIndex() stream 10, device 40000000, index 8
-10-08 17:14:00.497  8861  8887 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 17:14:00.497  8861  8861 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 9 ports 0xf264f000
-10-08 17:14:00.497  8861  8861 V APM_AudioPolicyManager: listAudioPorts() got 9 ports needed 9
-10-08 17:14:00.497  8861  8885 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 0 ports 0xf2a95080
-10-08 17:14:00.497  8861  8885 V APM_AudioPolicyManager: listAudioPorts() got 0 ports needed 9
-10-08 17:14:00.498  8861  8887 V APM_AudioPolicyManager: initStreamVolume() stream 9, min 0, max 15
-10-08 17:14:00.498  8861  8885 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 9 ports 0xf19c7000
-10-08 17:14:00.498  8861  8885 V APM_AudioPolicyManager: listAudioPorts() got 9 ports needed 9
-10-08 17:14:00.499  8861  8861 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 0 ports 0xf2e17140
-10-08 17:14:00.499  8861  8861 V APM_AudioPolicyManager: listAudioPorts() got 0 ports needed 9
-10-08 17:14:00.499  8861  8887 V APM_AudioPolicyManager: setStreamVolumeIndex() stream 9, device 00000004, index 5
-10-08 17:14:00.499  8861  8887 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 17:14:00.499  8861  8861 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 9 ports 0xf264f000
-10-08 17:14:00.499  8861  8861 V APM_AudioPolicyManager: listAudioPorts() got 9 ports needed 9
-10-08 17:14:00.501  8861  8887 V APM_AudioPolicyManager: setStreamVolumeIndex() stream 9, device 00000008, index 5
-10-08 17:14:00.501  8861  8887 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 17:14:00.501  8861  8887 V APM_AudioPolicyManager: setStreamVolumeIndex() stream 9, device 04000000, index 4
-10-08 17:14:00.501  8861  8887 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 17:14:00.501  8861  8887 V APM_AudioPolicyManager: setStreamVolumeIndex() stream 9, device 40000000, index 8
-10-08 17:14:00.501  8861  8887 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 17:14:00.501  8861  8887 V APM_AudioPolicyManager: initStreamVolume() stream 8, min 0, max 15
-10-08 17:14:00.501  8861  8887 V APM_AudioPolicyManager: setStreamVolumeIndex() stream 8, device 40000000, index 11
-10-08 17:14:00.501  8861  8887 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 17:14:00.501  8861  8887 V APM_AudioPolicyManager: initStreamVolume() stream 7, min 0, max 7
-10-08 17:14:00.502  8861  8887 V APM_AudioPolicyManager: setStreamVolumeIndex() stream 7, device 40000000, index 5
-10-08 17:14:00.502  8861  8887 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 17:14:00.502  8861  8887 V APM_AudioPolicyManager: initStreamVolume() stream 6, min 0, max 10
-10-08 17:14:00.502  8861  8887 V APM_AudioPolicyManager: setStreamVolumeIndex() stream 6, device 40000000, index 10
-10-08 17:14:00.502  8861  8887 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 17:14:00.502  8861  8887 V APM_AudioPolicyManager: initStreamVolume() stream 5, min 0, max 7
-10-08 17:14:00.502  8861  8887 V APM_AudioPolicyManager: setStreamVolumeIndex() stream 5, device 40000000, index 5
-10-08 17:14:00.502  8861  8887 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 17:14:00.502  8861  8887 V APM_AudioPolicyManager: initStreamVolume() stream 4, min 0, max 10
-10-08 17:14:00.502  8861  8887 V APM_AudioPolicyManager: setStreamVolumeIndex() stream 4, device 40000000, index 6
-10-08 17:14:00.502  8861  8887 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 17:14:00.502  8861  8887 V APM_AudioPolicyManager: initStreamVolume() stream 3, min 0, max 29
-10-08 17:14:00.503  8861  8887 V APM_AudioPolicyManager: setStreamVolumeIndex() stream 3, device 00000004, index 10
-10-08 17:14:00.503  8861  8887 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 17:14:00.503  8861  8887 V APM_AudioPolicyManager: setStreamVolumeIndex() stream 3, device 00000008, index 10
-10-08 17:14:00.503  8861  8887 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 17:14:00.503  8861  8887 V APM_AudioPolicyManager: setStreamVolumeIndex() stream 3, device 04000000, index 7
-10-08 17:14:00.503  8861  8887 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 17:14:00.503  8861  8887 V APM_AudioPolicyManager: setStreamVolumeIndex() stream 3, device 40000000, index 15
-10-08 17:14:00.503  8861  8887 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 17:14:00.503  8861  8887 V APM_AudioPolicyManager: initStreamVolume() stream 2, min 0, max 7
-10-08 17:14:00.503  8861  8887 V APM_AudioPolicyManager: setStreamVolumeIndex() stream 2, device 40000000, index 5
-10-08 17:14:00.503  8861  8887 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 17:14:00.503  8861  8887 V APM_AudioPolicyManager: initStreamVolume() stream 1, min 0, max 29
-10-08 17:14:00.504  8861  8887 V APM_AudioPolicyManager: setStreamVolumeIndex() stream 1, device 40000000, index 21
-10-08 17:14:00.504  8861  8887 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 17:14:00.504  8861  8887 V APM_AudioPolicyManager: initStreamVolume() stream 0, min 1, max 5
-10-08 17:14:00.504  8861  8887 V APM_AudioPolicyManager: setStreamVolumeIndex() stream 0, device 40000000, index 4
-10-08 17:14:00.504  8861  8887 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
-10-08 17:14:00.504  8861  8887 V APM_AudioPolicyManager: setForceUse() usage 1, config 10, mPhoneState 0
-10-08 17:14:00.505  8861  8887 V APM_AudioPolicyManager: getNewOutputDevice() selected device 0
-10-08 17:14:00.505  8861  8887 V APM_AudioPolicyManager: setOutputDevice() device 0000 delayMs 0
-10-08 17:14:00.505  8861  8887 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x1000000
-10-08 17:14:00.505  8861  8887 V APM_AudioPolicyManager: setOutputDevice() setting same device 0x0000 or null device
-10-08 17:14:00.505  8861  8887 V APM_AudioPolicyManager: getNewOutputDevice() selected device 0
-10-08 17:14:00.505  8861  8887 V APM_AudioPolicyManager: setOutputDevice() device 0000 delayMs 0
-10-08 17:14:00.505  8861  8887 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x1000000
-10-08 17:14:00.505  8861  8887 V APM_AudioPolicyManager: setOutputDevice() setting same device 0x0000 or null device
-10-08 17:14:00.505  8861  8887 V APM_AudioPolicyManager: getNewOutputDevice() selected device 0
-10-08 17:14:00.505  8861  8887 V APM_AudioPolicyManager: setOutputDevice() device 0000 delayMs 0
-10-08 17:14:00.505  8861  8887 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x8000
-10-08 17:14:00.505  8861  8887 V APM_AudioPolicyManager: setOutputDevice() setting same device 0x0000 or null device
-10-08 17:14:00.505  8861  8887 V APM_AudioPolicyManager: getNewOutputDevice() selected device 0
-10-08 17:14:00.505  8861  8887 V APM_AudioPolicyManager: setOutputDevice() device 0000 delayMs 0
-10-08 17:14:00.505  8861  8887 V APM_AudioPolicyManager: setOutputDevice() device 0000 delayMs 0
-10-08 17:14:00.505  8861  8887 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x1000000
-10-08 17:14:00.506  8861  8887 V APM_AudioPolicyManager: setOutputDevice() setting same device 0x0000 or null device
-10-08 17:14:00.506  8861  8887 V APM_AudioPolicyManager: setOutputDevice() device 0000 delayMs 0
-10-08 17:14:00.506  8861  8887 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x8000
-10-08 17:14:00.506  8861  8887 V APM_AudioPolicyManager: setOutputDevice() setting same device 0x0000 or null device
-10-08 17:14:00.506  8861  8887 V APM_AudioPolicyManager: setForceUse() usage 3, config 8, mPhoneState 0
-10-08 17:14:00.506  8861  8887 V APM_AudioPolicyManager: getNewOutputDevice() selected device 0
-10-08 17:14:00.506  8861  8887 V APM_AudioPolicyManager: setOutputDevice() device 0000 delayMs 0
-10-08 17:14:00.506  8861  8887 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x1000000
-10-08 17:14:00.506  8861  8887 V APM_AudioPolicyManager: setOutputDevice() setting same device 0x0000 or null device
-10-08 17:14:00.506  8861  8887 V APM_AudioPolicyManager: getNewOutputDevice() selected device 0
-10-08 17:14:00.506  8861  8887 V APM_AudioPolicyManager: setOutputDevice() device 0000 delayMs 0
-10-08 17:14:00.506  8861  8887 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x1000000
-10-08 17:14:00.506  8861  8887 V APM_AudioPolicyManager: setOutputDevice() setting same device 0x0000 or null device
-10-08 17:14:00.506  8861  8887 V APM_AudioPolicyManager: getNewOutputDevice() selected device 0
-10-08 17:14:00.506  8861  8887 V APM_AudioPolicyManager: setOutputDevice() device 0000 delayMs 0
-10-08 17:14:00.506  8861  8887 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x8000
-10-08 17:14:00.506  8861  8887 V APM_AudioPolicyManager: setOutputDevice() setting same device 0x0000 or null device
-10-08 17:14:00.506  8861  8887 V APM_AudioPolicyManager: getNewOutputDevice() selected device 0
-10-08 17:14:00.506  8861  8887 V APM_AudioPolicyManager: setOutputDevice() device 0000 delayMs 0
-10-08 17:14:00.507  8861  8887 V APM_AudioPolicyManager: setOutputDevice() device 0000 delayMs 0
-10-08 17:14:00.507  8861  8887 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x1000000
-10-08 17:14:00.507  8861  8887 V APM_AudioPolicyManager: setOutputDevice() setting same device 0x0000 or null device
-10-08 17:14:00.507  8861  8887 V APM_AudioPolicyManager: setOutputDevice() device 0000 delayMs 0
-10-08 17:14:00.507  8861  8887 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x8000
-10-08 17:14:00.507  8861  8887 V APM_AudioPolicyManager: setOutputDevice() setting same device 0x0000 or null device
-10-08 17:14:00.507  8861  8887 V APM_AudioPolicyManager: registerPolicyMixes() 2 mix(es)
-10-08 17:14:00.507  8861  8887 V APM_AudioPolicyManager:  registerPolicyMixes() mix 0 of 2 is RENDER, dev=0x1000000 addr=bus0_media_out
-10-08 17:14:00.507  8861  8887 V APM_AudioPolicyManager:  registerPolicyMixes() mix 1 of 2 is RENDER, dev=0x1000000 addr=bus1_system_sound_out
-10-08 17:14:00.507  8861  8887 I AudioFlinger: systemReady
-10-08 17:14:00.508  8861  8885 V AudioFlinger: setParameters(): io 0, keyvalue restarting=false, calling pid 1763 calling uid 1000
-10-08 17:14:00.508  8861  8885 V AudioFlinger: setParameters: filtered keyvalue restarting=false
-10-08 17:14:00.508  8861  8885 V APM_AudioPolicyManager: setForceUse() usage 7, config 0, mPhoneState 0
-10-08 17:14:00.509  8861  8885 V APM_AudioPolicyManager: setForceUse() usage 6, config 0, mPhoneState 0
+10-09 10:42:46.645  3462  3484 V AudioFlinger: createRecord() lSessionId: 9 input 30
+10-09 10:42:46.645  3462  3484 V AudioFlinger: getOrphanEffectChain_l session 9 index -2
+10-09 10:42:46.645  3462  3474 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 0 ports 0xe7a97188
+10-09 10:42:46.645  3462  3474 V APM_AudioPolicyManager: listAudioPorts() got 0 ports needed 7
+10-09 10:42:46.645  3462  3474 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 0 ports 0xe7a97188
+10-09 10:42:46.645  3462  3474 V APM_AudioPolicyManager: listAudioPorts() got 0 ports needed 7
+10-09 10:42:46.645  3462  3501 I AudioFlinger: AudioFlinger's thread 0xe5a03f80 tid=3501 ready to run
+10-09 10:42:46.646  3462  3484 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 7 ports 0xe62ef000
+10-09 10:42:46.646  3462  3484 V APM_AudioPolicyManager: listAudioPorts() got 7 ports needed 7
+10-09 10:42:46.646  3462  3474 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 7 ports 0xe7285800
+10-09 10:42:46.646  3462  3474 V APM_AudioPolicyManager: listAudioPorts() got 7 ports needed 7
+10-09 10:42:46.649  3462  3474 V AudioFlinger: acquiring 9 from 3495, for -1
+10-09 10:42:46.649  3462  3474 V AudioFlinger:  added new entry for 9
+10-09 10:42:46.650  3462  3474 V APM_AudioPolicyManager: AudioPolicyManager::startInput(input:30, session:9, silenced:0, concurrency:0)
+10-09 10:42:46.652  3462  3474 V APM_AudioPolicyManager: setInputDevice() createAudioPatch returned 0 patchHandle 44
+10-09 10:42:46.653  3462  3474 V APM_AudioPolicyManager: setDeviceConnectionStateInt() device: 0x8000, state 1, address 0 name remote-submix
+10-09 10:42:46.653  3462  3474 V APM_AudioPolicyManager: setDeviceConnectionState() connecting device 8000
+10-09 10:42:46.653  3462  3471 V AudioFlinger: setParameters(): io 0, keyvalue 0=;connect=32768, calling pid 3462 calling uid 1041
+10-09 10:42:46.653  3462  3471 V AudioFlinger: setParameters: filtered keyvalue 0=;connect=32768
+10-09 10:42:46.654  3462  3474 V APM_AudioPolicyManager: checkOutputsForDevice(): adding profile 0 from module r_submix
+10-09 10:42:46.654  3462  3474 V APM_AudioPolicyManager:   found 1 profiles, 0 outputs
+10-09 10:42:46.654  3462  3474 V APM_AudioPolicyManager: opening output for device 00008000 with params 0 profile 0xe7ac3640 name r_submix output
+10-09 10:42:46.654  3462  3474 I AudioFlinger: openOutput() this 0xe7abe000, module 34 Device 0x8000, SamplingRate 48000, Format 0x000001, Channels 0x3, flags 0,addr 0
+10-09 10:42:46.655  3462  3474 V AudioFlinger: openOutput_l() openOutputStream returned output 0xe7aca300, devices 0x8000, SamplingRate 48000, Format 0x1, Channels 0x3, flags 0, status 0 addr 0
+10-09 10:42:46.656  3462  3474 I AudioFlinger: HAL output buffer size 1024 frames, normal sink buffer size 1024 frames
+10-09 10:42:46.656  3462  3474 V AudioFlinger: openOutput_l() created mixer output: ID 29 thread 0xe5883b40
+10-09 10:42:46.657  3462  3502 I AudioFlinger: AudioFlinger's thread 0xe5883b40 tid=3502 ready to run
+10-09 10:42:46.658  3462  3471 V AudioFlinger: setParameters(): io 29, keyvalue mix=0, calling pid 3462 calling uid 1041
+10-09 10:42:46.658  3462  3471 V AudioFlinger: setParameters: filtered keyvalue mix=0
+10-09 10:42:46.659  3462  3502 D AudioFlinger: ro.audio.silent will be ignored for threads on AUDIO_DEVICE_OUT_REMOTE_SUBMIX
+10-09 10:42:46.663  3462  3502 D AudioFlinger: ro.audio.silent will be ignored for threads on AUDIO_DEVICE_OUT_REMOTE_SUBMIX
+10-09 10:42:46.664  3462  3474 V APM_AudioPolicyManager: checkAndSetVolume() cannot set stream 6 volume with force use = 0 for comm
+10-09 10:42:46.665  3462  3471 V AudioFlinger: setParameters(): io 29, keyvalue mono_output=0, calling pid 3462 calling uid 1041
+10-09 10:42:46.665  3462  3471 V AudioFlinger: setParameters: filtered keyvalue mono_output=0
+10-09 10:42:46.665  3462  3474 V AudioFlinger: moveEffects() session 0, srcOutput 13, dstOutput 29
+10-09 10:42:46.665  3462  3474 V AudioFlinger: moveEffectChain_l() session 0 from thread 0xe7003f80 to thread 0xe5883b40
+10-09 10:42:46.665  3462  3474 W AudioFlinger: moveEffectChain_l() effect chain for session 0 not on source thread 0xe7003f80
+10-09 10:42:46.665  3462  3474 V APM_AudioPolicyManager: selectOutputForMusicEffects selected output 29
+10-09 10:42:46.666  3462  3474 I AudioFlinger: HAL output buffer size 1024 frames, normal sink buffer size 1024 frames
+10-09 10:42:46.667  3462  3474 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
+10-09 10:42:46.667  3462  3503 I AudioFlinger: AudioFlinger's thread 0xe57036c0 tid=3503 ready to run
+10-09 10:42:46.667  3462  3474 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
+10-09 10:42:46.668  3462  3503 D AudioFlinger: ro.audio.silent will be ignored for threads on AUDIO_DEVICE_OUT_REMOTE_SUBMIX
+10-09 10:42:46.668  3462  3474 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
+10-09 10:42:46.668  3462  3474 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
+10-09 10:42:46.668  3462  3503 D AudioFlinger: ro.audio.silent will be ignored for threads on AUDIO_DEVICE_OUT_REMOTE_SUBMIX
+10-09 10:42:46.668  3462  3474 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
+10-09 10:42:46.668  3462  3474 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
+10-09 10:42:46.668  3462  3474 V APM_AudioPolicyManager: checkAndSetVolume() cannot set stream 6 volume with force use = 0 for comm
+10-09 10:42:46.668  3462  3474 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
+10-09 10:42:46.669  3462  3474 I chatty  : uid=1041(audioserver) Binder:3462_2 identical 3 lines
+10-09 10:42:46.669  3462  3474 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
+10-09 10:42:46.669  3462  3471 V AudioFlinger: setParameters(): io 37, keyvalue mono_output=0, calling pid 3462 calling uid 1041
+10-09 10:42:46.669  3462  3471 V AudioFlinger: setParameters: filtered keyvalue mono_output=0
+10-09 10:42:46.669  3462  3474 V APM_AudioPolicyManager: selectOutputForMusicEffects selected output 29
+10-09 10:42:46.669  3462  3474 V APM_AudioPolicyManager: checkOutputsForDevice(): setOutputDevice(dev=0x8000, addr=0)
+10-09 10:42:46.669  3462  3474 V APM_AudioPolicyManager: setOutputDevice() device 8000 delayMs 0
+10-09 10:42:46.669  3462  3474 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x8000
+10-09 10:42:46.669  3462  3474 V APM_AudioPolicyManager: setOutputDevice() changing device
+10-09 10:42:46.672  3462  3474 V APM_AudioPolicyManager: setOutputDevice() createAudioPatch returned 0 patchHandle 52num_sources 1 num_sinks 1
+10-09 10:42:46.673  3462  3474 V APM_AudioPolicyManager: checkAndSetVolume() cannot set stream 6 volume with force use = 0 for comm
+10-09 10:42:46.673  3462  3474 V APM_AudioPolicyManager: checkOutputsForDevice(): adding output 29
+10-09 10:42:46.673  3462  3474 V APM_AudioPolicyManager: setDeviceConnectionState() checkOutputsForDevice() returned 1 outputs
+10-09 10:42:46.673  3462  3474 V APM_AudioPolicyManager: checkOutputForStrategy() strategy 1, moving from output 13 to output 13
+10-09 10:42:46.673  3462  3474 V AudioFlinger: invalidateStream() stream 0
+10-09 10:42:46.673  3462  3474 V AudioFlinger: invalidateStream() stream 6
+10-09 10:42:46.673  3462  3474 V APM_AudioPolicyManager: checkOutputForStrategy() strategy 5, moving from output 13 to output 13
+10-09 10:42:46.673  3462  3474 V AudioFlinger: invalidateStream() stream 7
+10-09 10:42:46.673  3462  3474 V APM_AudioPolicyManager: checkOutputForStrategy() strategy 2, moving from output 13 to output 13
+10-09 10:42:46.673  3462  3474 V AudioFlinger: invalidateStream() stream 2
+10-09 10:42:46.673  3462  3474 V AudioFlinger: invalidateStream() stream 4
+10-09 10:42:46.673  3462  3474 V APM_AudioPolicyManager: checkOutputForStrategy() strategy 3, moving from output 13 to output 13
+10-09 10:42:46.673  3462  3474 V AudioFlinger: invalidateStream() stream 5
+10-09 10:42:46.673  3462  3474 V APM_AudioPolicyManager: checkOutputForStrategy() strategy 7, moving from output 13 to output 13
+10-09 10:42:46.673  3462  3474 V AudioFlinger: invalidateStream() stream 10
+10-09 10:42:46.673  3462  3474 V APM_AudioPolicyManager: checkOutputForStrategy() strategy 0, moving from output 13 to output 13
+10-09 10:42:46.674  3462  3474 V APM_AudioPolicyManager: selectOutputForMusicEffects selected output 29
+10-09 10:42:46.674  3462  3474 V AudioFlinger: invalidateStream() stream 1
+10-09 10:42:46.674  3462  3474 V AudioFlinger: invalidateStream() stream 3
+10-09 10:42:46.674  3462  3474 V APM_AudioPolicyManager: checkOutputForStrategy() strategy 4, moving from output 13 to output 13
+10-09 10:42:46.674  3462  3474 V AudioFlinger: invalidateStream() stream 8
+10-09 10:42:46.674  3462  3474 V APM_AudioPolicyManager: checkOutputForStrategy() strategy 8, moving from output 13 to output 13
+10-09 10:42:46.674  3462  3474 V AudioFlinger: invalidateStream() stream 11
+10-09 10:42:46.674  3462  3474 V APM_AudioPolicyManager: getNewOutputDevice() selected device 8000
+10-09 10:42:46.674  3462  3474 V APM_AudioPolicyManager: setOutputDevice() device 8000 delayMs 0
+10-09 10:42:46.674  3462  3474 V APM_AudioPolicyManager: getNewOutputDevice() selected device 0
+10-09 10:42:46.674  3462  3474 V APM_AudioPolicyManager: setOutputDevice() device 0000 delayMs 0
+10-09 10:42:46.674  3462  3474 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x1000000
+10-09 10:42:46.674  3462  3474 V APM_AudioPolicyManager: setOutputDevice() setting same device 0x0000 or null device
+10-09 10:42:46.674  3462  3474 V APM_AudioPolicyManager: getNewOutputDevice() selected device 0
+10-09 10:42:46.674  3462  3474 V APM_AudioPolicyManager: setOutputDevice() device 0000 delayMs 0
+10-09 10:42:46.674  3462  3474 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x8000
+10-09 10:42:46.674  3462  3474 V APM_AudioPolicyManager: setOutputDevice() setting same device 0x0000 or null device
+10-09 10:42:46.674  3462  3474 V APM_AudioPolicyManager: getNewOutputDevice() selected device 0
+10-09 10:42:46.674  3462  3474 V APM_AudioPolicyManager: setOutputDevice() device 0000 delayMs 0
+10-09 10:42:46.674  3462  3474 V APM_AudioPolicyManager: setOutputDevice() device 0000 delayMs 0
+10-09 10:42:46.674  3462  3474 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x1000000
+10-09 10:42:46.675  3462  3474 V APM_AudioPolicyManager: setOutputDevice() setting same device 0x0000 or null device
+10-09 10:42:46.675  3462  3474 V APM_AudioPolicyManager: setOutputDevice() device 0000 delayMs 0
+10-09 10:42:46.675  3462  3474 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x8000
+10-09 10:42:46.675  3462  3474 V APM_AudioPolicyManager: setOutputDevice() setting same device 0x0000 or null device
+10-09 10:42:46.675  3462  3474 V APM_AudioPolicyManager: AudioPolicyManager::startInput() input source = 8
+10-09 10:42:46.675  3462  3484 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 0 ports 0xe7715060
+10-09 10:42:46.675  3462  3484 V APM_AudioPolicyManager: listAudioPorts() got 0 ports needed 9
+10-09 10:42:46.675  3462  3486 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 0 ports 0xe77150c0
+10-09 10:42:46.675  3462  3486 V APM_AudioPolicyManager: listAudioPorts() got 0 ports needed 9
+10-09 10:42:46.676  3462  3474 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 9 ports 0xe6cf4000
+10-09 10:42:46.676  3462  3474 V APM_AudioPolicyManager: listAudioPorts() got 9 ports needed 9
+10-09 10:42:46.677  3462  3486 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 9 ports 0xe6293000
+10-09 10:42:46.677  3462  3486 V APM_AudioPolicyManager: listAudioPorts() got 9 ports needed 9
+10-09 10:42:46.679  3462  3485 V APM_AudioPolicyManager: getOutputForAttr() returns output 13
+10-09 10:42:46.679  3462  3485 V AudioFlinger: createTrack() sessionId: 73
+10-09 10:42:46.680  3462  3485 D AudioFlinger: Client defaulted notificationFrames to 1258 for frameCount 3776
+10-09 10:42:46.680  3462  3474 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 0 ports 0xe7a97190
+10-09 10:42:46.680  3462  3474 V APM_AudioPolicyManager: listAudioPorts() got 0 ports needed 9
+10-09 10:42:46.680  3462  3474 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 0 ports 0xe7a97190
+10-09 10:42:46.680  3462  3474 V APM_AudioPolicyManager: listAudioPorts() got 0 ports needed 9
+10-09 10:42:46.681  3462  3486 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 9 ports 0xe6293000
+10-09 10:42:46.681  3462  3486 V APM_AudioPolicyManager: listAudioPorts() got 9 ports needed 9
+10-09 10:42:46.684  3462  3484 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 0 ports 0xe7715060
+10-09 10:42:46.684  3462  3484 V APM_AudioPolicyManager: listAudioPorts() got 0 ports needed 9
+10-09 10:42:46.684  3462  3484 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 9 ports 0xe6334000
+10-09 10:42:46.684  3462  3484 V APM_AudioPolicyManager: listAudioPorts() got 9 ports needed 9
+10-09 10:42:46.685  3462  3462 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 9 ports 0xe72d2000
+10-09 10:42:46.685  3462  3462 V APM_AudioPolicyManager: listAudioPorts() got 9 ports needed 9
+10-09 10:42:46.686  3462  3474 V APM_AudioPolicyManager: startOutput() output 13, stream 3, session 73
+10-09 10:42:46.686  3462  3474 V APM_AudioPolicyManager: setBeaconMute(1) mBeaconMuteRefCount=2 mBeaconPlayingRefCount=0
+10-09 10:42:46.686  3462  3474 V APM_AudioPolicyManager: selectOutputForMusicEffects selected output 29
+10-09 10:42:46.686  3462  3474 V APM_AudioPolicyManager: setOutputDevice() device 1000000 delayMs 0
+10-09 10:42:46.686  3462  3474 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x1000000
+10-09 10:42:46.686  3462  3474 V APM_AudioPolicyManager: setOutputDevice() setting same device 0x1000000 or null device
+10-09 10:42:46.688  3462  3462 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 0 ports 0xe7a97138
+10-09 10:42:46.688  3462  3462 V APM_AudioPolicyManager: listAudioPorts() got 0 ports needed 9
+10-09 10:42:46.688  3462  3462 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 9 ports 0xe72d2000
+10-09 10:42:46.688  3462  3462 V APM_AudioPolicyManager: listAudioPorts() got 9 ports needed 9
+10-09 10:42:46.698  3462  3477 E AudioFlinger: no wake lock to update, but system ready!
+10-09 10:42:46.742  3462  3477 E AudioFlinger: no wake lock to update, but system ready!
+10-09 10:42:46.762  3462  3472 V APM_AudioPolicyManager: stopOutput() output 13, stream 3, session 73
+10-09 10:42:46.762  3462  3472 V APM_AudioPolicyManager: setBeaconMute(1) mBeaconMuteRefCount=1 mBeaconPlayingRefCount=0
+10-09 10:42:46.762  3462  3472 V APM_AudioPolicyManager: selectOutputForMusicEffects selected output 29
+10-09 10:42:46.762  3462  3472 V APM_AudioPolicyManager: releaseOutput() 13

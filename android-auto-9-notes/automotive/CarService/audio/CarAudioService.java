@@ -64,6 +64,11 @@ public class CarAudioService extends ICarAudio.Stub implements CarServiceBase {
         builder.setLooper(Looper.getMainLooper());
 
         // 1st, enumerate all output bus device ports
+        /***
+         * 
+         * 
+         * 
+         */
         AudioDeviceInfo[] deviceInfos = mAudioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS);
         if (deviceInfos.length == 0) {
             Log.e(CarLog.TAG_AUDIO, "getDynamicAudioPolicy, no output device available, ignore");

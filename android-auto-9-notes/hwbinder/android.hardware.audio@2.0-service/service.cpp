@@ -56,3 +56,12 @@ int main(int /* argc */, char* /* argv */ []) {
 
     joinRpcThreadpool();
 }
+
+
+/**
+ * 
+ * /vendor/lib/hw/audio.r_submix.default.so
+ * /vendor/lib/hw/audio.usb.default.so
+ * /vendor/lib/hw/audio.primary.imx8.so
+ * 
+*/
