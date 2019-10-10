@@ -68,8 +68,8 @@ status_t AudioFlinger::RecordThread::RecordTrack::start(AudioSystem::sync_event_
     }
 }
 
-bool        RecordTrack::isOutputTrack() const { return (mType == TYPE_OUTPUT); }
+bool        AudioFlinger::RecordThread::RecordTrack::::isOutputTrack() const { return (mType == TYPE_OUTPUT); }
 
-bool        RecordTrack::isPatchTrack() const { return (mType == TYPE_PATCH); }
+bool        AudioFlinger::RecordThread::RecordTrack::::isPatchTrack() const { return (mType == TYPE_PATCH); }
 
-bool        RecordTrack::isExternalTrack() const { return !isOutputTrack() && !isPatchTrack(); }
+bool        AudioFlinger::RecordThread::RecordTrack::::isExternalTrack() const { return !isOutputTrack() && !isPatchTrack(); }

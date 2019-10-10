@@ -82,7 +82,7 @@ struct submix_audio_device {
 static int adev_open(const hw_module_t* module, const char* name,hw_device_t** device)
 {
     ALOGI("adev_open(name=%s)", name);
-    
+
     struct submix_audio_device *rsxadev;
     /**
      * hardware/libhardware/include/hardware/audio.h:43:#define AUDIO_HARDWARE_INTERFACE "audio_hw_if"
@@ -168,7 +168,7 @@ static int adev_open_input_stream(struct audio_hw_device *dev,
     pthread_mutex_lock(&rsxadev->lock);
 
     /**
-     * 
+     * 这里第一次查找 idx 得到最后一个空闲索引 9
     */
     status_t res = submix_get_route_idx_for_address_l(rsxadev, address, &route_idx);
     if (res != OK) {
@@ -186,7 +186,7 @@ static int adev_open_input_stream(struct audio_hw_device *dev,
     }
 
 #if ENABLE_LEGACY_INPUT_OPEN  // 1
-    in = rsxadev->routes[route_idx].input;
+    in = rsxadev->routes[route_idx].input; //rsxadev->routes[9].input
     if (in) {
         in->ref_count++;
         sp<MonoPipe> sink = rsxadev->routes[route_idx].rsxSink;
@@ -247,6 +247,10 @@ static int adev_open_input_stream(struct audio_hw_device *dev,
     in->read_error_count = 0;
     // Initialize the pipe.
     ALOGV("adev_open_input_stream(): about to create pipe");
+    /**
+     * #define DEFAULT_PIPE_SIZE_IN_FRAMES  (1024*4)
+     * #define DEFAULT_PIPE_PERIOD_COUNT    4
+    */
     submix_audio_device_create_pipe_l(rsxadev, config, DEFAULT_PIPE_SIZE_IN_FRAMES,DEFAULT_PIPE_PERIOD_COUNT, in, NULL, address, route_idx);
 #if LOG_STREAMS_TO_FILES
     if (in->log_fd >= 0) close(in->log_fd);
@@ -262,6 +266,10 @@ static int adev_open_input_stream(struct audio_hw_device *dev,
 }
 
 
+
+/**
+ * 这里第一次查找 idx 得到最后一个空闲索引 9
+*/
 // Must be called with lock held on the submix_audio_device
 static status_t submix_get_route_idx_for_address_l(const struct submix_audio_device * const rsxadev,
                                                  const char* address, /*in*/
@@ -270,10 +278,16 @@ static status_t submix_get_route_idx_for_address_l(const struct submix_audio_dev
     // Do we already have a route for this address
     int route_idx = -1;
     int route_empty_idx = -1; // index of an empty route slot that can be used if needed
+    /**
+     * 由于 address 为 “0”，
+    */
     for (int i=0 ; i < MAX_ROUTES ; i++) {
         if (strcmp(rsxadev->routes[i].address, "") == 0) {
-            route_empty_idx = i;
+            route_empty_idx = i; //这里一直执行，知道最后索引 9
         }
+        /**
+         * 由于 routes[i].address 为空，一直不满足
+        */
         if (strncmp(rsxadev->routes[i].address, address, AUDIO_DEVICE_MAX_ADDRESS_LEN) == 0) {
             route_idx = i;
             break;
@@ -291,6 +305,129 @@ static status_t submix_get_route_idx_for_address_l(const struct submix_audio_dev
     return OK;
 }
 
+
+// If one doesn't exist, create a pipe for the submix audio device rsxadev of size
+// buffer_size_frames and optionally associate "in" or "out" with the submix audio device.
+// Must be called with lock held on the submix_audio_device
+static void submix_audio_device_create_pipe_l(struct submix_audio_device * const rsxadev,
+                                            const struct audio_config * const config,
+                                            const size_t buffer_size_frames,    //  1024*4
+                                            const uint32_t buffer_period_count, // 4
+                                            struct submix_stream_in * const in,
+                                            struct submix_stream_out * const out,  // null
+                                            const char *address,
+                                            int route_idx)
+{
+    ALOG_ASSERT(in || out);
+    ALOG_ASSERT(route_idx > -1);
+    ALOG_ASSERT(route_idx < MAX_ROUTES);
+    ALOGD("submix_audio_device_create_pipe_l(addr=%s, idx=%d)", address, route_idx);  // 9
+
+    // Save a reference to the specified input or output stream and the associated channel
+    // mask.
+    if (in) {
+        in->route_handle = route_idx;
+        rsxadev->routes[route_idx].input = in;
+        rsxadev->routes[route_idx].config.input_channel_mask = config->channel_mask;
+#if ENABLE_RESAMPLING
+        rsxadev->routes[route_idx].config.input_sample_rate = config->sample_rate;
+        // If the output isn't configured yet, set the output sample rate to the maximum supported
+        // sample rate such that the smallest possible input buffer is created, and put a default
+        // value for channel count
+        if (!rsxadev->routes[route_idx].output) {
+            rsxadev->routes[route_idx].config.output_sample_rate = 48000;
+            rsxadev->routes[route_idx].config.output_channel_mask = AUDIO_CHANNEL_OUT_STEREO;
+        }
+#endif // ENABLE_RESAMPLING
+    }
+    if (out) {
+        out->route_handle = route_idx;
+        rsxadev->routes[route_idx].output = out;
+        rsxadev->routes[route_idx].config.output_channel_mask = config->channel_mask;
+#if ENABLE_RESAMPLING
+        rsxadev->routes[route_idx].config.output_sample_rate = config->sample_rate;
+#endif // ENABLE_RESAMPLING
+    }
+    // Save the address
+    strncpy(rsxadev->routes[route_idx].address, address, AUDIO_DEVICE_MAX_ADDRESS_LEN);// "0"
+    ALOGD("  now using address %s for route %d", rsxadev->routes[route_idx].address, route_idx);
+    // If a pipe isn't associated with the device, create one.
+    if (rsxadev->routes[route_idx].rsxSink == NULL || rsxadev->routes[route_idx].rsxSource == NULL)
+    {
+        struct submix_config * const device_config = &rsxadev->routes[route_idx].config;
+        uint32_t channel_count;
+        if (out)
+            channel_count = audio_channel_count_from_out_mask(config->channel_mask);
+        else
+            channel_count = audio_channel_count_from_in_mask(config->channel_mask);//2
+#if ENABLE_CHANNEL_CONVERSION
+        // If channel conversion is enabled, allocate enough space for the maximum number of
+        // possible channels stored in the pipe for the situation when the number of channels in
+        // the output stream don't match the number in the input stream.
+        const uint32_t pipe_channel_count = max(channel_count, 2);
+#else
+        const uint32_t pipe_channel_count = channel_count;
+#endif // ENABLE_CHANNEL_CONVERSION
+        const NBAIO_Format format = Format_from_SR_C(config->sample_rate, pipe_channel_count,config->format);
+        const NBAIO_Format offers[1] = {format};
+        size_t numCounterOffers = 0;
+        // Create a MonoPipe with optional blocking set to true.
+        MonoPipe* sink = new MonoPipe(buffer_size_frames, format, true /*writeCanBlock*/);
+        // Negotiation between the source and sink cannot fail as the device open operation
+        // creates both ends of the pipe using the same audio format.
+        ssize_t index = sink->negotiate(offers, 1, NULL, numCounterOffers);
+        ALOG_ASSERT(index == 0);
+        MonoPipeReader* source = new MonoPipeReader(sink);
+        numCounterOffers = 0;
+        index = source->negotiate(offers, 1, NULL, numCounterOffers);
+        ALOG_ASSERT(index == 0);
+        ALOGV("submix_audio_device_create_pipe_l(): created pipe");
+
+        // Save references to the source and sink.
+        ALOG_ASSERT(rsxadev->routes[route_idx].rsxSink == NULL);
+        ALOG_ASSERT(rsxadev->routes[route_idx].rsxSource == NULL);
+        rsxadev->routes[route_idx].rsxSink = sink;
+        rsxadev->routes[route_idx].rsxSource = source;
+        // Store the sanitized audio format in the device so that it's possible to determine
+        // the format of the pipe source when opening the input device.
+        memcpy(&device_config->common, config, sizeof(device_config->common));
+        device_config->buffer_size_frames = sink->maxFrames();
+        device_config->buffer_period_size_frames = device_config->buffer_size_frames /buffer_period_count;
+        if (in) device_config->pipe_frame_size = audio_stream_in_frame_size(&in->stream);
+        if (out) device_config->pipe_frame_size = audio_stream_out_frame_size(&out->stream);
+#if ENABLE_CHANNEL_CONVERSION
+        // Calculate the pipe frame size based upon the number of channels.
+        device_config->pipe_frame_size = (device_config->pipe_frame_size * pipe_channel_count) / channel_count;
+#endif // ENABLE_CHANNEL_CONVERSION
+        SUBMIX_ALOGV("submix_audio_device_create_pipe_l(): pipe frame size %zd, pipe size %zd, "
+                     "period size %zd", device_config->pipe_frame_size,
+                     device_config->buffer_size_frames, device_config->buffer_period_size_frames);
+    }
+}
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////
+struct submix_stream_in {
+    struct audio_stream_in stream;
+    struct submix_audio_device *dev;
+    int route_handle;
+    bool input_standby;
+    bool output_standby_rec_thr; // output standby state as seen from record thread
+    // wall clock when recording starts
+    struct timespec record_start_time;
+    // how many frames have been requested to be read
+    uint64_t read_counter_frames;
+
+#if ENABLE_LEGACY_INPUT_OPEN
+    // Number of references to this input stream.
+    volatile int32_t ref_count;
+#endif // ENABLE_LEGACY_INPUT_OPEN
+#if LOG_STREAMS_TO_FILES
+    int log_fd;
+#endif // LOG_STREAMS_TO_FILES
+
+    volatile uint16_t read_error_count;
+};
 
 
 static ssize_t in_read(struct audio_stream_in *stream, void* buffer,size_t bytes)
@@ -503,5 +640,108 @@ static ssize_t in_read(struct audio_stream_in *stream, void* buffer,size_t bytes
     SUBMIX_ALOGV("in_read returns %zu", bytes);
     return bytes;
 
+}
+
+
+
+
+
+
+static int adev_open_output_stream(struct audio_hw_device *dev,
+                                   audio_io_handle_t handle,
+                                   audio_devices_t devices,
+                                   audio_output_flags_t flags,
+                                   struct audio_config *config,
+                                   struct audio_stream_out **stream_out,
+                                   const char *address)
+{
+    struct submix_audio_device * const rsxadev = audio_hw_device_get_submix_audio_device(dev);
+    ALOGD("adev_open_output_stream(address=%s)", address);
+    struct submix_stream_out *out;
+    bool force_pipe_creation = false;
+    (void)handle;
+    (void)devices;
+    (void)flags;
+
+    *stream_out = NULL;
+
+    // Make sure it's possible to open the device given the current audio config.
+    submix_sanitize_config(config, false);
+
+    int route_idx = -1;
+
+    pthread_mutex_lock(&rsxadev->lock);
+
+    status_t res = submix_get_route_idx_for_address_l(rsxadev, address, &route_idx);
+    if (res != OK) {
+        ALOGE("Error %d looking for address=%s in adev_open_output_stream", res, address);
+        pthread_mutex_unlock(&rsxadev->lock);
+        return res;
+    }
+
+    if (!submix_open_validate_l(rsxadev, route_idx, config, false)) {
+        ALOGE("adev_open_output_stream(): Unable to open output stream for address %s", address);
+        pthread_mutex_unlock(&rsxadev->lock);
+        return -EINVAL;
+    }
+
+    out = (struct submix_stream_out *)calloc(1, sizeof(struct submix_stream_out));
+    if (!out) {
+        pthread_mutex_unlock(&rsxadev->lock);
+        return -ENOMEM;
+    }
+
+    // Initialize the function pointer tables (v-tables).
+    out->stream.common.get_sample_rate = out_get_sample_rate;
+    out->stream.common.set_sample_rate = out_set_sample_rate;
+    out->stream.common.get_buffer_size = out_get_buffer_size;
+    out->stream.common.get_channels = out_get_channels;
+    out->stream.common.get_format = out_get_format;
+    out->stream.common.set_format = out_set_format;
+    out->stream.common.standby = out_standby;
+    out->stream.common.dump = out_dump;
+    out->stream.common.set_parameters = out_set_parameters;
+    out->stream.common.get_parameters = out_get_parameters;
+    out->stream.common.add_audio_effect = out_add_audio_effect;
+    out->stream.common.remove_audio_effect = out_remove_audio_effect;
+    out->stream.get_latency = out_get_latency;
+    out->stream.set_volume = out_set_volume;
+    out->stream.write = out_write;
+    out->stream.get_render_position = out_get_render_position;
+    out->stream.get_next_write_timestamp = out_get_next_write_timestamp;
+    out->stream.get_presentation_position = out_get_presentation_position;
+
+#if ENABLE_RESAMPLING
+    // Recreate the pipe with the correct sample rate so that MonoPipe.write() rate limits
+    // writes correctly.
+    force_pipe_creation = rsxadev->routes[route_idx].config.common.sample_rate
+            != config->sample_rate;
+#endif // ENABLE_RESAMPLING
+
+    // If the sink has been shutdown or pipe recreation is forced (see above), delete the pipe so
+    // that it's recreated.
+    if ((rsxadev->routes[route_idx].rsxSink != NULL
+            && rsxadev->routes[route_idx].rsxSink->isShutdown()) || force_pipe_creation) {
+        submix_audio_device_release_pipe_l(rsxadev, route_idx);
+    }
+
+    // Store a pointer to the device from the output stream.
+    out->dev = rsxadev;
+    // Initialize the pipe.
+    ALOGV("adev_open_output_stream(): about to create pipe at index %d", route_idx);
+    submix_audio_device_create_pipe_l(rsxadev, config, DEFAULT_PIPE_SIZE_IN_FRAMES,
+            DEFAULT_PIPE_PERIOD_COUNT, NULL, out, address, route_idx);
+#if LOG_STREAMS_TO_FILES
+    out->log_fd = open(LOG_STREAM_OUT_FILENAME, O_CREAT | O_TRUNC | O_WRONLY,
+                       LOG_STREAM_FILE_PERMISSIONS);
+    ALOGE_IF(out->log_fd < 0, "adev_open_output_stream(): log file open failed %s",strerror(errno));
+    ALOGV("adev_open_output_stream(): log_fd = %d", out->log_fd);
+#endif // LOG_STREAMS_TO_FILES
+    // Return the output stream.
+    *stream_out = &out->stream;
+
+    pthread_mutex_unlock(&rsxadev->lock);
+    ALOGD("adev_open_output_stream(address=%s) finished.", address);
+    return 0;
 }
 

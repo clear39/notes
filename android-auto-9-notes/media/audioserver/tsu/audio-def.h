@@ -60,6 +60,7 @@ typedef struct {
     audio_content_type_t content_type;  //  指定播放来源的类型（音乐、电影、语音、发音、未知）。
     audio_usage_t        usage;     //  指定播放来源的原因，并控制导向、焦点和音量决策。
     audio_source_t       source;    //  提取到 Audio HAL 的用法值。
+
     //指定来源的播放方式。包括对可听性强制执行（一些国家/地区要求发出相机快门提示音）和硬件音频/视频同步的支持。
     audio_flags_mask_t   flags;     //  @   system/media/audio/include/system/audio.h:47:typedef uint32_t audio_flags_mask_t;
     char                 tags[AUDIO_ATTRIBUTES_TAGS_MAX_SIZE]; /* UTF8 */
@@ -237,3 +238,8 @@ typedef enum {
     AUDIO_FORMAT_MAT_2_0               = 0x24000002u, // (MAT | MAT_SUB_2_0)
     AUDIO_FORMAT_MAT_2_1               = 0x24000003u, // (MAT | MAT_SUB_2_1)
 } audio_format_t;
+
+
+
+
+

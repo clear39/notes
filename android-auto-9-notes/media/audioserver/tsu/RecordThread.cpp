@@ -12,11 +12,15 @@ class RecordThread : public ThreadBase{
 
 
 //  @   /work/workcodes/aosp-p9.0.0_2.1.0-auto-ga/frameworks/av/services/audioflinger/Threads.cpp
-
+/***
+ * 
+ * AudioFlinger::openInput ---> AudioFlinger::openInput_l ---> DeviceHalInterface::openInputStream
+ * 
+*/
 AudioFlinger::RecordThread::RecordThread(const sp<AudioFlinger>& audioFlinger,
                                          AudioStreamIn *input,
                                          audio_io_handle_t id,
-                                         audio_devices_t outDevice,
+                                         audio_devices_t outDevice,   // primaryOutputDevice_l()
                                          audio_devices_t inDevice,
                                          bool systemReady
 #ifdef TEE_SINK
@@ -73,7 +77,9 @@ AudioFlinger::RecordThread::RecordThread(const sp<AudioFlinger>& audioFlinger,
         ALOGV("%p kUseFastCapture = Always, initFastCapture = true", this);
         break;
     case FastCapture_Static: // FastCapture_Static
+        //  frameworks/av/services/audioflinger/Threads.cpp:141:static const uint32_t kMinNormalCaptureBufferSizeMs = 12;
         initFastCapture = (mFrameCount * 1000) / mSampleRate < kMinNormalCaptureBufferSizeMs;
+        //  10-10 12:38:11.057  1771  1801 V AudioFlinger: 0xeed83200 kUseFastCapture = Static, (1024 * 1000) / 48000 vs 12, initFastCapture = 0
         ALOGV("%p kUseFastCapture = Static, (%lld * 1000) / %u vs %u, initFastCapture = %d",
                 this, (long long)mFrameCount, mSampleRate, kMinNormalCaptureBufferSizeMs,
                 initFastCapture);
@@ -158,6 +164,54 @@ failed: ;
     // FIXME mNormalSource
 }
 
+void AudioFlinger::RecordThread::readInputParameters_l()
+{
+    status_t result = mInput->stream->getAudioProperties(&mSampleRate, &mChannelMask, &mHALFormat);
+    LOG_ALWAYS_FATAL_IF(result != OK, "Error retrieving audio properties from HAL: %d", result);
+    mChannelCount = audio_channel_count_from_in_mask(mChannelMask);
+    LOG_ALWAYS_FATAL_IF(mChannelCount > FCC_8, "HAL channel count %d > %d", mChannelCount, FCC_8);
+    mFormat = mHALFormat;
+    LOG_ALWAYS_FATAL_IF(!audio_is_linear_pcm(mFormat), "HAL format %#x is not linear pcm", mFormat);
+    result = mInput->stream->getFrameSize(&mFrameSize);
+    LOG_ALWAYS_FATAL_IF(result != OK, "Error retrieving frame size from HAL: %d", result);
+    result = mInput->stream->getBufferSize(&mBufferSize);
+    LOG_ALWAYS_FATAL_IF(result != OK, "Error retrieving buffer size from HAL: %d", result);
+    mFrameCount = mBufferSize / mFrameSize;
+    ALOGV("%p RecordThread params: mChannelCount=%u, mFormat=%#x, mFrameSize=%lld, "
+            "mBufferSize=%lld, mFrameCount=%lld",
+            this, mChannelCount, mFormat, (long long)mFrameSize, (long long)mBufferSize,
+            (long long)mFrameCount);
+    // This is the formula for calculating the temporary buffer size.
+    // With 7 HAL buffers, we can guarantee ability to down-sample the input by ratio of 6:1 to
+    // 1 full output buffer, regardless of the alignment of the available input.
+    // The value is somewhat arbitrary, and could probably be even larger.
+    // A larger value should allow more old data to be read after a track calls start(),
+    // without increasing latency.
+    //
+    // Note this is independent of the maximum downsampling ratio permitted for capture.
+    mRsmpInFrames = mFrameCount * 7;
+    mRsmpInFramesP2 = roundup(mRsmpInFrames);
+    free(mRsmpInBuffer);
+    mRsmpInBuffer = NULL;
+
+    // TODO optimize audio capture buffer sizes ...
+    // Here we calculate the size of the sliding buffer used as a source
+    // for resampling.  mRsmpInFramesP2 is currently roundup(mFrameCount * 7).
+    // For current HAL frame counts, this is usually 2048 = 40 ms.  It would
+    // be better to have it derived from the pipe depth in the long term.
+    // The current value is higher than necessary.  However it should not add to latency.
+
+    // Over-allocate beyond mRsmpInFramesP2 to permit a HAL read past end of buffer
+    mRsmpInFramesOA = mRsmpInFramesP2 + mFrameCount - 1;
+    (void)posix_memalign(&mRsmpInBuffer, 32, mRsmpInFramesOA * mFrameSize);
+    // if posix_memalign fails, will segv here.
+    memset(mRsmpInBuffer, 0, mRsmpInFramesOA * mFrameSize);
+
+    // AudioRecord mSampleRate and mChannelCount are constant due to AudioRecord API constraints.
+    // But if thread's mSampleRate or mChannelCount changes, how will that affect active tracks?
+}
+
+
 /**
  * 启动线程
 */
@@ -168,7 +222,11 @@ void AudioFlinger::RecordThread::onFirstRef()
 
 
 
-
+/**
+ * 
+ * AudioFlinger::createRecord ---> 
+ * 
+*/
 // RecordThread::createRecordTrack_l() must be called with AudioFlinger::mLock held
 sp<AudioFlinger::RecordThread::RecordTrack> AudioFlinger::RecordThread::createRecordTrack_l(
         const sp<AudioFlinger::Client>& client,
@@ -177,7 +235,7 @@ sp<AudioFlinger::RecordThread::RecordTrack> AudioFlinger::RecordThread::createRe
         audio_format_t format,
         audio_channel_mask_t channelMask,
         size_t *pFrameCount,
-        audio_session_t sessionId,
+        audio_session_t sessionId,  //  
         size_t *pNotificationFrameCount,
         uid_t uid,
         audio_input_flags_t *flags,

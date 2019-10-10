@@ -133,9 +133,8 @@ public class CarAudioService extends ICarAudio.Stub implements CarServiceBase {
                     int contextNumber = mContextToBus.keyAt(j);
                     int[] usages = getUsagesForContext(contextNumber);
                     for (int usage : usages) {
-                        mixingRuleBuilder.addRule(
-                                new AudioAttributes.Builder().setUsage(usage).build(),
-                                AudioMixingRule.RULE_MATCH_ATTRIBUTE_USAGE);
+                        mixingRuleBuilder.addRule(new AudioAttributes.Builder().setUsage(usage).build(),
+                                                AudioMixingRule.RULE_MATCH_ATTRIBUTE_USAGE);
                     }
                     Log.i(CarLog.TAG_AUDIO, "Bus number: " + busNumber
                             + " contextNumber: " + contextNumber
