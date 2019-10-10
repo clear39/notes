@@ -16,7 +16,7 @@ AudioFlinger::RecordThread::RecordTrack::RecordTrack(
             audio_session_t sessionId,
             uid_t uid,
             audio_input_flags_t flags,
-            track_type type,
+            track_type type,                //TrackBase::TYPE_DEFAULT
             audio_port_handle_t portId)
     :   TrackBase(thread, client, attr, sampleRate, format,
                   channelMask, frameCount, buffer, bufferSize, sessionId, uid, false /*isOut*/,

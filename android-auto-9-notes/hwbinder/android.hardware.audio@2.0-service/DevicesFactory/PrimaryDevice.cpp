@@ -1,7 +1,6 @@
 
 
 
-
 //  @   hardware/interfaces/audio/core/all-versions/default/include/core/all-versions/default/PrimaryDevice.h
 struct PrimaryDevice : public IPrimaryDevice {}
 

@@ -15,3 +15,13 @@ status_t AudioSystem::getInputForAttr(const audio_attributes_t *attr,
     //  @   frameworks/av/services/audiopolicy/service/AudioPolicyInterfaceImpl.cpp
     return aps->getInputForAttr(attr, input, session, pid, uid, opPackageName,config, flags, selectedDeviceId, portId);
 }
+
+
+
+
+status_t AudioSystem::startInput(audio_port_handle_t portId, bool *silenced)
+{
+    const sp<IAudioPolicyService>& aps = AudioSystem::get_audio_policy_service();
+    if (aps == 0) return PERMISSION_DENIED;
+    return aps->startInput(portId, silenced);
+}

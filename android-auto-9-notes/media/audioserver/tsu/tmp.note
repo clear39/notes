@@ -1,0 +1,13 @@
+
+
+AudioPolicyManager::startInput
+ ---> AudioPolicyManager::setDeviceConnectionStateInt
+ ---> AudioPolicyManager::checkOutputsForDevice
+
+
+frameworks/av/services/audiopolicy/managerdefault/AudioPolicyManager.cpp:4372:        
+status_t status = dupOutputDesc->openDuplicating(mPrimaryOutput, desc,
+
+
+frameworks/av/services/audiopolicy/common/managerdefinitions/src/AudioOutputDescriptor.cpp:519:    
+*ioHandle = mClientInterface->openDuplicateOutput(output2->mIoHandle, output1->mIoHandle);

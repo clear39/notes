@@ -442,9 +442,16 @@ status_t AudioFlinger::RecordThread::start(RecordThread::RecordTrack* recordTrac
         recordTrack->mState = TrackBase::STARTING_1;
         mActiveTracks.add(recordTrack);
         status_t status = NO_ERROR;
+        /**
+         * 
+         * 由于 mType 值为 TrackBase::TYPE_DEFAULT，所以这里 返回 true
+        */
         if (recordTrack->isExternalTrack()) {
             mLock.unlock();
             bool silenced;
+            /***
+             * 这里非常重要
+            */
             status = AudioSystem::startInput(recordTrack->portId(), &silenced);
             mLock.lock();
             // FIXME should verify that recordTrack is still in mActiveTracks
