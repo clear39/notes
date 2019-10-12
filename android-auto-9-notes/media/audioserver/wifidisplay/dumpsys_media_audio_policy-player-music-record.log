@@ -1,18 +1,18 @@
-AudioPolicyManager: 0xf4472000
-Command Thread: 0xf442a140
-Tones Thread: 0xf442a0e0
-AudioCommandThread 0xf442a140 Dump
+AudioPolicyManager: 0xee7f2000
+Command Thread: 0xee7aa140
+Tones Thread: 0xee7aa0e0
+AudioCommandThread 0xee7aa140 Dump
 - Commands:
    Command Time        Wait pParam
   Last Command
-   11      000011.883  0    0xf4432d20
-AudioCommandThread 0xf442a0e0 Dump
+   02      000081.886  0    0xee794b28
+AudioCommandThread 0xee7aa0e0 Dump
 - Commands:
    Command Time        Wait pParam
   Last Command
      none
 
-AudioPolicyManager Dump: 0xf4472000
+AudioPolicyManager Dump: 0xee7f2000
  Primary Output: 13
  Phone state: AUDIO_MODE_NORMAL
  Force use for communications 0
@@ -59,6 +59,16 @@ AudioPolicyManager Dump: 0xf4472000
     - step_value: 100 mB
     - min_ramp_ms: 0 ms
     - max_ramp_ms: 0 ms
+  Device 3:
+  - id: 15
+  - tag name: Remote Submix Out
+  - type: AUDIO_DEVICE_OUT_REMOTE_SUBMIX                  
+  - address: 0                               
+  - Profiles:
+      Profile 0:
+          - format: AUDIO_FORMAT_PCM_16_BIT
+          - sampling rates:48000
+          - channel masks:0x0003
 - Available input devices:
   Device 1:
   - id:  8
@@ -104,7 +114,7 @@ HW Modules dump:
       - address: bus0_media_out                  
 
     - maxOpenCount: 1 - curOpenCount: 1
-    - maxActiveCount: 1 - curActiveCount: 0
+    - maxActiveCount: 1 - curActiveCount: 1
     output 1:
     - name: mixport_bus1_system_sound_out
     - Profiles:
@@ -426,11 +436,12 @@ HW Modules dump:
     - flags: 0x0000 (AUDIO_OUTPUT_FLAG_NONE)
     - Supported devices:
       Device 1:
+      - id: 15
       - tag name: Remote Submix Out
       - type: AUDIO_DEVICE_OUT_REMOTE_SUBMIX                  
       - address: 0                               
 
-    - maxOpenCount: 1 - curOpenCount: 0
+    - maxOpenCount: 1 - curOpenCount: 1
     - maxActiveCount: 1 - curActiveCount: 0
   - inputs:
     input 0:
@@ -448,10 +459,11 @@ HW Modules dump:
       - type: AUDIO_DEVICE_IN_REMOTE_SUBMIX                   
       - address: 0                               
 
-    - maxOpenCount: 0 - curOpenCount: 0
-    - maxActiveCount: 1 - curActiveCount: 0
+    - maxOpenCount: 0 - curOpenCount: 1
+    - maxActiveCount: 1 - curActiveCount: 1
   - Declared devices:
     Device 1:
+    - id: 15
     - tag name: Remote Submix Out
     - type: AUDIO_DEVICE_OUT_REMOTE_SUBMIX                  
     - address: 0                               
@@ -496,15 +508,15 @@ Outputs dump:
  Devices 01000000
  Stream volume refCount muteCount
  00     -24.000     00       00
- 01     -758.000     00       00
+ 01     0.000     00       00
  02     -758.000     00       00
- 03     -758.000     00       00
+ 03     -22.175     01       00
  04     -29.700     00       00
  05     -758.000     00       00
  06     -1.000     00       00
  07     -758.000     00       00
  08     -758.000     00       00
- 09     0.000     00       00
+ 09     0.000     00       01
  10     -58.000     00       00
  11     0.000     00       00
  12     -1.000     00       00
@@ -526,12 +538,73 @@ Outputs dump:
  06     -1.000     00       00
  07     -758.000     00       00
  08     -758.000     00       00
- 09     0.000     00       00
+ 09     0.000     00       01
  10     -58.000     00       00
+ 11     0.000     00       00
+ 12     -1.000     00       00
+- Output 29 dump:
+ Latency: 85
+ Flags 00000000
+ ID: 16
+ Sampling rate: 48000
+ Format: 00000001
+ Channels: 00000003
+ Devices 00008000
+ Stream volume refCount muteCount
+ 00     -5.882     00       00
+ 01     -10.941     00       00
+ 02     -8.700     00       00
+ 03     -22.175     00       00
+ 04     -12.000     00       00
+ 05     -8.700     00       00
+ 06     -1.000     00       00
+ 07     -11.118     00       00
+ 08     -10.765     00       00
+ 09     0.000     00       00
+ 10     -21.025     00       00
+ 11     0.000     00       00
+ 12     -1.000     00       00
+- Output 37 dump:
+ Latency: 85
+ Flags 00000000
+ ID: 17
+ Sampling rate: 48000
+ Format: 00000001
+ Channels: 00000003
+ Devices 01008000
+ Stream volume refCount muteCount
+ 00     -5.882     00       00
+ 01     -10.941     00       00
+ 02     -8.700     00       00
+ 03     -22.175     00       00
+ 04     -12.000     00       00
+ 05     -8.700     00       00
+ 06     -1.000     00       00
+ 07     -11.118     00       00
+ 08     -10.765     00       00
+ 09     0.000     00       00
+ 10     -21.025     00       00
  11     0.000     00       00
  12     -1.000     00       00
 
 Inputs dump:
+- Input 30 dump:
+ ID: 13
+ Sampling rate: 48000
+ Format: 1
+ Channels: 0000000c
+ Devices 80000100
+ Audio Sessions:
+   Audio session 1:
+   - session: 33
+   - owner uid:  0
+   - input source: 8
+   - format: 00000001
+   - sample: 44100
+   - channel mask: 0000000c
+   - is soundtrigger: false
+   - open count: 1
+   - active count: 1
 
 Streams dump:
  Stream  Can be muted  Index Min  Index Max  Index Cur [device : index]...
@@ -662,6 +735,22 @@ Audio Patches:
     - Mix ID 4 I/O handle 21
   - 1 sinks:
     - Device ID 5 AUDIO_DEVICE_OUT_BUS
+  Audio patch 3:
+  - handle: 14
+  - audio flinger handle: 28
+  - owner uid: 1041
+  - 1 sources:
+    - Device ID 10 AUDIO_DEVICE_IN_REMOTE_SUBMIX
+  - 1 sinks:
+    - Mix ID 13 I/O handle 30
+  Audio patch 4:
+  - handle: 18
+  - audio flinger handle: 36
+  - owner uid: 1041
+  - 1 sources:
+    - Mix ID 16 I/O handle 29
+  - 1 sinks:
+    - Device ID 15 AUDIO_DEVICE_OUT_REMOTE_SUBMIX
 
 Audio Policy Mix:
   Audio Policy Mix 1:

@@ -1,3 +1,9 @@
+
+autolink -------------> /dev/ttyXRUSB1
+TSU -------------> /dev/ttyXRUSB2
+
+
+
 sudo ./uuu_imx_android_flash.sh -f imx8qxp -e -D ./
 
 dumpsys acitivity service TelephonyDebugService

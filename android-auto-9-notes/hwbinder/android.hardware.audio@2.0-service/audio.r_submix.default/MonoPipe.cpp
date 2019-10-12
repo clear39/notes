@@ -1,5 +1,8 @@
 
-
+/***
+ * logcat -s MonoPipe
+ * 
+ * */
 
 //  @   /work/workcodes/aosp-p9.0.0_2.1.0-auto-ga/frameworks/av/media/libnbaio/MonoPipe.cpp
 MonoPipe::MonoPipe(size_t reqFrames, const NBAIO_Format& format, bool writeCanBlock /*=true*/) :

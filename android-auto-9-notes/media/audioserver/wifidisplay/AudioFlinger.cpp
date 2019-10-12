@@ -366,3 +366,29 @@ Exit:
     *status = lStatus;
     return recordHandle;
 }
+
+
+
+
+
+audio_io_handle_t AudioFlinger::openDuplicateOutput(audio_io_handle_t output1,audio_io_handle_t output2)
+{
+    ALOGV("openDuplicateOutput() output1:%#x output2:%#x",output1,output2);
+
+    Mutex::Autolock _l(mLock);
+    MixerThread *thread1 = checkMixerThread_l(output1);
+    MixerThread *thread2 = checkMixerThread_l(output2);
+
+    if (thread1 == NULL || thread2 == NULL) {
+        ALOGW("openDuplicateOutput() wrong output mixer type for output %d or %d", output1,output2);
+        return AUDIO_IO_HANDLE_NONE;
+    }
+
+    audio_io_handle_t id = nextUniqueId(AUDIO_UNIQUE_ID_USE_OUTPUT);
+    DuplicatingThread *thread = new DuplicatingThread(this, thread1, id, mSystemReady);
+    thread->addOutputTrack(thread2);
+    mPlaybackThreads.add(id, thread);
+    // notify client processes of the new output creation
+    thread->ioConfigChanged(AUDIO_OUTPUT_OPENED);
+    return id;
+}
