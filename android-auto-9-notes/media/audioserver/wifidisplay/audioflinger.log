@@ -118,7 +118,11 @@
 10-11 17:03:20.480  1769  3375 V AudioFlinger_Thread: acquireWakeLock_l() AudioOut_1D status 0
 10-11 17:03:20.480  1769  3375 D AudioFlinger_Thread: updateWakeLockUids_l AudioOut_1D uids:
 10-11 17:03:20.481  1769  3375 V AudioFlinger_Thread: updateWakeLockUids_l() AudioOut_1D status 0
+
 10-11 17:03:20.481  1769  3375 D AudioFlinger_Thread: ro.audio.silent will be ignored for threads on AUDIO_DEVICE_OUT_REMOTE_SUBMIX
+
+
+
 10-11 17:03:20.481  1769  3375 V AudioFlinger_Thread: thread 0xec183500 type MIXER TID 3375 threadLoop()
 10-11 17:03:20.481  1769  1798 V AudioFlinger_Thread: sendConfigEvent_l() num events 1 event 2
 10-11 17:03:20.481  1769  3375 V AudioFlinger_Thread: processConfigEvents_l() remaining events 1
@@ -142,7 +146,10 @@
 10-11 17:03:20.483  1769  1801 V AudioPolicyService: AudioCommandThread() adding set volume stream 1, volume 0.283754, output 29
 10-11 17:03:20.483  1769  1801 V AudioPolicyService: inserting command: 2 at index 0, num commands 0
 10-11 17:03:20.483  1769  3375 V AudioFlinger_Thread: updateWakeLockUids_l() AudioOut_1D status 0
+
+
 10-11 17:03:20.483  1769  3375 D AudioFlinger_Thread: ro.audio.silent will be ignored for threads on AUDIO_DEVICE_OUT_REMOTE_SUBMIX
+
 10-11 17:03:20.483  1769  1806 V AudioFlinger_Thread: getTimestamp error - no valid kernel position
 10-11 17:03:20.483  1769  3375 V AudioFlinger_Thread: thread 0xec183500 type MIXER TID 3375 threadLoop()
 10-11 17:03:20.483  1769  1798 V AudioPolicyService: AudioCommandThread() processing set volume stream 1,                             volume 0.283754, output 29
@@ -258,6 +265,8 @@
 10-11 17:03:20.488  1769  1801 V AudioFlinger_Thread: PlaybackThread::ioConfigChanged, thread 0xec003a80, event 1
 10-11 17:03:20.489  1769  1801 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
 10-11 17:03:20.489  1769  3376 I AudioFlinger_Thread: AudioFlinger's thread 0xec003a80 tid=3376 ready to run
+
+
 10-11 17:03:20.489  1769  1801 V AudioPolicyService: AudioCommandThread() adding set volume stream 0, volume 0.508023, output 37
 10-11 17:03:20.489  1769  1801 V AudioPolicyService: inserting command: 2 at index 0, num commands 0
 10-11 17:03:20.489  1769  1798 V AudioPolicyService: AudioCommandThread() processing set volume stream 0,                             volume 0.508023, output 37
@@ -657,14 +666,13 @@
 
 
 10-11 17:03:20.576  1769  1804 V AudioFlinger_Thread: thread 0xedd031c0 type MIXER TID 1804 threadLoop()
-
-
-
 10-11 17:03:20.576  1769  1804 V AudioFlinger_Thread: getTimestamp error - no valid kernel position
 10-11 17:03:20.576  1769  1804 V AudioFlinger_Thread: track 0 s=00071b20 [NOT READY] on thread 0xedd031c0
 10-11 17:03:20.576  1769  1804 V AudioFlinger_Track: presentationComplete() mPresentationCompleteFrames 509920 framesWritten 509952
+
 10-11 17:03:20.576  1769  1804 V AudioFlinger_Thread: track 2 s=00000759 [OK] on thread 0xedd031c0
 10-11 17:03:20.576  1769  1804 V AudioFlinger_Thread: removeTracks_l removing track on session 25
+
 10-11 17:03:20.576  1769  1804 D AudioFlinger_Thread: updateWakeLockUids_l AudioOut_D uids:10054 
 10-11 17:03:20.576  1769  1804 V AudioFlinger_Thread: updateWakeLockUids_l() AudioOut_D status 0
 10-11 17:03:20.576  1769  1804 V AudioFlinger_Thread: thread 0xedd031c0 type MIXER TID 1804 threadLoop() mBytesRemaining:0

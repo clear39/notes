@@ -1,3 +1,11 @@
+//  开启init日志
+printk.devkmsg 在内核 vendor/nxp-opensource/kernel_imx/Documentation/admin-guide/kernel-parameters.txt
+BOARD_KERNEL_CMDLINE += printk.devkmsg=on
+
+
+//  关闭selinux
+BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
+
 
 autolink -------------> /dev/ttyXRUSB1
 TSU -------------> /dev/ttyXRUSB2
