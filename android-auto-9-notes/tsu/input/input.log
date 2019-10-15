@@ -1,0 +1,17 @@
+
+
+
+10-15 12:07:31.142  3563  3563 V InputMethodManager: Starting input: view=android.widget.SearchView$SearchAutoComplete{7fb68be VFED..CL. .F...... 0,6-672,42 #10203d4 android:id/search_src_text},
+focus=true,windowFocus=true,autofillUiShowing=false,window=android.view.ViewRootImpl$W@e9ad1f,temporaryDetach=false reason=WINDOW_FOCUS_GAIN
+10-15 12:07:31.144  3563  3563 V InputMethodManager: Starting input: tba=android.view.inputmethod.EditorInfo@aa37e07 ic=com.android.internal.widget.EditableInputConnection@86cfb34
+10-15 12:07:31.144  3563  3563 V InputMethodManager: START INPUT: view=android.widget.SearchView$SearchAutoComplete{7fb68be VFED..CL. .F...... 0,6-672,42 #10203d4 android:id/search_src_text},focus=true,windowFoc
+us=true,autofillUiShowing=false,window=android.view.ViewRootImpl$W@e9ad1f,temporaryDetach=false ic=com.android.internal.widget.EditableInputConnection@86cfb34 tba=android.view.inputmethod.EditorInfo@aa37e07 cont
+rolFlags=#107
+10-15 12:07:31.146  1716  2387 V InputMethodManagerService: windowGainedFocus: reason=WINDOW_FOCUS_GAIN client=android.os.BinderProxy@d8303d8 inputContext=com.android.internal.view.IInputContext$Stub$Proxy@ba1e2
+d6 missingMethods= attribute=android.view.inputmethod.EditorInfo@e8ef957 controlFlags=#107 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION windowFlags=#81810100 unverifiedTargetSdkVersion=28
+10-15 12:07:31.163  1716  2387 V InputMethodManagerService: Unspecified window will show input
+10-15 12:07:31.168  3563  3563 V InputMethodManager: Starting input: Bind result=InputBindResult{result=SUCCESS_WITH_IME_SESSION method=com.android.internal.view.IInputMethodSession$Stub$Proxy@928fd5d id=com.and
+roid.inputmethod.latin/.LatinIME sequence=30 userActionNotificationSequenceNumber=3}
+10-15 12:07:31.174  1716  1727 V InputMethodManagerService: Client requesting input be shown
+10-15 12:07:31.185  1906  1906 I LatinIME: Starting input. Cursor position = 0,0
+10-15 12:07:31.187  2133  2861 D PrefCtrlListHelper: Could not find Context-only controller for pref: com.android.settings.inputmethod.GameControllerPreferenceController

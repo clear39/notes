@@ -1,4 +1,111 @@
 
+10-14 13:29:45.150  2452  2452 W ContextImpl: Calling a method in the system process without a qualified user: android.app.ContextImpl.bindService:1611 android.content.ContextWrapper.bindService:698 com.android 
+10-14 13:29:45.152  1714  2346 W ActivityManager: Unable to start service Intent { cmp=android.car.input.service/.DefaultInputService (has extras) } U=0: not found
+
+
+
+
+
+10-14 13:29:45.185  2452  2452 E AndroidRuntime: FATAL EXCEPTION: main
+10-14 13:29:45.185  2452  2452 E AndroidRuntime: Process: com.android.car, PID: 2452
+10-14 13:29:45.185  2452  2452 E AndroidRuntime: java.lang.RuntimeException: Unable to create service com.android.car.CarService: java.lang.IllegalArgumentException: Illegal null AudioPolicy argument
+10-14 13:29:45.185  2452  2452 E AndroidRuntime:        at android.app.ActivityThread.handleCreateService(ActivityThread.java:3591)
+10-14 13:29:45.185  2452  2452 E AndroidRuntime:        at android.app.ActivityThread.access$1300(ActivityThread.java:200)
+10-14 13:29:45.185  2452  2452 E AndroidRuntime:        at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1680)
+10-14 13:29:45.185  2452  2452 E AndroidRuntime:        at android.os.Handler.dispatchMessage(Handler.java:106)
+10-14 13:29:45.185  2452  2452 E AndroidRuntime:        at android.os.Looper.loop(Looper.java:193)
+10-14 13:29:45.185  2452  2452 E AndroidRuntime:        at android.app.ActivityThread.main(ActivityThread.java:6727)
+10-14 13:29:45.185  2452  2452 E AndroidRuntime:        at java.lang.reflect.Method.invoke(Native Method)
+10-14 13:29:45.185  2452  2452 E AndroidRuntime:        at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:493)
+10-14 13:29:45.185  2452  2452 E AndroidRuntime:        at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:917)
+10-14 13:29:45.185  2452  2452 E AndroidRuntime: Caused by: java.lang.IllegalArgumentException: Illegal null AudioPolicy argument
+10-14 13:29:45.185  2452  2452 E AndroidRuntime:        at android.media.AudioManager.registerAudioPolicy(AudioManager.java:3165)
+10-14 13:29:45.185  2452  2452 E AndroidRuntime:        at com.android.car.CarAudioService.setupDynamicRouting(CarAudioService.java:402)
+10-14 13:29:45.185  2452  2452 E AndroidRuntime:        at com.android.car.CarAudioService.init(CarAudioService.java:225)
+10-14 13:29:45.185  2452  2452 E AndroidRuntime:        at com.android.car.ICarImpl.init(ICarImpl.java:187)
+10-14 13:29:45.185  2452  2452 E AndroidRuntime:        at com.android.car.CarService.onCreate(CarService.java:107)
+10-14 13:29:45.185  2452  2452 E AndroidRuntime:        at android.app.ActivityThread.handleCreateService(ActivityThread.java:3579)
+10-14 13:29:45.185  2452  2452 E AndroidRuntime:        ... 8 more
+10-14 13:29:45.189  1714  2346 W RescueParty: Noticed 3 events for UID 1000 in last 12 sec
+10-14 13:29:45.190  1714  2346 W ActivityManager: Process com.android.car has crashed too many times: killing!
+10-14 13:29:45.249  1714  2346 I ActivityManager: Process com.android.car (pid 2452) has died: pers PER 
+10-14 13:29:45.249  1714  2346 W ActivityManager: Scheduling restart of crashed service com.android.car/.CarService in 0ms
+10-14 13:29:45.249  1714  2346 W ActivityManager: Re-adding persistent process ProcessRecord{32af5e3 2452:com.android.car/1000}
+10-14 13:29:45.284  1714  1738 I ActivityManager: Start proc 2514:com.android.car/1000 for restart com.android.car
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+frameworks/base/services/core/java/com/android/server/StorageManagerService.java:843:                        mVold.unlockUserKey(user.id, user.serialNumber, encodeBytes(null),
+frameworks/base/services/core/java/com/android/server/StorageManagerService.java:2562:    public void unlockUserKey(int userId, int serialNumber, byte[] token, byte[] secret) {
+frameworks/base/services/core/java/com/android/server/StorageManagerService.java:2573:                mVold.unlockUserKey(userId, serialNumber, encodeBytes(token),
+frameworks/base/services/core/java/com/android/server/am/UserController.java:1158:                storageManager.unlockUserKey(userId, userInfo.serialNumber, token, secret);
+
+ 
+ 
+ @Override
+public SharedPreferences getSharedPreferences(File file, int mode) {
+    SharedPreferencesImpl sp;
+    synchronized (ContextImpl.class) {
+        final ArrayMap<File, SharedPreferencesImpl> cache = getSharedPreferencesCacheLocked();
+        sp = cache.get(file);
+        if (sp == null) {
+            checkMode(mode);
+            if (getApplicationInfo().targetSdkVersion >= android.os.Build.VERSION_CODES.O) {
+                if (isCredentialProtectedStorage()
+                        && !getSystemService(UserManager.class).isUserUnlockingOrUnlocked(UserHandle.myUserId())) {
+                    throw new IllegalStateException("SharedPreferences in credential encrypted "
+                            + "storage are not available until after user is unlocked");
+                }
+            }
+            sp = new SharedPreferencesImpl(file, mode);
+            cache.put(file, sp);
+            return sp;
+        }
+    }
+    if ((mode & Context.MODE_MULTI_PROCESS) != 0 ||
+        getApplicationInfo().targetSdkVersion < android.os.Build.VERSION_CODES.HONEYCOMB) {
+        // If somebody else (some other process) changed the prefs
+        // file behind our back, we reload it.  This has been the
+        // historical (if undocumented) behavior.
+        sp.startReloadIfChangedUnexpectedly();
+    }
+    return sp;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 10-12 17:14:55.194  2515  2544 E AndroidRuntime: Process: android.process.acore, PID: 2515
 10-12 17:14:55.194  2515  2544 E AndroidRuntime: android.database.sqlite.SQLiteCantOpenDatabaseException: unknown error (code 14 SQLITE_CANTOPEN): Could not open database
 10-12 17:14:55.194  2515  2544 E AndroidRuntime:        at android.database.sqlite.SQLiteConnection.nativeOpen(Native Method)
@@ -73,6 +180,26 @@ public File getDataDirFile() {
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //  @   /work/workcodes/tsu-aosp-p9.0.0_2.1.0-auto-ga/frameworks/base/core/java/android/app/LoadedApk.java
 public final class LoadedApk {
     private String mDataDir;
@@ -84,6 +211,13 @@ public final class LoadedApk {
 
 
 
+commit 2d781228c9f6a329d92fe81f154634d1e6d7e3b8
+Author: shijiubing <shijiubing@auto-link.com.cn>
+Date:   Mon Jul 22 15:29:34 2019 +0800
+
+    chore: modify app directBootAware default value is true
+    
+    Change-Id: I000f55edde263937d56d583d3aaa8d006f8d69ec
 
 
 
