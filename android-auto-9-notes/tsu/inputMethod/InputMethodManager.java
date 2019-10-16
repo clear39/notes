@@ -3,6 +3,76 @@
 
 public final class InputMethodManager {
 
+    /***
+     * 在 WindowManagerGlobal.getWindowSession() 调用
+     */
+    public static InputMethodManager getInstance() {
+        synchronized (InputMethodManager.class) {
+            if (sInstance == null) {
+                try {
+                    sInstance = new InputMethodManager(Looper.getMainLooper());
+                } catch (ServiceNotFoundException e) {
+                    throw new IllegalStateException(e);
+                }
+            }
+            return sInstance;
+        }
+    }
+
+    InputMethodManager(Looper looper) throws ServiceNotFoundException {
+        /***
+         * public static final String INPUT_METHOD_SERVICE = "input_method";
+         */
+        this(IInputMethodManager.Stub.asInterface(ServiceManager.getServiceOrThrow(Context.INPUT_METHOD_SERVICE)), looper);
+    }
+
+    InputMethodManager(IInputMethodManager service, Looper looper) {
+        mService = service;
+        mMainLooper = looper;
+        mH = new H(looper);
+        /***
+         * 
+         */
+        mIInputContext = new ControlledInputConnectionWrapper(looper,mDummyInputConnection, this);
+    }
+
+    /***
+     * 在 WindowManagerGlobal.getWindowSession() 调用，
+     * 并且 传递给 WindowManagerService.openSession
+     */
+    public IInputMethodClient getClient() {
+        /***
+         * final IInputMethodClient.Stub mClient = new IInputMethodClient.Stub() {
+         * 
+         */
+        return mClient;
+    }
+
+    /***
+     * 在 WindowManagerGlobal.getWindowSession() 调用，
+     * 并且 传递给 WindowManagerService.openSession
+     */
+    public IInputContext getInputContext() {
+        /***
+         * 在构造函数中创建
+         */
+        return mIInputContext;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     boolean startInputInner(@InputMethodClient.StartInputReason final int startInputReason,
         IBinder windowGainingFocus, int controlFlags, int softInputMode,
         int windowFlags) {

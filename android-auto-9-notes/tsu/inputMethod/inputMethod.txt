@@ -1,2 +1,11 @@
 
 
+
+InputMethodManagerService 文件保存路径  /data/system/inputmethod/
+
+
+dumpsys input_method
+
+
+
+

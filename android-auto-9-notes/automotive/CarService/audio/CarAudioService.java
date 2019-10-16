@@ -133,8 +133,7 @@ public class CarAudioService extends ICarAudio.Stub implements CarServiceBase {
                     int contextNumber = mContextToBus.keyAt(j);
                     int[] usages = getUsagesForContext(contextNumber);
                     for (int usage : usages) {
-                        mixingRuleBuilder.addRule(new AudioAttributes.Builder().setUsage(usage).build(),
-                                                AudioMixingRule.RULE_MATCH_ATTRIBUTE_USAGE);
+                        mixingRuleBuilder.addRule(new AudioAttributes.Builder().setUsage(usage).build(),AudioMixingRule.RULE_MATCH_ATTRIBUTE_USAGE);
                     }
                     Log.i(CarLog.TAG_AUDIO, "Bus number: " + busNumber
                             + " contextNumber: " + contextNumber
@@ -183,6 +182,18 @@ public class CarAudioService extends ICarAudio.Stub implements CarServiceBase {
         if (!validateVolumeGroups()) {
             throw new RuntimeException("Invalid volume groups configuration");
         }
+    }
+
+
+
+    private void setMasterMute(boolean mute, int flags) {
+        mAudioManager.setMasterMute(mute, flags);
+
+        // When the master mute is turned ON, we want the playing app to get a "pause" command.
+        // When the volume is unmuted, we want to resume playback.
+        int keycode = mute ? KeyEvent.KEYCODE_MEDIA_PAUSE : KeyEvent.KEYCODE_MEDIA_PLAY;
+        mAudioManager.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, keycode));
+        mAudioManager.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, keycode));
     }
 
 
