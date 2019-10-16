@@ -1,3 +1,14 @@
+
+
+
+logcat -s InputMethodManager InputMethodManagerService ViewRootImpl
+
+logcat -s ActivityManager
+
+
+
+
+
 sudo ./uuu_imx_android_flash.sh -f imx8qxp-tsu -a -e -D ./
 
 setprop persist.sys.disable_rescure true
@@ -30,6 +41,8 @@ crw-rw----  1 system system 13,  68 2019-10-12 14:47 event4
 
 
 autolink_8q:/ # getevent
+
+
 add device 1: /dev/input/event4
   name:     "uinput_pointer"
 add device 2: /dev/input/event3

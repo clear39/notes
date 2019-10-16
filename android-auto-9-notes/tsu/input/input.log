@@ -1,17 +1,163 @@
+10-16 16:21:13.956  2126  2126 I ViewRootImpl: ViewRootHandler.handleMessage( MSG_WINDOW_FOCUS_CHANGED )
+10-16 16:21:13.957  2126  2126 V InputMethodManager: onPreWindowFocus(). mCurRootView=DecorView@5576365[Settings] rootView=DecorView@5576365[Settings] hasWindowFocus=false
+10-16 16:21:14.106  1715  3247 D InputMethodManagerService: --- calledFromForegroundUserOrSystemProcess ? calling uid = 1000 system uid = 1000 calling userId = 0, foreground user id = 0, calling pid = 1715com.a)
+10-16 16:21:16.915  2111  2111 V InputMethodManager: checkFocusNoStartInput() mServedView == mNextServedView && !forceNewFocus
+10-16 16:21:16.943  2111  2111 I ViewRootImpl: ViewRootHandler.handleMessage( MSG_RESIZED )
+10-16 16:21:17.521  2111  2111 I ViewRootImpl: ViewRootHandler.handleMessage( MSG_DIE )
+10-16 16:21:17.521  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.view.View{db37aa9 V.ED..... ......ID 19,0-29,0 #7f0a00f5 app:id/docked_divider_background},focus=false,windowFocus=fall
+10-16 16:21:17.521  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=com.android.systemui.stackdivider.MinimizedDockShadow{c80e82e V.ED..... ......ID 0,0-8,0 #7f0a01f7 app:id/minimized_dock_shadol
+10-16 16:21:17.521  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=com.android.systemui.stackdivider.DividerHandleView{b350fcf V.ED..... ......ID 0,-48-48,48 #7f0a00f6 app:id/docked_divider_hanl
+10-16 16:21:17.522  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=com.android.systemui.stackdivider.DividerView{8012e30 I.E...... ......ID 0,0-48,0},focus=false,windowFocus=false,autofillUiShol
+10-16 16:21:19.584  2126  2126 I ViewRootImpl: ViewRootHandler.handleMessage( MSG_DISPATCH_APP_VISIBILITY )
+10-16 16:21:20.107  3293  3293 V InputMethodManager: focusIn: android.widget.SearchView$SearchAutoComplete{7e29d8b VFED..CL. .F....ID 0,0-0,0 #10203d4 android:id/search_src_text},focus=true,windowFocus=false,aue
+10-16 16:21:20.107  3293  3293 V InputMethodManager: focusIn: null
+10-16 16:21:20.108  3293  3293 V InputMethodManager: Not IME target window, ignoring
+10-16 16:21:47.108  3293  3293 I ViewRootImpl: ViewRootHandler.handleMessage( MSG_WINDOW_FOCUS_CHANGED )
+10-16 16:21:47.108  3293  3293 V InputMethodManager: onPreWindowFocus(). mCurRootView=null rootView=DecorView@283024c[SearchActivity] hasWindowFocus=true
+10-16 16:21:47.109  3293  3293 V InputMethodManager: focusIn: android.widget.SearchView$SearchAutoComplete{7e29d8b VFED..CL. .F....ID 0,6-672,42 #10203d4 android:id/search_src_text},focus=true,windowFocus=true,e
+10-16 16:21:47.109  3293  3293 V InputMethodManager: focusIn: DecorView@283024c[SearchActivity],focus=true,windowFocus=true,autofillUiShowing=false,window=android.view.ViewRootImpl$W@9b2e2f3,temporaryDetach=fale
+10-16 16:21:47.110  3293  3293 V InputMethodManager: scheduleCheckFocusLocked: view=android.widget.SearchView$SearchAutoComplete{7e29d8b VFED..CL. .F....ID 0,6-672,42 #10203d4 android:id/search_src_text},focus=e
+10-16 16:21:47.111  3293  3293 V InputMethodManager: onPostWindowFocus: android.widget.SearchView$SearchAutoComplete{7e29d8b VFED..CL. .F....ID 0,6-672,42 #10203d4 android:id/search_src_text} softInputMode=STAT0
+10-16 16:21:47.111  3293  3293 V InputMethodManager: Restarting due to mRestartOnNextWindowFocus
+10-16 16:21:47.111  3293  3293 V InputMethodManager: focusIn: android.widget.SearchView$SearchAutoComplete{7e29d8b VFED..CL. .F....ID 0,6-672,42 #10203d4 android:id/search_src_text},focus=true,windowFocus=true,e
+10-16 16:21:47.112  3293  3293 V InputMethodManager: focusIn: DecorView@283024c[SearchActivity],focus=true,windowFocus=true,autofillUiShowing=false,window=android.view.ViewRootImpl$W@9b2e2f3,temporaryDetach=fale
+10-16 16:21:47.112  3293  3293 V InputMethodManager: scheduleCheckFocusLocked: view=android.widget.SearchView$SearchAutoComplete{7e29d8b VFED..CL. .F....ID 0,6-672,42 #10203d4 android:id/search_src_text},focus=e
+10-16 16:21:47.112  3293  3293 V InputMethodManager: checkFocus: view=null next=android.widget.SearchView$SearchAutoComplete{7e29d8b VFED..CL. .F....ID 0,6-672,42 #10203d4 android:id/search_src_text} forceNewFo>
+10-16 16:21:47.113  3293  3293 V InputMethodManager: Starting input: view=android.widget.SearchView$SearchAutoComplete{7e29d8b VFED..CL. .F....ID 0,6-672,42 #10203d4 android:id/search_src_text},focus=true,windoN
+10-16 16:21:47.113  3293  3293 V InputMethodManager: java.lang.Throwable
+10-16 16:21:47.113  3293  3293 V InputMethodManager:    at android.view.inputmethod.InputMethodManager.startInputInner(InputMethodManager.java:1251)
+10-16 16:21:47.113  3293  3293 V InputMethodManager:    at android.view.inputmethod.InputMethodManager.onPostWindowFocus(InputMethodManager.java:1578)
+10-16 16:21:47.113  3293  3293 V InputMethodManager:    at android.view.ViewRootImpl.handleWindowFocusChanged(ViewRootImpl.java:2593)
+10-16 16:21:47.113  3293  3293 V InputMethodManager:    at android.view.ViewRootImpl.access$900(ViewRootImpl.java:132)
+10-16 16:21:47.113  3293  3293 V InputMethodManager:    at android.view.ViewRootImpl$ViewRootHandler.handleMessage(ViewRootImpl.java:4176)
+10-16 16:21:47.113  3293  3293 V InputMethodManager:    at android.os.Handler.dispatchMessage(Handler.java:106)
+10-16 16:21:47.113  3293  3293 V InputMethodManager:    at android.os.Looper.loop(Looper.java:193)
+10-16 16:21:47.113  3293  3293 V InputMethodManager:    at android.app.ActivityThread.main(ActivityThread.java:6727)
+10-16 16:21:47.113  3293  3293 V InputMethodManager:    at java.lang.reflect.Method.invoke(Native Method)
+10-16 16:21:47.113  3293  3293 V InputMethodManager:    at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:493)
+10-16 16:21:47.113  3293  3293 V InputMethodManager:    at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:917)
+10-16 16:21:47.116  3293  3293 V InputMethodManager: Starting input: tba=android.view.inputmethod.EditorInfo@5e01f3c ic=com.android.internal.widget.EditableInputConnection@e59c4c5
+10-16 16:21:47.116  3293  3293 V InputMethodManager: START INPUT: view=android.widget.SearchView$SearchAutoComplete{7e29d8b VFED..CL. .F....ID 0,6-672,42 #10203d4 android:id/search_src_text},focus=true,windowFo7
+10-16 16:21:47.118  1715  3247 V InputMethodManagerService: startInputOrWindowGainedFocus() windowToken:android.os.BinderProxy@cb86f4f
+10-16 16:21:47.118  1715  3247 D InputMethodManagerService: --- calledFromForegroundUserOrSystemProcess ? calling uid = 10007 system uid = 1000 calling userId = 0, foreground user id = 0, calling pid = 3293com.)
+10-16 16:21:47.118  1715  3247 V InputMethodManagerService: windowGainedFocus: reason=WINDOW_FOCUS_GAIN client=android.os.BinderProxy@18015ae inputContext=com.android.internal.view.IInputContext$Stub$Proxy@1fd98
+10-16 16:21:47.120  1715  3247 V InputMethodManagerService: Unspecified window will show input
+10-16 16:21:47.121  1715  3247 V InputMethodManagerService: unbindCurrentInputLocked: client=android.os.BinderProxy@6a388b9
+10-16 16:21:47.121  1715  3247 V InputMethodManagerService: Hide switching menu
+10-16 16:21:47.121  1715  3247 V InputMethodManagerService: switching to client: client=android.os.BinderProxy@18015ae keyguard=false
+10-16 16:21:47.121  1715  3247 V InputMethodManagerService: Creating new session for client ClientState{f6a1b82 uid 10007 pid 3293}
+10-16 16:21:47.122  1715  3247 D InputMethodManagerService: showCurrentInputLocked: mCurToken=android.os.Binder@274f0b7
+10-16 16:21:47.123  2126  2126 I InputMethodManager: handleMessage: MSG_SET_ACTIVE false, was true
+10-16 16:21:47.123  2126  2126 I InputMethodManager: handleMessage: MSG_UNBIND 8 reason=SWITCH_CLIENT
+10-16 16:21:47.123  2126  2126 V InputMethodManager: Clearing binding!
 
 
 
-10-15 12:07:31.142  3563  3563 V InputMethodManager: Starting input: view=android.widget.SearchView$SearchAutoComplete{7fb68be VFED..CL. .F...... 0,6-672,42 #10203d4 android:id/search_src_text},
-focus=true,windowFocus=true,autofillUiShowing=false,window=android.view.ViewRootImpl$W@e9ad1f,temporaryDetach=false reason=WINDOW_FOCUS_GAIN
-10-15 12:07:31.144  3563  3563 V InputMethodManager: Starting input: tba=android.view.inputmethod.EditorInfo@aa37e07 ic=com.android.internal.widget.EditableInputConnection@86cfb34
-10-15 12:07:31.144  3563  3563 V InputMethodManager: START INPUT: view=android.widget.SearchView$SearchAutoComplete{7fb68be VFED..CL. .F...... 0,6-672,42 #10203d4 android:id/search_src_text},focus=true,windowFoc
-us=true,autofillUiShowing=false,window=android.view.ViewRootImpl$W@e9ad1f,temporaryDetach=false ic=com.android.internal.widget.EditableInputConnection@86cfb34 tba=android.view.inputmethod.EditorInfo@aa37e07 cont
-rolFlags=#107
-10-15 12:07:31.146  1716  2387 V InputMethodManagerService: windowGainedFocus: reason=WINDOW_FOCUS_GAIN client=android.os.BinderProxy@d8303d8 inputContext=com.android.internal.view.IInputContext$Stub$Proxy@ba1e2
-d6 missingMethods= attribute=android.view.inputmethod.EditorInfo@e8ef957 controlFlags=#107 softInputMode=STATE_UNSPECIFIED|ADJUST_PAN|IS_FORWARD_NAVIGATION windowFlags=#81810100 unverifiedTargetSdkVersion=28
-10-15 12:07:31.163  1716  2387 V InputMethodManagerService: Unspecified window will show input
-10-15 12:07:31.168  3563  3563 V InputMethodManager: Starting input: Bind result=InputBindResult{result=SUCCESS_WITH_IME_SESSION method=com.android.internal.view.IInputMethodSession$Stub$Proxy@928fd5d id=com.and
-roid.inputmethod.latin/.LatinIME sequence=30 userActionNotificationSequenceNumber=3}
-10-15 12:07:31.174  1716  1727 V InputMethodManagerService: Client requesting input be shown
-10-15 12:07:31.185  1906  1906 I LatinIME: Starting input. Cursor position = 0,0
-10-15 12:07:31.187  2133  2861 D PrefCtrlListHelper: Could not find Context-only controller for pref: com.android.settings.inputmethod.GameControllerPreferenceController
+10-16 16:21:47.124  1715  3247 V InputMethodManagerService: Calling com.android.internal.view.IInputMethod$Stub$Proxy@58d909.showSoftInput(0, null)
+
+
+
+10-16 16:21:47.124  1715  3247 D InputMethodManagerService: bindCurrentInputMethodServiceLocked intent:Intent { act=android.view.InputMethod cmp=com.android.inputmethod.latin/.LatinIME (has extras) } flags:0x2C1
+10-16 16:21:47.125  1715  2737 D InputMethodManagerService: --- calledFromForegroundUserOrSystemProcess ? calling uid = 10048 system uid = 1000 calling userId = 0, foreground user id = 0, calling pid = 1900com.)
+10-16 16:21:47.136  3293  3293 V InputMethodManager: Starting input: Bind result=InputBindResult{result=SUCCESS_WAITING_IME_SESSION method=null id=com.android.inputmethod.latin/.LatinIME sequence=9 userActionNo}
+10-16 16:21:47.137  3293  3293 I ViewRootImpl: ViewRootHandler.handleMessage( MSG_RESIZED_REPORT )
+10-16 16:21:47.141  1715  2909 V InputMethodManagerService: Disabling: SessionState{uid 1000 pid 2126 method 58d909 session deb570e channel ClientState{99fced3 uid 1000 pid 2126} (server)}
+10-16 16:21:47.142  1715  2909 V InputMethodManagerService: Enabling: SessionState{uid 10007 pid 3293 method 58d909 session 9650bfc channel ClientState{f6a1b82 uid 10007 pid 3293} (server)}
+
+
+
+
+
+10-16 16:21:47.142  1715  2909 V InputMethodManagerService: Attach new input asks to show input
+10-16 16:21:47.142  1715  2909 D InputMethodManagerService: showCurrentInputLocked: mCurToken=android.os.Binder@274f0b7
+10-16 16:21:47.142  1715  2909 V InputMethodManagerService: Calling com.android.internal.view.IInputMethod$Stub$Proxy@58d909.showSoftInput(0, null)
+
+
+
+
+
+
+10-16 16:21:47.144  1715  2737 D InputMethodManagerService: --- calledFromForegroundUserOrSystemProcess ? calling uid = 10048 system uid = 1000 calling userId = 0, foreground user id = 0, calling pid = 1900com.)
+10-16 16:21:47.145  1715  2737 D InputMethodManagerService: --- calledFromForegroundUserOrSystemProcess ? calling uid = 10048 system uid = 1000 calling userId = 0, foreground user id = 0, calling pid = 1900com.)
+10-16 16:21:47.147  1715  2737 D InputMethodManagerService: --- calledFromForegroundUserOrSystemProcess ? calling uid = 10048 system uid = 1000 calling userId = 0, foreground user id = 0, calling pid = 1900com.)
+10-16 16:21:47.148  1715  2737 D InputMethodManagerService: --- calledFromForegroundUserOrSystemProcess ? calling uid = 10048 system uid = 1000 calling userId = 0, foreground user id = 0, calling pid = 1900com.)
+10-16 16:21:47.161  1715  2909 D InputMethodManagerService: --- show notification: label =  ��狱��语(��美�) - Android ��售� (AOSP)
+10-16 16:21:47.166  1715  2737 D InputMethodManagerService: --- calledFromForegroundUserOrSystemProcess ? calling uid = 1000 system uid = 1000 calling userId = 0, foreground user id = 0, calling pid = 1715com.a)
+10-16 16:21:47.239  1715  2737 D InputMethodManagerService: --- show notification: label =  ��狱��语(��美�) - Android ��售� (AOSP)
+10-16 16:21:47.240  1715  2909 D InputMethodManagerService: --- calledFromForegroundUserOrSystemProcess ? calling uid = 10048 system uid = 1000 calling userId = 0, foreground user id = 0, calling pid = 1900com.)
+10-16 16:21:47.244  1715  2909 D InputMethodManagerService: --- calledFromForegroundUserOrSystemProcess ? calling uid = 10048 system uid = 1000 calling userId = 0, foreground user id = 0, calling pid = 1900com.)
+10-16 16:21:47.245  1715  2909 D InputMethodManagerService: --- calledFromForegroundUserOrSystemProcess ? calling uid = 10048 system uid = 1000 calling userId = 0, foreground user id = 0, calling pid = 1900com.)
+10-16 16:21:47.246  1715  2909 D InputMethodManagerService: --- calledFromForegroundUserOrSystemProcess ? calling uid = 10048 system uid = 1000 calling userId = 0, foreground user id = 0, calling pid = 1900com.)
+10-16 16:21:47.248  1715  2909 D InputMethodManagerService: --- calledFromForegroundUserOrSystemProcess ? calling uid = 10048 system uid = 1000 calling userId = 0, foreground user id = 0, calling pid = 1900com.)
+10-16 16:21:47.258  1715  2909 D InputMethodManagerService: --- show notification: label =  ��狱��语(��美�) - Android ��售� (AOSP)
+10-16 16:21:47.479  1900  1900 I ViewRootImpl: ViewRootHandler.handleMessage( MSG_RESIZED_REPORT )
+10-16 16:21:47.712  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=com.android.systemui.statusbar.NotificationBackgroundView{5c725d4 V.ED..... ......I. 0,0-0,0 #7f0a006c app:id/backgroundNormall
+10-16 16:21:47.712  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=com.android.systemui.statusbar.NotificationBackgroundView{949e37d I.ED..... ......I. 0,0-0,0 #7f0a006b app:id/backgroundDimmedl
+10-16 16:21:47.712  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=com.android.internal.widget.CachingIconView{9e32d62 V.ED..... ......I. 0,0-0,0 #1020006 android:id/icon},focus=false,windowFocl
+10-16 16:21:47.712  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.TextView{e31f74f V.ED..... ......ID 0,0-0,0 #10201af android:id/app_name_text},focus=false,windowFocus=false,aul
+10-16 16:21:47.712  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.TextView{130d486 G.ED..... ......I. 0,0-0,0 #102028d android:id/header_text_secondary_divider},focus=false,windl
+10-16 16:21:47.712  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.TextView{a88161 G.ED..... ......I. 0,0-0,0 #102028c android:id/header_text_secondary},focus=false,windowFocus=fl
+10-16 16:21:47.713  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.TextView{acfbcc8 G.ED..... ......I. 0,0-0,0 #102028b android:id/header_text_divider},focus=false,windowFocus=fal
+10-16 16:21:47.713  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.TextView{f40b96b G.ED..... ......I. 0,0-0,0 #102028a android:id/header_text},focus=false,windowFocus=false,autol
+10-16 16:21:47.713  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.TextView{c58eae3 G.ED..... ......I. 0,0-0,0 #1020461 android:id/time_divider},focus=false,windowFocus=false,autl
+10-16 16:21:47.714  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.DateTimeView{335b312 G.ED..... ......I. 0,0-0,0 #102045d android:id/time},focus=false,windowFocus=false,autofill
+10-16 16:21:47.714  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.view.ViewStub{31e0be5 G.E...... ......I. 0,0-0,0 #10201fa android:id/chronometer},focus=false,windowFocus=false,autofil
+10-16 16:21:47.714  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=com.android.internal.widget.NotificationExpandButton{38906ba GFED..C.. ......I. 0,0-0,0 #102023e android:id/expand_button},focl
+10-16 16:21:47.715  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.ImageView{82f8147 G.ED..... ......I. 0,0-0,0 #1020392 android:id/profile_badge},focus=false,windowFocus=false,al
+10-16 16:21:47.715  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.ImageButton{7742272 GFED..C.. ......I. 0,0-0,0 #10201eb android:id/camera},focus=false,windowFocus=false,autofil
+10-16 16:21:47.716  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.ImageButton{51d96c3 GFED..C.. ......I. 0,0-0,0 #102030a android:id/mic},focus=false,windowFocus=false,autofillUl
+10-16 16:21:47.716  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.ImageButton{f5acb40 GFED..C.. ......I. 0,0-0,0 #1020361 android:id/overlay},focus=false,windowFocus=false,autofl
+10-16 16:21:47.716  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.LinearLayout{aba8edc VFE...C.. ......I. 0,0-0,0 #10201b0 android:id/app_ops},focus=false,windowFocus=false,autol
+10-16 16:21:47.716  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.view.NotificationHeaderView{7163a79 V.E...... ......I. 0,0-0,0 #102033d android:id/notification_header},focus=false,wil
+10-16 16:21:47.716  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.TextView{95a5ef3 V.ED..... ......ID 0,0-0,0 #1020016 android:id/title},focus=false,windowFocus=false,autofillUil
+10-16 16:21:47.716  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.TextView{ad29d G.ED..... ......ID 0,0-0,0 #102045a android:id/text_line_1},focus=false,windowFocus=false,autofil
+10-16 16:21:47.717  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.LinearLayout{cddf3be V.E...... ......I. 0,0-0,0 #10202e3 android:id/line1},focus=false,windowFocus=false,autofil
+10-16 16:21:47.717  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=com.android.internal.widget.ImageFloatingTextView{75aa7b0 V.ED..... ......ID 0,0-0,0 #102043e android:id/text},focus=false,winl
+10-16 16:21:47.718  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.view.ViewStub{e4abdae G.E...... ......I. 0,0-0,0 #102000d android:id/progress},focus=false,windowFocus=false,autofillUl
+10-16 16:21:47.718  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.LinearLayout{987dd74 G.E...... ......I. 0,0-0,0 #1020406 android:id/smart_reply_container},focus=false,windowFol
+10-16 16:21:47.718  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.LinearLayout{db8dc1f V.E...... ......I. 0,0-0,0 #102033e android:id/notification_main_column},focus=false,windol
+10-16 16:21:47.718  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.ImageView{2d13629 G.ED..... ......I. 0,0-0,0 #10203b7 android:id/right_icon},focus=false,windowFocus=false,autol
+10-16 16:21:47.718  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.FrameLayout{9c15b6c V.E...... R.....I. 0,0-0,0 #1020426 android:id/status_bar_latest_event_content},focus=falsel
+10-16 16:21:47.719  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=com.android.internal.widget.CachingIconView{7ff5ce0 V.ED..... ......I. 0,0-0,0 #1020006 android:id/icon},focus=false,windowFocl
+10-16 16:21:47.719  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.TextView{aad670c G.ED..... ......I. 0,0-0,0 #10201af android:id/app_name_text},focus=false,windowFocus=false,aul
+10-16 16:21:47.719  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.TextView{5f54a37 G.ED..... ......I. 0,0-0,0 #102028d android:id/header_text_secondary_divider},focus=false,windl
+10-16 16:21:47.719  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.TextView{51d6b36 G.ED..... ......I. 0,0-0,0 #102028c android:id/header_text_secondary},focus=false,windowFocus=l
+10-16 16:21:47.719  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.TextView{8384d1 G.ED..... ......I. 0,0-0,0 #102028b android:id/header_text_divider},focus=false,windowFocus=fall
+10-16 16:21:47.719  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.TextView{44fe7f8 G.ED..... ......I. 0,0-0,0 #102028a android:id/header_text},focus=false,windowFocus=false,autol
+10-16 16:21:47.719  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.TextView{ccd04c2 G.ED..... ......I. 0,0-0,0 #1020461 android:id/time_divider},focus=false,windowFocus=false,autl
+10-16 16:21:47.720  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.DateTimeView{8ea9d0d G.ED..... ......I. 0,0-0,0 #102045d android:id/time},focus=false,windowFocus=false,autofill
+10-16 16:21:47.720  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.view.ViewStub{290926a G.E...... ......I. 0,0-0,0 #10201fa android:id/chronometer},focus=false,windowFocus=false,autofil
+10-16 16:21:47.720  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=com.android.internal.widget.NotificationExpandButton{c26d35b G.ED..... ......I. 0,0-0,0 #102023e android:id/expand_button},focl
+10-16 16:21:47.720  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.ImageView{3978ba4 G.ED..... ......I. 0,0-0,0 #1020392 android:id/profile_badge},focus=false,windowFocus=false,al
+10-16 16:21:47.721  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.ImageButton{2b70535 GFED..C.. ......I. 0,0-0,0 #10201eb android:id/camera},focus=false,windowFocus=false,autofil
+10-16 16:21:47.721  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.ImageButton{7818dca GFED..C.. ......I. 0,0-0,0 #102030a android:id/mic},focus=false,windowFocus=false,autofillUl
+10-16 16:21:47.721  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.ImageButton{f991b3b GFED..C.. ......I. 0,0-0,0 #1020361 android:id/overlay},focus=false,windowFocus=false,autofl
+10-16 16:21:47.721  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.LinearLayout{82b855 VFE...C.. ......I. 0,0-0,0 #10201b0 android:id/app_ops},focus=false,windowFocus=false,autofl
+10-16 16:21:47.721  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.view.NotificationHeaderView{51ec258 V.E...... ......I. 0,0-0,0 #102033d android:id/notification_header},focus=false,wil
+10-16 16:21:47.721  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.FrameLayout{55fbfb1 V.E...... ......I. 0,0-0,0},focus=false,windowFocus=false,autofillUiShowing=false,window=anl
+10-16 16:21:47.721  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.TextView{b46fb99 V.ED..... ......ID 0,0-0,0 #1020016 android:id/title},focus=false,windowFocus=false,autofillUil
+10-16 16:21:47.722  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.TextView{f37ee5e V.ED..... ......I. 0,0-0,0 #102043e android:id/text},focus=false,windowFocus=false,autofillUiSl
+10-16 16:21:47.722  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.LinearLayout{a12bc96 V.E...... ......I. 0,0-0,0 #102033e android:id/notification_main_column},focus=false,windol
+10-16 16:21:47.722  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=com.android.internal.widget.NotificationActionListLayout{1743017 G.E...... ......I. 0,0-0,0 #102018c android:id/actions},focusl
+10-16 16:21:47.722  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.FrameLayout{25523f G.E...... ......I. 0,0-0,0 #102018d android:id/actions_container},focus=false,windowFocus=fal
+10-16 16:21:47.722  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.LinearLayout{de9ac04 V.E...... ......I. 0,0-0,0 #102033b android:id/notification_action_list_margin_target},focl
+10-16 16:21:47.722  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.FrameLayout{dffa5ed V.E...... R.....I. 0,0-0,0 #1020426 android:id/status_bar_latest_event_content},focus=falsel
+10-16 16:21:47.723  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=com.android.systemui.statusbar.NotificationContentView{cb60c22 V.E...... ......I. 0,0-0,0 #7f0a0119 app:id/expanded},focus=fall
+10-16 16:21:47.723  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=com.android.internal.widget.CachingIconView{aca52d3 V.ED..... ......I. 0,0-0,0 #1020006 android:id/icon},focus=false,windowFocl
+10-16 16:21:47.723  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.TextView{f93be10 V.ED..... ......ID 0,0-0,0 #10201af android:id/app_name_text},focus=false,windowFocus=false,aul
+10-16 16:21:47.723  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.TextView{c7f494b G.ED..... ......I. 0,0-0,0 #102028d android:id/header_text_secondary_divider},focus=false,windl
+10-16 16:21:47.723  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.TextView{42a6a1a G.ED..... ......I. 0,0-0,0 #102028c android:id/header_text_secondary},focus=false,windowFocus=l
+10-16 16:21:47.724  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.TextView{96360c5 G.ED..... ......I. 0,0-0,0 #102028b android:id/header_text_divider},focus=false,windowFocus=fal
+10-16 16:21:47.724  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.TextView{edeab3c G.ED..... ......I. 0,0-0,0 #102028a android:id/header_text},focus=false,windowFocus=false,autol
+10-16 16:21:47.724  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.TextView{750de6 G.ED..... ......I. 0,0-0,0 #1020461 android:id/time_divider},focus=false,windowFocus=false,autol
+10-16 16:21:47.724  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.DateTimeView{d9e4441 G.ED..... ......I. 0,0-0,0 #102045d android:id/time},focus=false,windowFocus=false,autofill
+10-16 16:21:47.724  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.view.ViewStub{deaab0e G.E...... ......I. 0,0-0,0 #10201fa android:id/chronometer},focus=false,windowFocus=false,autofil
+10-16 16:21:47.725  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=com.android.internal.widget.NotificationExpandButton{7dd492f VFED..C.. ......I. 0,0-0,0 #102023e android:id/expand_button},focl
+10-16 16:21:47.725  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.ImageView{5893f28 G.ED..... ......I. 0,0-0,0 #1020392 android:id/profile_badge},focus=false,windowFocus=false,al
+10-16 16:21:47.725  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.ImageButton{581b6b3 GFED..C.. ......I. 0,0-0,0 #10201eb android:id/camera},focus=false,windowFocus=false,autofil
+10-16 16:21:47.725  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.ImageButton{f578470 GFED..C.. ......I. 0,0-0,0 #102030a android:id/mic},focus=false,windowFocus=false,autofillUl
+10-16 16:21:47.725  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.ImageButton{13db3e9 GFED..C.. ......I. 0,0-0,0 #1020361 android:id/overlay},focus=false,windowFocus=false,autofl
+10-16 16:21:47.725  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.widget.LinearLayout{630fd09 VFE...C.. ......I. 0,0-0,0 #10201b0 android:id/app_ops},focus=false,windowFocus=false,autol
+10-16 16:21:47.726  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=android.view.NotificationHeaderView{34cc86e V.E...... R.....I. 0,0-0,0 #102033d android:id/notification_header},focus=false,wil
+10-16 16:21:47.726  2111  2111 V InputMethodManager: onViewDetachedFromWindow: view=com.android.systemui.statusbar.NotificationContentView{fd70b0f V.E...... ......I. 0,0-0,0 #7f0a011a app:id/expandedPublic},focl
+read: unexpected EOF!
