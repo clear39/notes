@@ -165,7 +165,29 @@ public class CarAudioService extends ICarAudio.Stub implements CarServiceBase {
 
     private void setupVolumeGroups() {
         Preconditions.checkArgument(mCarAudioDeviceInfos.size() > 0,"No bus device is configured to setup volume groups");
+
+        /**
+        36 <volumeGroups xmlns:car="http://schemas.android.com/apk/res-auto">
+        37     <group>
+        38     ┊   <context car:context="music"/>
+        39     ┊   <context car:context="call_ring"/>
+        40     ┊   <context car:context="navigation"/>
+        41     ┊   <context car:context="voice_command"/>
+        42     ┊   <context car:context="call"/>
+        43     </group>
+        44     <group>
+        45     ┊   <context car:context="notification"/>
+        46     ┊   <context car:context="system_sound"/>
+        47     ┊   <context car:context="alarm"/>
+        48     </group>
+        49 </volumeGroups>
+
+         */
         final CarVolumeGroupsHelper helper = new CarVolumeGroupsHelper(mContext, R.xml.car_volume_groups);
+
+        /***
+         * 解析 car_volume_groups
+         */
         mCarVolumeGroups = helper.loadVolumeGroups();
         for (CarVolumeGroup group : mCarVolumeGroups) {
             for (int contextNumber : group.getContexts()) {
