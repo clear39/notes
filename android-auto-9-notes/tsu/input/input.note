@@ -1,0 +1,35 @@
+// 没有连接
+autolink_8q:/ # ls /dev/input/ -al                                             
+total 0
+drwxr-xr-x  2 root   root       100 2019-10-12 14:04 .
+drwxr-xr-x 17 root   root      1700 2019-10-12 14:04 ..
+crw-rw----  1 system system 13,  64 2019-10-12 14:04 event0
+crw-rw----  1 system system 13,  65 2019-10-12 14:04 event1
+crw-rw----  1 system system 13,  66 2019-10-12 14:04 event2
+
+
+// 连接上之后
+autolink_8q:/ # ls /dev/input/ -al                                             
+total 0
+drwxr-xr-x  2 root   root       140 2019-10-12 14:47 .
+drwxr-xr-x 17 root   root      1700 2019-10-12 14:04 ..
+crw-rw----  1 system system 13,  64 2019-10-12 14:04 event0
+crw-rw----  1 system system 13,  65 2019-10-12 14:44 event1
+crw-rw----  1 system system 13,  66 2019-10-12 14:44 event2
+crw-rw----  1 system system 13,  67 2019-10-12 14:47 event3
+crw-rw----  1 system system 13,  68 2019-10-12 14:47 event4
+
+
+autolink_8q:/ # getevent
+
+
+add device 1: /dev/input/event4
+  name:     "uinput_pointer"
+add device 2: /dev/input/event3
+  name:     "uinput_touch"
+add device 3: /dev/input/event2
+  name:     "uinput_hardkey_knob"
+add device 4: /dev/input/event1
+  name:     "uinput_hardkey"
+add device 5: /dev/input/event0
+  name:     "sc-powerkey"

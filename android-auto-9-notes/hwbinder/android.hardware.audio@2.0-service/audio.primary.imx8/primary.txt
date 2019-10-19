@@ -1,3 +1,4 @@
 /*
 * 这一块有单独的代码仓库
 */
+nxp/imx8/imx-p9.0.0_2.1.0-auto-ga/platform/hardware/imx_dev
