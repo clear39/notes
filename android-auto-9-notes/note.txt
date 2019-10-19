@@ -7,6 +7,9 @@ BOARD_KERNEL_CMDLINE += printk.devkmsg=on
 BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
 
 
+setprop persist.sys.disable_rescure true
+
+
 autolink -------------> /dev/ttyXRUSB1
 TSU -------------> /dev/ttyXRUSB2
 

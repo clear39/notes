@@ -61,6 +61,11 @@ public class CarAudioService extends ICarAudio.Stub implements CarServiceBase {
     @Nullable
     private AudioPolicy getDynamicAudioPolicy(@NonNull IAudioControl audioControl) {
         AudioPolicy.Builder builder = new AudioPolicy.Builder(mContext);
+        /***
+         * 
+         * 
+         * 
+         */
         builder.setLooper(Looper.getMainLooper());
 
         // 1st, enumerate all output bus device ports
@@ -74,6 +79,13 @@ public class CarAudioService extends ICarAudio.Stub implements CarServiceBase {
             Log.e(CarLog.TAG_AUDIO, "getDynamicAudioPolicy, no output device available, ignore");
             return null;
         }
+
+
+        /***
+         * private final SparseArray<CarAudioDeviceInfo> mCarAudioDeviceInfos = new SparseArray<>();
+         * 
+         * 这里将 bus 设备地址与 AudioDeviceInfo 添加 mCarAudioDeviceInfos 表中
+         */
         for (AudioDeviceInfo info : deviceInfos) {
             Log.v(CarLog.TAG_AUDIO, String.format("output id=%d address=%s type=%s",info.getId(), info.getAddress(), info.getType()));
             if (info.getType() == AudioDeviceInfo.TYPE_BUS) {
@@ -101,6 +113,12 @@ public class CarAudioService extends ICarAudio.Stub implements CarServiceBase {
             ContextNumber.SYSTEM_SOUND
         };
         
+        private final SparseIntArray mContextToBus = new SparseIntArray();
+
+        将 ContextNumber 与 busNumber 对应压入 mContextToBus map中 （将 ContextNumber 与 busNumber映射 ）
+        检测 AudioControl.cpp 中 配置的对应bus 地址设备是否存在，
+        如果 info 为空 直接 弹出警告信息
+
          */
         try {
             for (int contextNumber : CONTEXT_NUMBERS) {
@@ -121,11 +139,19 @@ public class CarAudioService extends ICarAudio.Stub implements CarServiceBase {
             int busNumber = mCarAudioDeviceInfos.keyAt(i);
             boolean hasContext = false;
             CarAudioDeviceInfo info = mCarAudioDeviceInfos.valueAt(i);
+            /**
+             * 获取输出设备信息
+             */
             AudioFormat mixFormat = new AudioFormat.Builder()
                     .setSampleRate(info.getSampleRate())
                     .setEncoding(info.getEncodingFormat())
                     .setChannelMask(info.getChannelCount())
                     .build();
+
+
+            /***
+             * 
+             *  */        
             AudioMixingRule.Builder mixingRuleBuilder = new AudioMixingRule.Builder();
             for (int j = 0; j < mContextToBus.size(); j++) {
                 if (mContextToBus.valueAt(j) == busNumber) {
@@ -147,7 +173,7 @@ public class CarAudioService extends ICarAudio.Stub implements CarServiceBase {
                 // audio_policy_configuration and no context is assigned to it.
                 // In such case, do not build a policy mix with zero rules.
                 AudioMix audioMix = new AudioMix.Builder(mixingRuleBuilder.build())
-                        .setFormat(mixFormat)
+                        .setFormat(mixFormat)  // 输入设备 采样信息，解码格式，通道数量
                         .setDevice(info.getAudioDeviceInfo())
                         .setRouteFlags(AudioMix.ROUTE_FLAG_RENDER)
                         .build();
@@ -157,8 +183,22 @@ public class CarAudioService extends ICarAudio.Stub implements CarServiceBase {
 
         // 4th, attach the {@link AudioPolicyVolumeCallback}
         builder.setAudioPolicyVolumeCallback(mAudioPolicyVolumeCallback);
-
+        
+        /**
+         * 在 build 中通过设置的参数 构造一个 AudioPolicy 并返回
+         */
         return builder.build();
+    }
+
+
+    private int[] getUsagesForContext(int contextNumber) {
+        final List<Integer> usages = new ArrayList<>();
+        for (int i = 0; i < USAGE_TO_CONTEXT.size(); i++) {
+            if (USAGE_TO_CONTEXT.valueAt(i) == contextNumber) {
+                usages.add(USAGE_TO_CONTEXT.keyAt(i));
+            }
+        }
+        return usages.stream().mapToInt(i -> i).toArray();
     }
 
 

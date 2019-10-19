@@ -19,7 +19,7 @@ BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
 
 
 
-
+am start -n cn.kuwo.kwmusiccar/.WelcomeActivity
 
 
 
