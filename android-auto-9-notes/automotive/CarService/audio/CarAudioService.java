@@ -72,7 +72,7 @@ public class CarAudioService extends ICarAudio.Stub implements CarServiceBase {
         /***
          * 
          * 
-         * 
+         * public static final int GET_DEVICES_OUTPUTS   = 0x0002;
          */
         AudioDeviceInfo[] deviceInfos = mAudioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS);
         if (deviceInfos.length == 0) {

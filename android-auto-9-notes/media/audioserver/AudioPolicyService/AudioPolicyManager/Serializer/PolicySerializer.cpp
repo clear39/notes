@@ -200,7 +200,9 @@ status_t ModuleTraits::deserialize(xmlDocPtr doc, const xmlNode *root, PtrElemen
      * */
     const xmlNode *children = root->xmlChildrenNode;
     while (children != NULL) {
-        if (!xmlStrcmp(children->name, (const xmlChar *)childAttachedDevicesTag)) {//const char *const ModuleTraits::childAttachedDevicesTag = "attachedDevices";
+        
+        //const char *const ModuleTraits::childAttachedDevicesTag = "attachedDevices";
+        if (!xmlStrcmp(children->name, (const xmlChar *)childAttachedDevicesTag)) {
             ALOGV("%s: %s %s found", __FUNCTION__, tag, childAttachedDevicesTag);
             const xmlNode *child = children->xmlChildrenNode;
             while (child != NULL) {
@@ -217,7 +219,9 @@ status_t ModuleTraits::deserialize(xmlDocPtr doc, const xmlNode *root, PtrElemen
                 child = child->next;
             }
         }
-        if (!xmlStrcmp(children->name, (const xmlChar *)childDefaultOutputDeviceTag)) {//const char *const ModuleTraits::childDefaultOutputDeviceTag = "defaultOutputDevice";
+
+        //const char *const ModuleTraits::childDefaultOutputDeviceTag = "defaultOutputDevice";
+        if (!xmlStrcmp(children->name, (const xmlChar *)childDefaultOutputDeviceTag)) {
             xmlChar *defaultOutputDevice = xmlNodeListGetString(doc, children->xmlChildrenNode, 1);;
             if (defaultOutputDevice != NULL) {
                 ALOGV("%s: %s %s=%s", __FUNCTION__, tag, childDefaultOutputDeviceTag,(const char*)defaultOutputDevice);

@@ -15,24 +15,105 @@
 -->
 
 <audioPolicyConfiguration version="1.0" xmlns:xi="http://www.w3.org/2001/XInclude">
-    <globalConfiguration speaker_drc_enabled="true"/>
 
+    <!--
+
+    -->
+    <globalConfiguration speaker_drc_enabled="true"/>
+    <!--
+
+       frameworks/av/services/audiopolicy/common/managerdefinitions/include/HwModule.h:100:class HwModuleCollection : public Vector<sp<HwModule> >
+
+       modules 是一个集合  对应类为 HwModuleCollection
+    -->
     <modules>
         <!-- Primary Audio HAL -->
-        <module name="primary" halVersion="2.0">
+        <!-- 
+            frameworks/av/services/audiopolicy/common/managerdefinitions/src/HwModule.cpp
+            module 标签 对应的类为 HwModule
 
+            每个 HwModule 都会添加到 AudioPolicyConfig的成员mHwModules中，
+            而 AudioPolicyConfig的成员mHwModules 是有 AudioPolicyManager 成员 mHwModulesAll 传入 （详情请看 AudioPolicyManager构造函数）
+        -->
+        <module name="primary" halVersion="2.0">
+            <!-- 
+                attachedDevices 标签中的每个 item（对应devicePort（DeviceDescriptor）中的 tagName） 成员 会去 devicePorts 中 查找匹配的 tagName 项 ，
+                然后加入到 AudioPolicyConfig 中的 mAvailableOutputDevices 和 mAvailableInputDevices 集合中
+
+
+                注意 mAvailableOutputDevices 和 mAvailableInputDevices 是由 AudioPolicyManager 成员（mAvailableOutputDevices和mAvailableInputDevices）传入 （详情请看 AudioPolicyManager构造函数）
+                
+                所有的 module 标签中 attachedDevices 子标签 都会添加 AudioPolicyManager 成员 mAvailableOutputDevices 和 mAvailableInputDevices
+            -->
             <attachedDevices>
                 <item>bus0_media_out</item>
                 <item>bus1_system_sound_out</item>
                 <item>Built-In Mic</item>
             </attachedDevices>
+
+            <!-- 
+                defaultOutputDevice 标签 和 attachedDevices 相同，同样是通过属性值 bus0_media_out 到 devicePorts（DeviceVector） 对应集合中通过查找匹配的 tagName 项
+                但是 mDefaultOutputDevice（DeviceDescriptor）设备 只有一个
+            -->
             <defaultOutputDevice>bus0_media_out</defaultOutputDevice>
             
+            <!--
+                frameworks/av/services/audiopolicy/common/managerdefinitions/include/HwModule.h:37:
+                typedef Vector<sp<IOProfile> > IOProfileCollection;
+
+                mixPorts 对应集合类为 IOProfileCollection
+
+                mixPorts 通过 void HwModule::setProfiles(const IOProfileCollection &profiles) 方法添加到 HwModule 中的 mOutputProfiles 和 mInputProfiles 中
+                在 HwModule::setProfiles 方法中会遍历 IOProfileCollection 结合通过 mixPort 的 role 属性 来区分添加 mOutputProfiles（role="source"） 还是 mInputProfiles（role="sink"） 中
+                frameworks/av/services/audiopolicy/common/managerdefinitions/include/AudioPort.h:48:    
+                audio_port_role_t AudioPort::getRole() const { return mRole; }
+
+                注意：
+                 在 HwModule::setProfiles 中 每个 IOProfile（mixPort） 都会添加到 HwModule成员mPorts（类型为AudioPortVector）中
+                 下面 devicePorts（DeviceVector） 的每个成员devicePort（DeviceDescriptor）也会添加到 HwModule成员mPorts（类型为AudioPortVector）中
+
+            -->
             <mixPorts>
-                <!--IOProfile-->
+                <!--
+                    frameworks/av/services/audiopolicy/common/managerdefinitions/include/IOProfile.h:33:
+                    class IOProfile : public AudioPort
+
+                    mixPort对应的封装类为 IOProfile
+
+
+                    每个 mixPort 可以 有 profile 还可以有 gain 子标签
+
+                    void AudioPort::setAudioProfiles(const AudioProfileVector &profiles) { mProfiles = profiles; }
+
+                    void AudioPort::setGains(const AudioGainCollection &gains) { mGains = gains; }
+
+
+                    属性:
+                    name="mixport_bus0_media_out" 存储在 AudioPort::mName 中 （方法 AudioPort::setName AudioPort::getName IOProfile::getTagName）
+
+                    role="source" 存储在 AudioPort::mRole(类型audio_port_role_t)中（方法 AudioPort::getRole）
+
+                    flags="AUDIO_OUTPUT_FLAG_PRIMARY" 存储在 AudioPort::mFlags 中 （方法 AudioPort::setFlags AudioPort::getFlags）
+                -->
                 <mixPort name="mixport_bus0_media_out" role="source"
                         flags="AUDIO_OUTPUT_FLAG_PRIMARY">
-                    <!--AudioProfile-->
+                    <!--
+                        frameworks/av/services/audiopolicy/common/managerdefinitions/include/AudioProfile.h:36:
+                        class AudioProfile : public virtual RefBase
+                        profile 对应封装类为 AudioProfile
+
+                        属性：
+                        name="" 存储在 AudioProfile::mName 没有用到，默认为空 
+                        format="AUDIO_FORMAT_PCM_16_BIT" 存储在 AudioProfile::mFormat(类型为audio_format_t) 
+                        samplingRates="48000" 存储在 AudioProfile::mSamplingRates(该成员为集合SampleRateVector)中
+                        channelMasks="AUDIO_CHANNEL_OUT_STEREO"  存储在 AudioProfile::mChannelMasks(该成员为集合ChannelsVector)中
+
+
+                        通过 void AudioPort::setAudioProfiles(const AudioProfileVector &profiles) { mProfiles = profiles; }
+                        关联到 IOProfile 中 
+                        获取  AudioProfileVector &getAudioProfiles() { return mProfiles; }
+                    
+                    -->
                     <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
                              samplingRates="48000"
                              channelMasks="AUDIO_CHANNEL_OUT_STEREO"/>
@@ -50,11 +131,70 @@
                 </mixPort>
 
             </mixPorts>
-            
+            <!--
+                frameworks/av/services/audiopolicy/common/managerdefinitions/include/DeviceDescriptor.h:67:
+                class DeviceVector : public SortedVector<sp<DeviceDescriptor> >
+
+                devicePorts 对应集合类为 DeviceVector（每个成员为DeviceDescriptor（devicePort））
+
+                每一个 devicePort 都会添加到 DeviceVector（HwModule的成员） 集合中 
+                （对应方法 void HwModule::setDeclaredDevices(const DeviceVector &devices) 和 const DeviceVector &HwModule::getDeclaredDevices()）
+                这里在 HwModule::setDeclaredDevices 中会遍历 DeviceVector 添加到 HwModule成员mPorts（类型为AudioPortVector）中
+                上面 mixPorts 的每个成员mixPort也会添加到 HwModule成员mPorts（类型为AudioPortVector）中
+
+
+                frameworks/av/services/audiopolicy/common/managerdefinitions/include/AudioCollections.h:31:
+                class AudioPortVector : public Vector<sp<AudioPort> >
+            -->
             <devicePorts>
+                <!--
+                    frameworks/av/services/audiopolicy/common/managerdefinitions/include/DeviceDescriptor.h:29:
+                    class DeviceDescriptor : public AudioPort, public AudioPortConfig
+
+                    devicePort 对应类 DeviceDescriptor
+
+
+                    每个 devicePort 可以 有 profile 还可以有 gain 子标签
+
+                    void AudioPort::setAudioProfiles(const AudioProfileVector &profiles) { mProfiles = profiles; }
+
+                    void AudioPort::setGains(const AudioGainCollection &gains) { mGains = gains; }
+
+                    属性:
+                    tagName="bus0_media_out" 存储在 DeviceDescriptor::mTagName  中 （方法 DeviceDescriptor::getTagName）
+                    role="sink"     存储在 AudioPort::mRole(类型audio_port_role_t)中（方法 AudioPort::getRole）
+                    type="AUDIO_DEVICE_OUT_BUS" 只是用来判断是否符合输入输出设备（和role="sink"匹配进行判断）
+                    address="bus0_media_out" 存储在 DeviceDescriptor::mAddress 中
+                -->
                 <devicePort tagName="bus0_media_out" role="sink" type="AUDIO_DEVICE_OUT_BUS"
                         address="bus0_media_out">
                     <gains>
+                        <!--
+                        frameworks/av/services/audiopolicy/common/managerdefinitions/include/AudioGain.h:25:
+                        class AudioGain: public RefBase
+
+                        gain 对应封装类 AudioGain
+
+
+                        属性：
+
+                        name="" 
+
+                        @   system/media/audio/include/system/audio.h:337:typedef uint32_t audio_gain_mode_t;
+                        @   system/media/audio/include/system/audio-base.h
+                        417 enum {
+                        418     AUDIO_GAIN_MODE_JOINT    = 0x1u,                                                                                                                                                                           
+                        419     AUDIO_GAIN_MODE_CHANNELS = 0x2u,
+                        420     AUDIO_GAIN_MODE_RAMP     = 0x4u,
+                        421 };   
+                        mode="AUDIO_GAIN_MODE_JOINT" 存储在 AudioGain::mGain.mode 中
+
+                        minValueMB="-3200"  存储在 AudioGain::mGain.min_value 中
+                        maxValueMB="600"       存储在 AudioGain::mGain.max_value 中
+                        defaultValueMB="0"      存储在 AudioGain::mGain.default_value 中
+                        stepValueMB="100"       存储在 AudioGain::mGain.step_value 中
+
+                        -->
                         <gain name="" mode="AUDIO_GAIN_MODE_JOINT"
                                 minValueMB="-3200" maxValueMB="600" defaultValueMB="0" stepValueMB="100"/>
                     </gains>
@@ -71,6 +211,9 @@
                 </devicePort>
             </devicePorts>
             <!-- route declaration, i.e. list all available sources for a given sink -->
+            <!--
+                
+            -->
             <routes>
                 <route type="mix" sink="bus0_media_out" sources="mixport_bus0_media_out"/>
                 <route type="mix" sink="bus1_system_sound_out" sources="mixport_bus1_system_sound_out"/>

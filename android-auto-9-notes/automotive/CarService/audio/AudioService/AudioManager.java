@@ -9,9 +9,9 @@ public class AudioManager {
      * currently connected to the system and meeting the criteria specified in the
      * <code>flags</code> parameter.
      * @param flags A set of bitflags specifying the criteria to test.
-     * @see #GET_DEVICES_OUTPUTS
-     * @see #GET_DEVICES_INPUTS
-     * @see #GET_DEVICES_ALL
+     * @see #GET_DEVICES_OUTPUTS    //  public static final int GET_DEVICES_OUTPUTS   = 0x0002;
+     * @see #GET_DEVICES_INPUTS     //  public static final int GET_DEVICES_INPUTS    = 0x0001;
+     * @see #GET_DEVICES_ALL        // public static final int GET_DEVICES_ALL = GET_DEVICES_OUTPUTS | GET_DEVICES_INPUTS;
      * @return A (possibly zero-length) array of AudioDeviceInfo objects.
      */
     public AudioDeviceInfo[] getDevices(int flags) {
@@ -108,13 +108,11 @@ public class AudioManager {
 
                 for (int i = 0; i < newPatches.size(); i++) {
                     for (int j = 0; j < newPatches.get(i).sources().length; j++) {
-                        AudioPortConfig portCfg = updatePortConfig(newPatches.get(i).sources()[j],
-                                                                   newPorts);
+                        AudioPortConfig portCfg = updatePortConfig(newPatches.get(i).sources()[j], newPorts);
                         newPatches.get(i).sources()[j] = portCfg;
                     }
                     for (int j = 0; j < newPatches.get(i).sinks().length; j++) {
-                        AudioPortConfig portCfg = updatePortConfig(newPatches.get(i).sinks()[j],
-                                                                   newPorts);
+                        AudioPortConfig portCfg = updatePortConfig(newPatches.get(i).sinks()[j],newPorts);
                         newPatches.get(i).sinks()[j] = portCfg;
                     }
                 }
@@ -160,31 +158,5 @@ public class AudioManager {
         }
         return SUCCESS;
     }
-
-
-
-
-
-
-
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
