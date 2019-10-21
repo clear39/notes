@@ -1,5 +1,14 @@
 查看系统创建了那些路由表：  
 cat /data/misc/net/rt_tables
+
+添加路由表
+echo "100  test" >> /etc/iproute2/rt_tables 系统重启有效 100为table_id    test为表名
+
+// ip route路由表
+ip route add default via 192.168.2.2 table 200
+
+
+
 源码地址：/work/workcodes/aosp-p9.x-auto-alpha/system/netd/server/RouteController.cpp
 
 console:/ # cat /data/misc/net/rt_tables                                       
@@ -10,6 +19,11 @@ console:/ # cat /data/misc/net/rt_tables
 99 legacy_system
 1007 ppp0
 1003 wlan0
+
+
+
+//  ip rule策略路由
+ip rule add from all table 200 pref 30000
 
 
 

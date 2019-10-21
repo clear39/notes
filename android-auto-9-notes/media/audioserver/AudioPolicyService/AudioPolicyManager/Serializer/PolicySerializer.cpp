@@ -761,6 +761,8 @@ status_t RouteTraits::deserialize(_xmlDoc /*doc*/, const _xmlNode *root, sp<Audi
     }
 
     /**
+     * ctx 为 HwModule
+     * 
      * 这里是调用 
     */
     // Convert Sink name to port pointer

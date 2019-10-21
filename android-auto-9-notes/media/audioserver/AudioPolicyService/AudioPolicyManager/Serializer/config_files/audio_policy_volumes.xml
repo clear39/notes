@@ -22,9 +22,51 @@ volume index from 0 to 100.
 </volume>
 -->
 
+
+
+<!--
+frameworks/av/services/audiopolicy/common/managerdefinitions/include/VolumeCurve.h:158:
+class VolumeCurvesCollection : public KeyedVector<audio_stream_type_t, VolumeCurvesForStream>,
+
+volumes 对应封装类 volumes VolumeCurvesCollection
+void AudioPolicyConfig::setVolumes(const VolumeCurvesCollection &volumes)
+
+而 AudioPolicyConfig的成员 mVolumeCurves 是有 AudioPolicyManager 成员 mVolumeCurves 传入 （详情请看 AudioPolicyManager构造函数）
+
+-->
 <volumes>
+    <!--
+       frameworks/av/services/audiopolicy/common/managerdefinitions/include/VolumeCurve.h:49:
+       class VolumeCurve : public RefBase
+
+       volume标签对应封装类为 VolumeCurve 
+
+       属性：
+       //由构造VolumeCurve方法传入
+       // audio_stream_type_t VolumeCurve::getStreamType() const { return mStreamType; }
+       //   @   system/media/audio/include/system/audio-base.h:40:} audio_stream_type_t;
+       stream="AUDIO_STREAM_VOICE_CALL"  存储在 VolumeCurve::mStreamType(类型 audio_stream_type_t) 中 
+
+       //由构造VolumeCurve方法传入
+       // device_category VolumeCurve::getDeviceCategory() const { return mDeviceCategory; }
+       deviceCategory="DEVICE_CATEGORY_HEADSET" 存储在 VolumeCurve::mDeviceCategory(类型 device_category) 中 
+
+       // 该属性可能没有，
+       // 该属性有值时，会通过属性值去配置文件中查找 reference子标签的属性名为name的值 进行匹配进行设置 CurvePoint 属性
+       // 如果该属性没有，会有子标签 进行匹配 CurvePoint 属性
+       ref="DEFAULT_MEDIA_VOLUME_CURVE"
+
+    -->
     <volume stream="AUDIO_STREAM_VOICE_CALL" deviceCategory="DEVICE_CATEGORY_HEADSET">
-        <!--mIndex , mAttenuationInMb-->
+        <!--
+        
+            格式：    mIndex , mAttenuationInMb
+
+            point 对应封装类为 CurvePoint
+        
+            <point> CurvePoint::mIndex, CurvePoint::mAttenuationInMb</point>
+            通过  VolumeCurve::add 将每一个 CurvePoint 添加到 VolumeCurve::mCurvePoints 中
+        -->
         <point>0,-4200</point>
         <point>33,-2800</point>
         <point>66,-1400</point>

@@ -17,7 +17,10 @@
 <audioPolicyConfiguration version="1.0" xmlns:xi="http://www.w3.org/2001/XInclude">
 
     <!--
+        void AudioPolicyConfig::setSpeakerDrcEnabled(bool isSpeakerDrcEnabled);
+        存储在 AudioPolicyConfig::mIsSpeakerDrcEnabled 中
 
+        访问方法 bool AudioPolicyConfig::isSpeakerDrcEnabled() const { return mIsSpeakerDrcEnabled; }
     -->
     <globalConfiguration speaker_drc_enabled="true"/>
     <!--
@@ -212,9 +215,40 @@
             </devicePorts>
             <!-- route declaration, i.e. list all available sources for a given sink -->
             <!--
-                
+                frameworks/av/services/audiopolicy/common/managerdefinitions/include/AudioCollections.h:38:
+                class AudioRouteVector : public Vector<sp<AudioRoute> >
+                通过 void HwModule::setRoutes(const AudioRouteVector &routes) 添加到 HwModule 的 mRoutes 中
             -->
             <routes>
+                <!--
+                    frameworks/av/services/audiopolicy/common/managerdefinitions/include/AudioRoute.h:36:
+                    class AudioRoute  : public virtual RefBase
+
+                    route 标签对应封装类 AudioRoute 
+
+                    属性:
+                    
+                    typedef enum {
+                        AUDIO_ROUTE_MUX = 0,
+                        AUDIO_ROUTE_MIX = 1
+                    } audio_route_type_t;
+                    type="mix"  存储在 AudioRoute::mType(类型为 audio_route_type_t) 中
+
+                    // sink 属性值 匹配 devicePort的tagName 或者 mixPort的Name
+                    // 通过sink属性值(bus0_media_out) 通过 HwModule::findPortByTagName 方法到 HwModule::mPorts（mixport和devicePort都会添加到这里） 中查找 匹配 devicePort的tagName 或者 mixPort的Name
+                    // 查找对应的 AudioPort 通过 void AudioRoute::setSink(const sp<AudioPort> &sink) { mSink = sink; }
+                    // AudioPort 通过 addRoute 将 AudioRoute 关联起来
+                    sink="bus0_media_out" 存储在 AudioRoute::mSink (类型为 sp<AudioPort>) 中
+
+
+                    // sources 属性值 匹配 devicePort的tagName 或者 mixPort的Name
+                    // 通过sources属性值(mixport_bus0_media_out) 通过 HwModule::findPortByTagName 方法到 HwModule::mPorts（mixport和devicePort都会添加到这里） 中查找 匹配 devicePort的tagName 或者 mixPort的Name
+                    // 注意这里 sources属性值 可以设置多个，通过“，”隔开
+                    // 这里每个 sources 都会通过 AudioPort::addRoute 关联起来
+                    // 这里通过 sources 查找到的 AudioPort 会通过 AudioRoute::setSources 关联起来
+                    sources="mixport_bus0_media_out"
+                
+                -->
                 <route type="mix" sink="bus0_media_out" sources="mixport_bus0_media_out"/>
                 <route type="mix" sink="bus1_system_sound_out" sources="mixport_bus1_system_sound_out"/>
                 <route type="mix" sink="primary input" sources="Built-In Mic"/>

@@ -10,6 +10,10 @@ BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
 setprop persist.sys.disable_rescure true
 
 
+settings put global mobile_data 0
+
+
+
 autolink -------------> /dev/ttyXRUSB1
 TSU -------------> /dev/ttyXRUSB2
 
@@ -21,6 +25,9 @@ dumpsys acitivity service TelephonyDebugService
 
 
 setprop  selinux.restorecon_recursive  file
+
+
+
 
 // reboot 命令 是通过:
 setprop sys.powerctl reboot,shell
@@ -36,29 +43,3 @@ fb6b 4096 4096 451493 451493 sha1 079a4c686a8426dee45e0be9c936efec6ae855cb b6bfb
 6-3b97d10bfb6b fec_roots 2 fec_blocks 455050 fec_start 455050" root=/dev/dm-0 androidboot.vbmeta.device=PARTUUID=65846b06-f75f-4c10-a67f-9ce13b1bb9dc androidboot.vbmeta.avb_version=1.1 androidboot.vbmeta.device_
 state=unlocked androidboot.vbmeta.hash_alg=sha256 androidboot.vbmeta.size=3264 androidboot.vbmeta.digest=3b8bbe3c4b7e8d3648a3a7e7926ac7321f17f1e6349de25633c75714e0854a8c androidboot.vbmeta.invalidate_on_error=ye
 s androidboot.veritymode=enforcing skip_initramfs rootwait androidboot.dtbo_idx=0 androidboot.keystore=software
-
-
-
-
-
-
-service early_init_sh /vendor/bin/init.insmod.sh /vendor/etc/early.init.cfg sys.all.early_init.ready
-    class main
-    user root
-    group root system
-    disabled
-    oneshot
-
-service boot_completed_core_sh /vendor/bin/init.insmod.sh /vendor/etc/setup.core.cfg vendor.all.setup_core.ready
-    class main
-    user root
-    group root system
-    disabled
-    oneshot
-
-service boot_completed_main_sh /vendor/bin/init.insmod.sh /vendor/etc/setup.main.cfg vendor.all.setup_main.ready
-    class main
-    user root
-    group root system
-    disabled
-    oneshot
