@@ -1,5 +1,5 @@
 
-settings put global mobile_data 0
+
 
 AudioPolicyManager::startInput
  ---> AudioPolicyManager::setDeviceConnectionStateInt

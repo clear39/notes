@@ -108,13 +108,11 @@ public class AudioManager {
 
                 for (int i = 0; i < newPatches.size(); i++) {
                     for (int j = 0; j < newPatches.get(i).sources().length; j++) {
-                        AudioPortConfig portCfg = updatePortConfig(newPatches.get(i).sources()[j],
-                                                                   newPorts);
+                        AudioPortConfig portCfg = updatePortConfig(newPatches.get(i).sources()[j], newPorts);
                         newPatches.get(i).sources()[j] = portCfg;
                     }
                     for (int j = 0; j < newPatches.get(i).sinks().length; j++) {
-                        AudioPortConfig portCfg = updatePortConfig(newPatches.get(i).sinks()[j],
-                                                                   newPorts);
+                        AudioPortConfig portCfg = updatePortConfig(newPatches.get(i).sinks()[j],newPorts);
                         newPatches.get(i).sinks()[j] = portCfg;
                     }
                 }

@@ -137,12 +137,9 @@ android_media_AudioSystem_listAudioPatches(JNIEnv *env, jobject clazz,jobject jP
         }
 
         numPatches = 0;
-        status = AudioSystem::listAudioPatches(&numPatches,
-                                               NULL,
-                                               &generation1);
+        status = AudioSystem::listAudioPatches(&numPatches,NULL,&generation1);
         if (status != NO_ERROR) {
-            ALOGE_IF(status != NO_ERROR, "listAudioPatches AudioSystem::listAudioPatches error %d",
-                                      status);
+            ALOGE_IF(status != NO_ERROR, "listAudioPatches AudioSystem::listAudioPatches error %d",status);
             break;
         }
         if (numPatches == 0) {
@@ -152,9 +149,7 @@ android_media_AudioSystem_listAudioPatches(JNIEnv *env, jobject clazz,jobject jP
 
         nPatches = (struct audio_patch *)realloc(nPatches, numPatches * sizeof(struct audio_patch));
 
-        status = AudioSystem::listAudioPatches(&numPatches,
-                                               nPatches,
-                                               &generation);
+        status = AudioSystem::listAudioPatches(&numPatches,nPatches,&generation);
         ALOGV("listAudioPatches AudioSystem::listAudioPatches numPatches %d generation %d generation1 %d",
               numPatches, generation, generation1);
 
@@ -166,8 +161,7 @@ android_media_AudioSystem_listAudioPatches(JNIEnv *env, jobject clazz,jobject jP
     }
 
     for (size_t i = 0; i < numPatches; i++) {
-        jobject patchHandle = env->NewObject(gAudioHandleClass, gAudioHandleCstor,
-                                                 nPatches[i].id);
+        jobject patchHandle = env->NewObject(gAudioHandleClass, gAudioHandleCstor,nPatches[i].id);
         if (patchHandle == NULL) {
             jStatus = AUDIO_JAVA_ERROR;
             goto exit;
@@ -178,18 +172,14 @@ android_media_AudioSystem_listAudioPatches(JNIEnv *env, jobject clazz,jobject jP
         env->SetIntField(patchHandle, gAudioHandleFields.mId, nPatches[i].id);
 
         // load sources
-        jSources = env->NewObjectArray(nPatches[i].num_sources,
-                                       gAudioPortConfigClass, NULL);
+        jSources = env->NewObjectArray(nPatches[i].num_sources,gAudioPortConfigClass, NULL);
         if (jSources == NULL) {
             jStatus = AUDIO_JAVA_ERROR;
             goto exit;
         }
 
         for (size_t j = 0; j < nPatches[i].num_sources; j++) {
-            jStatus = convertAudioPortConfigFromNative(env,
-                                                      NULL,
-                                                      &jSource,
-                                                      &nPatches[i].sources[j]);
+            jStatus = convertAudioPortConfigFromNative(env,NULL,&jSource,&nPatches[i].sources[j]);
             if (jStatus != AUDIO_JAVA_SUCCESS) {
                 goto exit;
             }
@@ -202,8 +192,7 @@ android_media_AudioSystem_listAudioPatches(JNIEnv *env, jobject clazz,jobject jP
                   nPatches[i].sources[j].id);
         }
         // load sinks
-        jSinks = env->NewObjectArray(nPatches[i].num_sinks,
-                                     gAudioPortConfigClass, NULL);
+        jSinks = env->NewObjectArray(nPatches[i].num_sinks,gAudioPortConfigClass, NULL);
         if (jSinks == NULL) {
             jStatus = AUDIO_JAVA_ERROR;
             goto exit;
@@ -227,8 +216,7 @@ android_media_AudioSystem_listAudioPatches(JNIEnv *env, jobject clazz,jobject jP
                   nPatches[i].sinks[j].id);
         }
 
-        jPatch = env->NewObject(gAudioPatchClass, gAudioPatchCstor,
-                                       patchHandle, jSources, jSinks);
+        jPatch = env->NewObject(gAudioPatchClass, gAudioPatchCstor,patchHandle, jSources, jSinks);
         env->DeleteLocalRef(jSources);
         jSources = NULL;
         env->DeleteLocalRef(jSinks);
