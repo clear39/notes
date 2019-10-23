@@ -190,7 +190,17 @@
 10-22 09:05:43.976  2962 11203 V AudioFlinger_Track: OutputTrack constructor mCblk 0xe48d4d00, mBuffer 0xe48d4de0, frameCount 2880, mChannelMask 0x00000003
 10-22 09:05:43.977  2962 11203 V AudioFlinger: openDuplicateOutput() id:29 DuplicatingThread:0xe491ec80
 10-22 09:05:43.978  2962 11203 V APM_AudioPolicyManager: applyStreamVolumes() for device 00000000
+
+
+
+
+
+
+
 10-22 09:05:43.978  2962 14012 I AudioFlinger_Thread: AudioFlinger's thread 0xe491ec80 tid=14012 ready to run
+
+
+
 10-22 09:05:43.978  2962 11203 W APM_AudioPolicyManager: getDeviceForVolume() invalid device combination: 00000000
 10-22 09:05:43.978  2962 11203 V AudioPolicyService: AudioCommandThread() adding set volume stream 0, volume 0.508023, output 29
 10-22 09:05:43.978  2962 11203 V AudioPolicyService: inserting command: 2 at index 0, num commands 0
@@ -257,6 +267,10 @@
 10-22 09:05:43.983  2962  2997 V AudioFlinger: setParameters(): io 29, keyvalue mono_output=0, calling pid 2962 calling uid 1041
 10-22 09:05:43.983  2962  2997 V AudioFlinger: setParameters: filtered keyvalue mono_output=0
 10-22 09:05:43.983  2962  2997 V AudioPolicyService: AudioCommandThread() going to sleep
+
+
+
+
 10-22 09:05:43.983  2962 11203 V APM_AudioPolicyManager: getOutputsForDevice() device 8000
 10-22 09:05:43.983  2962 11203 V APM_AudioPolicyManager: output 0 isDuplicated=0 device=1000000
 10-22 09:05:43.983  2962 11203 V APM_AudioPolicyManager: output 1 isDuplicated=0 device=8000
@@ -268,6 +282,10 @@
 10-22 09:05:43.983  2962 11203 V APM_AudioPolicyManager: setOutputDevice() device 8000 delayMs 0
 10-22 09:05:43.983  2962 11203 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x8000
 10-22 09:05:43.983  2962 11203 V APM_AudioPolicyManager: setOutputDevice() changing device
+
+
+
+
 10-22 09:05:43.983  2962 11203 V AudioPolicyService: AudioCommandThread() adding create patch delay 0
 10-22 09:05:43.983  2962 11203 V AudioPolicyService: inserting command: 7 at index 0, num commands 0
 10-22 09:05:43.984  2962  2997 V AudioPolicyService: AudioCommandThread() processing create audio patch

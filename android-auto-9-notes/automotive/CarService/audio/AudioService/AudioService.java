@@ -10,9 +10,9 @@ public class AudioService extends IAudioService.Stub
      * 
      * @param policyConfig
      * @param pcb
-     * @param hasFocusListener
-     * @param isFocusPolicy
-     * @param isVolumeController
+     * @param hasFocusListener  false
+     * @param isFocusPolicy    false
+     * @param isVolumeController  true
      * @return
      */
     public String registerAudioPolicy(AudioPolicyConfig policyConfig, IAudioPolicyCallback pcb,

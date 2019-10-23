@@ -34,7 +34,13 @@ status_t AudioPolicyMixCollection::unregisterMix(const String8& address)
     return NO_ERROR;
 }
 
-
+/***
+ * 
+ * AudioFlinger::createTrack 
+ * ---> AudioPolicyService::getOutputForAttr
+ * ----> AudioPolicyManager::getOutputForAttr
+ * 
+ * */
 status_t AudioPolicyMixCollection::getOutputForAttr(audio_attributes_t attributes, uid_t uid,sp<SwAudioOutputDescriptor> &desc)
 {
     ALOGV("getOutputForAttr() querying %zu mixes:", size());
@@ -60,8 +66,7 @@ status_t AudioPolicyMixCollection::getOutputForAttr(audio_attributes_t attribute
 
             // iterate over all mix criteria to list what rules this mix contains
             for (size_t j = 0; j < mix->mCriteria.size(); j++) {
-                ALOGV(" getOutputForAttr: mix %zu: inspecting mix criteria %zu of %zu",
-                        i, j, mix->mCriteria.size());
+                ALOGV(" getOutputForAttr: mix %zu: inspecting mix criteria %zu of %zu",i, j, mix->mCriteria.size());
 
                 // if there is an address match, prioritize that match
                 if (strncmp(attributes.tags, "addr=", strlen("addr=")) == 0 &&
