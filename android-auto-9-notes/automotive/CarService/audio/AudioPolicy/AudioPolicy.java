@@ -10,13 +10,6 @@
 
 
 public class AudioPolicy {
- 
-   
-
-  
-
-
-
     /** 
      * @hide 
      * 
@@ -85,6 +78,13 @@ public static class AudioPolicy.Builder {
 
 
 
+      public Builder addMix(@NonNull AudioMix mix) throws IllegalArgumentException {
+            if (mix == null) {
+                throw new IllegalArgumentException("Illegal null AudioMix argument");
+            }
+            mMixes.add(mix);
+            return this;
+        }
 
 
 

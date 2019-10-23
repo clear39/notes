@@ -1,37 +1,31 @@
+10-22 09:35:17.546  7200 13822 D createTrack: #00 pc 0003c303  /system/lib/libaudioclient.so (android::BpAudioFlinger::createTrack(android::IAudioFlinger::CreateTrackInput const&, android::IAudioFlinger::CreateTrackOutput&, int*)+38)
+10-22 09:35:17.546  7200 13822 D createTrack: #01 pc 00031e41  /system/lib/libaudioclient.so (android::AudioTrack::createTrack_l()+656)
+10-22 09:35:17.546  7200 13822 D createTrack: #02 pc 000335b7  /system/lib/libaudioclient.so (android::AudioTrack::restoreTrack_l(char const*)+254)
+10-22 09:35:17.546  7200 13822 D createTrack: #03 pc 000349d7  /system/lib/libaudioclient.so (android::AudioTrack::obtainBuffer(android::AudioTrack::Buffer*, timespec const*, timespec*, unsigned int*)+158)
+10-22 09:35:17.546  7200 13822 D createTrack: #04 pc 00034d3f  /system/lib/libaudioclient.so (android::AudioTrack::write(void const*, unsigned int, bool)+246)
+10-22 09:35:17.546  7200 13822 D createTrack: #05 pc 000ecce9  /system/lib/libandroid_runtime.so (int writeToTrack<signed char>(android::sp<android::sp::AudioTrack> const&, int, signed char const*, int, int, bool)+100)
+10-22 09:35:17.546  7200 13822 D createTrack: #06 pc 000ea851  /system/lib/libandroid_runtime.so (int android_media_AudioTrack_writeArray<_jbyteArray*>(_JNIEnv*, _jobject*, _jbyteArray*, int, int, int, unsigned char)+112)
+10-22 09:35:17.546  7200 13822 D createTrack: #07 pc 003b6ed3  /system/framework/arm/boot-framework.oat (offset 0x3ac000) (android.hardware.usb.UsbRequest.native_init [DEDUPED]+122)
+10-22 09:35:17.546  7200 13822 D createTrack: #08 pc 00456573  /system/framework/arm/boot-framework.oat (offset 0x3ac000) (android.media.AudioTrack.write+186)
+10-22 09:35:17.546  7200 13822 D createTrack: #09 pc 0045648f  /system/framework/arm/boot-framework.oat (offset 0x3ac000) (android.media.AudioTrack.write+54)
+10-22 09:35:17.546  7200 13822 D createTrack: #10 pc 00417b75  /system/lib/libart.so (art_quick_invoke_stub_internal+68)
+10-22 09:35:17.546  7200 13822 D createTrack: #11 pc 003f128f  /system/lib/libart.so (art_quick_invoke_stub+226)
+10-22 09:35:17.546  7200 13822 D createTrack: #12 pc 000a1031  /system/lib/libart.so (art::ArtMethod::Invoke(art::Thread*, unsigned int*, unsigned int, art::JValue*, char const*)+136)
+10-22 09:35:17.546  7200 13822 D createTrack: #13 pc 00350a0d  /system/lib/libart.so (art::(anonymous namespace)::InvokeWithArgArray(art::ScopedObjectAccessAlreadyRunnable const&, art::ArtMethod*, art::(anonymous namespace)::ArgArray*, art::JValue*, char const*)+52)
+10-22 09:35:17.546  7200 13822 D createTrack: #14 pc 003519b5  /system/lib/libart.so (art::InvokeVirtualOrInterfaceWithVarArgs(art::ScopedObjectAccessAlreadyRunnable const&, _jobject*, _jmethodID*, std::__va_list)+316)
+10-22 09:35:17.546  7200 13822 D createTrack: #15 pc 00273969  /system/lib/libart.so (art::JNI::CallIntMethod(_JNIEnv*, _jobject*, _jmethodID*, ...)+492)
+10-22 09:35:17.546  7200 13822 D createTrack: #16 pc 000273d3  /data/app/cn.kuwo.kwmusiccar-_4G9OsMa4OoFY76HTRXPnQ==/lib/arm/libijksdlV7.so (J4AC_android_media_AudioTrack__write+26)
+10-22 09:35:17.546  7200 13822 D createTrack: #17 pc 00010ff9  /data/app/cn.kuwo.kwmusiccar-_4G9OsMa4OoFY76HTRXPnQ==/lib/arm/libijksdlV7.so (SDL_Android_AudioTrack_write+64)
+10-22 09:35:17.546  7200 13822 D createTrack: #18 pc 00011b05  /data/app/cn.kuwo.kwmusiccar-_4G9OsMa4OoFY76HTRXPnQ==/lib/arm/libijksdlV7.so
+10-22 09:35:17.546  7200 13822 D createTrack: #19 pc 0000ebbb  /data/app/cn.kuwo.kwmusiccar-_4G9OsMa4OoFY76HTRXPnQ==/lib/arm/libijksdlV7.so
+10-22 09:35:17.546  7200 13822 D createTrack: #20 pc 00063c85  /system/lib/libc.so (__pthread_start(void*)+22)
+10-22 09:35:17.546  7200 13822 D createTrack: #21 pc 0001e085  /system/lib/libc.so (__start_thread+22)
 
-10-14 13:29:45.150  2452  2452 W ContextImpl: Calling a method in the system process without a qualified user: android.app.ContextImpl.bindService:1611 android.content.ContextWrapper.bindService:698 com.android 
-10-14 13:29:45.152  1714  2346 W ActivityManager: Unable to start service Intent { cmp=android.car.input.service/.DefaultInputService (has extras) } U=0: not found
 
 
 
 
 
-10-14 13:29:45.185  2452  2452 E AndroidRuntime: FATAL EXCEPTION: main
-10-14 13:29:45.185  2452  2452 E AndroidRuntime: Process: com.android.car, PID: 2452
-10-14 13:29:45.185  2452  2452 E AndroidRuntime: java.lang.RuntimeException: Unable to create service com.android.car.CarService: java.lang.IllegalArgumentException: Illegal null AudioPolicy argument
-10-14 13:29:45.185  2452  2452 E AndroidRuntime:        at android.app.ActivityThread.handleCreateService(ActivityThread.java:3591)
-10-14 13:29:45.185  2452  2452 E AndroidRuntime:        at android.app.ActivityThread.access$1300(ActivityThread.java:200)
-10-14 13:29:45.185  2452  2452 E AndroidRuntime:        at android.app.ActivityThread$H.handleMessage(ActivityThread.java:1680)
-10-14 13:29:45.185  2452  2452 E AndroidRuntime:        at android.os.Handler.dispatchMessage(Handler.java:106)
-10-14 13:29:45.185  2452  2452 E AndroidRuntime:        at android.os.Looper.loop(Looper.java:193)
-10-14 13:29:45.185  2452  2452 E AndroidRuntime:        at android.app.ActivityThread.main(ActivityThread.java:6727)
-10-14 13:29:45.185  2452  2452 E AndroidRuntime:        at java.lang.reflect.Method.invoke(Native Method)
-10-14 13:29:45.185  2452  2452 E AndroidRuntime:        at com.android.internal.os.RuntimeInit$MethodAndArgsCaller.run(RuntimeInit.java:493)
-10-14 13:29:45.185  2452  2452 E AndroidRuntime:        at com.android.internal.os.ZygoteInit.main(ZygoteInit.java:917)
-10-14 13:29:45.185  2452  2452 E AndroidRuntime: Caused by: java.lang.IllegalArgumentException: Illegal null AudioPolicy argument
-10-14 13:29:45.185  2452  2452 E AndroidRuntime:        at android.media.AudioManager.registerAudioPolicy(AudioManager.java:3165)
-10-14 13:29:45.185  2452  2452 E AndroidRuntime:        at com.android.car.CarAudioService.setupDynamicRouting(CarAudioService.java:402)
-10-14 13:29:45.185  2452  2452 E AndroidRuntime:        at com.android.car.CarAudioService.init(CarAudioService.java:225)
-10-14 13:29:45.185  2452  2452 E AndroidRuntime:        at com.android.car.ICarImpl.init(ICarImpl.java:187)
-10-14 13:29:45.185  2452  2452 E AndroidRuntime:        at com.android.car.CarService.onCreate(CarService.java:107)
-10-14 13:29:45.185  2452  2452 E AndroidRuntime:        at android.app.ActivityThread.handleCreateService(ActivityThread.java:3579)
-10-14 13:29:45.185  2452  2452 E AndroidRuntime:        ... 8 more
-10-14 13:29:45.189  1714  2346 W RescueParty: Noticed 3 events for UID 1000 in last 12 sec
-10-14 13:29:45.190  1714  2346 W ActivityManager: Process com.android.car has crashed too many times: killing!
-10-14 13:29:45.249  1714  2346 I ActivityManager: Process com.android.car (pid 2452) has died: pers PER 
-10-14 13:29:45.249  1714  2346 W ActivityManager: Scheduling restart of crashed service com.android.car/.CarService in 0ms
-10-14 13:29:45.249  1714  2346 W ActivityManager: Re-adding persistent process ProcessRecord{32af5e3 2452:com.android.car/1000}
-10-14 13:29:45.284  1714  1738 I ActivityManager: Start proc 2514:com.android.car/1000 for restart com.android.car
 
 
 
@@ -45,212 +39,3 @@
 
 
 
-
-
-
-
-
-
-
-
-
- 
-frameworks/base/services/core/java/com/android/server/StorageManagerService.java:843:                        mVold.unlockUserKey(user.id, user.serialNumber, encodeBytes(null),
-frameworks/base/services/core/java/com/android/server/StorageManagerService.java:2562:    public void unlockUserKey(int userId, int serialNumber, byte[] token, byte[] secret) {
-frameworks/base/services/core/java/com/android/server/StorageManagerService.java:2573:                mVold.unlockUserKey(userId, serialNumber, encodeBytes(token),
-frameworks/base/services/core/java/com/android/server/am/UserController.java:1158:                storageManager.unlockUserKey(userId, userInfo.serialNumber, token, secret);
-
- 
- 
- @Override
-public SharedPreferences getSharedPreferences(File file, int mode) {
-    SharedPreferencesImpl sp;
-    synchronized (ContextImpl.class) {
-        final ArrayMap<File, SharedPreferencesImpl> cache = getSharedPreferencesCacheLocked();
-        sp = cache.get(file);
-        if (sp == null) {
-            checkMode(mode);
-            if (getApplicationInfo().targetSdkVersion >= android.os.Build.VERSION_CODES.O) {
-                if (isCredentialProtectedStorage()
-                        && !getSystemService(UserManager.class).isUserUnlockingOrUnlocked(UserHandle.myUserId())) {
-                    throw new IllegalStateException("SharedPreferences in credential encrypted "
-                            + "storage are not available until after user is unlocked");
-                }
-            }
-            sp = new SharedPreferencesImpl(file, mode);
-            cache.put(file, sp);
-            return sp;
-        }
-    }
-    if ((mode & Context.MODE_MULTI_PROCESS) != 0 ||
-        getApplicationInfo().targetSdkVersion < android.os.Build.VERSION_CODES.HONEYCOMB) {
-        // If somebody else (some other process) changed the prefs
-        // file behind our back, we reload it.  This has been the
-        // historical (if undocumented) behavior.
-        sp.startReloadIfChangedUnexpectedly();
-    }
-    return sp;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-10-12 17:14:55.194  2515  2544 E AndroidRuntime: Process: android.process.acore, PID: 2515
-10-12 17:14:55.194  2515  2544 E AndroidRuntime: android.database.sqlite.SQLiteCantOpenDatabaseException: unknown error (code 14 SQLITE_CANTOPEN): Could not open database
-10-12 17:14:55.194  2515  2544 E AndroidRuntime:        at android.database.sqlite.SQLiteConnection.nativeOpen(Native Method)
-10-12 17:14:55.194  2515  2544 E AndroidRuntime:        at android.database.sqlite.SQLiteConnection.open(SQLiteConnection.java:211)
-10-12 17:14:55.194  2515  2544 E AndroidRuntime:        at android.database.sqlite.SQLiteConnection.open(SQLiteConnection.java:195)
-10-12 17:14:55.194  2515  2544 E AndroidRuntime:        at android.database.sqlite.SQLiteConnectionPool.openConnectionLocked(SQLiteConnectionPool.java:503)
-10-12 17:14:55.194  2515  2544 E AndroidRuntime:        at android.database.sqlite.SQLiteConnectionPool.open(SQLiteConnectionPool.java:204)
-10-12 17:14:55.194  2515  2544 E AndroidRuntime:        at android.database.sqlite.SQLiteConnectionPool.open(SQLiteConnectionPool.java:196)
-10-12 17:14:55.194  2515  2544 E AndroidRuntime:        at android.database.sqlite.SQLiteDatabase.openInner(SQLiteDatabase.java:880)
-10-12 17:14:55.194  2515  2544 E AndroidRuntime:        at android.database.sqlite.SQLiteDatabase.open(SQLiteDatabase.java:865)
-10-12 17:14:55.194  2515  2544 E AndroidRuntime:        at android.database.sqlite.SQLiteDatabase.openDatabase(SQLiteDatabase.java:739)
-10-12 17:14:55.194  2515  2544 E AndroidRuntime:        at android.database.sqlite.SQLiteDatabase.openDatabase(SQLiteDatabase.java:729)
-10-12 17:14:55.194  2515  2544 E AndroidRuntime:        at android.database.sqlite.SQLiteOpenHelper.getDatabaseLocked(SQLiteOpenHelper.java:365)
-10-12 17:14:55.194  2515  2544 E AndroidRuntime:        at android.database.sqlite.SQLiteOpenHelper.getReadableDatabase(SQLiteOpenHelper.java:322)
-10-12 17:14:55.194  2515  2544 E AndroidRuntime:        at com.android.providers.contacts.CallLogDatabaseHelper.getReadableDatabase(CallLogDatabaseHelper.java:233)
-10-12 17:14:55.194  2515  2544 E AndroidRuntime:        at com.android.providers.contacts.CallLogDatabaseHelper.getProperty(CallLogDatabaseHelper.java:241)
-10-12 17:14:55.194  2515  2544 E AndroidRuntime:        at com.android.providers.contacts.CallLogProvider.getLastSyncTime(CallLogProvider.java:811)
-10-12 17:14:55.194  2515  2544 E AndroidRuntime:        at com.android.providers.contacts.CallLogProvider.syncEntriesFrom(CallLogProvider.java:670)
-10-12 17:14:55.194  2515  2544 E AndroidRuntime:        at com.android.providers.contacts.CallLogProvider.syncEntries(CallLogProvider.java:654)
-10-12 17:14:55.194  2515  2544 E AndroidRuntime:        at com.android.providers.contacts.CallLogProvider.performBackgroundTask(CallLogProvider.java:839)
-10-12 17:14:55.194  2515  2544 E AndroidRuntime:        at com.android.providers.contacts.CallLogProvider.access$000(CallLogProvider.java:67)
-10-12 17:14:55.194  2515  2544 E AndroidRuntime:        at com.android.providers.contacts.CallLogProvider$1.onPerformTask(CallLogProvider.java:221)
-10-12 17:14:55.194  2515  2544 E AndroidRuntime:        at com.android.providers.contacts.ContactsTaskScheduler$MyHandler.handleMessage(ContactsTaskScheduler.java:77)
-10-12 17:14:55.194  2515  2544 E AndroidRuntime:        at android.os.Handler.dispatchMessage(Handler.java:106)
-10-12 17:14:55.194  2515  2544 E AndroidRuntime:        at android.os.Looper.loop(Looper.java:193)
-10-12 17:14:55.194  2515  2544 E AndroidRuntime:        at android.os.HandlerThread.run(HandlerThread.java:65)
-
-
-
-//  @   /work/workcodes/tsu-aosp-p9.0.0_2.1.0-auto-ga/frameworks/base/core/java/android/app/ContextImpl.java
-
-@Override
-public File getDataDir() {
-    if (mPackageInfo != null) {
-        File res = null;
-        if (isCredentialProtectedStorage()) {
-            res = mPackageInfo.getCredentialProtectedDataDirFile();
-        } else if (isDeviceProtectedStorage()) {
-            res = mPackageInfo.getDeviceProtectedDataDirFile();
-        } else {
-            res = mPackageInfo.getDataDirFile();
-        }
-
-        if (res != null) {
-            if (!res.exists() && android.os.Process.myUid() == android.os.Process.SYSTEM_UID) {
-                Log.wtf(TAG, "Data directory doesn't exist for package " + getPackageName(), new Throwable());
-            }
-            return res;
-        } else {
-            throw new RuntimeException( "No data directory found for package " + getPackageName());
-        }
-    } else {
-        throw new RuntimeException( "No package details found for package " + getPackageName());
-    }
-}
-
-
-
-@Override
-public boolean isDeviceProtectedStorage() {
-    return (mFlags & Context.CONTEXT_DEVICE_PROTECTED_STORAGE) != 0;
-}
-
-@Override
-public boolean isCredentialProtectedStorage() {
-    return (mFlags & Context.CONTEXT_CREDENTIAL_PROTECTED_STORAGE) != 0;
-}
-
-public File getDataDirFile() {
-    return mDataDirFile;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//  @   /work/workcodes/tsu-aosp-p9.0.0_2.1.0-auto-ga/frameworks/base/core/java/android/app/LoadedApk.java
-public final class LoadedApk {
-    private String mDataDir;
-    private String mLibDir;
-    private File mDataDirFile; // 
-    private File mDeviceProtectedDataDirFile; //
-    private File mCredentialProtectedDataDirFile;  //
-}
-
-
-
-commit 2d781228c9f6a329d92fe81f154634d1e6d7e3b8
-Author: shijiubing <shijiubing@auto-link.com.cn>
-Date:   Mon Jul 22 15:29:34 2019 +0800
-
-    chore: modify app directBootAware default value is true
-    
-    Change-Id: I000f55edde263937d56d583d3aaa8d006f8d69ec
-
-
-
-xqli@linux:/work/workcodes/tsu-aosp-p9.0.0_2.1.0-auto-ga/frameworks/base$ git log core/java/android/content/pm/PackageParser.java
-
-
-
-
-xqli@linux:/work/workcodes/tsu-aosp-p9.0.0_2.1.0-auto-ga/frameworks/base$ git log services/core/java/com/android/server/pm/PackageManagerService.java
-commit 19094723fca478946f8da5c7fc1c01ce5e18d111
-Author: shijiubing <shijiubing@auto-link.com.cn>
-Date:   Thu Aug 8 17:00:29 2019 +0800
-
-    chore: application direbootaware can used for components
-    
-    Change-Id: I0f1bd21bd39f35f7e9be8164fb6599d90e328ef5
-
-
-
-
-
-commit 2d781228c9f6a329d92fe81f154634d1e6d7e3b8
-Author: shijiubing <shijiubing@auto-link.com.cn>
-Date:   Mon Jul 22 15:29:34 2019 +0800
-
-    chore: modify app directBootAware default value is true
-    
-    Change-Id: I000f55edde263937d56d583d3aaa8d006f8d69ec
-
-commit f508794557961877a4e01a733c9330c92b92e637
-Author: shijiubing <shijiubing@auto-link.com.cn>
-Date:   Mon Jul 22 12:38:39 2019 +0800
-
-    chore: 1 app defalt match directBootAware, 2 activity support priority
-    
-    Change-Id: Ida8e76f64198dae687e25eb23d9f63ae73c14c43

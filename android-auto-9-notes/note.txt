@@ -19,6 +19,8 @@ TSU -------------> /dev/ttyXRUSB2
 
 am start -n cn.kuwo.kwmusiccar/.WelcomeActivity
 
+am start -n com.example.demo1/.MainActivity
+
 sudo ./uuu_imx_android_flash.sh -f imx8qxp -e -D ./
 
 dumpsys acitivity service TelephonyDebugService
