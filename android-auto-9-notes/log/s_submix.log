@@ -1,3 +1,30 @@
+frameworks/av/services/audioflinger/Threads.cpp:2907:            track->invalidate();
+frameworks/av/services/audioflinger/Threads.cpp:2962:            t->invalidate();
+
+
+
+frameworks/av/services/audioflinger/Threads.cpp:4472:                track->invalidate(); // consider it dead.
+
+
+
+frameworks/av/services/audioflinger/Threads.cpp:5277:                        previousTrack->invalidate();
+frameworks/av/services/audioflinger/Threads.cpp:5837:                            previousTrack->invalidate();
+frameworks/av/services/audioflinger/Threads.cpp:5843:                            previousTrack->invalidate();
+frameworks/av/services/audioflinger/Threads.cpp:6408:        track->invalidate();
+
+
+frameworks/av/services/audioflinger/Threads.cpp:6855:            track->invalidate();
+
+
+frameworks/av/services/audioflinger/Threads.cpp:8110:                track->invalidate();
+
+
+
+frameworks/av/services/audioflinger/Threads.cpp:8753:            track->invalidate();
+
+
+
+
 
 10-22 09:05:43.787  2962 10902 V AudioFlinger: registerClient() client 0xe5c15218, pid 13971
 10-22 09:05:43.788  2962 10902 V AudioFlinger: createRecord() output.sessionId:33 output.selectedDeviceId:0 output.flags:0

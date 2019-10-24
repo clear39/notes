@@ -164,6 +164,38 @@ public class AudioManager {
 
 
 
+    /**
+     * @hide
+     * Register the given {@link AudioPolicy}.
+     * This call is synchronous and blocks until the registration process successfully completed
+     * or failed to complete.
+     * @param policy the non-null {@link AudioPolicy} to register.
+     * @return {@link #ERROR} if there was an error communicating with the registration service
+     *    or if the user doesn't have the required
+     *    {@link android.Manifest.permission#MODIFY_AUDIO_ROUTING} permission,
+     *    {@link #SUCCESS} otherwise.
+     */
+    @SystemApi
+    @RequiresPermission(android.Manifest.permission.MODIFY_AUDIO_ROUTING)
+    public int registerAudioPolicy(@NonNull AudioPolicy policy) {
+        if (policy == null) {
+            throw new IllegalArgumentException("Illegal null AudioPolicy argument");
+        }
+        final IAudioService service = getService();
+        try {
+            String regId = service.registerAudioPolicy(policy.getConfig(), policy.cb(),
+                    policy.hasFocusListener(), policy.isFocusPolicy(), policy.isVolumeController());
+            if (regId == null) {
+                return ERROR;
+            } else {
+                policy.setRegistration(regId);
+            }
+            // successful registration
+        } catch (RemoteException e) {
+            throw e.rethrowFromSystemServer();
+        }
+        return SUCCESS;
+    }
 
 
 
@@ -174,6 +206,5 @@ public class AudioManager {
 
 
 
-    
 
 }

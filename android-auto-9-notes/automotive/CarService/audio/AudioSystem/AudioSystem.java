@@ -3,6 +3,29 @@
 public class AudioSystem{
     public static native int listAudioPorts(ArrayList<AudioPort> ports, int[] generation);
     public static native int listAudioPatches(ArrayList<AudioPatch> patches, int[] generation);
+
+
+    private static native final void native_register_dynamic_policy_callback();
+    private static void dynamicPolicyCallbackFromNative(int event, String regId, int val)
+    {
+        DynamicPolicyCallback cb = null;
+        synchronized (AudioSystem.class) {
+            if (sDynPolicyCallback != null) {
+                cb = sDynPolicyCallback;
+            }
+        }
+        if (cb != null) {
+            switch(event) {
+                case DYNAMIC_POLICY_EVENT_MIX_STATE_UPDATE:
+                    cb.onDynamicPolicyMixStateUpdate(regId, val);
+                    break;
+                default:
+                    Log.e(TAG, "dynamicPolicyCallbackFromNative: unknown event " + event);
+            }
+        }
+    }
+
+
 }
 
 
@@ -257,4 +280,34 @@ exit:
     }
     free(nPatches);
     return jStatus;
+}
+
+
+
+
+static void
+android_media_AudioSystem_registerDynPolicyCallback(JNIEnv *env, jobject thiz)
+{
+    AudioSystem::setDynPolicyCallback(android_media_AudioSystem_dyn_policy_callback);
+}
+
+static void
+android_media_AudioSystem_dyn_policy_callback(int event, String8 regId, int val)
+{
+    JNIEnv *env = AndroidRuntime::getJNIEnv();
+    if (env == NULL) {
+        return;
+    }
+
+    jclass clazz = env->FindClass(kClassPathName);
+    const char* zechars = regId.string();
+    jstring zestring = env->NewStringUTF(zechars);
+
+    /***
+     * dynamicPolicyCallbackFromNative
+     */
+    env->CallStaticVoidMethod(clazz, gAudioPolicyEventHandlerMethods.postDynPolicyEventFromNative,event, zestring, val);
+
+    env->ReleaseStringUTFChars(zestring, zechars);
+    env->DeleteLocalRef(clazz);
 }
