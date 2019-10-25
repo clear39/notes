@@ -641,7 +641,7 @@ status_t AudioPolicyManager::getOutputForAttr(const audio_attributes_t *attr,
                                               audio_io_handle_t *output,
                                               audio_session_t session,
                                               audio_stream_type_t *stream,
-                                              uid_t uid,
+                                              uid_t uid,   
                                               const audio_config_t *config,
                                               audio_output_flags_t *flags,
                                               audio_port_handle_t *selectedDeviceId,
@@ -684,30 +684,53 @@ status_t AudioPolicyManager::getOutputForAttr(const audio_attributes_t *attr,
         ALOGV("getOutputForAttr() returns output %d", *output);
         return NO_ERROR;
     }
+
     if (attributes.usage == AUDIO_USAGE_VIRTUAL_SOURCE) {
         ALOGW("getOutputForAttr() no policy mix found for usage AUDIO_USAGE_VIRTUAL_SOURCE");
         return BAD_VALUE;
     }
 
 /***
- *  10-22 09:05:43.991  2962  2999 V APM_AudioPolicyManager: getOutputForAttr() usage=1, content=2, 
- *  tag= flags=00000200 session 25 selectedDeviceId 0
+ *  10-22 09:05:43.991  2962  2999 V APM_AudioPolicyManager: getOutputForAttr() usage=1(AUDIO_USAGE_MEDIA), content=2, 
+ *  tag= flags=00000200(AUDIO_FLAG_DEEP_BUFFER) session 25 selectedDeviceId 0(AUDIO_PORT_HANDLE_NONE)
  * */
     ALOGV("getOutputForAttr() usage=%d, content=%d, tag=%s flags=%08x"
             " session %d selectedDeviceId %d",
             attributes.usage, attributes.content_type, attributes.tags, attributes.flags,
             session, *selectedDeviceId);
 
+    /**
+     * 
+     * @    frameworks/av/services/audiopolicy/managerdefault/AudioPolicyManager.cpp
+     * 由于 usage=1(AUDIO_USAGE_MEDIA) flags=00000200(AUDIO_FLAG_DEEP_BUFFER)
+     * 则返回  AUDIO_STREAM_MUSIC 
+    */
     *stream = streamTypefromAttributesInt(&attributes);
 
     // Explicit routing?
     sp<DeviceDescriptor> deviceDesc;
+    /**
+     * selectedDeviceId 0(AUDIO_PORT_HANDLE_NONE)
+    */
     if (*selectedDeviceId != AUDIO_PORT_HANDLE_NONE) {
         deviceDesc = mAvailableOutputDevices.getDeviceFromId(*selectedDeviceId);
     }
+    /**
+     * frameworks/av/services/audiopolicy/managerdefault/AudioPolicyManager.h:561: 
+     *  SessionRouteMap mOutputRoutes = SessionRouteMap(SessionRouteMap::MAPTYPE_OUTPUT);
+     * 
+    */
     mOutputRoutes.addRoute(session, *stream, SessionRoute::SOURCE_TYPE_NA, deviceDesc, uid);
 
+    /**
+     * 由于 usage=1(AUDIO_USAGE_MEDIA) flags=00000200(AUDIO_FLAG_DEEP_BUFFER)
+     * 则返回  STRATEGY_MEDIA 
+    */
     routing_strategy strategy = (routing_strategy) getStrategyForAttr(&attributes);
+    /**
+     * 
+     * 
+    */
     audio_devices_t device = getDeviceForStrategy(strategy, false /*fromCache*/);
 
     if ((attributes.flags & AUDIO_FLAG_HW_AV_SYNC) != 0) {
@@ -754,6 +777,109 @@ status_t AudioPolicyManager::getOutputForAttr(const audio_attributes_t *attr,
     return NO_ERROR;
 }
 
+
+audio_stream_type_t AudioPolicyManager::streamTypefromAttributesInt(const audio_attributes_t *attr)
+{
+    /**
+     * attr->flags = 00000200(AUDIO_FLAG_DEEP_BUFFER)
+     * 
+    */
+    // flags to stream type mapping
+    if ((attr->flags & AUDIO_FLAG_AUDIBILITY_ENFORCED) == AUDIO_FLAG_AUDIBILITY_ENFORCED) {
+        return AUDIO_STREAM_ENFORCED_AUDIBLE;
+    }
+    if ((attr->flags & AUDIO_FLAG_SCO) == AUDIO_FLAG_SCO) {
+        return AUDIO_STREAM_BLUETOOTH_SCO;
+    }
+    if ((attr->flags & AUDIO_FLAG_BEACON) == AUDIO_FLAG_BEACON) {
+        return AUDIO_STREAM_TTS;
+    }
+
+    // usage to stream type mapping
+    switch (attr->usage) {
+    case AUDIO_USAGE_MEDIA: //  system/media/audio/include/system/audio-base.h:387:    AUDIO_USAGE_MEDIA = 1,
+    case AUDIO_USAGE_GAME:
+    case AUDIO_USAGE_ASSISTANT:
+    case AUDIO_USAGE_ASSISTANCE_NAVIGATION_GUIDANCE:
+        return AUDIO_STREAM_MUSIC;
+    case AUDIO_USAGE_ASSISTANCE_ACCESSIBILITY:
+        return AUDIO_STREAM_ACCESSIBILITY;
+    case AUDIO_USAGE_ASSISTANCE_SONIFICATION:
+        return AUDIO_STREAM_SYSTEM;
+    case AUDIO_USAGE_VOICE_COMMUNICATION:
+        return AUDIO_STREAM_VOICE_CALL;
+
+    case AUDIO_USAGE_VOICE_COMMUNICATION_SIGNALLING:
+        return AUDIO_STREAM_DTMF;
+
+    case AUDIO_USAGE_ALARM:
+        return AUDIO_STREAM_ALARM;
+    case AUDIO_USAGE_NOTIFICATION_TELEPHONY_RINGTONE:
+        return AUDIO_STREAM_RING;
+
+    case AUDIO_USAGE_NOTIFICATION:
+    case AUDIO_USAGE_NOTIFICATION_COMMUNICATION_REQUEST:
+    case AUDIO_USAGE_NOTIFICATION_COMMUNICATION_INSTANT:
+    case AUDIO_USAGE_NOTIFICATION_COMMUNICATION_DELAYED:
+    case AUDIO_USAGE_NOTIFICATION_EVENT:
+        return AUDIO_STREAM_NOTIFICATION;
+
+    case AUDIO_USAGE_UNKNOWN:
+    default:
+        return AUDIO_STREAM_MUSIC;
+    }
+}
+
+
+
+uint32_t AudioPolicyManager::getStrategyForAttr(const audio_attributes_t *attr) {
+    /**
+     * attr->flags = 00000200(AUDIO_FLAG_DEEP_BUFFER)
+     * 
+    */
+    // flags to strategy mapping
+    if ((attr->flags & AUDIO_FLAG_BEACON) == AUDIO_FLAG_BEACON) {
+        return (uint32_t) STRATEGY_TRANSMITTED_THROUGH_SPEAKER;
+    }
+    if ((attr->flags & AUDIO_FLAG_AUDIBILITY_ENFORCED) == AUDIO_FLAG_AUDIBILITY_ENFORCED) {
+        return (uint32_t) STRATEGY_ENFORCED_AUDIBLE;
+    }
+    // usage to strategy mapping
+    return static_cast<uint32_t>(mEngine->getStrategyForUsage(attr->usage));
+}
+
+
+audio_devices_t AudioPolicyManager::getDeviceForStrategy(routing_strategy strategy,bool fromCache /*= "false"*/)
+{
+    // Check if an explicit routing request exists for a stream type corresponding to the
+    // specified strategy and use it in priority over default routing rules.
+    for (int stream = 0; stream < AUDIO_STREAM_FOR_POLICY_CNT; stream++) {
+        /**
+         * getStrategy 直接调用 Engine::getStrategyForStream
+        */
+        if (getStrategy((audio_stream_type_t)stream) == strategy) {
+            /**
+             * 
+            */
+            audio_devices_t forcedDevice = mOutputRoutes.getActiveDeviceForStream((audio_stream_type_t)stream, mAvailableOutputDevices);
+            if (forcedDevice != AUDIO_DEVICE_NONE) {
+                return forcedDevice;
+            }
+        }
+    }
+
+    if (fromCache) {
+        ALOGVV("getDeviceForStrategy() from cache strategy %d, device %x",strategy, mDeviceForStrategy[strategy]);
+        return mDeviceForStrategy[strategy];
+    }
+
+
+    /**
+     * 
+     * 
+    */
+    return mEngine->getDeviceForStrategy(strategy);
+}
 
 
 

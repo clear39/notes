@@ -79,8 +79,7 @@ status_t AudioPolicyMixCollection::getOutputForAttr(audio_attributes_t attribute
 
                 switch (mix->mCriteria[j].mRule) {
                 case RULE_MATCH_ATTRIBUTE_USAGE:
-                    ALOGV("\tmix has RULE_MATCH_ATTRIBUTE_USAGE for usage %d",
-                                                mix->mCriteria[j].mValue.mUsage);
+                    ALOGV("\tmix has RULE_MATCH_ATTRIBUTE_USAGE for usage %d",mix->mCriteria[j].mValue.mUsage);
                     hasUsageMatchRules = true;
                     if (mix->mCriteria[j].mValue.mUsage == attributes.usage) {
                         // found one match against all allowed usages
@@ -88,8 +87,7 @@ status_t AudioPolicyMixCollection::getOutputForAttr(audio_attributes_t attribute
                     }
                     break;
                 case RULE_EXCLUDE_ATTRIBUTE_USAGE:
-                    ALOGV("\tmix has RULE_EXCLUDE_ATTRIBUTE_USAGE for usage %d",
-                            mix->mCriteria[j].mValue.mUsage);
+                    ALOGV("\tmix has RULE_EXCLUDE_ATTRIBUTE_USAGE for usage %d",mix->mCriteria[j].mValue.mUsage);
                     hasUsageExcludeRules = true;
                     if (mix->mCriteria[j].mValue.mUsage == attributes.usage) {
                         // found this usage is to be excluded
@@ -149,9 +147,7 @@ status_t AudioPolicyMixCollection::getOutputForAttr(audio_attributes_t attribute
         } else if (mix->mMixType == MIX_TYPE_RECORDERS) {
             if (attributes.usage == AUDIO_USAGE_VIRTUAL_SOURCE &&
                     strncmp(attributes.tags, "addr=", strlen("addr=")) == 0 &&
-                    strncmp(attributes.tags + strlen("addr="),
-                            mix->mDeviceAddress.string(),
-                            AUDIO_ATTRIBUTES_TAGS_MAX_SIZE - strlen("addr=") - 1) == 0) {
+                    strncmp(attributes.tags + strlen("addr="),mix->mDeviceAddress.string(),AUDIO_ATTRIBUTES_TAGS_MAX_SIZE - strlen("addr=") - 1) == 0) {
                 desc = policyMix->getOutput();
             }
         }

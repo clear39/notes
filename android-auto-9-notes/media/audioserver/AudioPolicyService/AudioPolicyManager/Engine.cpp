@@ -1,6 +1,36 @@
 
 
+//  @   /work/workcodes/tsu-aosp-p9.0.0_2.1.0-auto-ga/frameworks/av/services/audiopolicy/enginedefault/src/EngineInstance.cpp
+EngineInstance *EngineInstance::getInstance()
+{
+    static EngineInstance instance;
+    return &instance;
+}
+
+
+EngineInstance::EngineInstance()
+{
+}
+
+
+template <>
+AudioPolicyManagerInterface *EngineInstance::queryInterface() const
+{
+    return getEngine()->queryInterface<AudioPolicyManagerInterface>();
+}
+
+
+
 //  @   /work/workcodes/aosp-p9.0.0_2.1.0-auto-ga/frameworks/av/services/audiopolicy/enginedefault/src/Engine.cpp
+
+/**
+ * 
+ * AudioPolicyManager::AudioPolicyManager 
+ * --> AudioPolicyManager::initialize()
+ * ---> audio_policy::EngineInstance::getInstance()
+ * ----> EngineInstance::getEngine()
+ * 
+*/
 Engine::Engine()
     : mManagerInterface(this),
       mPhoneState(AUDIO_MODE_NORMAL),
@@ -15,5 +45,5 @@ Engine::Engine()
 template <>
 AudioPolicyManagerInterface *Engine::queryInterface()
 {
-    return &mManagerInterface;
+    return &mManagerInterface; // Engine
 }
