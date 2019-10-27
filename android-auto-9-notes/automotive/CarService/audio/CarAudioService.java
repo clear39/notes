@@ -88,6 +88,9 @@ public class CarAudioService extends ICarAudio.Stub implements CarServiceBase {
          */
         for (AudioDeviceInfo info : deviceInfos) {
             Log.v(CarLog.TAG_AUDIO, String.format("output id=%d address=%s type=%s",info.getId(), info.getAddress(), info.getType()));
+            /***
+             * 
+             */
             if (info.getType() == AudioDeviceInfo.TYPE_BUS) {
                 final CarAudioDeviceInfo carInfo = new CarAudioDeviceInfo(info);
                 // See also the audio_policy_configuration.xml and getBusForContext in

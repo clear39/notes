@@ -133,6 +133,13 @@ status_t AudioPolicyManager::listAudioPorts(audio_port_role_t role,
                      * 
                      * frameworks/av/services/audiopolicy/managerdefault/AudioPolicyManager.cpp:4203:    
                      * mOutputs.add(output, outputDesc);
+                     * 
+                     * 
+    frameworks/av/services/audiopolicy/managerdefault/AudioPolicyManager.cpp:1025:        addOutput(output, outputDesc);
+    frameworks/av/services/audiopolicy/managerdefault/AudioPolicyManager.cpp:4063:                addOutput(output, outputDesc);
+    frameworks/av/services/audiopolicy/managerdefault/AudioPolicyManager.cpp:4352:                    addOutput(output, desc);
+    frameworks/av/services/audiopolicy/managerdefault/AudioPolicyManager.cpp:4377:                            addOutput(duplicatedOutput, dupOutputDesc);
+
                     */
                     if (portsWritten < portsMax) {
                         mOutputs[i]->toAudioPort(&ports[portsWritten++]);
@@ -160,5 +167,9 @@ status_t AudioPolicyManager::listAudioPatches(unsigned int *num_patches,struct a
         return BAD_VALUE;
     }
     *generation = curAudioPortGeneration();
+    /**
+     * 
+     * 
+    */
     return mAudioPatches.listAudioPatches(num_patches, patches);
 }

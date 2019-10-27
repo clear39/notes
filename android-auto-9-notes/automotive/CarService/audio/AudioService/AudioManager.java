@@ -9,9 +9,9 @@ public class AudioManager {
      * currently connected to the system and meeting the criteria specified in the
      * <code>flags</code> parameter.
      * @param flags A set of bitflags specifying the criteria to test.
-     * @see #GET_DEVICES_OUTPUTS    //  public static final int GET_DEVICES_OUTPUTS   = 0x0002;
-     * @see #GET_DEVICES_INPUTS     //  public static final int GET_DEVICES_INPUTS    = 0x0001;
-     * @see #GET_DEVICES_ALL        // public static final int GET_DEVICES_ALL = GET_DEVICES_OUTPUTS | GET_DEVICES_INPUTS;
+     * @see #GET_DEVICES_OUTPUTS
+     * @see #GET_DEVICES_INPUTS
+     * @see #GET_DEVICES_ALL
      * @return A (possibly zero-length) array of AudioDeviceInfo objects.
      */
     public AudioDeviceInfo[] getDevices(int flags) {
@@ -81,7 +81,10 @@ public class AudioManager {
                 do {
                     newPorts.clear();
                     /***
+                     * 通过 AudioSystem::listAudioPorts 先查找个数，分配内存，再获取信息
                      * 
+                     *AudioSystem::listAudioPorts --> AudioPolicyService::listAudioPorts --> AudioPolicyManager::listAudioPorts
+                     * 直接看 AudioPolicyManager::listAudioPorts 
                      */
                     status = AudioSystem.listAudioPorts(newPorts, portGeneration);
                     if (status != SUCCESS) {
@@ -90,7 +93,8 @@ public class AudioManager {
                     }
                     newPatches.clear();
                     /**
-                     * 
+                     * AudioSystem::listAudioPatches --> AudioPolicyService::listAudioPatches --> AudioPolicyManager::listAudioPatches
+                     * 直接看 AudioPolicyManager::listAudioPatches 
                      */
                     status = AudioSystem.listAudioPatches(newPatches, patchGeneration);
                     if (status != SUCCESS) {
@@ -164,7 +168,10 @@ public class AudioManager {
 
 
 
-    /**
+
+
+
+     /**
      * @hide
      * Register the given {@link AudioPolicy}.
      * This call is synchronous and blocks until the registration process successfully completed
@@ -183,8 +190,8 @@ public class AudioManager {
         }
         final IAudioService service = getService();
         try {
-            String regId = service.registerAudioPolicy(policy.getConfig(), policy.cb(),
-                    policy.hasFocusListener(), policy.isFocusPolicy(), policy.isVolumeController());
+            String regId = service.registerAudioPolicy(policy.getConfig(), 
+                policy.cb(),policy.hasFocusListener(), policy.isFocusPolicy(), policy.isVolumeController());
             if (regId == null) {
                 return ERROR;
             } else {
@@ -196,6 +203,12 @@ public class AudioManager {
         }
         return SUCCESS;
     }
+
+
+
+
+
+
 
 
 

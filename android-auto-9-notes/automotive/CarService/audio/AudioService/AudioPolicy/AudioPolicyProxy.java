@@ -78,6 +78,12 @@ public class AudioPolicyProxy extends AudioPolicyConfig implements IBinder.Death
 
     void connectMixes() {
         final long identity = Binder.clearCallingIdentity();
+        /***
+         * 最终直接调到 registration 为 true 表示注册，否则为 注销 
+         * status_t AudioPolicyService::registerPolicyMixes(const Vector<AudioMix>& mixes, bool registration)
+         * --> status_t AudioPolicyManager::registerPolicyMixes(const Vector<AudioMix>& mixes)
+         * 
+         */
         AudioSystem.registerPolicyMixes(mMixes, true);
         Binder.restoreCallingIdentity(identity);
     }

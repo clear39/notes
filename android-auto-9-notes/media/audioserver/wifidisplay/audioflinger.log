@@ -1,19 +1,26 @@
 10-11 17:03:20.448  1769  1801 V AudioFlinger: registerClient() client 0xee409060, pid 3368
 10-11 17:03:20.448  1769  1801 V AudioFlinger_Thread: sendConfigEvent_l() num events 1 event 0
 10-11 17:03:20.448  1769  1801 V AudioFlinger_Thread: sendConfigEvent_l() num events 1 event 0
-10-11 17:03:20.449  1769  1804 V AudioFlinger_Thread: thread 0xedd031c0 type MIXER TID 1804 threadLoop() mSleepTimeUs:0 mMixerStatus:2
-10-11 17:03:20.449  1769  1806 V AudioFlinger_Thread: thread 0xedb83780 type MIXER TID 1806 waking up
+10-11 17:03:20.449  1769  1804 V AudioFlinger_Thread: thread 0xedd031c0(AudioOut_D) type MIXER TID 1804 threadLoop() mSleepTimeUs:0 mMixerStatus:2
+
+
+10-11 17:03:20.449  1769  1806 V AudioFlinger_Thread: thread 0xedb83780(AudioOut_15) type MIXER TID 1806 waking up
 10-11 17:03:20.449  1769  1806 V AudioFlinger_Thread: acquireWakeLock_l() AudioOut_15 status 0
 10-11 17:03:20.449  1769  1806 D AudioFlinger_Thread: updateWakeLockUids_l AudioOut_15 uids:
 10-11 17:03:20.449  1769  1806 V AudioFlinger_Thread: updateWakeLockUids_l() AudioOut_15 status 0
-10-11 17:03:20.449  1769  1806 V AudioFlinger_Thread: thread 0xedb83780 type MIXER TID 1806 threadLoop()
+10-11 17:03:20.449  1769  1806 V AudioFlinger_Thread: thread 0xedb83780(AudioOut_15) type MIXER TID 1806 threadLoop()
 10-11 17:03:20.449  1769  1806 V AudioFlinger_Thread: processConfigEvents_l() remaining events 1
 10-11 17:03:20.449  1769  1806 V AudioFlinger_Thread: PlaybackThread::ioConfigChanged, thread 0xedb83780, event 0
 10-11 17:03:20.450  1769  1806 V AudioFlinger_Thread: processConfigEvents_l() DONE thread 0xedb83780
 10-11 17:03:20.450  1769  1806 V AudioFlinger_Thread: getTimestamp error - no valid kernel position
-10-11 17:03:20.450  1769  1806 V AudioFlinger_Thread: thread 0xedb83780 type MIXER TID 1806 threadLoop() mBytesRemaining:0
-10-11 17:03:20.450  1769  1806 V AudioFlinger_Thread: thread 0xedb83780 type MIXER TID 1806 threadLoop() mSleepTimeUs:10500 mMixerStatus:0
+10-11 17:03:20.450  1769  1806 V AudioFlinger_Thread: thread 0xedb83780(AudioOut_15) type MIXER TID 1806 threadLoop() mBytesRemaining:0
+10-11 17:03:20.450  1769  1806 V AudioFlinger_Thread: thread 0xedb83780(AudioOut_15) type MIXER TID 1806 threadLoop() mSleepTimeUs:10500 mMixerStatus:0
+
+
+
+
 10-11 17:03:20.451  1769  1801 V AudioFlinger: createRecord() output.sessionId:33 output.selectedDeviceId:0 output.flags:0
+
 10-11 17:03:20.451  1769  1801 V AudioPolicyIntefaceImpl: getInputForAttr (0,0,8,0x0,) 0 33 3368 0 MLS_AUDIO_RECORD (44100,0xC,1) 0x0 0 0
 10-11 17:03:20.452  1769  1801 V APM_AudioPolicyManager: getInputForAttr() source 8, sampling rate 44100, format 0x1, channel mask 0xc,session 33, flags 0
 10-11 17:03:20.452  1769  1801 V APM_AudioPolicyManager: getInputForAttr() tags()
@@ -24,15 +31,17 @@
 10-11 17:03:20.460  1769  1801 V AudioFlinger_Thread: 0xec383ec0 RecordThread params: mChannelCount=2, mFormat=0x1, mFrameSize=4, mBufferSize=4096, mFrameCount=1024
 10-11 17:03:20.460  1769  1801 V AudioFlinger_Thread: 0xec383ec0 kUseFastCapture = Static, (1024 * 1000) / 48000 vs 12, initFastCapture = 0
 10-11 17:03:20.461  1769  1801 V AudioFlinger: openInput_l() created record thread: ID 30 thread 0xec383ec0
-10-11 17:03:20.461  1769  1806 V AudioFlinger_Thread: thread 0xedb83780 type MIXER TID 1806 threadLoop()
+10-11 17:03:20.461  1769  1806 V AudioFlinger_Thread: thread 0xedb83780(AudioOut_15) type MIXER TID 1806 threadLoop()
 10-11 17:03:20.461  1769  1806 V AudioFlinger_Thread: getTimestamp error - no valid kernel position
-10-11 17:03:20.461  1769  1806 V AudioFlinger_Thread: thread 0xedb83780 type MIXER TID 1806 threadLoop() mBytesRemaining:0
-10-11 17:03:20.461  1769  1806 V AudioFlinger_Thread: thread 0xedb83780 type MIXER TID 1806 threadLoop() mSleepTimeUs:10500 mMixerStatus:0
+10-11 17:03:20.461  1769  1806 V AudioFlinger_Thread: thread 0xedb83780(AudioOut_15) type MIXER TID 1806 threadLoop() mBytesRemaining:0
+10-11 17:03:20.461  1769  1806 V AudioFlinger_Thread: thread 0xedb83780(AudioOut_15) type MIXER TID 1806 threadLoop() mSleepTimeUs:10500 mMixerStatus:0
 10-11 17:03:20.461  1769  3374 I AudioFlinger_Thread: AudioFlinger's thread 0xec383ec0 tid=3374 ready to run
 10-11 17:03:20.461  1769  1801 V AudioPolicyService: AudioCommandThread() adding update audio port list
 10-11 17:03:20.461  1769  1801 V AudioPolicyService: inserting command: 9 at index 0, num commands 0
 10-11 17:03:20.462  1769  1799 V AudioPolicyService: AudioCommandThread() processing update audio port list
 10-11 17:03:20.462  1769  1799 V AudioPolicyService: AudioCommandThread() going to sleep
+
+
 10-11 17:03:20.462  1769  1801 V APM_AudioPolicyManager: getInputForAttr() returns input 30 type 1 selectedDeviceId 10
 10-11 17:03:20.462  1769  1801 V AudioPolicyIntefaceImpl: getInputForAttr inputType:1 
 10-11 17:03:20.462  1769  1801 V AudioFlinger: createRecord() lSessionId: 33 input 30
@@ -53,12 +62,19 @@
 10-11 17:03:20.466  1769  1801 V AudioFlinger: getOrphanEffectChain_l session 33 index -2
 10-11 17:03:20.467  1769  1801 V AudioFlinger: acquiring 33 from 3368, for -1
 10-11 17:03:20.467  1769  1801 V AudioFlinger:  added new entry for 33
+
+
+
 10-11 17:03:20.467  1769  1801 V AudioFlinger_Track: RecordHandle::start()
 10-11 17:03:20.467  1769  1801 V AudioFlinger_Thread: RecordThread::start event 0, triggerSession 0
 10-11 17:03:20.467  1769  1801 V APM_AudioPolicyManager: AudioPolicyManager::startInput(input:30, session:33, silenced:0, concurrency:0)
 10-11 17:03:20.467  1769  1801 V APM_AudioPolicyManager: getInputForAttr() availableDeviceTypes(0x104) selectedDeviceFromMix(0)
+
+
 10-11 17:03:20.467  1769  1801 V AudioPolicyService: AudioCommandThread() adding create patch delay 0
 10-11 17:03:20.467  1769  1801 V AudioPolicyService: inserting command: 7 at index 0, num commands 0
+
+
 10-11 17:03:20.467  1769  1798 V AudioPolicyService: AudioCommandThread() processing create audio patch
 10-11 17:03:20.468  1769  1798 V AudioFlinger_Thread: sendConfigEvent_l() num events 1 event 3
 10-11 17:03:20.468  1769  3374 V AudioFlinger_Thread: RecordThread: loop starting
@@ -70,18 +86,29 @@
 10-11 17:03:20.469  1769  3374 V AudioFlinger_Thread: processConfigEvents_l() remaining events 1
 10-11 17:03:20.469  1769  3374 V AudioFlinger_Thread: processConfigEvents_l() DONE thread 0xec383ec0
 10-11 17:03:20.470  1769  1798 V AudioPolicyService: AudioCommandThread() going to sleep
+
+
+
 10-11 17:03:20.470  1769  1801 V APM_AudioPolicyManager: setInputDevice() createAudioPatch returned 0 patchHandle 28
 10-11 17:03:20.471  1769  1801 V AudioPolicyService: AudioCommandThread() adding recording configuration update event 1, source 8 uid 0
 10-11 17:03:20.471  1769  1801 V AudioPolicyService: inserting command: 13 at index 0, num commands 0
 10-11 17:03:20.471  1769  1801 V AudioPolicyService: AudioCommandThread() adding update audio patch list
 10-11 17:03:20.471  1769  1799 V AudioPolicyService: AudioCommandThread() processing recording configuration update
+
 10-11 17:03:20.471  1769  1801 V AudioPolicyService: inserting command: 10 at index 0, num commands 0
+
 10-11 17:03:20.471  1769  1799 V AudioPolicyService: AudioCommandThread() processing update audio patch list
+
 10-11 17:03:20.471  1769  1801 V APM_AudioPolicyManager: setDeviceConnectionStateInt() device: 0x8000, state 1, address 0 name remote-submix
+
+
 10-11 17:03:20.471  1769  1801 V APM_AudioPolicyManager: setDeviceConnectionState() connecting device 8000
+
 10-11 17:03:20.471  1769  1799 V AudioPolicyService: AudioCommandThread() going to sleep
 10-11 17:03:20.471  1769  1801 V AudioPolicyService: AudioCommandThread() adding set parameter string 0=;connect=32768, io 0 ,delay 0
 10-11 17:03:20.471  1769  1801 V AudioPolicyService: inserting command: 3 at index 0, num commands 0
+
+
 10-11 17:03:20.471  1769  1798 V AudioPolicyService: AudioCommandThread() processing set parameters string 0=;connect=32768, io 0
 10-11 17:03:20.471  1769  1798 V AudioFlinger: setParameters(): io 0, keyvalue 0=;connect=32768, calling pid 1769 calling uid 1041
 10-11 17:03:20.471  1769  1798 V AudioFlinger: setParameters: filtered keyvalue 0=;connect=32768
@@ -98,20 +125,34 @@
 10-11 17:03:20.472  1769  1804 V AudioFlinger_Thread: thread 0xedd031c0 type MIXER TID 1804 threadLoop() mBytesRemaining:0
 10-11 17:03:20.473  1769  1804 V AudioFlinger_Thread: thread 0xedd031c0 type MIXER TID 1804 threadLoop() mSleepTimeUs:0 mMixerStatus:2
 10-11 17:03:20.474  1769  1798 V AudioPolicyService: AudioCommandThread() going to sleep
+
+
+
 10-11 17:03:20.474  1769  1801 V APM_AudioPolicyManager: checkOutputsForDevice(): adding profile 0 from module r_submix
+
+
 10-11 17:03:20.474  1769  1801 V APM_AudioPolicyManager:   found 1 profiles, 0 outputs
 10-11 17:03:20.474  1769  1801 V APM_AudioPolicyManager: opening output for device 00008000 with params 0 profile 0xee7c3640 name r_submix output
+
+
+
 10-11 17:03:20.474  1769  1801 I AudioFlinger: openOutput() this 0xee7be000, module 34 Device 0x8000, SamplingRate 48000, Format 0x000001, Channels 0x3, flags 0,addr 0
 10-11 17:03:20.476  1769  1801 V AudioFlinger: openOutput_l() openOutputStream returned output 0xee438348, devices 0x8000, SamplingRate 48000, Format 0x1, Channels 0x3, flags 0, status 0 addr 0
 10-11 17:03:20.477  1769  1801 I AudioFlinger_Thread: HAL output buffer size 1024 frames, normal sink buffer size 1024 frames
 10-11 17:03:20.477  1769  1801 V AudioFlinger_Thread: MixerThread() id=29 device=0x8000 type=MIXER
 10-11 17:03:20.477  1769  1801 V AudioFlinger_Thread: mSampleRate=48000, mChannelMask=0x3, mChannelCount=2, mFormat=0x1, mFrameSize=4, mFrameCount=1024, mNormalFrameCount=1024
 10-11 17:03:20.478  1769  1801 V AudioFlinger: openOutput_l() created mixer output: ID 29 thread 0xec183500
+
+
 10-11 17:03:20.478  1769  1801 V AudioFlinger_Thread: PlaybackThread::ioConfigChanged, thread 0xec183500, event 1
 10-11 17:03:20.478  1769  3375 I AudioFlinger_Thread: AudioFlinger's thread 0xec183500 tid=3375 ready to run
+
+
 10-11 17:03:20.479  1769  1801 V AudioPolicyService: AudioCommandThread() adding set parameter string mix=0, io 29 ,delay 0
 10-11 17:03:20.479  1769  1801 V AudioPolicyService: inserting command: 3 at index 0, num commands 0
 10-11 17:03:20.479  1769  1798 V AudioPolicyService: AudioCommandThread() processing set parameters string mix=0, io 29
+
+
 10-11 17:03:20.479  1769  1798 V AudioFlinger: setParameters(): io 29, keyvalue mix=0, calling pid 1769 calling uid 1041
 10-11 17:03:20.479  1769  1798 V AudioFlinger: setParameters: filtered keyvalue mix=0
 10-11 17:03:20.479  1769  1798 V AudioFlinger_Thread: ThreadBase::setParameters() mix=0
@@ -267,6 +308,8 @@
 10-11 17:03:20.489  1769  3376 I AudioFlinger_Thread: AudioFlinger's thread 0xec003a80 tid=3376 ready to run
 
 
+
+
 10-11 17:03:20.489  1769  1801 V AudioPolicyService: AudioCommandThread() adding set volume stream 0, volume 0.508023, output 37
 10-11 17:03:20.489  1769  1801 V AudioPolicyService: inserting command: 2 at index 0, num commands 0
 10-11 17:03:20.489  1769  1798 V AudioPolicyService: AudioCommandThread() processing set volume stream 0,                             volume 0.508023, output 37
@@ -396,10 +439,6 @@
 10-11 17:03:20.497  1769  3375 V AudioFlinger_Thread: processConfigEvents_l() DONE thread 0xec183500
 10-11 17:03:20.498  1769  3375 V AudioFlinger_Thread: thread 0xec183500 type MIXER TID 3375 threadLoop() mBytesRemaining:0
 10-11 17:03:20.498  1769  3375 V AudioFlinger_Thread: thread 0xec183500 type MIXER TID 3375 threadLoop() mSleepTimeUs:10500 mMixerStatus:0
-
-
-
-
 10-11 17:03:20.498  1769  1798 V AudioPolicyService: AudioCommandThread() going to sleep
 10-11 17:03:20.498  1769  1801 V APM_AudioPolicyManager: setOutputDevice() createAudioPatch returned 0 patchHandle 36num_sources 1 num_sinks 1
 10-11 17:03:20.498  1769  1801 V AudioPolicyService: AudioCommandThread() adding update audio patch list
@@ -409,6 +448,9 @@
 10-11 17:03:20.498  1769  1801 V APM_AudioPolicyManager: checkAndSetVolume() cannot set stream 6 volume with force use = 0 for comm
 10-11 17:03:20.498  1769  1801 V APM_AudioPolicyManager: checkOutputsForDevice(): adding output 29
 10-11 17:03:20.498  1769  1801 V APM_AudioPolicyManager: setDeviceConnectionState() checkOutputsForDevice() returned 1 outputs
+
+
+
 10-11 17:03:20.498  1769  1801 V APM_AudioPolicyManager: checkOutputForStrategy() strategy 1, moving from output 13 to output 13
 10-11 17:03:20.498  1769  1801 V AudioFlinger: invalidateStream() stream 0
 10-11 17:03:20.498  1769  1801 V AudioFlinger_Thread: MixerThread::invalidateTracks() mixer 0xedd031c0, streamType 0, mTracks.size 2
@@ -536,19 +578,32 @@
 
 10-11 17:03:20.504  1769  1800 V AudioFlinger_Thread: sendConfigEvent_l() num events 1 event 0
 10-11 17:03:20.504  1769  1800 V AudioFlinger_Thread: sendConfigEvent_l() num events 1 event 0
+
 10-11 17:03:20.504  1769  3374 V AudioFlinger_Thread: processConfigEvents_l() remaining events 1
 10-11 17:03:20.504  1769  3376 V AudioFlinger_Thread: DuplicatingThread::clearOutputTracks()
 10-11 17:03:20.504  1769  3376 V AudioFlinger_Thread: thread 0xec003a80 type DUPLICATING TID 3376 threadLoop()
 10-11 17:03:20.504  1769  3376 V AudioFlinger_Thread: processConfigEvents_l() remaining events 1
 10-11 17:03:20.504  1769  3374 V AudioFlinger_Thread: processConfigEvents_l() DONE thread 0xec383ec0
 10-11 17:03:20.504  1769  3376 V AudioFlinger_Thread: PlaybackThread::ioConfigChanged, thread 0xec003a80, event 0
+
+
+
 10-11 17:03:20.504  1769  1800 V AudioPolicyIntefaceImpl: getOutputForAttr()
+
+
+
 10-11 17:03:20.505  1769  1980 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 9 ports 0xed9a7000
 10-11 17:03:20.505  1769  3376 V AudioFlinger_Thread: processConfigEvents_l() DONE thread 0xec003a80
 10-11 17:03:20.505  1769  3376 V AudioFlinger_Thread: DuplicatingThread::saveOutputTracks()
 10-11 17:03:20.505  1769  3376 V AudioFlinger_Thread: thread 0xec003a80 type DUPLICATING TID 3376 threadLoop() mBytesRemaining:0
 10-11 17:03:20.505  1769  1980 V APM_AudioPolicyManager: listAudioPorts() got 9 ports needed 9
+
+
 10-11 17:03:20.507  1769  1800 V APM_AudioPolicyManager: getOutputForAttr() returns output 13
+
+
+
+
 10-11 17:03:20.507  1769  1800 V AudioFlinger: createTrack() sessionId: 25
 10-11 17:03:20.514  1769  1769 V APM_AudioPolicyManager: setBeaconMute(1) mBeaconMuteRefCount=2 mBeaconPlayingRefCount=0
 10-11 17:03:20.514  1769  1769 V APM_AudioPolicyManager: selectOutputForMusicEffects selected output 29

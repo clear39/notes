@@ -336,12 +336,17 @@ frameworks/av/services/audioflinger/Threads.cpp:8753:            track->invalida
 10-22 09:05:43.986  2962 11203 V APM_AudioPolicyManager: output 1 isDuplicated=0 device=8000
 10-22 09:05:43.986  2962 11203 V APM_AudioPolicyManager: output 2 isDuplicated=1 device=1008000
 10-22 09:05:43.986  2962 11203 V APM_AudioPolicyManager: getOutputsForDevice() found output 29
+
+
+
 10-22 09:05:43.986  2962 11203 V APM_AudioPolicyManager: checkOutputForStrategy(): policy related outputs
 10-22 09:05:43.986  2962 11203 V APM_AudioPolicyManager:  previous outputs: adding 13
 10-22 09:05:43.986  2962 11203 V APM_AudioPolicyManager:  new outputs: adding 13
 10-22 09:05:43.986  2962 11203 V APM_AudioPolicyManager: checkOutputForStrategy() strategy 1, moving from output 13 to output 13
 10-22 09:05:43.986  2962 11203 V AudioFlinger: invalidateStream() stream 0
 10-22 09:05:43.986  2962 11203 V AudioFlinger: invalidateStream() stream 6
+
+
 10-22 09:05:43.986  2962 11203 V APM_AudioPolicyManager: getDeviceForStrategy() from cache strategy 5, device 1000000
 10-22 09:05:43.986  2962 11203 V APM_AudioPolicyManager: getOutputsForDevice() device 1000000
 10-22 09:05:43.986  2962 11203 V APM_AudioPolicyManager: output 0 isDuplicated=0 device=1000000
@@ -352,11 +357,16 @@ frameworks/av/services/audioflinger/Threads.cpp:8753:            track->invalida
 10-22 09:05:43.986  2962 11203 V APM_AudioPolicyManager: getOutputsForDevice() found output 21
 10-22 09:05:43.986  2962 11203 V APM_AudioPolicyManager: output 2 isDuplicated=1 device=1008000
 10-22 09:05:43.986  2962 11203 V APM_AudioPolicyManager: getOutputsForDevice() found output 29
+
+
 10-22 09:05:43.986  2962 11203 V APM_AudioPolicyManager: checkOutputForStrategy(): policy related outputs
 10-22 09:05:43.986  2962 11203 V APM_AudioPolicyManager:  previous outputs: adding 13
 10-22 09:05:43.986  2962 11203 V APM_AudioPolicyManager:  new outputs: adding 13
 10-22 09:05:43.986  2962 11203 V APM_AudioPolicyManager: checkOutputForStrategy() strategy 5, moving from output 13 to output 13
 10-22 09:05:43.986  2962 11203 V AudioFlinger: invalidateStream() stream 7
+
+
+
 10-22 09:05:43.986  2962 11203 V APM_AudioPolicyManager: getDeviceForStrategy() from cache strategy 2, device 1000000
 10-22 09:05:43.986  2962 11203 V APM_AudioPolicyManager: getOutputsForDevice() device 1000000
 10-22 09:05:43.986  2962 11203 V APM_AudioPolicyManager: output 0 isDuplicated=0 device=1000000
@@ -367,12 +377,24 @@ frameworks/av/services/audioflinger/Threads.cpp:8753:            track->invalida
 10-22 09:05:43.986  2962 11203 V APM_AudioPolicyManager: output 1 isDuplicated=0 device=8000
 10-22 09:05:43.986  2962 11203 V APM_AudioPolicyManager: output 2 isDuplicated=1 device=1008000
 10-22 09:05:43.986  2962 11203 V APM_AudioPolicyManager: getOutputsForDevice() found output 29
+
+
+
 10-22 09:05:43.986  2962 11203 V APM_AudioPolicyManager: checkOutputForStrategy(): policy related outputs
 10-22 09:05:43.986  2962 11203 V APM_AudioPolicyManager:  previous outputs: adding 13
 10-22 09:05:43.986  2962 11203 V APM_AudioPolicyManager:  new outputs: adding 13
 10-22 09:05:43.986  2962 11203 V APM_AudioPolicyManager: checkOutputForStrategy() strategy 2, moving from output 13 to output 13
+
+
+
+
+
 10-22 09:05:43.987  2962 11203 V AudioFlinger: invalidateStream() stream 2
 10-22 09:05:43.987  2962 11203 V AudioFlinger: invalidateStream() stream 4
+
+
+
+
 10-22 09:05:43.987  2962 11203 V APM_AudioPolicyManager: getDeviceForStrategy() from cache strategy 3, device 1000000
 10-22 09:05:43.987  2962 11203 V APM_AudioPolicyManager: getOutputsForDevice() device 1000000
 10-22 09:05:43.987  2962 11203 V APM_AudioPolicyManager: output 0 isDuplicated=0 device=1000000
@@ -433,6 +455,8 @@ frameworks/av/services/audioflinger/Threads.cpp:8753:            track->invalida
 10-22 09:05:43.988  2962 11203 V AudioPolicyService: AudioCommandThread() adding set volume stream 3, volume 1.000000, output 13
 10-22 09:05:43.988  2962 11203 V AudioPolicyService: inserting command: 2 at index 1, num commands 1
 10-22 09:05:43.988  2962  2997 V AudioPolicyService: AudioCommandThread() going to sleep
+
+
 10-22 09:05:43.988  2962 11203 V APM_AudioPolicyManager: getOutputsForDevice() device 8000
 10-22 09:05:43.988  2962 11203 V APM_AudioPolicyManager: output 0 isDuplicated=0 device=1000000
 10-22 09:05:43.988  2962 11203 V APM_AudioPolicyManager: output 1 isDuplicated=0 device=8000
@@ -442,6 +466,10 @@ frameworks/av/services/audioflinger/Threads.cpp:8753:            track->invalida
 10-22 09:05:43.988  2962 11203 V APM_AudioPolicyManager: selectOutputForMusicEffects selected output 21
 10-22 09:05:43.988  2962 11203 V AudioFlinger: invalidateStream() stream 1
 10-22 09:05:43.988  2962 11203 V AudioFlinger: invalidateStream() stream 3
+
+
+
+
 10-22 09:05:43.988  2962 11203 V APM_AudioPolicyManager: getDeviceForStrategy() from cache strategy 4, device 1000000
 10-22 09:05:43.988  2962 11203 V APM_AudioPolicyManager: getOutputsForDevice() device 1000000
 10-22 09:05:43.988  2962 11203 V APM_AudioPolicyManager: output 0 isDuplicated=0 device=1000000
@@ -2131,6 +2159,8 @@ frameworks/av/services/audioflinger/Threads.cpp:8753:            track->invalida
 10-22 09:06:25.218  2962  2999 V APM_AudioPolicyManager: output 1 isDuplicated=0 device=8000
 10-22 09:06:25.218  2962  2999 V APM_AudioPolicyManager: output 2 isDuplicated=1 device=1008000
 10-22 09:06:25.218  2962  2999 V APM_AudioPolicyManager: getOutputsForDevice() found output 29
+
+
 10-22 09:06:25.218  2962  2999 V APM_AudioPolicyManager: checkOutputForStrategy(): policy related outputs
 10-22 09:06:25.218  2962  2999 V APM_AudioPolicyManager:  previous outputs: adding 13
 10-22 09:06:25.218  2962  2999 V APM_AudioPolicyManager:  new outputs: adding 13
@@ -2148,10 +2178,16 @@ frameworks/av/services/audioflinger/Threads.cpp:8753:            track->invalida
 10-22 09:06:25.218  2962  2999 V APM_AudioPolicyManager: output 2 isDuplicated=1 device=1008000
 10-22 09:06:25.218  2962  2999 V APM_AudioPolicyManager: getOutputsForDevice() found output 29
 10-22 09:06:25.218  2962  2999 V APM_AudioPolicyManager: checkOutputForStrategy(): policy related outputs
+
 10-22 09:06:25.218  2962  2999 V APM_AudioPolicyManager:  previous outputs: adding 13
 10-22 09:06:25.218  2962  2999 V APM_AudioPolicyManager:  new outputs: adding 13
+
 10-22 09:06:25.218  2962  2999 V APM_AudioPolicyManager: checkOutputForStrategy() strategy 5, moving from output 13 to output 13
 10-22 09:06:25.218  2962  2999 V AudioFlinger: invalidateStream() stream 7
+
+
+
+
 10-22 09:06:25.218  2962  2999 V APM_AudioPolicyManager: getDeviceForStrategy() from cache strategy 2, device 1000000
 10-22 09:06:25.218  2962  2999 V APM_AudioPolicyManager: getOutputsForDevice() device 1000000
 10-22 09:06:25.218  2962  2999 V APM_AudioPolicyManager: output 0 isDuplicated=0 device=1000000
@@ -2181,6 +2217,11 @@ frameworks/av/services/audioflinger/Threads.cpp:8753:            track->invalida
 10-22 09:06:25.219  2962  2999 V APM_AudioPolicyManager: output 1 isDuplicated=0 device=8000
 10-22 09:06:25.219  2962  2999 V APM_AudioPolicyManager: output 2 isDuplicated=1 device=1008000
 10-22 09:06:25.219  2962  2999 V APM_AudioPolicyManager: getOutputsForDevice() found output 29
+
+
+
+
+
 10-22 09:06:25.219  2962  2999 V APM_AudioPolicyManager: checkOutputForStrategy(): policy related outputs
 10-22 09:06:25.219  2962  2999 V APM_AudioPolicyManager:  previous outputs: adding 13
 10-22 09:06:25.219  2962  2999 V APM_AudioPolicyManager:  new outputs: adding 13
@@ -2266,11 +2307,18 @@ frameworks/av/services/audioflinger/Threads.cpp:8753:            track->invalida
 10-22 09:06:25.220  2962  2999 V APM_AudioPolicyManager: output 1 isDuplicated=0 device=8000
 10-22 09:06:25.220  2962  2999 V APM_AudioPolicyManager: output 2 isDuplicated=1 device=1008000
 10-22 09:06:25.220  2962  2999 V APM_AudioPolicyManager: getOutputsForDevice() found output 29
+
+
+
+
 10-22 09:06:25.220  2962  2999 V APM_AudioPolicyManager: checkOutputForStrategy(): policy related outputs
 10-22 09:06:25.220  2962  2999 V APM_AudioPolicyManager:  previous outputs: adding 13
 10-22 09:06:25.220  2962  2999 V APM_AudioPolicyManager:  new outputs: adding 13
 10-22 09:06:25.220  2962  2999 V APM_AudioPolicyManager: checkOutputForStrategy() strategy 4, moving from output 13 to output 13
 10-22 09:06:25.220  2962  2999 V AudioFlinger: invalidateStream() stream 8
+
+
+
 10-22 09:06:25.220  2962  2999 V APM_AudioPolicyManager: getDeviceForStrategy() from cache strategy 8, device 8000
 10-22 09:06:25.220  2962  2999 V APM_AudioPolicyManager: getOutputsForDevice() device 8000
 10-22 09:06:25.220  2962  2999 V APM_AudioPolicyManager: output 0 isDuplicated=0 device=1000000

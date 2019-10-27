@@ -1,4 +1,9 @@
 //  @   /work/workcodes/aosp-p9.0.0_2.1.0-auto-ga/frameworks/av/services/audiopolicy/managerdefault/AudioPolicyManager.cpp
+/**
+ * IAudioFlinger::createRecord
+ * --> AudioFlinger::createRecord
+ * ---> AudioSystem::getInputForAttr
+*/
 status_t AudioPolicyManager::getInputForAttr(const audio_attributes_t *attr,
                                              audio_io_handle_t *input,  // out
                                              audio_session_t session,
@@ -64,6 +69,9 @@ status_t AudioPolicyManager::getInputForAttr(const audio_attributes_t *attr,
     ALOGV("getInputForAttr() tags(%s)",attr->tags); // 空的
 
     if (inputSource == AUDIO_SOURCE_REMOTE_SUBMIX && strncmp(attr->tags, "addr=", strlen("addr=")) == 0) {
+        /**
+         * 
+        */
         status = mPolicyMixes.getInputMixForAttr(*attr, &policyMix);
         if (status != NO_ERROR) {
             goto error;
@@ -218,6 +226,15 @@ audio_devices_t AudioPolicyManager::getDeviceForInputSource(audio_source_t input
 
 
 //////////////////////////////////////////////////////////////////////////////////////
+/**
+ * 
+ * IAudioRecord::start 
+ * ---> RecordHandle::start 
+ * ----> RecordTrack::start 
+ * -----> RecordThread::start
+ * ------> AudioSystem::startInput
+ * 
+*/
 status_t AudioPolicyManager::startInput(audio_io_handle_t input,
                                         audio_session_t session,
                                         bool silenced,
@@ -403,14 +420,30 @@ status_t AudioPolicyManager::setDeviceConnectionStateInt(audio_devices_t device,
                                                          const char *device_address,
                                                          const char *device_name)
 {
+    //  10-11 17:03:20.471  1769  1801 V APM_AudioPolicyManager: setDeviceConnectionStateInt() device: 0x8000, state 1, address 0 name remote-submix
     ALOGV("setDeviceConnectionStateInt() device: 0x%X, state %d, address %s name %s", device, state, device_address, device_name);
 
     // connect/disconnect only 1 device at a time
+    /**
+     * @    system/media/audio/include/system/audio.h
+     * 
+    */
     if (!audio_is_output_device(device) && !audio_is_input_device(device)) return BAD_VALUE;
 
+    
     sp<DeviceDescriptor> devDesc = mHwModules.getDeviceDescriptor(device, device_address, device_name);
 
     // handle output devices
+    /**
+        554 static inline bool audio_is_output_device(audio_devices_t device)
+        555 {   
+        556     if (((device & AUDIO_DEVICE_BIT_IN) == 0) &&   //   system/media/audio/include/system/audio-base.h:291:    AUDIO_DEVICE_BIT_IN                        = 0x80000000u,
+        557     ┊   ┊   (popcount(device) == 1) && ((device & ~AUDIO_DEVICE_OUT_ALL) == 0))
+        558     ┊   return true;
+        559     else
+        560     ┊   return false;
+        561 }
+    */
     if (audio_is_output_device(device)) {
         SortedVector <audio_io_handle_t> outputs;
 
@@ -422,11 +455,12 @@ status_t AudioPolicyManager::setDeviceConnectionStateInt(audio_devices_t device,
         switch (state)
         {
         // handle output device connection
-        case AUDIO_POLICY_DEVICE_STATE_AVAILABLE: {
+        case AUDIO_POLICY_DEVICE_STATE_AVAILABLE: { // 1
             if (index >= 0) {
                 ALOGW("setDeviceConnectionState() device already connected: %x", device);
                 return INVALID_OPERATION;
             }
+            //  10-11 17:03:20.471  1769  1801 V APM_AudioPolicyManager: setDeviceConnectionState() connecting device 8000
             ALOGV("setDeviceConnectionState() connecting device %x", device);
 
             // register new device as available
@@ -447,6 +481,9 @@ status_t AudioPolicyManager::setDeviceConnectionStateInt(audio_devices_t device,
             // parameters on newly connected devices (instead of opening the outputs...)
             broadcastDeviceConnectionState(device, state, devDesc->mAddress);
 
+            /**
+             * 
+            */
             if (checkOutputsForDevice(devDesc, state, outputs, devDesc->mAddress) != NO_ERROR) {
                 mAvailableOutputDevices.remove(devDesc);
 
@@ -458,11 +495,13 @@ status_t AudioPolicyManager::setDeviceConnectionStateInt(audio_devices_t device,
 
             // outputs should never be empty here
             ALOG_ASSERT(outputs.size() != 0, "setDeviceConnectionState():" "checkOutputsForDevice() returned no outputs but status OK");
+            
+            //  10-11 17:03:20.498  1769  1801 V APM_AudioPolicyManager: setDeviceConnectionState() checkOutputsForDevice() returned 1 outputs
             ALOGV("setDeviceConnectionState() checkOutputsForDevice() returned %zu outputs", outputs.size());
 
             } break;
         // handle output device disconnection
-        case AUDIO_POLICY_DEVICE_STATE_UNAVAILABLE: {
+        case AUDIO_POLICY_DEVICE_STATE_UNAVAILABLE: {//0 
             if (index < 0) {
                 ALOGW("setDeviceConnectionState() device not connected: %x", device);
                 return INVALID_OPERATION;
@@ -620,6 +659,215 @@ status_t AudioPolicyManager::setDeviceConnectionStateInt(audio_devices_t device,
 
     ALOGW("setDeviceConnectionState() invalid device: %x", device);
     return BAD_VALUE;
+}
+
+status_t AudioPolicyManager::checkOutputsForDevice(const sp<DeviceDescriptor>& devDesc,
+                                                   audio_policy_dev_state_t state,
+                                                   SortedVector<audio_io_handle_t>& outputs,
+                                                   const String8& address)
+{
+    audio_devices_t device = devDesc->type();
+    sp<SwAudioOutputDescriptor> desc;
+
+    if (audio_device_is_digital(device)) {
+        // erase all current sample rates, formats and channel masks
+        devDesc->clearAudioProfiles();
+    }
+
+    if (state == AUDIO_POLICY_DEVICE_STATE_AVAILABLE) {
+        // first list already open outputs that can be routed to this device
+        for (size_t i = 0; i < mOutputs.size(); i++) {
+            desc = mOutputs.valueAt(i);
+            if (!desc->isDuplicated() && (desc->supportedDevices() & device)) {
+                if (!device_distinguishes_on_address(device)) {
+
+                    ALOGV("checkOutputsForDevice(): adding opened output %d", mOutputs.keyAt(i));
+                    outputs.add(mOutputs.keyAt(i));
+                } else {
+                    ALOGV("  checking address match due to device 0x%x", device);
+                    findIoHandlesByAddress(desc, device, address, outputs);
+                }
+            }
+        }
+        // then look for output profiles that can be routed to this device
+        SortedVector< sp<IOProfile> > profiles;
+        for (const auto& hwModule : mHwModules) {
+            for (size_t j = 0; j < hwModule->getOutputProfiles().size(); j++) {
+                sp<IOProfile> profile = hwModule->getOutputProfiles()[j];
+                if (profile->supportDevice(device)) {
+                    if (!device_distinguishes_on_address(device) ||  profile->supportDeviceAddress(address)) {
+                        profiles.add(profile);
+                        //  10-11 17:03:20.474  1769  1801 V APM_AudioPolicyManager: checkOutputsForDevice(): adding profile 0 from module r_submix
+                        ALOGV("checkOutputsForDevice(): adding profile %zu from module %s",  j, hwModule->getName());
+                    }
+                }
+            }
+        }
+        
+        //  10-11 17:03:20.474  1769  1801 V APM_AudioPolicyManager:   found 1 profiles, 0 outputs
+        ALOGV("  found %zu profiles, %zu outputs", profiles.size(), outputs.size());
+
+        if (profiles.isEmpty() && outputs.isEmpty()) {
+            ALOGW("checkOutputsForDevice(): No output available for device %04x", device);
+            return BAD_VALUE;
+        }
+
+        // open outputs for matching profiles if needed. Direct outputs are also opened to
+        // query for dynamic parameters and will be closed later by setDeviceConnectionState()
+        for (ssize_t profile_index = 0; profile_index < (ssize_t)profiles.size(); profile_index++) {
+            sp<IOProfile> profile = profiles[profile_index];
+
+            // nothing to do if one output is already opened for this profile
+            size_t j;
+            for (j = 0; j < outputs.size(); j++) {
+                desc = mOutputs.valueFor(outputs.itemAt(j));
+                if (!desc->isDuplicated() && desc->mProfile == profile) {
+                    // matching profile: save the sample rates, format and channel masks supported
+                    // by the profile in our device descriptor
+                    if (audio_device_is_digital(device)) {
+                        devDesc->importAudioPort(profile);
+                    }
+                    break;
+                }T
+            }
+            if (j != outputs.size()) {
+                continue;
+            }
+
+            if (!profile->canOpenNewIo()) {
+                ALOGW("Max Output number %u already opened for this profile %s",  profile->maxOpenCount, profile->getTagName().c_str());
+                continue;
+            }
+
+           
+            //  10-11 17:03:20.474  1769  1801 V APM_AudioPolicyManager: opening output for device 00008000 with params 0 profile 0xee7c3640 name r_submix outputd
+            ALOGV("opening output for device %08x with params %s profile %p name %s", device, address.string(), profile.get(), profile->getName().string());
+            desc = new SwAudioOutputDescriptor(profile, mpClientInterface);
+            audio_io_handle_t output = AUDIO_IO_HANDLE_NONE;
+             /**
+             * 这里 open 函数会触发 AudioFlinger::openOutput() 调用
+             * 创建 r_submix 输出设备对应的线程MixerThread
+             * 
+            */
+            status_t status = desc->open(nullptr, device, address,  AUDIO_STREAM_DEFAULT, AUDIO_OUTPUT_FLAG_NONE, &output);
+
+            if (status == NO_ERROR) {
+                // Here is where the out_set_parameters() for card & device gets called
+                if (!address.isEmpty()) {
+                    char *param = audio_device_address_to_parameter(device, address);
+                    mpClientInterface->setParameters(output, String8(param));
+                    free(param);
+                }
+                updateAudioProfiles(device, output, profile->getAudioProfiles());
+                if (!profile->hasValidAudioProfile()) {
+                    ALOGW("checkOutputsForDevice() missing param");
+                    desc->close();
+                    output = AUDIO_IO_HANDLE_NONE;
+                } else if (profile->hasDynamicAudioProfile()) {
+                    desc->close();
+                    output = AUDIO_IO_HANDLE_NONE;
+                    audio_config_t config = AUDIO_CONFIG_INITIALIZER;
+                    profile->pickAudioProfile(config.sample_rate, config.channel_mask, config.format);
+                    config.offload_info.sample_rate = config.sample_rate;
+                    config.offload_info.channel_mask = config.channel_mask;
+                    config.offload_info.format = config.format;
+
+                    status_t status = desc->open(&config, device, address, AUDIO_STREAM_DEFAULT,AUDIO_OUTPUT_FLAG_NONE, &output);
+                    if (status != NO_ERROR) {
+                        output = AUDIO_IO_HANDLE_NONE;
+                    }
+                }
+
+                if (output != AUDIO_IO_HANDLE_NONE) {
+                    addOutput(output, desc);
+                    if (device_distinguishes_on_address(device) && address != "0") {
+                        sp<AudioPolicyMix> policyMix;
+                        if (mPolicyMixes.getAudioPolicyMix(address, policyMix) != NO_ERROR) {
+                            ALOGE("checkOutputsForDevice() cannot find policy for address %s",address.string());
+                        }
+                        policyMix->setOutput(desc);
+                        desc->mPolicyMix = policyMix->getMix();
+
+                    } else if (((desc->mFlags & AUDIO_OUTPUT_FLAG_DIRECT) == 0) &&hasPrimaryOutput()) {
+                        // no duplicated output for direct outputs and
+                        // outputs used by dynamic policy mixes
+                        audio_io_handle_t duplicatedOutput = AUDIO_IO_HANDLE_NONE;
+
+                        //TODO: configure audio effect output stage here
+
+                        // open a duplicating output thread for the new output and the primary output
+                        sp<SwAudioOutputDescriptor> dupOutputDesc = new SwAudioOutputDescriptor(NULL, mpClientInterface);
+                        status_t status = dupOutputDesc->openDuplicating(mPrimaryOutput, desc,&duplicatedOutput);
+                        if (status == NO_ERROR) {
+                            // add duplicated output descriptor
+                            addOutput(duplicatedOutput, dupOutputDesc);
+                        } else {
+                            ALOGW("checkOutputsForDevice() could not open dup output for %d and %d",mPrimaryOutput->mIoHandle, output);
+                            desc->close();
+                            removeOutput(output);
+                            nextAudioPortGeneration();
+                            output = AUDIO_IO_HANDLE_NONE;
+                        }
+                    }
+                }
+            } else {
+                output = AUDIO_IO_HANDLE_NONE;
+            }
+            if (output == AUDIO_IO_HANDLE_NONE) {
+                ALOGW("checkOutputsForDevice() could not open output for device %x", device);
+                profiles.removeAt(profile_index);
+                profile_index--;
+            } else {
+                outputs.add(output);
+                // Load digital format info only for digital devices
+                if (audio_device_is_digital(device)) {
+                    devDesc->importAudioPort(profile);
+                }
+
+                if (device_distinguishes_on_address(device)) {
+                    ALOGV("checkOutputsForDevice(): setOutputDevice(dev=0x%x, addr=%s)",
+                            device, address.string());
+                    setOutputDevice(desc, device, true/*force*/, 0/*delay*/,
+                            NULL/*patch handle*/, address.string());
+                }
+                ALOGV("checkOutputsForDevice(): adding output %d", output);
+            }
+        }
+
+        if (profiles.isEmpty()) {
+            ALOGW("checkOutputsForDevice(): No output available for device %04x", device);
+            return BAD_VALUE;
+        }
+    } else { // Disconnect
+        // check if one opened output is not needed any more after disconnecting one device
+        for (size_t i = 0; i < mOutputs.size(); i++) {
+            desc = mOutputs.valueAt(i);
+            if (!desc->isDuplicated()) {
+                // exact match on device
+                if (device_distinguishes_on_address(device) &&
+                        (desc->supportedDevices() == device)) {
+                    findIoHandlesByAddress(desc, device, address, outputs);
+                } else if (!(desc->supportedDevices() & mAvailableOutputDevices.types())) {
+                    ALOGV("checkOutputsForDevice(): disconnecting adding output %d",
+                            mOutputs.keyAt(i));
+                    outputs.add(mOutputs.keyAt(i));
+                }
+            }
+        }
+        // Clear any profiles associated with the disconnected device.
+        for (const auto& hwModule : mHwModules) {
+            for (size_t j = 0; j < hwModule->getOutputProfiles().size(); j++) {
+                sp<IOProfile> profile = hwModule->getOutputProfiles()[j];
+                if (profile->supportDevice(device)) {
+                    ALOGV("checkOutputsForDevice(): "
+                            "clearing direct output profile %zu on module %s",
+                            j, hwModule->getName());
+                    profile->clearAudioProfiles();
+                }
+            }
+        }
+    }
+    return NO_ERROR;
 }
 
 
