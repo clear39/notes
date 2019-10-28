@@ -216,9 +216,6 @@ status_t AudioPolicyManager::listAudioPatches(unsigned int *num_patches,struct a
  * ----> AudioSystem.registerPolicyMixes
  * -----> AudioPolicyService::registerPolicyMixes
 */
-
-
-
 status_t AudioPolicyManager::registerPolicyMixes(const Vector<AudioMix>& mixes)
 {
     ALOGV("registerPolicyMixes() %zu mix(es)", mixes.size());

@@ -82,7 +82,12 @@ public class CarAudioService extends ICarAudio.Stub implements CarServiceBase {
          * --> AudioManager.getDevicesStatic
          * ---> AudioManager.listAudioDevicePorts
          * ----> AudioManager.updateAudioPortCache
+         * -----> AudioSystem.listAudioPorts
+         * ------> android_media_AudioSystem_listAudioPorts
+         * -------> AudioPolicyService::listAudioPorts
+         * --------> AudioPolicyManager::listAudioPorts
          * 
+         * 从 mAvailableOutputDevices 和 mAvailableInputDevices 以及 mInputs 和 mOutputs 中查找获取
          */
         AudioDeviceInfo[] deviceInfos = mAudioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS);
         if (deviceInfos.length == 0) {
@@ -99,13 +104,18 @@ public class CarAudioService extends ICarAudio.Stub implements CarServiceBase {
         for (AudioDeviceInfo info : deviceInfos) {
             Log.v(CarLog.TAG_AUDIO, String.format("output id=%d address=%s type=%s",info.getId(), info.getAddress(), info.getType()));
             /***
-             * 
+             * 注意这里只有 AudioDeviceInfo.TYPE_BUS 才是合格的
              */
             if (info.getType() == AudioDeviceInfo.TYPE_BUS) {
                 final CarAudioDeviceInfo carInfo = new CarAudioDeviceInfo(info);
                 // See also the audio_policy_configuration.xml and getBusForContext in
                 // audio control HAL, the bus number should be no less than zero.
                 if (carInfo.getBusNumber() >= 0) {
+                    /***
+                     * 以 bus0_media_out 为例
+                     * carInfo.getBusNumber() 就是去bus0 后面0值
+                     * 
+                     */
                     mCarAudioDeviceInfos.put(carInfo.getBusNumber(), carInfo);
                     Log.i(CarLog.TAG_AUDIO, "Valid bus found " + carInfo);
                 }
@@ -148,6 +158,9 @@ public class CarAudioService extends ICarAudio.Stub implements CarServiceBase {
 
         // 3rd, enumerate all physical buses and build the routing policy.
         // Note that one can not register audio mix for same bus more than once.
+        /***
+         * 给每一个bus设备添加 构建路由策略，注册到 AudioPolicyManager中
+         */
         for (int i = 0; i < mCarAudioDeviceInfos.size(); i++) {
             int busNumber = mCarAudioDeviceInfos.keyAt(i);
             boolean hasContext = false;
@@ -170,8 +183,14 @@ public class CarAudioService extends ICarAudio.Stub implements CarServiceBase {
                 if (mContextToBus.valueAt(j) == busNumber) {
                     hasContext = true;
                     int contextNumber = mContextToBus.keyAt(j);
+                    /***
+                     * 在 USAGE_TO_CONTEXT 中查找 由 ContextNumber 对应的 Usage
+                     */
                     int[] usages = getUsagesForContext(contextNumber);
                     for (int usage : usages) {
+                        /**
+                         * 
+                         */
                         mixingRuleBuilder.addRule(new AudioAttributes.Builder().setUsage(usage).build(),AudioMixingRule.RULE_MATCH_ATTRIBUTE_USAGE);
                     }
                     Log.i(CarLog.TAG_AUDIO, "Bus number: " + busNumber
