@@ -38,13 +38,17 @@ public class CarAudioService extends ICarAudio.Stub implements CarServiceBase {
 
             // Restore master mute state if applicable
             if (mPersistMasterMuteState) {// 这里为true
+                /***
+                 * packages/services/Car/car-lib/src/android/car/media/CarAudioManager.java:55:    
+                 * public static final String VOLUME_SETTINGS_KEY_MASTER_MUTE = "android.car.MASTER_MUTE";
+                 */
                 boolean storedMasterMute = Settings.Global.getInt(mContext.getContentResolver(),CarAudioManager.VOLUME_SETTINGS_KEY_MASTER_MUTE, 0) != 0;
                 setMasterMute(storedMasterMute, 0);
             }
         }
     }
 
-
+    //////////////////////////////////////////////////////////////////////////////////////////////
     private void setupDynamicRouting() {
         final IAudioControl audioControl = getAudioControl();
         if (audioControl == null) {
@@ -71,8 +75,14 @@ public class CarAudioService extends ICarAudio.Stub implements CarServiceBase {
         // 1st, enumerate all output bus device ports
         /***
          * 
-         * 
+         * 获取输出设备
          * public static final int GET_DEVICES_OUTPUTS   = 0x0002;
+         * 
+         * AudioManager.getDevices
+         * --> AudioManager.getDevicesStatic
+         * ---> AudioManager.listAudioDevicePorts
+         * ----> AudioManager.updateAudioPortCache
+         * 
          */
         AudioDeviceInfo[] deviceInfos = mAudioManager.getDevices(AudioManager.GET_DEVICES_OUTPUTS);
         if (deviceInfos.length == 0) {
@@ -205,7 +215,8 @@ public class CarAudioService extends ICarAudio.Stub implements CarServiceBase {
     }
 
 
-
+    //////////////////////////////////////////////////////////////////////////////////////////////
+    
     private void setupVolumeGroups() {
         Preconditions.checkArgument(mCarAudioDeviceInfos.size() > 0,"No bus device is configured to setup volume groups");
 

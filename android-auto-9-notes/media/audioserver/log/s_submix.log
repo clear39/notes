@@ -28,12 +28,18 @@ frameworks/av/services/audioflinger/Threads.cpp:8753:            track->invalida
 
 10-22 09:05:43.787  2962 10902 V AudioFlinger: registerClient() client 0xe5c15218, pid 13971
 10-22 09:05:43.788  2962 10902 V AudioFlinger: createRecord() output.sessionId:33 output.selectedDeviceId:0 output.flags:0
+
 10-22 09:05:43.788  2962 10902 V AudioPolicyIntefaceImpl: getInputForAttr (0,0,8,0x0,) 0 33 13971 0 MLS_AUDIO_RECORD (48000,0xC,1) 0x0 0 0
 10-22 09:05:43.788  2962 10902 V APM_AudioPolicyManager: getInputForAttr() source 8, sampling rate 48000, format 0x1, channel mask 0xc,session 33, flags 0
 10-22 09:05:43.788  2962 10902 V APM_AudioPolicyManager: getInputForAttr() tags()
 10-22 09:05:43.788  2962 10902 V APM_AudioPolicyManager: getInputForAttr() availableDeviceTypes(0x104) selectedDeviceFromMix(0)
 10-22 09:05:43.788  2962 10902 V APM_AudioPolicyManager: getDeviceForInputSource mEngine->getDeviceForInputSource
 10-22 09:05:43.788  2962 10902 V APM_AudioPolicyManager: getInputForAttr() device 0x80000100
+
+
+
+
+
 10-22 09:05:43.788  2962 10902 I AudioFlinger: openInput() this 0xe5c3e000, module 34 Device 0x80000100, SamplingRate 48000, Format 0x000001, Channels 0xc, flags 0,addr 0
 10-22 09:05:43.791  2962 10902 V AudioFlinger: openInput_l() openInputStream returned input 0xe5c1ecc0, devices 0x80000100, SamplingRate 48000, Format 0x1, Channels 0xc, flags 0, status 0 addr 0
 10-22 09:05:43.792  2962 10902 V AudioFlinger: openInput_l() created record thread: ID 30 thread 0xe4e89600
@@ -59,7 +65,9 @@ frameworks/av/services/audioflinger/Threads.cpp:8753:            track->invalida
 10-22 09:05:43.799  2962 10902 V AudioFlinger: getOrphanEffectChain_l session 33 index -2
 10-22 09:05:43.800  2962 11203 V AudioFlinger: acquiring 33 from 13971, for -1
 10-22 09:05:43.800  2962 11203 V AudioFlinger:  added new entry for 33
+
 10-22 09:05:43.801  2962 11203 V AudioFlinger_Track: RecordHandle::start()
+
 10-22 09:05:43.801  2962 11203 V APM_AudioPolicyManager: AudioPolicyManager::startInput(input:30, session:33, silenced:0, concurrency:0)
 10-22 09:05:43.801  2962 11203 V APM_AudioPolicyManager: getInputForAttr() availableDeviceTypes(0x104) selectedDeviceFromMix(0)
 10-22 09:05:43.801  2962 11203 V APM_AudioPolicyManager: getDeviceForInputSource mEngine->getDeviceForInputSource
@@ -84,6 +92,8 @@ frameworks/av/services/audioflinger/Threads.cpp:8753:            track->invalida
 10-22 09:05:43.807  2962  2997 V AudioFlinger: setParameters(): io 0, keyvalue 0=;connect=32768, calling pid 2962 calling uid 1041
 10-22 09:05:43.807  2962  2997 V AudioFlinger: setParameters: filtered keyvalue 0=;connect=32768
 10-22 09:05:43.808  2962  2997 V AudioPolicyService: AudioCommandThread() going to sleep
+
+
 10-22 09:05:43.808  2962 11203 V APM_AudioPolicyManager: checkOutputsForDevice(): adding profile 0 from module r_submix
 10-22 09:05:43.808  2962 11203 V APM_AudioPolicyManager:   found 1 profiles, 0 outputs
 10-22 09:05:43.808  2962 11203 V APM_AudioPolicyManager: opening output for device 00008000 with params 0 profile 0xe5c435a0 name r_submix output
@@ -92,7 +102,15 @@ frameworks/av/services/audioflinger/Threads.cpp:8753:            track->invalida
 10-22 09:05:43.813  2962 11203 I AudioFlinger_Thread: HAL output buffer size 1024 frames, normal sink buffer size 1024 frames
 10-22 09:05:43.813  2962 11203 V AudioFlinger: openOutput_l() created mixer output: ID 21 thread 0xe4883740
 10-22 09:05:43.814  2962 14007 I AudioFlinger_Thread: AudioFlinger's thread 0xe4883740 tid=14007 ready to run
+
+
+
+
 10-22 09:05:43.814  2962 14007 D AudioFlinger_Thread: ro.audio.silent will be ignored for threads on AUDIO_DEVICE_OUT_REMOTE_SUBMIX
+
+
+
+
 10-22 09:05:43.816  2962 11203 V AudioPolicyService: AudioCommandThread() adding set parameter string mix=0, io 21 ,delay 0
 10-22 09:05:43.816  2962 11203 V AudioPolicyService: inserting command: 3 at index 0, num commands 0
 10-22 09:05:43.816  2962  2997 V AudioPolicyService: AudioCommandThread() processing set parameters string mix=0, io 21
@@ -166,54 +184,7 @@ frameworks/av/services/audioflinger/Threads.cpp:8753:            track->invalida
 10-22 09:05:43.823  2962 11203 V APM_AudioPolicyManager: selectOutputForMusicEffects selected output 21
 10-22 09:05:43.823  2962 11203 V AudioFlinger: openDuplicateOutput() output1:0x15 output2:0xd
 10-22 09:05:43.824  2962 11203 I AudioFlinger_Thread: HAL output buffer size 1024 frames, normal sink buffer size 1024 frames
-10-22 09:05:43.900  2962 11203 D Track   : #00 pc 0003097f  /system/lib/libaudioflinger.so (android::AudioFlinger::PlaybackThread::Track::Track(android::AudioFlinger::PlaybackThread*, android::sp<android::AudioFlinger::Client> const&, audio_stream_type_t, audio_attributes_t const&, unsigned int, audio_format_t, unsigned int, unsigned int, void*, unsigned int, android::sp<android::IMemory> const&, audio_session_t, unsigned int, audio_output_flags_t, android::AudioFlinger::ThreadBase::TrackBase::track_type, int)+686)
-10-22 09:05:43.900  2962 11203 D Track   : #01 pc 00031fd9  /system/lib/libaudioflinger.so (android::AudioFlinger::PlaybackThread::OutputTrack::OutputTrack(android::AudioFlinger::PlaybackThread*, android::AudioFlinger::DuplicatingThread*, unsigned int, audio_format_t, unsigned int, unsigned int, unsigned int)+88)
-10-22 09:05:43.900  2962 11203 D Track   : #02 pc 000258e5  /system/lib/libaudioflinger.so (android::AudioFlinger::DuplicatingThread::addOutputTrack(android::AudioFlinger::MixerThread*)+112)
-10-22 09:05:43.900  2962 11203 D Track   : #03 pc 00025a33  /system/lib/libaudioflinger.so (android::AudioFlinger::DuplicatingThread::DuplicatingThread(android::sp<android::AudioFlinger> const&, android::AudioFlinger::MixerThread*, int, bool)+186)
-10-22 09:05:43.900  2962 11203 D Track   : #04 pc 000176d9  /system/lib/libaudioflinger.so (android::AudioFlinger::openDuplicateOutput(int, int)+180)
-10-22 09:05:43.900  2962 11203 D Track   : #05 pc 0000ef4d  /system/lib/libaudiopolicyservice.so (android::AudioPolicyService::AudioPolicyClient::openDuplicateOutput(int, int)+36)
-10-22 09:05:43.900  2962 11203 D Track   : #06 pc 00035feb  /system/lib/libaudiopolicymanagerdefault.so (android::SwAudioOutputDescriptor::openDuplicating(android::sp<android::SwAudioOutputDescriptor> const&, android::sp<android::SwAudioOutputDescriptor> const&, int*)+34)
-10-22 09:05:43.900  2962 11203 D Track   : #07 pc 0001d5d9  /system/lib/libaudiopolicymanagerdefault.so (android::AudioPolicyManager::checkOutputsForDevice(android::sp<android::DeviceDescriptor> const&, audio_policy_dev_state_t, android::SortedVector<int>&, android::String8 const&)+1288)
-10-22 09:05:43.900  2962 11203 D Track   : #08 pc 0001ccc1  /system/lib/libaudiopolicymanagerdefault.so (android::AudioPolicyManager::setDeviceConnectionStateInt(unsigned int, audio_policy_dev_state_t, char const*, char const*)+1468)
-10-22 09:05:43.900  2962 11203 D Track   : #09 pc 000239b3  /system/lib/libaudiopolicymanagerdefault.so (android::AudioPolicyManager::startInput(int, audio_session_t, bool, unsigned int*)+1482)
-10-22 09:05:43.900  2962 11203 D Track   : #10 pc 0000d643  /system/lib/libaudiopolicyservice.so (android::AudioPolicyService::startInput(int, bool*)+186)
-10-22 09:05:43.900  2962 11203 D Track   : #11 pc 0002de81  /system/lib/libaudioclient.so (android::AudioSystem::startInput(int, bool*)+36)
-10-22 09:05:43.900  2962 11203 D Track   : #12 pc 00027f87  /system/lib/libaudioflinger.so (android::AudioFlinger::RecordThread::start(android::AudioFlinger::RecordThread::RecordTrack*, android::AudioSystem::sync_event_t, audio_session_t)+342)
-10-22 09:05:43.900  2962 11203 D Track   : #13 pc 0003308f  /system/lib/libaudioflinger.so (android::AudioFlinger::RecordThread::RecordTrack::start(android::AudioSystem::sync_event_t, audio_session_t)+54)
-10-22 09:05:43.900  2962 11203 D Track   : #14 pc 00032ced  /system/lib/libaudioflinger.so (android::AudioFlinger::RecordHandle::start(int, int)+36)
-10-22 09:05:43.900  2962 11203 D Track   : #15 pc 00003aff  /system/bin/audioserver (android::media::BnAudioRecord::onTransact(unsigned int, android::Parcel const&, android::Parcel*, unsigned int)+98)
-10-22 09:05:43.900  2962 11203 D Track   : #16 pc 000361cf  /system/lib/libbinder.so (android::BBinder::transact(unsigned int, android::Parcel const&, android::Parcel*, unsigned int)+70)
-10-22 09:05:43.900  2962 11203 D Track   : #17 pc 0003da17  /system/lib/libbinder.so (android::IPCThreadState::executeCommand(int)+410)
-10-22 09:05:43.900  2962 11203 D Track   : #18 pc 0003d7a3  /system/lib/libbinder.so (android::IPCThreadState::getAndExecuteCommand()+106)
-10-22 09:05:43.900  2962 11203 D Track   : #19 pc 0003dccb  /system/lib/libbinder.so (android::IPCThreadState::joinThreadPool(bool)+38)
-10-22 09:05:43.900  2962 11203 D Track   : #20 pc 000546fd  /system/lib/libbinder.so (android::PoolThread::threadLoop()+12)
-10-22 09:05:43.900  2962 11203 D Track   : #21 pc 0000c147  /system/lib/libutils.so (android::Thread::_threadLoop(void*)+166)
-10-22 09:05:43.901  2962 11203 D Track   : #22 pc 00063c85  /system/lib/libc.so (__pthread_start(void*)+22)
-10-22 09:05:43.901  2962 11203 D Track   : #23 pc 0001e085  /system/lib/libc.so (__start_thread+22)
 10-22 09:05:43.901  2962 11203 V AudioFlinger_Track: OutputTrack constructor mCblk 0xe496f380, mBuffer 0xe496f460, frameCount 3072, mChannelMask 0x00000003
-10-22 09:05:43.976  2962 11203 D Track   : #00 pc 0003097f  /system/lib/libaudioflinger.so (android::AudioFlinger::PlaybackThread::Track::Track(android::AudioFlinger::PlaybackThread*, android::sp<android::AudioFlinger::Client> const&, audio_stream_type_t, audio_attributes_t const&, unsigned int, audio_format_t, unsigned int, unsigned int, void*, unsigned int, android::sp<android::IMemory> const&, audio_session_t, unsigned int, audio_output_flags_t, android::AudioFlinger::ThreadBase::TrackBase::track_type, int)+686)
-10-22 09:05:43.976  2962 11203 D Track   : #01 pc 00031fd9  /system/lib/libaudioflinger.so (android::AudioFlinger::PlaybackThread::OutputTrack::OutputTrack(android::AudioFlinger::PlaybackThread*, android::AudioFlinger::DuplicatingThread*, unsigned int, audio_format_t, unsigned int, unsigned int, unsigned int)+88)
-10-22 09:05:43.976  2962 11203 D Track   : #02 pc 000258e5  /system/lib/libaudioflinger.so (android::AudioFlinger::DuplicatingThread::addOutputTrack(android::AudioFlinger::MixerThread*)+112)
-10-22 09:05:43.976  2962 11203 D Track   : #03 pc 000176f7  /system/lib/libaudioflinger.so (android::AudioFlinger::openDuplicateOutput(int, int)+210)
-10-22 09:05:43.976  2962 11203 D Track   : #04 pc 0000ef4d  /system/lib/libaudiopolicyservice.so (android::AudioPolicyService::AudioPolicyClient::openDuplicateOutput(int, int)+36)
-10-22 09:05:43.976  2962 11203 D Track   : #05 pc 00035feb  /system/lib/libaudiopolicymanagerdefault.so (android::SwAudioOutputDescriptor::openDuplicating(android::sp<android::SwAudioOutputDescriptor> const&, android::sp<android::SwAudioOutputDescriptor> const&, int*)+34)
-10-22 09:05:43.976  2962 11203 D Track   : #06 pc 0001d5d9  /system/lib/libaudiopolicymanagerdefault.so (android::AudioPolicyManager::checkOutputsForDevice(android::sp<android::DeviceDescriptor> const&, audio_policy_dev_state_t, android::SortedVector<int>&, android::String8 const&)+1288)
-10-22 09:05:43.976  2962 11203 D Track   : #07 pc 0001ccc1  /system/lib/libaudiopolicymanagerdefault.so (android::AudioPolicyManager::setDeviceConnectionStateInt(unsigned int, audio_policy_dev_state_t, char const*, char const*)+1468)
-10-22 09:05:43.976  2962 11203 D Track   : #08 pc 000239b3  /system/lib/libaudiopolicymanagerdefault.so (android::AudioPolicyManager::startInput(int, audio_session_t, bool, unsigned int*)+1482)
-10-22 09:05:43.976  2962 11203 D Track   : #09 pc 0000d643  /system/lib/libaudiopolicyservice.so (android::AudioPolicyService::startInput(int, bool*)+186)
-10-22 09:05:43.976  2962 11203 D Track   : #10 pc 0002de81  /system/lib/libaudioclient.so (android::AudioSystem::startInput(int, bool*)+36)
-10-22 09:05:43.976  2962 11203 D Track   : #11 pc 00027f87  /system/lib/libaudioflinger.so (android::AudioFlinger::RecordThread::start(android::AudioFlinger::RecordThread::RecordTrack*, android::AudioSystem::sync_event_t, audio_session_t)+342)
-10-22 09:05:43.976  2962 11203 D Track   : #12 pc 0003308f  /system/lib/libaudioflinger.so (android::AudioFlinger::RecordThread::RecordTrack::start(android::AudioSystem::sync_event_t, audio_session_t)+54)
-10-22 09:05:43.976  2962 11203 D Track   : #13 pc 00032ced  /system/lib/libaudioflinger.so (android::AudioFlinger::RecordHandle::start(int, int)+36)
-10-22 09:05:43.976  2962 11203 D Track   : #14 pc 00003aff  /system/bin/audioserver (android::media::BnAudioRecord::onTransact(unsigned int, android::Parcel const&, android::Parcel*, unsigned int)+98)
-10-22 09:05:43.976  2962 11203 D Track   : #15 pc 000361cf  /system/lib/libbinder.so (android::BBinder::transact(unsigned int, android::Parcel const&, android::Parcel*, unsigned int)+70)
-10-22 09:05:43.976  2962 11203 D Track   : #16 pc 0003da17  /system/lib/libbinder.so (android::IPCThreadState::executeCommand(int)+410)
-10-22 09:05:43.976  2962 11203 D Track   : #17 pc 0003d7a3  /system/lib/libbinder.so (android::IPCThreadState::getAndExecuteCommand()+106)
-10-22 09:05:43.976  2962 11203 D Track   : #18 pc 0003dccb  /system/lib/libbinder.so (android::IPCThreadState::joinThreadPool(bool)+38)
-10-22 09:05:43.976  2962 11203 D Track   : #19 pc 000546fd  /system/lib/libbinder.so (android::PoolThread::threadLoop()+12)
-10-22 09:05:43.976  2962 11203 D Track   : #20 pc 0000c147  /system/lib/libutils.so (android::Thread::_threadLoop(void*)+166)
-10-22 09:05:43.976  2962 11203 D Track   : #21 pc 00063c85  /system/lib/libc.so (__pthread_start(void*)+22)
-10-22 09:05:43.976  2962 11203 D Track   : #22 pc 0001e085  /system/lib/libc.so (__start_thread+22)
 10-22 09:05:43.976  2962 11203 V AudioFlinger_Track: OutputTrack constructor mCblk 0xe48d4d00, mBuffer 0xe48d4de0, frameCount 2880, mChannelMask 0x00000003
 10-22 09:05:43.977  2962 11203 V AudioFlinger: openDuplicateOutput() id:29 DuplicatingThread:0xe491ec80
 10-22 09:05:43.978  2962 11203 V APM_AudioPolicyManager: applyStreamVolumes() for device 00000000

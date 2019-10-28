@@ -223,8 +223,10 @@ void AudioFlinger::RecordThread::onFirstRef()
 
 
 /**
- * 
- * AudioFlinger::createRecord ---> 
+ * AudioRecord::set
+ * -> AudioRecord::createRecord_l
+ * --> AudioFlinger::createRecord
+ * ---> 
  * 
 */
 // RecordThread::createRecordTrack_l() must be called with AudioFlinger::mLock held
@@ -391,12 +393,16 @@ Exit:
 
 
 /**
- * IAudioRecord::start ---> RecordHandle::start ---> RecordTrack::start ---> RecordThread::start
+ * IAudioRecord::start 
+ * ---> RecordHandle::start 
+ * ----> RecordTrack::start 
+ * -----> RecordThread::start
 */
 status_t AudioFlinger::RecordThread::start(RecordThread::RecordTrack* recordTrack,
                                            AudioSystem::sync_event_t event /*= AudioSystem::SYNC_EVENT_NONE*/,
                                            audio_session_t triggerSession /*= AUDIO_SESSION_NONE*/)
 {
+    // 10-11 17:03:20.467  1769  1801 V AudioFlinger_Thread: RecordThread::start event 0, triggerSession 0
     ALOGV("RecordThread::start event %d, triggerSession %d", event, triggerSession);
     sp<ThreadBase> strongMe = this;
     status_t status = NO_ERROR;
@@ -440,6 +446,10 @@ status_t AudioFlinger::RecordThread::start(RecordThread::RecordTrack* recordTrac
         //      adding the track to mActiveTracks after returning from AudioSystem::startInput(),
         //      or using a separate command thread
         recordTrack->mState = TrackBase::STARTING_1;
+        /**
+         * 
+         * 
+        */
         mActiveTracks.add(recordTrack);
         status_t status = NO_ERROR;
         /**
@@ -451,6 +461,12 @@ status_t AudioFlinger::RecordThread::start(RecordThread::RecordTrack* recordTrac
             bool silenced;
             /***
              * 这里非常重要
+             * 
+             * AudioSystem::startInput
+             * --> AudioPolicyService::startInput
+             * ---> AudioPolicyManager::startInput
+             * 
+             * 
             */
             status = AudioSystem::startInput(recordTrack->portId(), &silenced);
             mLock.lock();
@@ -461,6 +477,11 @@ status_t AudioFlinger::RecordThread::start(RecordThread::RecordTrack* recordTrac
                 ALOGV("RecordThread::start error %d", status);
                 return status;
             }
+            /**
+             * frameworks/av/services/audioflinger/RecordTracks.h:67:            
+             * void        setSilenced(bool silenced) { if (!isPatchTrack()) mSilenced = silenced; }
+
+            */
             recordTrack->setSilenced(silenced);
         }
         // Catch up with current buffer indices if thread is already running.

@@ -13,14 +13,27 @@ sp<DeviceDescriptor> HwModuleCollection::getDeviceDescriptor(const audio_devices
 {
     String8 address = (device_address == nullptr) ? String8("") : String8(device_address);
     // handle legacy remote submix case where the address was not always specified
+    /**
+     * 
+     * 
+    */
     if (device_distinguishes_on_address(device) && (address.length() == 0)) {
         address = String8("0");
     }
 
     for (const auto& hwModule : *this) {
+        /**
+         * 这里对应module的 devicePort
+        */
         DeviceVector declaredDevices = hwModule->getDeclaredDevices();
+        /**
+         * 
+        */
         DeviceVector deviceList = declaredDevices.getDevicesFromTypeAddr(device, address);
         if (!deviceList.isEmpty()) {
+            /**
+             * 
+            */
             return deviceList.itemAt(0);
         }
         if (!matchAdress) {

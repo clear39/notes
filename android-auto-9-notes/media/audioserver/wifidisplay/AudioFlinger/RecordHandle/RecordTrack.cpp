@@ -56,7 +56,10 @@ AudioFlinger::RecordThread::RecordTrack::RecordTrack(
 }
 
 
-
+/**
+ * IAudioRecord::start 
+ * ---> RecordHandle::start 
+ * */
 status_t AudioFlinger::RecordThread::RecordTrack::start(AudioSystem::sync_event_t event,audio_session_t triggerSession)
 {
     sp<ThreadBase> thread = mThread.promote();
@@ -67,6 +70,20 @@ status_t AudioFlinger::RecordThread::RecordTrack::start(AudioSystem::sync_event_
         return BAD_VALUE;
     }
 }
+
+void AudioFlinger::RecordThread::RecordTrack::clearSyncStartEvent()
+{
+    /**
+     * 
+    */
+    if (mSyncStartEvent != 0) {
+        mSyncStartEvent->cancel();
+        mSyncStartEvent.clear();
+    }
+    mFramesToDrop = 0;
+}
+
+
 
 bool        AudioFlinger::RecordThread::RecordTrack::::isOutputTrack() const { return (mType == TYPE_OUTPUT); }
 

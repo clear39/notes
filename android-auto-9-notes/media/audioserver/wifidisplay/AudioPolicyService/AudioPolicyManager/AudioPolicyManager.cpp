@@ -80,10 +80,13 @@ status_t AudioPolicyManager::getInputForAttr(const audio_attributes_t *attr,
         device = AUDIO_DEVICE_IN_REMOTE_SUBMIX;
         address = String8(attr->tags + strlen("addr="));
     } else {
+        /**
+         * 
+         * */
         device = getDeviceAndMixForInputSource(inputSource, &policyMix);
 
         // 10-10 13:44:10.458  1771  1771 V APM_AudioPolicyManager: getInputForAttr() device -2147483392
-        ALOGV("getInputForAttr() device %#x",device);
+        ALOGV("getInputForAttr() device %#x",*device);
         if (device == AUDIO_DEVICE_NONE) {
             ALOGW("getInputForAttr() could not find device for source %d", inputSource);
             status = BAD_VALUE;
@@ -153,6 +156,7 @@ audio_devices_t AudioPolicyManager::getDeviceAndMixForInputSource(audio_source_t
      * */
     audio_devices_t selectedDeviceFromMix = mPolicyMixes.getDeviceAndMixForInputSource(inputSource, availableDeviceTypes, policyMix);
 
+    //  10-22 09:05:43.788  2962 10902 V APM_AudioPolicyManager: getInputForAttr() availableDeviceTypes(0x104) selectedDeviceFromMix(0)
     ALOGV("getInputForAttr() availableDeviceTypes(%#x) selectedDeviceFromMix(%#x)",availableDeviceTypes,selectedDeviceFromMix);
 
     if (selectedDeviceFromMix != AUDIO_DEVICE_NONE) {
@@ -162,37 +166,7 @@ audio_devices_t AudioPolicyManager::getDeviceAndMixForInputSource(audio_source_t
     return getDeviceForInputSource(inputSource);
 }
 
-//  @   frameworks/av/services/audiopolicy/common/managerdefinitions/src/AudioPolicyMix.cpp
-audio_devices_t AudioPolicyMixCollection::getDeviceAndMixForInputSource(audio_source_t inputSource,audio_devices_t availDevices,AudioMix **policyMix)
-{
-    for (size_t i = 0; i < size(); i++) {
-        AudioMix *mix = valueAt(i)->getMix();
 
-        if (mix->mMixType != MIX_TYPE_RECORDERS) {
-            continue;
-        }
-
-        for (size_t j = 0; j < mix->mCriteria.size(); j++) {
-            if ((RULE_MATCH_ATTRIBUTE_CAPTURE_PRESET == mix->mCriteria[j].mRule && mix->mCriteria[j].mValue.mSource == inputSource) ||
-               (RULE_EXCLUDE_ATTRIBUTE_CAPTURE_PRESET == mix->mCriteria[j].mRule && mix->mCriteria[j].mValue.mSource != inputSource)) {
-                /**
-                 * availDevices = 0x104
-                 * 
-                 * system/media/audio/include/system/audio-base.h:337:    AUDIO_DEVICE_IN_REMOTE_SUBMIX              = 0x80000100u, // BIT_IN | 0x100
-                */
-                if (availDevices & AUDIO_DEVICE_IN_REMOTE_SUBMIX) {
-                    if (policyMix != NULL) {
-                        *policyMix = mix;
-                    }
-                    ALOGV("getDeviceAndMixForInputSource %p",policyMix);
-                    return AUDIO_DEVICE_IN_REMOTE_SUBMIX;
-                }
-                break;
-            }
-        }
-    }
-    return AUDIO_DEVICE_NONE;
-}
 
 audio_devices_t AudioPolicyManager::getDeviceForInputSource(audio_source_t inputSource)
 {

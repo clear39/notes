@@ -4,6 +4,10 @@ class AudioPolicyMixCollection : public DefaultKeyedVector<String8, sp<AudioPoli
 
 
 //  @   frameworks/av/services/audiopolicy/common/managerdefinitions/src/AudioPolicyMix.cpp
+/**
+ * 
+ * 
+*/
 status_t AudioPolicyMixCollection::registerMix(const String8& address, AudioMix mix,sp<SwAudioOutputDescriptor> desc)
 {
     ssize_t index = indexOfKey(address);
@@ -22,6 +26,10 @@ status_t AudioPolicyMixCollection::registerMix(const String8& address, AudioMix 
     return NO_ERROR;
 }
 
+/**
+ * 
+ * 
+*/
 status_t AudioPolicyMixCollection::unregisterMix(const String8& address)
 {
     ssize_t index = indexOfKey(address);
@@ -34,6 +42,92 @@ status_t AudioPolicyMixCollection::unregisterMix(const String8& address)
     return NO_ERROR;
 }
 
+
+/**
+ * IAudioFlinger::createRecord
+ * --> AudioFlinger::createRecord
+ * ---> AudioSystem::getInputForAttr
+ * ----> AudioPolicyManager::getInputForAttr
+ * -----> AudioPolicyManager::getDeviceAndMixForInputSource
+*/
+audio_devices_t AudioPolicyMixCollection::getDeviceAndMixForInputSource(audio_source_t inputSource,
+                                    audio_devices_t availDevices,AudioMix **policyMix)
+{
+    for (size_t i = 0; i < size(); i++) {
+        AudioMix *mix = valueAt(i)->getMix();
+
+        if (mix->mMixType != MIX_TYPE_RECORDERS) {
+            continue;
+        }
+
+        for (size_t j = 0; j < mix->mCriteria.size(); j++) {
+            if ((RULE_MATCH_ATTRIBUTE_CAPTURE_PRESET == mix->mCriteria[j].mRule && mix->mCriteria[j].mValue.mSource == inputSource) ||
+               (RULE_EXCLUDE_ATTRIBUTE_CAPTURE_PRESET == mix->mCriteria[j].mRule && mix->mCriteria[j].mValue.mSource != inputSource)) {
+                /**
+                 * availDevices = 0x104
+                 * 
+                 * system/media/audio/include/system/audio-base.h:337:    AUDIO_DEVICE_IN_REMOTE_SUBMIX              = 0x80000100u, // BIT_IN | 0x100
+                */
+                if (availDevices & AUDIO_DEVICE_IN_REMOTE_SUBMIX) {
+                    if (policyMix != NULL) {
+                        *policyMix = mix;
+                    }
+                    ALOGV("getDeviceAndMixForInputSource %p",policyMix);
+                    return AUDIO_DEVICE_IN_REMOTE_SUBMIX;
+                }
+                break;
+            }
+        }
+    }
+    return AUDIO_DEVICE_NONE;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/***
+ * 
+ * AudioFlinger::createRecord 
+ * ---> AudioPolicyService::getInputForAttr
+ * ----> AudioPolicyManager::getInputForAttr
+ * 
+ * */
+status_t AudioPolicyMixCollection::getInputMixForAttr(audio_attributes_t attr, AudioMix **policyMix)
+{
+    if (strncmp(attr.tags, "addr=", strlen("addr=")) != 0) {
+        return BAD_VALUE;
+    }
+    String8 address(attr.tags + strlen("addr="));
+
+#ifdef LOG_NDEBUG
+    ALOGV("getInputMixForAttr looking for address %s\n  mixes available:", address.string());
+    for (size_t i = 0; i < size(); i++) {
+            sp<AudioPolicyMix> policyMix = valueAt(i);
+            AudioMix *mix = policyMix->getMix();
+            ALOGV("\tmix %zu address=%s", i, mix->mDeviceAddress.string());
+    }
+#endif
+
+    ssize_t index = indexOfKey(address);
+    if (index < 0) {
+        ALOGW("getInputMixForAttr() no policy for address %s", address.string());
+        return BAD_VALUE;
+    }
+    sp<AudioPolicyMix> audioPolicyMix = valueAt(index);
+    AudioMix *mix = audioPolicyMix->getMix();
+
+    if (mix->mMixType != MIX_TYPE_PLAYERS) {
+        ALOGW("getInputMixForAttr() bad policy mix type for address %s", address.string());
+        return BAD_VALUE;
+    }
+    *policyMix = mix;
+    return NO_ERROR;
+}
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /***
  * 
  * AudioFlinger::createTrack 

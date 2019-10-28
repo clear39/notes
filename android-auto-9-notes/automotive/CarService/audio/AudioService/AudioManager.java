@@ -80,10 +80,13 @@ public class AudioManager {
 
                 do {
                     newPorts.clear();
-                    /***
+                    /**
                      * 通过 AudioSystem::listAudioPorts 先查找个数，分配内存，再获取信息
                      * 
-                     *AudioSystem::listAudioPorts --> AudioPolicyService::listAudioPorts --> AudioPolicyManager::listAudioPorts
+                     *AudioSystem::listAudioPorts 
+                     *--> AudioPolicyService::listAudioPorts
+                     *---> AudioPolicyManager::listAudioPorts
+                     *
                      * 直接看 AudioPolicyManager::listAudioPorts 
                      */
                     status = AudioSystem.listAudioPorts(newPorts, portGeneration);
@@ -93,7 +96,9 @@ public class AudioManager {
                     }
                     newPatches.clear();
                     /**
-                     * AudioSystem::listAudioPatches --> AudioPolicyService::listAudioPatches --> AudioPolicyManager::listAudioPatches
+                     * AudioSystem::listAudioPatches 
+                     * --> AudioPolicyService::listAudioPatches 
+                     * --> AudioPolicyManager::listAudioPatches
                      * 直接看 AudioPolicyManager::listAudioPatches 
                      */
                     status = AudioSystem.listAudioPatches(newPatches, patchGeneration);

@@ -166,10 +166,142 @@ status_t AudioPolicyManager::listAudioPatches(unsigned int *num_patches,struct a
     if (generation == NULL) {
         return BAD_VALUE;
     }
+    /***
+     * frameworks/av/services/audiopolicy/managerdefault/AudioPolicyManager.h:645:   
+     * uint32_t curAudioPortGeneration() const { return mAudioPortGeneration; }
+     * */
     *generation = curAudioPortGeneration();
     /**
      * 
      * 
     */
     return mAudioPatches.listAudioPatches(num_patches, patches);
+}
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////
+// Register a list of custom mixes with their attributes and format.
+// When a mix is registered, corresponding input and output profiles are
+// added to the remote submix hw module. The profile contains only the
+// parameters (sampling rate, format...) specified by the mix.
+// The corresponding input remote submix device is also connected.
+//
+// When a remote submix device is connected, the address is checked to select the
+// appropriate profile and the corresponding input or output stream is opened.
+//
+// When capture starts, getInputForAttr() will:
+//  - 1 look for a mix matching the address passed in attribtutes tags if any
+//  - 2 if none found, getDeviceForInputSource() will:
+//     - 2.1 look for a mix matching the attributes source
+//     - 2.2 if none found, default to device selection by policy rules
+// At this time, the corresponding output remote submix device is also connected
+// and active playback use cases can be transferred to this mix if needed when reconnecting
+// after AudioTracks are invalidated
+//
+// When playback starts, getOutputForAttr() will:
+//  - 1 look for a mix matching the address passed in attribtutes tags if any
+//  - 2 if none found, look for a mix matching the attributes usage
+//  - 3 if none found, default to device and output selection by policy rules.
+
+/***
+ * 
+ * CarAudioService.init()
+ * --> AudioManager.registerAudioPolicy()
+ * ---> AudioService.registerAudioPolicy new AudioService$AudioPolicyProxy
+ * ----> AudioPolicyProxy.connectMixes
+ * ----> AudioSystem.registerPolicyMixes
+ * -----> AudioPolicyService::registerPolicyMixes
+*/
+
+
+
+status_t AudioPolicyManager::registerPolicyMixes(const Vector<AudioMix>& mixes)
+{
+    ALOGV("registerPolicyMixes() %zu mix(es)", mixes.size());
+    status_t res = NO_ERROR;
+
+    sp<HwModule> rSubmixModule;
+    // examine each mix's route type
+    for (size_t i = 0; i < mixes.size(); i++) {
+        // we only support MIX_ROUTE_FLAG_LOOP_BACK or MIX_ROUTE_FLAG_RENDER, not the combination
+        if ((mixes[i].mRouteFlags & MIX_ROUTE_FLAG_ALL) == MIX_ROUTE_FLAG_ALL) {
+            res = INVALID_OPERATION;
+            break;
+        }
+        if ((mixes[i].mRouteFlags & MIX_ROUTE_FLAG_LOOP_BACK) == MIX_ROUTE_FLAG_LOOP_BACK) {
+            ALOGV("registerPolicyMixes() mix %zu of %zu is LOOP_BACK", i, mixes.size());
+            if (rSubmixModule == 0) {
+                rSubmixModule = mHwModules.getModuleFromName(AUDIO_HARDWARE_MODULE_ID_REMOTE_SUBMIX);
+                if (rSubmixModule == 0) {
+                    ALOGE(" Unable to find audio module for submix, aborting mix %zu registration", i);
+                    res = INVALID_OPERATION;
+                    break;
+                }
+            }
+
+            /**
+             * address="bus0_media_out"
+            */
+            String8 address = mixes[i].mDeviceAddress;
+
+            if (mPolicyMixes.registerMix(address, mixes[i], 0 /*output desc*/) != NO_ERROR) {
+                ALOGE(" Error registering mix %zu for address %s", i, address.string());
+                res = INVALID_OPERATION;
+                break;
+            }
+            audio_config_t outputConfig = mixes[i].mFormat;
+            audio_config_t inputConfig = mixes[i].mFormat;
+            // NOTE: audio flinger mixer does not support mono output: configure remote submix HAL in
+            // stereo and let audio flinger do the channel conversion if needed.
+            outputConfig.channel_mask = AUDIO_CHANNEL_OUT_STEREO;
+            inputConfig.channel_mask = AUDIO_CHANNEL_IN_STEREO;
+            rSubmixModule->addOutputProfile(address, &outputConfig,AUDIO_DEVICE_OUT_REMOTE_SUBMIX, address);
+            rSubmixModule->addInputProfile(address, &inputConfig,AUDIO_DEVICE_IN_REMOTE_SUBMIX, address);
+
+            if (mixes[i].mMixType == MIX_TYPE_PLAYERS) {
+                setDeviceConnectionStateInt(AUDIO_DEVICE_IN_REMOTE_SUBMIX,AUDIO_POLICY_DEVICE_STATE_AVAILABLE,address.string(), "remote-submix");
+            } else {
+                setDeviceConnectionStateInt(AUDIO_DEVICE_OUT_REMOTE_SUBMIX,AUDIO_POLICY_DEVICE_STATE_AVAILABLE,address.string(), "remote-submix");
+            }
+        } else if ((mixes[i].mRouteFlags & MIX_ROUTE_FLAG_RENDER) == MIX_ROUTE_FLAG_RENDER) {
+            String8 address = mixes[i].mDeviceAddress;
+            audio_devices_t device = mixes[i].mDeviceType;
+            ALOGV(" registerPolicyMixes() mix %zu of %zu is RENDER, dev=0x%X addr=%s", i, mixes.size(), device, address.string());
+            ALOGV(" registerPolicyMixes() mOutputs.size()=%zu",mOutputs.size());
+            bool foundOutput = false;
+            for (size_t j = 0 ; j < mOutputs.size() ; j++) {
+                sp<SwAudioOutputDescriptor> desc = mOutputs.valueAt(j);
+                sp<AudioPatch> patch = mAudioPatches.valueFor(desc->getPatchHandle());
+                if ((patch != 0) && (patch->mPatch.num_sinks != 0)
+                        && (patch->mPatch.sinks[0].type == AUDIO_PORT_TYPE_DEVICE)
+                        && (patch->mPatch.sinks[0].ext.device.type == device)
+                        && (strncmp(patch->mPatch.sinks[0].ext.device.address, address.string(),AUDIO_DEVICE_MAX_ADDRESS_LEN) == 0)) {
+                    if (mPolicyMixes.registerMix(address, mixes[i], desc) != NO_ERROR) {
+                        res = INVALID_OPERATION;
+                    } else {
+                        foundOutput = true;
+                    }
+                    break;
+                }
+            }
+
+            if (res != NO_ERROR) {
+                ALOGE(" Error registering mix %zu for device 0x%X addr %s",i, device, address.string());
+                res = INVALID_OPERATION;
+                break;
+            } else if (!foundOutput) {
+                ALOGE(" Output not found for mix %zu for device 0x%X addr %s",i, device, address.string());
+                res = INVALID_OPERATION;
+                break;
+            }
+        }
+    }
+    if (res != NO_ERROR) {
+        unregisterPolicyMixes(mixes);
+    }
+    return res;
 }

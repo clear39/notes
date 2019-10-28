@@ -1,8 +1,186 @@
 //  @   /work/workcodes/aosp-p9.0.0_2.1.0-auto-ga/frameworks/av/services/audioflinger/AudioFlinger.cpp
 
+///////////////////////////////////////////////////////////////////////////
 /**
- * 
- * 
+ * AudioRecord::set
+ * -> AudioRecord::createRecord_l
+*/
+sp<media::IAudioRecord> AudioFlinger::createRecord(const CreateRecordInput& input,CreateRecordOutput& output,status_t *status)
+{
+    sp<RecordThread::RecordTrack> recordTrack;
+    sp<RecordHandle> recordHandle;
+    sp<Client> client;
+    status_t lStatus;
+    audio_session_t sessionId = input.sessionId;
+    audio_port_handle_t portId = AUDIO_PORT_HANDLE_NONE;
+
+    output.cblk.clear();
+    output.buffers.clear();
+    output.inputId = AUDIO_IO_HANDLE_NONE;
+
+    bool updatePid = (input.clientInfo.clientPid == -1);
+    const uid_t callingUid = IPCThreadState::self()->getCallingUid();
+    uid_t clientUid = input.clientInfo.clientUid;
+    if (!isTrustedCallingUid(callingUid)) {
+        ALOGW_IF(clientUid != callingUid,
+                "%s uid %d tried to pass itself off as %d",
+                __FUNCTION__, callingUid, clientUid);
+        clientUid = callingUid;
+        updatePid = true;
+    }
+    pid_t clientPid = input.clientInfo.clientPid;
+    if (updatePid) {
+        const pid_t callingPid = IPCThreadState::self()->getCallingPid();
+        ALOGW_IF(clientPid != -1 && clientPid != callingPid,
+                 "%s uid %d pid %d tried to pass itself off as pid %d",
+                 __func__, callingUid, callingPid, clientPid);
+        clientPid = callingPid;
+    }
+
+    // we don't yet support anything other than linear PCM
+    if (!audio_is_valid_format(input.config.format) || !audio_is_linear_pcm(input.config.format)) {
+        ALOGE("createRecord() invalid format %#x", input.config.format);
+        lStatus = BAD_VALUE;
+        goto Exit;
+    }
+
+    // further channel mask checks are performed by createRecordTrack_l()
+    if (!audio_is_input_channel(input.config.channel_mask)) {
+        ALOGE("createRecord() invalid channel mask %#x", input.config.channel_mask);
+        lStatus = BAD_VALUE;
+        goto Exit;
+    }
+
+    if (sessionId == AUDIO_SESSION_ALLOCATE) {
+        sessionId = (audio_session_t) newAudioUniqueId(AUDIO_UNIQUE_ID_USE_SESSION);
+    } else if (audio_unique_id_get_use(sessionId) != AUDIO_UNIQUE_ID_USE_SESSION) {
+        lStatus = BAD_VALUE;
+        goto Exit;
+    }
+
+    output.sessionId = sessionId;
+    output.selectedDeviceId = input.selectedDeviceId;
+    output.flags = input.flags;
+
+    client = registerPid(clientPid);
+
+    // Not a conventional loop, but a retry loop for at most two iterations total.
+    // Try first maybe with FAST flag then try again without FAST flag if that fails.
+    // Exits loop via break on no error of got exit on error
+    // The sp<> references will be dropped when re-entering scope.
+    // The lack of indentation is deliberate, to reduce code churn and ease merges.
+    for (;;) {
+    // release previously opened input if retrying.
+    if (output.inputId != AUDIO_IO_HANDLE_NONE) {
+        recordTrack.clear();
+        AudioSystem::releaseInput(portId);
+        output.inputId = AUDIO_IO_HANDLE_NONE;
+        output.selectedDeviceId = input.selectedDeviceId;
+        portId = AUDIO_PORT_HANDLE_NONE;
+    }
+    /**
+     * 
+     * AudioSystem::getInputForAttr 会触发 AudioFlinger::openInput_l 调用 创建线程
+     * 
+     * 这里主要得到 output.inputId，output.selectedDeviceId， portId 值
+     * 
+     * output.inputId 是由 AudioFlinger::openInput_l 创建用于标记 创建的对应线程
+     * output.selectedDeviceId 
+     * portId
+     * 
+    */
+    lStatus = AudioSystem::getInputForAttr(&input.attr, &output.inputId,
+                                      sessionId,   // 已经创建
+                                    // FIXME compare to AudioTrack
+                                      clientPid,
+                                      clientUid,
+                                      input.opPackageName,
+                                      &input.config,
+                                      output.flags, &output.selectedDeviceId, &portId);
+
+    {
+        Mutex::Autolock _l(mLock);
+        RecordThread *thread = checkRecordThread_l(output.inputId);
+        if (thread == NULL) {
+            ALOGE("createRecord() checkRecordThread_l failed");
+            lStatus = BAD_VALUE;
+            goto Exit;
+        }
+
+        ALOGV("createRecord() lSessionId: %d input %d", sessionId, output.inputId);
+
+        output.sampleRate = input.config.sample_rate;
+        output.frameCount = input.frameCount;
+        output.notificationFrameCount = input.notificationFrameCount;
+
+        recordTrack = thread->createRecordTrack_l(client, input.attr, &output.sampleRate,
+                                                  input.config.format, input.config.channel_mask,
+                                                  &output.frameCount, sessionId,    // 已经创建 
+                                                  &output.notificationFrameCount,
+                                                  clientUid, &output.flags,
+                                                  input.clientInfo.clientTid,
+                                                  &lStatus, portId);
+
+        LOG_ALWAYS_FATAL_IF((lStatus == NO_ERROR) && (recordTrack == 0));
+
+        // lStatus == BAD_TYPE means FAST flag was rejected: request a new input from
+        // audio policy manager without FAST constraint
+        if (lStatus == BAD_TYPE) {
+            continue;
+        }
+
+        if (lStatus != NO_ERROR) {
+            goto Exit;
+        }
+
+        // Check if one effect chain was awaiting for an AudioRecord to be created on this
+        // session and move it to this thread.
+        sp<EffectChain> chain = getOrphanEffectChain_l(sessionId);
+        if (chain != 0) {
+            Mutex::Autolock _l(thread->mLock);
+            thread->addEffectChain_l(chain);
+        }
+        break;
+    }
+    // End of retry loop.
+    // The lack of indentation is deliberate, to reduce code churn and ease merges.
+    }
+
+    output.cblk = recordTrack->getCblk();
+    output.buffers = recordTrack->getBuffers();
+
+    // return handle to client
+    recordHandle = new RecordHandle(recordTrack);
+
+Exit:
+    if (lStatus != NO_ERROR) {
+        // remove local strong reference to Client before deleting the RecordTrack so that the
+        // Client destructor is called by the TrackBase destructor with mClientLock held
+        // Don't hold mClientLock when releasing the reference on the track as the
+        // destructor will acquire it.
+        {
+            Mutex::Autolock _cl(mClientLock);
+            client.clear();
+        }
+        recordTrack.clear();
+        if (output.inputId != AUDIO_IO_HANDLE_NONE) {
+            AudioSystem::releaseInput(portId);
+        }
+    }
+
+    *status = lStatus;
+    return recordHandle;
+}
+
+///////////////////////////////////////////////////////////////////////////
+/**
+ * AudioRecord::set
+ * -> AudioRecord::createRecord_l
+ * --> AudioFlinger::createRecord 
+ * ---> AudioSystem::getInputForAttr
+ * ----> AudioPolicyService::getInputForAttr
+ * -----> AudioPolicyManager::getInputForAttr
+ * ------> AudioPolicyManager::getDeviceAndMixForInputSource
 */
 status_t AudioFlinger::openInput(audio_module_handle_t module,
                                           audio_io_handle_t *input,
@@ -180,194 +358,6 @@ sp<AudioFlinger::ThreadBase> AudioFlinger::openInput_l(audio_module_handle_t mod
     *input = AUDIO_IO_HANDLE_NONE;
     return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-sp<media::IAudioRecord> AudioFlinger::createRecord(const CreateRecordInput& input,CreateRecordOutput& output,status_t *status)
-{
-    sp<RecordThread::RecordTrack> recordTrack;
-    sp<RecordHandle> recordHandle;
-    sp<Client> client;
-    status_t lStatus;
-    audio_session_t sessionId = input.sessionId;
-    audio_port_handle_t portId = AUDIO_PORT_HANDLE_NONE;
-
-    output.cblk.clear();
-    output.buffers.clear();
-    output.inputId = AUDIO_IO_HANDLE_NONE;
-
-    bool updatePid = (input.clientInfo.clientPid == -1);
-    const uid_t callingUid = IPCThreadState::self()->getCallingUid();
-    uid_t clientUid = input.clientInfo.clientUid;
-    if (!isTrustedCallingUid(callingUid)) {
-        ALOGW_IF(clientUid != callingUid,
-                "%s uid %d tried to pass itself off as %d",
-                __FUNCTION__, callingUid, clientUid);
-        clientUid = callingUid;
-        updatePid = true;
-    }
-    pid_t clientPid = input.clientInfo.clientPid;
-    if (updatePid) {
-        const pid_t callingPid = IPCThreadState::self()->getCallingPid();
-        ALOGW_IF(clientPid != -1 && clientPid != callingPid,
-                 "%s uid %d pid %d tried to pass itself off as pid %d",
-                 __func__, callingUid, callingPid, clientPid);
-        clientPid = callingPid;
-    }
-
-    // we don't yet support anything other than linear PCM
-    if (!audio_is_valid_format(input.config.format) || !audio_is_linear_pcm(input.config.format)) {
-        ALOGE("createRecord() invalid format %#x", input.config.format);
-        lStatus = BAD_VALUE;
-        goto Exit;
-    }
-
-    // further channel mask checks are performed by createRecordTrack_l()
-    if (!audio_is_input_channel(input.config.channel_mask)) {
-        ALOGE("createRecord() invalid channel mask %#x", input.config.channel_mask);
-        lStatus = BAD_VALUE;
-        goto Exit;
-    }
-
-    if (sessionId == AUDIO_SESSION_ALLOCATE) {
-        sessionId = (audio_session_t) newAudioUniqueId(AUDIO_UNIQUE_ID_USE_SESSION);
-    } else if (audio_unique_id_get_use(sessionId) != AUDIO_UNIQUE_ID_USE_SESSION) {
-        lStatus = BAD_VALUE;
-        goto Exit;
-    }
-
-    output.sessionId = sessionId;
-    output.selectedDeviceId = input.selectedDeviceId;
-    output.flags = input.flags;
-
-    client = registerPid(clientPid);
-
-    // Not a conventional loop, but a retry loop for at most two iterations total.
-    // Try first maybe with FAST flag then try again without FAST flag if that fails.
-    // Exits loop via break on no error of got exit on error
-    // The sp<> references will be dropped when re-entering scope.
-    // The lack of indentation is deliberate, to reduce code churn and ease merges.
-    for (;;) {
-    // release previously opened input if retrying.
-    if (output.inputId != AUDIO_IO_HANDLE_NONE) {
-        recordTrack.clear();
-        AudioSystem::releaseInput(portId);
-        output.inputId = AUDIO_IO_HANDLE_NONE;
-        output.selectedDeviceId = input.selectedDeviceId;
-        portId = AUDIO_PORT_HANDLE_NONE;
-    }
-    /**
-     * 
-     * AudioSystem::getInputForAttr 会触发 AudioFlinger::openInput_l 调用 创建线程
-     * 
-     * 这里主要得到 output.inputId，output.selectedDeviceId， portId 值
-     * 
-     * output.inputId 是由 AudioFlinger::openInput_l 创建用于标记 创建的对应线程
-     * output.selectedDeviceId 
-     * portId
-     * 
-    */
-    lStatus = AudioSystem::getInputForAttr(&input.attr, &output.inputId,
-                                      sessionId,   // 已经创建
-                                    // FIXME compare to AudioTrack
-                                      clientPid,
-                                      clientUid,
-                                      input.opPackageName,
-                                      &input.config,
-                                      output.flags, &output.selectedDeviceId, &portId);
-
-    {
-        Mutex::Autolock _l(mLock);
-        RecordThread *thread = checkRecordThread_l(output.inputId);
-        if (thread == NULL) {
-            ALOGE("createRecord() checkRecordThread_l failed");
-            lStatus = BAD_VALUE;
-            goto Exit;
-        }
-
-        ALOGV("createRecord() lSessionId: %d input %d", sessionId, output.inputId);
-
-        output.sampleRate = input.config.sample_rate;
-        output.frameCount = input.frameCount;
-        output.notificationFrameCount = input.notificationFrameCount;
-
-        recordTrack = thread->createRecordTrack_l(client, input.attr, &output.sampleRate,
-                                                  input.config.format, input.config.channel_mask,
-                                                  &output.frameCount, sessionId,    // 已经创建 
-                                                  &output.notificationFrameCount,
-                                                  clientUid, &output.flags,
-                                                  input.clientInfo.clientTid,
-                                                  &lStatus, portId);
-
-        LOG_ALWAYS_FATAL_IF((lStatus == NO_ERROR) && (recordTrack == 0));
-
-        // lStatus == BAD_TYPE means FAST flag was rejected: request a new input from
-        // audio policy manager without FAST constraint
-        if (lStatus == BAD_TYPE) {
-            continue;
-        }
-
-        if (lStatus != NO_ERROR) {
-            goto Exit;
-        }
-
-        // Check if one effect chain was awaiting for an AudioRecord to be created on this
-        // session and move it to this thread.
-        sp<EffectChain> chain = getOrphanEffectChain_l(sessionId);
-        if (chain != 0) {
-            Mutex::Autolock _l(thread->mLock);
-            thread->addEffectChain_l(chain);
-        }
-        break;
-    }
-    // End of retry loop.
-    // The lack of indentation is deliberate, to reduce code churn and ease merges.
-    }
-
-    output.cblk = recordTrack->getCblk();
-    output.buffers = recordTrack->getBuffers();
-
-    // return handle to client
-    recordHandle = new RecordHandle(recordTrack);
-
-Exit:
-    if (lStatus != NO_ERROR) {
-        // remove local strong reference to Client before deleting the RecordTrack so that the
-        // Client destructor is called by the TrackBase destructor with mClientLock held
-        // Don't hold mClientLock when releasing the reference on the track as the
-        // destructor will acquire it.
-        {
-            Mutex::Autolock _cl(mClientLock);
-            client.clear();
-        }
-        recordTrack.clear();
-        if (output.inputId != AUDIO_IO_HANDLE_NONE) {
-            AudioSystem::releaseInput(portId);
-        }
-    }
-
-    *status = lStatus;
-    return recordHandle;
-}
-
-
 
 
 
