@@ -191,7 +191,8 @@ public class CarAudioService extends ICarAudio.Stub implements CarServiceBase {
                         /**
                          * 
                          */
-                        mixingRuleBuilder.addRule(new AudioAttributes.Builder().setUsage(usage).build(),AudioMixingRule.RULE_MATCH_ATTRIBUTE_USAGE);
+                        mixingRuleBuilder.addRule(new AudioAttributes.Builder().setUsage(usage).build(),
+                                                    AudioMixingRule.RULE_MATCH_ATTRIBUTE_USAGE);
                     }
                     Log.i(CarLog.TAG_AUDIO, "Bus number: " + busNumber
                             + " contextNumber: " + contextNumber
@@ -218,6 +219,8 @@ public class CarAudioService extends ICarAudio.Stub implements CarServiceBase {
         
         /**
          * 在 build 中通过设置的参数 构造一个 AudioPolicy 并返回
+         * 
+         * AudioPolicy.Builder.build()
          */
         return builder.build();
     }
