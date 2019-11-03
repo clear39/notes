@@ -98,6 +98,17 @@ int main(int argc __unused, char **argv)
         sp<IServiceManager> sm = defaultServiceManager();
         ALOGI("ServiceManager: %p", sm.get());
 
+
+        /***
+         * BinderService @  frameworks/native/include/binder/BinderService.h
+         * 由于 AudioFlinger AudioPolicyService AAudioService SoundTriggerHwService都继承 BinderService<typename SERVICE>
+         * 
+         * BinderService<typename SERVICE>::instantiate()
+         * --> BinderService<typename SERVICE>::publish()
+         * ---> IServiceManager::addService
+         */
+
+
         AudioFlinger::instantiate();
 
         

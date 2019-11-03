@@ -27,6 +27,57 @@ void HwModule::setProfiles(const IOProfileCollection &profiles)
     }
 }
 
+const InputProfileCollection &HwModule::getInputProfiles() const { return mInputProfiles; }
+
+const OutputProfileCollection &HwModule::getOutputProfiles() const { return mOutputProfiles; }
+
+status_t HwModule::addOutputProfile(const String8& name, const audio_config_t *config,
+                                    audio_devices_t device, const String8& address)
+{
+    sp<IOProfile> profile = new OutputProfile(name);
+
+    profile->addAudioProfile(new AudioProfile(config->format, config->channel_mask,config->sample_rate));
+
+    sp<DeviceDescriptor> devDesc = new DeviceDescriptor(device);
+    devDesc->mAddress = address;
+    profile->addSupportedDevice(devDesc);
+
+    return addOutputProfile(profile);
+}
+
+
+
+status_t HwModule::addInputProfile(const String8& name, const audio_config_t *config,audio_devices_t device, const String8& address)
+{
+    sp<IOProfile> profile = new InputProfile(name);
+    profile->addAudioProfile(new AudioProfile(config->format, config->channel_mask,config->sample_rate));
+
+    sp<DeviceDescriptor> devDesc = new DeviceDescriptor(device);
+    devDesc->mAddress = address;
+    profile->addSupportedDevice(devDesc);
+
+    ALOGV("addInputProfile() name %s rate %d mask 0x%08x",name.string(), config->sample_rate, config->channel_mask);
+
+    return addInputProfile(profile);
+}
+
+
+
+/**
+ * 音频策略文件中解析调用
+*/
+void HwModule::setProfiles(const IOProfileCollection &profiles)
+{
+    for (size_t i = 0; i < profiles.size(); i++) {
+        addProfile(profiles[i]);
+    }
+}
+
+/**
+ * 
+ * void HwModule::setProfiles(const IOProfileCollection &profiles)
+ * -->
+*/
 status_t HwModule::addProfile(const sp<IOProfile> &profile)
 {
     switch (profile->getRole()) {
@@ -40,7 +91,13 @@ status_t HwModule::addProfile(const sp<IOProfile> &profile)
     return BAD_VALUE;
 }
 
-
+/**
+ * 注意这里调用该函数有俩个方法
+ * status_t HwModule::addProfile(const sp<IOProfile> &profile) // 音频策略文件解析调用
+ * 
+ * // 
+ * status_t HwModule::addInputProfile(const String8& name, const audio_config_t *config,audio_devices_t device, const String8& address)
+*/
 status_t HwModule::addOutputProfile(const sp<IOProfile> &profile)
 {
     profile->attach(this);
@@ -49,6 +106,13 @@ status_t HwModule::addOutputProfile(const sp<IOProfile> &profile)
     return NO_ERROR;
 }
 
+/**
+ * 注意这里调用该函数有俩个方法
+ * status_t HwModule::addProfile(const sp<IOProfile> &profile) // 音频策略文件解析调用
+ * 
+ * // 
+ * status_t HwModule::addOutputProfile(const String8& name, const audio_config_t *config,audio_devices_t device, const String8& address)
+*/
 status_t HwModule::addInputProfile(const sp<IOProfile> &profile)
 {
     profile->attach(this);

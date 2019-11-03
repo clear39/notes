@@ -2,7 +2,11 @@ class AudioOutputDescriptor: public AudioPortConfig{
 
 }
 
-//  @   /work/workcodes/aosp-p9.x-auto-ga/frameworks/av/services/audiopolicy/common/managerdefinitions/src/AudioOutputDescriptor.cpp
+class SwAudioOutputDescriptor: public AudioOutputDescriptor{
+
+}
+
+//  @   frameworks/av/services/audiopolicy/common/managerdefinitions/src/AudioOutputDescriptor.cpp
 /***
  * port 为 mixport 标签
  * */
@@ -28,6 +32,10 @@ AudioOutputDescriptor::AudioOutputDescriptor(const sp<AudioPort>& port,AudioPoli
     }
 }
 
+
+/***
+ * profile 为 mixport 标签
+ * */
 SwAudioOutputDescriptor::SwAudioOutputDescriptor(const sp<IOProfile>& profile,AudioPolicyClientInterface *clientInterface)
     : AudioOutputDescriptor(profile, clientInterface),
     mProfile(profile), mIoHandle(AUDIO_IO_HANDLE_NONE), mLatency(0),
@@ -113,6 +121,34 @@ status_t SwAudioOutputDescriptor::open(const audio_config_t *config,
 
     return status;
 }
+
+
+
+audio_devices_t SwAudioOutputDescriptor::device() const
+{
+    if (isDuplicated()) {
+        return (audio_devices_t)(mOutput1->mDevice | mOutput2->mDevice);
+    } else {
+        return mDevice;
+    }
+}
+
+bool SwAudioOutputDescriptor::isFixedVolume(audio_devices_t device)
+{
+    // unit gain if rerouting to external policy
+    if (device == AUDIO_DEVICE_OUT_REMOTE_SUBMIX) {
+        if (mPolicyMix != NULL) {
+            ALOGV("max gain when rerouting for output=%d", mIoHandle);
+            return true;
+        }
+    }
+    if (device == AUDIO_DEVICE_OUT_TELEPHONY_TX) {
+        ALOGV("max gain when output device is telephony tx");
+        return true;
+    }
+    return false;
+}
+
 
 
 bool AudioOutputDescriptor::setVolume(float volume, audio_stream_type_t stream,audio_devices_t device __unused, uint32_t delayMs,bool force)

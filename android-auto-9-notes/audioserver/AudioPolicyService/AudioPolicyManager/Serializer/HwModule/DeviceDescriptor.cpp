@@ -2,7 +2,7 @@ class DeviceDescriptor : public AudioPort, public AudioPortConfig{
 
 }
 
-//  @   /work/workcodes/aosp-p9.0.0_2.1.0-auto-ga/frameworks/av/services/audiopolicy/common/managerdefinitions/src/DeviceDescriptor.cpp
+//  @   frameworks/av/services/audiopolicy/common/managerdefinitions/src/DeviceDescriptor.cpp
 DeviceDescriptor::DeviceDescriptor(audio_devices_t type, const String8 &tagName) :
     AudioPort(String8(""), AUDIO_PORT_TYPE_DEVICE, audio_is_output_device(type) ? AUDIO_PORT_ROLE_SINK :  AUDIO_PORT_ROLE_SOURCE),
     mAddress(""), mTagName(tagName), mDeviceType(type), mId(0)
@@ -19,8 +19,7 @@ void AudioPort::setAudioProfiles(const AudioProfileVector &profiles) { mProfiles
 
 
 
-
-
+bool AudioPort::isAttached() { return mModule != 0; }
 
 
 

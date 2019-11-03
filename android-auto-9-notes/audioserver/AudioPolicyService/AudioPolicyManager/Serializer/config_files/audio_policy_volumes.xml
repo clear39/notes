@@ -202,7 +202,7 @@ void AudioPolicyConfig::setVolumes(const VolumeCurvesCollection &volumes)
                                        ref="DEFAULT_SYSTEM_VOLUME_CURVE"/>
     <volume stream="AUDIO_STREAM_DTMF" deviceCategory="DEVICE_CATEGORY_EXT_MEDIA"
                                        ref="DEFAULT_DEVICE_CATEGORY_EXT_MEDIA_VOLUME_CURVE"/>
-    <volume stream="AUDIO_STREAM_DTMF" deviceCategory="DEVICE_CATEGORY_HEARING_AID"
+    <volume stream="AUDIO_STREAM_DTMF" deviceCategory="DEVICE_CATEGORY_HEARING_AID" 
                                        ref="DEFAULT_HEARING_AID_VOLUME_CURVE"/>
     <volume stream="AUDIO_STREAM_TTS" deviceCategory="DEVICE_CATEGORY_HEADSET"
                                       ref="SILENT_VOLUME_CURVE"/>

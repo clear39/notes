@@ -112,8 +112,7 @@ AudioFlinger::MixerThread::MixerThread(const sp<AudioFlinger>& audioFlinger, Aud
 #endif
                 monoPipe->negotiate(offers, 1, NULL, numCounterOffers);
         ALOG_ASSERT(index == 0);
-        monoPipe->setAvgFrames((mScreenState & 1) ?
-                (monoPipe->maxFrames() * 7) / 8 : mNormalFrameCount * 2);
+        monoPipe->setAvgFrames((mScreenState & 1) ? (monoPipe->maxFrames() * 7) / 8 : mNormalFrameCount * 2);
         mPipeSink = monoPipe;
 
 #ifdef TEE_SINK
@@ -236,6 +235,9 @@ sp<AudioFlinger::PlaybackThread::Track> AudioFlinger::PlaybackThread::createTrac
     uint32_t sampleRate = *pSampleRate;
 
     // special case for FAST flag considered OK if fast mixer is present
+    /**
+     * hasFastMixer 判断 mFastMixer 是否为空 
+    */
     if (hasFastMixer()) {
         outputFlags = (audio_output_flags_t)(outputFlags | AUDIO_OUTPUT_FLAG_FAST);
     }
@@ -289,8 +291,7 @@ sp<AudioFlinger::PlaybackThread::Track> AudioFlinger::PlaybackThread::createTrac
                     audio_output_flags_t old = *flags;
                     chain->checkOutputFlagCompatibility(flags);
                     if (old != *flags) {
-                        ALOGV("AUDIO_OUTPUT_FLAGS denied by effect, session=%d old=%#x new=%#x",
-                                (int)session, (int)old, (int)*flags);
+                        ALOGV("AUDIO_OUTPUT_FLAGS denied by effect, session=%d old=%#x new=%#x", (int)session, (int)old, (int)*flags);
                     }
                 }
             }
@@ -526,5 +527,8 @@ Exit:
 
 
 effect_buffer_t *PlaybackThread::sinkBuffer() const { 
+    /**
+     * PlaybackThread::mSinkBuffer
+    */
     return reinterpret_cast<effect_buffer_t *>(mSinkBuffer); 
 };

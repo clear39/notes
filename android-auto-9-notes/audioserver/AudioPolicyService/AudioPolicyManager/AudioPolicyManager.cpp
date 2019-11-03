@@ -44,7 +44,10 @@ AudioPolicyManager::AudioPolicyManager(AudioPolicyClientInterface *clientInterfa
 
 }
 
-
+/**
+ * AudioPolicyManager::AudioPolicyManager()
+ * ---> 
+*/
 void AudioPolicyManager::loadConfig() {
 #ifdef USE_XML_AUDIO_POLICY_CONF
     if (deserializeAudioPolicyXmlConfig(getConfig()) != NO_ERROR) {
@@ -106,15 +109,25 @@ static status_t deserializeAudioPolicyXmlConfig(AudioPolicyConfig &config) {
 }
 #endif
 
+
+/**
+ * AudioPolicyManager::AudioPolicyManager()
+ * ---> 
+*/
 status_t AudioPolicyManager::initialize() {
     //  @   /work/workcodes/aosp-p9.0.0_2.1.0-auto-ga/frameworks/av/services/audiopolicy/common/managerdefinitions/src/StreamDescriptor.cpp
     /*
         @   frameworks/av/services/audiopolicy/common/managerdefinitions/include/IVolumeCurvesCollection.h
-        initializeVolumeCurves 函数空实现
+        initializeVolumeCurves 函数空实现，什么事情也没有做
     */
     mVolumeCurves->initializeVolumeCurves(getConfig().isSpeakerDrcEnabled());
 
-    //  @ frameworks/av/services/audiopolicy/engineconfigurable/src/EngineInstance.cpp
+    /**
+     * 
+     *   @ frameworks/av/services/audiopolicy/engineconfigurable/src/EngineInstance.cpp
+     * 以下倆部都是获得 mEngine 为 ManagerInterfaceImpl
+     * 
+     * */
     // Once policy config has been parsed, retrieve an instance of the engine and initialize it.
     audio_policy::EngineInstance *engineInstance = audio_policy::EngineInstance::getInstance();
     if (!engineInstance) {
@@ -159,6 +172,10 @@ status_t AudioPolicyManager::initialize() {
         // 返回 audio_module_handle_t 
         //  @ system/media/audio/include/system/audio.h:321:typedef int audio_module_handle_t;
         //  @ system/media/audio/include/system/audio-base.h:15:    AUDIO_MODULE_HANDLE_NONE = 0
+        /**
+         * audio_module_handle_t AudioFlinger::loadHwModule(const char *name)
+         * --> audio_module_handle_t AudioFlinger::loadHwModule_l(const char *name)
+        */
         hwModule->setHandle(mpClientInterface->loadHwModule(hwModule->getName()));
         if (hwModule->getHandle() == AUDIO_MODULE_HANDLE_NONE) {
             ALOGW("could not open HW module %s", hwModule->getName());
@@ -169,7 +186,15 @@ status_t AudioPolicyManager::initialize() {
         // except for direct output streams that are only opened when they are actually
         // required by an app.
         // This also validates mAvailableOutputDevices list
+        /**
+         * 
+         * 这里 IOProfile （对应音频策略文件中 mixport 标签）
+         * 
+        */
         for (const auto& outProfile : hwModule->getOutputProfiles()) {
+            /**
+             * 这里返回true
+            */
             if (!outProfile->canOpenNewIo()) {
                 ALOGE("Invalid Output profile max open count %u for profile %s",outProfile->maxOpenCount, outProfile->getTagName().c_str());
                 continue;
@@ -192,29 +217,35 @@ status_t AudioPolicyManager::initialize() {
             }
 
             /**
-             * HwModule::setRoutes(const AudioRouteVector &routes) --> HwModule::refreshSupportedDevices() --> IOProfile::setSupportedDevices(const DeviceVector &devices)
+             * HwModule::setRoutes(const AudioRouteVector &routes) 
+             * --> HwModule::refreshSupportedDevices() 
+             * ---> IOProfile::setSupportedDevices(const DeviceVector &devices)
              * 这里 getSupportedDevicesType 是调用 DeviceDescriptor 的 mDeviceType（匹配配置文件中 type 属性值）
              * 
-             * profileType 为 AUDIO_DEVICE_IN_BUILTIN_MIC
+             * profileType 为 AUDIO_DEVICE_OUT_BUS
             */
             audio_devices_t profileType = outProfile->getSupportedDevicesType();
 
             /**
              * mDefaultOutputDevice 是 通过 <defaultOutputDevice>bus0_media_out</defaultOutputDevice> 从 mDeclaredDevices 中查找到的
-             * 即可得到 mDefaultOutputDevice 为 DeviceDescriptor ，type() 返回值为 mDeviceType 为 AUDIO_DEVICE_IN_BUILTIN_MIC
+             * 即可得到 mDefaultOutputDevice 为 DeviceDescriptor ，type() 返回值为 mDeviceType 为 AUDIO_DEVICE_OUT_BUS
              * 
             */
             if ((profileType & mDefaultOutputDevice->type()) != AUDIO_DEVICE_NONE) {
-                // 执行这里  profileType = AUDIO_DEVICE_IN_BUILTIN_MIC
+                // 执行这里  profileType = AUDIO_DEVICE_OUT_BUS
                 profileType = mDefaultOutputDevice->type();
             } else {
                 // chose first device present in profile's SupportedDevices also part of
                 // outputDeviceTypes
+                /**
+                 * outputDeviceTypes = AUDIO_DEVICE_OUT_BUS
+                */
                 profileType = outProfile->getSupportedDeviceForType(outputDeviceTypes);
             }
 
             /**
              * 如果 mAvailableOutputDevices 为空，则  outputDeviceTypes = AUDIO_DEVICE_NONE = 0
+             * 这里注意 首先只有添加到 mAvailableOutputDevices 的设备 才能往下走，不然直接continue
             */
             if ((profileType & outputDeviceTypes) == 0) {
                 continue;
@@ -321,6 +352,9 @@ status_t AudioPolicyManager::initialize() {
             continue;
         }
         // The device is now validated and can be appended to the available devices of the engine
+        /**
+         * --> ManagerInterfaceImpl::setDeviceConnectionState //空实现，什么也没有干
+        */
         mEngine->setDeviceConnectionState(mAvailableOutputDevices[i],AUDIO_POLICY_DEVICE_STATE_AVAILABLE);
         i++;
     }
@@ -332,6 +366,9 @@ status_t AudioPolicyManager::initialize() {
             continue;
         }
         // The device is now validated and can be appended to the available devices of the engine
+        /**
+         * --> ManagerInterfaceImpl::setDeviceConnectionState //空实现，什么也没有干
+        */
         mEngine->setDeviceConnectionState(mAvailableInputDevices[i],AUDIO_POLICY_DEVICE_STATE_AVAILABLE);
         i++;
     }
@@ -345,8 +382,16 @@ status_t AudioPolicyManager::initialize() {
     for (size_t i = 0; i  < mAvailableInputDevices.size(); i++) {
         if (mAvailableInputDevices[i]->mAddress.isEmpty()) {
             if (mAvailableInputDevices[i]->type() == AUDIO_DEVICE_IN_BUILTIN_MIC) {
+                /**
+                 * system/media/audio/include/system/audio.h:1089:
+                 * #define AUDIO_BOTTOM_MICROPHONE_ADDRESS "bottom"
+                */
                 mAvailableInputDevices[i]->mAddress = String8(AUDIO_BOTTOM_MICROPHONE_ADDRESS);
             } else if (mAvailableInputDevices[i]->type() == AUDIO_DEVICE_IN_BACK_MIC) {
+                /**
+                 * system/media/audio/include/system/audio.h:1091:
+                 * #define AUDIO_BACK_MICROPHONE_ADDRESS "back"
+                */
                 mAvailableInputDevices[i]->mAddress = String8(AUDIO_BACK_MICROPHONE_ADDRESS);
             }
         }
@@ -361,8 +406,19 @@ status_t AudioPolicyManager::initialize() {
     return status;
 }
 
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * output 由 AudioFlinger 创建的线程  对应的map key
+ * 
+*/
 void AudioPolicyManager::addOutput(audio_io_handle_t output, const sp<SwAudioOutputDescriptor>& outputDesc)
 {
+    /**
+     * frameworks/av/services/audiopolicy/managerdefault/AudioPolicyManager.h:552:        
+     * SwAudioOutputCollection mOutputs;
+    */
     mOutputs.add(output, outputDesc);
     applyStreamVolumes(outputDesc, AUDIO_DEVICE_NONE, 0 /* delayMs */, true /* force */);
     updateMono(output); // update mono status when adding to output list
@@ -458,6 +514,9 @@ status_t AudioPolicyManager::checkAndSetVolume(audio_stream_type_t stream,int in
 void AudioPolicyManager::updateMono(audio_io_handle_t output) {
     AudioParameter param;
     param.addInt(String8(AudioParameter::keyMonoOutput), (int)mMasterMono);
+    /**
+     * status_t AudioFlinger::setParameters(audio_io_handle_t ioHandle, const String8& keyValuePairs)
+    */
     mpClientInterface->setParameters(output, param.toString());
 }
 
@@ -532,7 +591,11 @@ uint32_t AudioPolicyManager::nextAudioPortGeneration()
 }
 
 
-
+/**
+ * 
+ * 
+ * 
+*/
 uint32_t AudioPolicyManager::setOutputDevice(const sp<AudioOutputDescriptor>& outputDesc,
                                              audio_devices_t device,
                                              bool force,
@@ -647,8 +710,8 @@ uint32_t AudioPolicyManager::setOutputDevice(const sp<AudioOutputDescriptor>& ou
             const sp<AudioInputDescriptor>  inputDescriptor = mInputs.valueAt(i);
             if (!is_virtual_input_device(inputDescriptor->mDevice)) {
                 AudioParameter inputCmd = AudioParameter();
-                ALOGV("%s: inform input %d of device:%d", __func__, inputDescriptor->mIoHandle, device);
-                inputCmd.addInt(String8(AudioParameter::keyRouting),device);
+                ALOGV("%s: inform inut %d of device:%d", __func__, inputDescriptor->mIoHandle, device);
+                inputCmd.addInt(Strinpg8(AudioParameter::keyRouting),device);
                 mpClientInterface->setParameters(inputDescriptor->mIoHandle,inputCmd.toString(),delayMs);
             }
         }
@@ -660,8 +723,13 @@ uint32_t AudioPolicyManager::setOutputDevice(const sp<AudioOutputDescriptor>& ou
     return muteWaitMs;
 }
 
-
-
+////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * AudioPolicyManager::AudioPolicyManager()
+ * --> AudioPolicyManager::initialize()
+ * ---> AudioPolicyManager::updateDevicesAndOutputs()
+ * 
+*/
 void AudioPolicyManager::updateDevicesAndOutputs()
 {
     //  frameworks/av/services/audiopolicy/common/include/RoutingStrategy.h:35:    NUM_STRATEGIES
@@ -671,12 +739,23 @@ void AudioPolicyManager::updateDevicesAndOutputs()
     mPreviousOutputs = mOutputs;
 }
 
+
+/**
+ * AudioPolicyManager::AudioPolicyManager()
+ * --> AudioPolicyManager::initialize()
+ * ---> AudioPolicyManager::updateDevicesAndOutputs()
+ * ----> AudioPolicyManager::getDeviceForStrategy()
+*/
 audio_devices_t AudioPolicyManager::getDeviceForStrategy(routing_strategy strategy,bool fromCache)
 {
     // Check if an explicit routing request exists for a stream type corresponding to the
     // specified strategy and use it in priority over default routing rules.
     for (int stream = 0; stream < AUDIO_STREAM_FOR_POLICY_CNT; stream++) {
         if (getStrategy((audio_stream_type_t)stream) == strategy) {
+            /**
+             * @ frameworks/av/services/audiopolicy/managerdefault/AudioPolicyManager.h:561:        
+             * SessionRouteMap mOutputRoutes = SessionRouteMap(SessionRouteMap::MAPTYPE_OUTPUT);
+            */
             audio_devices_t forcedDevice = mOutputRoutes.getActiveDeviceForStream((audio_stream_type_t)stream, mAvailableOutputDevices);
             if (forcedDevice != AUDIO_DEVICE_NONE) {
                 return forcedDevice;

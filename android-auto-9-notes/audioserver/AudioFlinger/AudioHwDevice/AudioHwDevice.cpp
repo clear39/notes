@@ -38,7 +38,10 @@ status_t AudioHwDevice::openOutputStream(
             config->format,
             config->channel_mask);
 
-
+    /***
+     * 这里的 audio_io_handle_t handle 为对应的线程
+     * 
+     * */
     status_t status = outputStream->open(handle, devices, config, address);
 
     if (status != NO_ERROR) {

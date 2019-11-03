@@ -31,11 +31,16 @@ void AudioPolicyService::onFirstRef()
         /***
          * createAudioPolicyManager 只是new AudioPolicyManager 类并将 mAudioPolicyClient 传递给AudioPolicyManager
          * AudioPolicyClient 用于 AudioPolicyManager 回调 AudioPolicyService 的接口封装
+         * 
+         * extern "C" AudioPolicyInterface* createAudioPolicyManager(AudioPolicyClientInterface *clientInterface)
+         * ---> new AudioPolicyManager(clientInterface);
+         * 
          */ 
         mAudioPolicyManager = createAudioPolicyManager(mAudioPolicyClient);
     }
 
-    /***
+    /**
+     * 
      */ 
     // load audio processing modules
     sp<AudioPolicyEffects> audioPolicyEffects = new AudioPolicyEffects();

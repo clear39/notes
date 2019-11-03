@@ -8,7 +8,7 @@ class IOProfile : public AudioPort{
         <profile name="" format="AUDIO_FORMAT_PCM_16_BIT" samplingRates="48000"  channelMasks="AUDIO_CHANNEL_OUT_STEREO"/>
     </mixPort>
  */ 
-//  @   /work/workcodes/aosp-p9.0.0_2.1.0-auto-ga/frameworks/av/services/audiopolicy/common/managerdefinitions/src/IOProfile.cpp
+//  @   frameworks/av/services/audiopolicy/common/managerdefinitions/src/IOProfile.cpp
 IOProfile::IOProfile(const String8 &name, audio_port_role_t role)
         : AudioPort(name, AUDIO_PORT_TYPE_MIX, role),
           maxOpenCount((role == AUDIO_PORT_ROLE_SOURCE) ? 1 : 0),
@@ -18,13 +18,13 @@ IOProfile::IOProfile(const String8 &name, audio_port_role_t role)
         
 }
 
-
 bool IOProfile::canOpenNewIo() {
     if (maxOpenCount == 0 || curOpenCount < maxOpenCount) {
         return true;
     }
     return false;
 }
+
 
 //  @   /work/workcodes/aosp-p9.0.0_2.1.0-auto-ga/frameworks/av/services/audiopolicy/common/managerdefinitions/include/AudioPort.h
 void AudioPort::setAudioProfiles(const AudioProfileVector &profiles) { mProfiles = profiles; }
@@ -54,12 +54,32 @@ void setGains(const AudioGainCollection &gains) {
 }
 
 /**
- * 这里是 HwModule::setRoutes(const AudioRouteVector &routes) --> HwModule::refreshSupportedDevices()
+ * 这里是 HwModule::setRoutes(const AudioRouteVector &routes) 
+ * --> HwModule::refreshSupportedDevices()
 */
 void IOProfile::setSupportedDevices(const DeviceVector &devices)
 {
     mSupportedDevices = devices;
 }
+
+bool IOProfile::hasSupportedDevices() const { 
+    return !mSupportedDevices.isEmpty(); 
+}
+
+
+// chose first device present in mSupportedDevices also part of deviceType
+audio_devices_t IOProfile::getSupportedDeviceForType(audio_devices_t deviceType) const
+{
+    for (size_t k = 0; k  < mSupportedDevices.size(); k++) {
+        audio_devices_t profileType = mSupportedDevices[k]->type();
+        if (profileType & deviceType) {
+            return profileType;
+        }
+    }
+    return AUDIO_DEVICE_NONE;
+}
+
+
 
 
 
