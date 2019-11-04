@@ -3,7 +3,7 @@ class UidPolicy : public BnUidObserver, public virtual IBinder::DeathRecipient
 
 }
 
-//  @ /work/workcodes/aosp-p9.0.0_2.1.0-auto-ga/frameworks/av/services/audiopolicy/service/AudioPolicyService.cpp
+//  @ frameworks/av/services/audiopolicy/service/AudioPolicyService.cpp
 
 explicit UidPolicy::UidPolicy(wp<AudioPolicyService> service)
     : mService(service), mObserverRegistered(false)
@@ -12,9 +12,11 @@ explicit UidPolicy::UidPolicy(wp<AudioPolicyService> service)
 
 void AudioPolicyService::UidPolicy::registerSelf()
 {
-    //  @   /work/workcodes/aosp-p9.0.0_2.1.0-auto-ga/frameworks/native/libs/binder/ActivityManager.cpp
+    //  @   frameworks/native/libs/binder/ActivityManager.cpp
     ActivityManager am;
-    am.registerUidObserver(this, ActivityManager::UID_OBSERVER_GONE | ActivityManager::UID_OBSERVER_IDLE | ActivityManager::UID_OBSERVER_ACTIVE,
+    am.registerUidObserver(this, ActivityManager::UID_OBSERVER_GONE 
+                                | ActivityManager::UID_OBSERVER_IDLE 
+                                | ActivityManager::UID_OBSERVER_ACTIVE,
                            ActivityManager::PROCESS_STATE_UNKNOWN,
                            String16("audioserver"));
 
@@ -31,47 +33,66 @@ void AudioPolicyService::UidPolicy::registerSelf()
     }
 }
 
-void ActivityManager::registerUidObserver(const sp<IUidObserver> &observer,
-                                          const int32_t event,
-                                          const int32_t cutpoint,
-                                          const String16 &callingPackage)
-{
-    sp<IActivityManager> service = getService();
-    if (service != NULL)
+
+
+
+
+/**
+ * 在c层代码中只实现一下三个方法
+*/
+void AudioPolicyService::UidPolicy::onUidActive(uid_t uid) {
+    updateUidCache(uid, true, true);
+}
+
+void AudioPolicyService::UidPolicy::onUidGone(uid_t uid, __unused bool disabled) {
+    updateUidCache(uid, false, false);
+}
+
+void AudioPolicyService::UidPolicy::onUidIdle(uid_t uid, __unused bool disabled) {
+    updateUidCache(uid, false, true);
+}
+
+void AudioPolicyService::UidPolicy::updateUidCache(uid_t uid, bool active, bool insert) {
+    if (isServiceUid(uid)) return;
+    bool wasActive = false;
     {
-        service->registerUidObserver(observer, event, cutpoint, callingPackage);
+        Mutex::Autolock _l(mLock);
+        updateUidLocked(&mCachedUids, uid, active, insert, nullptr, &wasActive);
+        // Do not notify service if currently overridden.
+        if (mOverrideUids.find(uid) != mOverrideUids.end()) return;
+    }
+    bool nowActive = active && insert;
+    if (wasActive != nowActive) notifyService(uid, nowActive);
+}
+
+bool AudioPolicyService::UidPolicy::isServiceUid(uid_t uid) const {
+    /**
+     * system/core/libcutils/include/private/android_filesystem_config.h:165:#define AID_APP_START 10000 // first app user 
+     * 
+    */  
+    return multiuser_get_app_id(uid) < AID_APP_START;
+}
+
+
+void AudioPolicyService::UidPolicy::updateUidLocked(std::unordered_map<uid_t, bool> *uids,uid_t uid, bool active, bool insert, bool *wasThere, bool *wasActive) {
+    auto it = uids->find(uid);
+    if (it != uids->end()) {
+        if (wasThere != nullptr) *wasThere = true;
+        if (wasActive != nullptr) *wasActive = it->second;
+        if (insert) {
+            it->second = active;
+        } else {
+            uids->erase(it);
+        }
+    } else if (insert) {
+        uids->insert(std::pair<uid_t, bool>(uid, active));
     }
 }
 
-sp<IActivityManager> ActivityManager::getService()
-{
-    std::lock_guard<Mutex> scoped_lock(mLock);
-    int64_t startTime = 0;
-    sp<IActivityManager> service = mService;
-    while (service == NULL || !IInterface::asBinder(service)->isBinderAlive())
-    {
-        sp<IBinder> binder = defaultServiceManager()->checkService(String16("activity"));
-        if (binder == NULL)
-        {
-            // Wait for the activity service to come back...
-            if (startTime == 0)
-            {
-                startTime = uptimeMillis();
-                ALOGI("Waiting for activity service");
-            }
-            else if ((uptimeMillis() - startTime) > 1000000)
-            {
-                ALOGW("Waiting too long for activity service, giving up");
-                service = NULL;
-                break;
-            }
-            usleep(25000);
-        }
-        else
-        {
-            service = interface_cast<IActivityManager>(binder);
-            mService = service;
-        }
+
+void AudioPolicyService::UidPolicy::notifyService(uid_t uid, bool active) {
+    sp<AudioPolicyService> service = mService.promote();
+    if (service != nullptr) {
+        service->setRecordSilenced(uid, !active);
     }
-    return service;
 }

@@ -58,3 +58,34 @@ void AudioPolicyService::onFirstRef()
 
 
 
+
+
+
+
+
+
+
+
+/**
+ * ActivityManagerService
+ * --> UidPolicy::onUidActive/onUidGone/onUidIdle
+ * ---> AudioPolicyService::UidPolicy::notifyService
+ * 
+*/
+void AudioPolicyService::setRecordSilenced(uid_t uid, bool silenced)
+{
+    {
+        Mutex::Autolock _l(mLock);
+        if (mAudioPolicyManager) {
+            AutoCallerClear acc;
+            mAudioPolicyManager->setRecordSilenced(uid, silenced);
+        }
+    }
+    sp<IAudioFlinger> af = AudioSystem::get_audio_flinger();
+    if (af) {
+        af->setRecordSilenced(uid, silenced);
+    }
+}
+
+
+

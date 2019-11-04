@@ -769,3 +769,37 @@ audio_devices_t AudioPolicyManager::getDeviceForStrategy(routing_strategy strate
     }
     return mEngine->getDeviceForStrategy(strategy);
 }
+
+
+
+
+
+
+
+
+
+
+
+///////////////////////////////////////////////////////////////////////////////////
+/**
+ * ActivityManagerService
+ * --> UidPolicy::onUidActive/onUidGone/onUidIdle
+ * ---> AudioPolicyService::UidPolicy::notifyService
+ * ----> AudioPolicyService::setRecordSilenced
+*/
+void AudioPolicyManager::setRecordSilenced(uid_t uid, bool silenced)
+{
+    ALOGV("AudioPolicyManager:setRecordSilenced(uid:%d, silenced:%d)", uid, silenced);
+
+    Vector<sp<AudioInputDescriptor> > activeInputs = mInputs.getActiveInputs();
+    for (size_t i = 0; i < activeInputs.size(); i++) {
+        sp<AudioInputDescriptor> activeDesc = activeInputs[i];
+        AudioSessionCollection activeSessions = activeDesc->getAudioSessions(true);
+        for (size_t j = 0; j < activeSessions.size(); j++) {
+            sp<AudioSession> activeSession = activeSessions.valueAt(j);
+            if (activeSession->uid() == uid) {
+                activeSession->setSilenced(silenced);
+            }
+        }
+    }
+}

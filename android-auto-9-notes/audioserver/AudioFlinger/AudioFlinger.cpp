@@ -1039,8 +1039,28 @@ sp<AudioFlinger::Client> AudioFlinger::registerPid(pid_t pid)
 }
 
 
+///////////////////////////////////////////////////////////////////////////////////
+/**
+ * ActivityManagerService
+ * --> UidPolicy::onUidActive/onUidGone/onUidIdle
+ * ---> AudioPolicyService::UidPolicy::notifyService
+ * ----> AudioPolicyService::setRecordSilenced
+*/
+void AudioFlinger::setRecordSilenced(uid_t uid, bool silenced)
+{
+    ALOGV("AudioFlinger::setRecordSilenced(uid:%d, silenced:%d)", uid, silenced);
 
-
+    AutoMutex lock(mLock);
+    /**
+     * 注意这里只有 RecordThread 和 MmapThread
+    */
+    for (size_t i = 0; i < mRecordThreads.size(); i++) {
+        mRecordThreads[i]->setRecordSilenced(uid, silenced);
+    }
+    for (size_t i = 0; i < mMmapThreads.size(); i++) {
+        mMmapThreads[i]->setRecordSilenced(uid, silenced);
+    }
+}
 
 
 
@@ -1181,6 +1201,8 @@ status_t AudioFlinger::dump(int fd, const Vector<String16>& args)
     }
     return NO_ERROR;
 }
+
+
 
 
 
