@@ -1,3 +1,20 @@
+getevent
+
+*.kcm 为键盘布局文件
+*.kl 
+
+
+
+
+
+
+
+
+
+
+
+
+
 // 没有连接
 autolink_8q:/ # ls /dev/input/ -al                                             
 total 0

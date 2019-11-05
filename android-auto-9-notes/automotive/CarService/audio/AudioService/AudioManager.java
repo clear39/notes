@@ -99,6 +99,7 @@ public class AudioManager {
                      * AudioSystem::listAudioPatches 
                      * --> AudioPolicyService::listAudioPatches 
                      * --> AudioPolicyManager::listAudioPatches
+                     * 
                      * 直接看 AudioPolicyManager::listAudioPatches 
                      */
                     status = AudioSystem.listAudioPatches(newPatches, patchGeneration);
@@ -109,6 +110,7 @@ public class AudioManager {
                     // Loop until patch generation is the same as port generation unless audio ports
                     // and audio patches are not null.
                 } while (patchGeneration[0] != portGeneration[0]  && (ports == null || patches == null));
+                
                 // If the patch generation doesn't equal port generation, return ERROR here in case
                 // of mismatch between audio ports and audio patches.
                 if (patchGeneration[0] != portGeneration[0]) {

@@ -238,7 +238,7 @@ public class CarAudioService extends ICarAudio.Stub implements CarServiceBase {
 
 
     //////////////////////////////////////////////////////////////////////////////////////////////
-    
+
     private void setupVolumeGroups() {
         Preconditions.checkArgument(mCarAudioDeviceInfos.size() > 0,"No bus device is configured to setup volume groups");
 
@@ -293,7 +293,7 @@ public class CarAudioService extends ICarAudio.Stub implements CarServiceBase {
         mAudioManager.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_DOWN, keycode));
         mAudioManager.dispatchMediaKeyEvent(new KeyEvent(KeyEvent.ACTION_UP, keycode));
     }
-
+    
 
 
 }

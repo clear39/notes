@@ -9,7 +9,42 @@ class NativeInputManager : public virtual RefBase,
 
 
 
-//  @   /work/workcodes/tsu-aosp-p9.0.0_2.1.0-auto-ga/frameworks/base/services/core/jni/com_android_server_input_InputManagerService.cpp
+//  @   frameworks/base/services/core/jni/com_android_server_input_InputManagerService.cpp
+
+
+/**
+ * public InputManagerService(Context context)
+ * --> InputManagerService.nativeInit
+ * ---> nativeInit   //  frameworks/base/services/core/jni/com_android_server_input_InputManagerService.cpp
+ * ----> new NativeInputManager
+*/
+NativeInputManager::NativeInputManager(jobject contextObj,
+        jobject serviceObj, const sp<Looper>& looper) :
+        mLooper(looper), mInteractive(true) {
+    JNIEnv* env = jniEnv();
+
+    mContextObj = env->NewGlobalRef(contextObj);
+    mServiceObj = env->NewGlobalRef(serviceObj);
+
+    {
+        AutoMutex _l(mLock);
+        mLocked.systemUiVisibility = ASYSTEM_UI_VISIBILITY_STATUS_BAR_VISIBLE;
+        mLocked.pointerSpeed = 0;
+        mLocked.pointerGesturesEnabled = true;
+        mLocked.showTouches = false;
+        mLocked.pointerCapture = false;
+    }
+    mInteractive = true;
+
+    sp<EventHub> eventHub = new EventHub();
+    mInputManager = new InputManager(eventHub, this, this);
+}
+
+inline sp<InputManager> getInputManager() const { 
+    return mInputManager; 
+}
+
+
 
 /**
  * 
