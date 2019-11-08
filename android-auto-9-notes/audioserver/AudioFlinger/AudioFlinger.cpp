@@ -1063,6 +1063,30 @@ void AudioFlinger::setRecordSilenced(uid_t uid, bool silenced)
 }
 
 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * @    frameworks/av/services/audioflinger/PatchPanel.cpp
+ * Connect a patch between several source and sink ports 
+ * 
+ * 
+ * system/media/audio/include/system/audio.h:494:
+ * typedef int audio_patch_handle_t;
+ * 
+ * mAudioPatch = mCarAudioManager.createAudioPatch(HARDCODED_TUNER_ADDRESS,AudioAttributes.USAGE_MEDIA, 0);
+ * 
+ * */
+status_t AudioFlinger::createAudioPatch(const struct audio_patch *patch,audio_patch_handle_t *handle)
+{
+    Mutex::Autolock _l(mLock);
+    if (mPatchPanel != 0) {
+        /**
+         * mPatchPanel 在 void AudioFlinger::onFirstRef() 中创建
+        */
+        return mPatchPanel->createAudioPatch(patch, handle);
+    }
+    return NO_INIT;
+}
+
 
 
 

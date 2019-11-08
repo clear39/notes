@@ -472,6 +472,13 @@ sp<AudioFlinger::PlaybackThread::Track> AudioFlinger::PlaybackThread::createTrac
         // all tracks in same audio session must share the same routing strategy otherwise
         // conflicts will happen when tracks are moved from one output to another by audio policy
         // manager
+        /**
+         * AudioSystem::getStrategyForStream
+         * ---> AudioPolicyService::getStrategyForStream
+         * ----> AudioPolicyManager::getStrategyForStream
+         * -----> routing_strategy AudioPolicyManager::getStrategy(audio_stream_type_t stream)
+         * ------> routing_strategy Engine::getStrategyForStream(audio_stream_type_t stream)
+        */
         uint32_t strategy = AudioSystem::getStrategyForStream(streamType);
         for (size_t i = 0; i < mTracks.size(); ++i) {
             sp<Track> t = mTracks[i];
@@ -488,6 +495,15 @@ sp<AudioFlinger::PlaybackThread::Track> AudioFlinger::PlaybackThread::createTrac
     /***
      * frameworks/av/services/audioflinger/PlaybackTracks.h:23:class Track : public TrackBase, public VolumeProvider {
      * frameworks/av/services/audioflinger/Tracks.cpp 
+     * 
+     * 
+     * enum track_type {
+ 52     ┊   TYPE_DEFAULT,
+ 53     ┊   TYPE_OUTPUT,
+ 54     ┊   TYPE_PATCH,
+ 55     };  
+     * 
+     * 
      * */
         track = new Track(this, client, streamType, attr, sampleRate, format,
                           channelMask, frameCount,
