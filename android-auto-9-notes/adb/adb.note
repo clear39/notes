@@ -1,0 +1,28 @@
+/**
+*   @   system/core/rootdir/init.usb.rc
+*
+*/
+# adbd is controlled via property triggers in init.<platform>.usb.rc
+service adbd /system/bin/adbd --root_seclabel=u:r:su:s0
+    class core
+    socket adbd stream 660 system system
+    disabled
+    seclabel u:r:adbd:s0
+
+
+
+
+
+源码路径 system/core/adb
+
+//////////////////////////////////////////////////////////////////
+//设置adb tcp端口
+setprop service.adb.tcp.port 5555
+setprop persist.adb.tcp.port 5555
+
+
+
+开启adb日志
+setprop persist.adb.trace_mask  all
+开启日志 存储在 /data/adb
+

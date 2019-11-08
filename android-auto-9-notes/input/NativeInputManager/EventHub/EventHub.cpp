@@ -199,7 +199,7 @@ status_t EventHub::openDeviceLocked(const char *devicePath) {
 
     // Load the configuration file for the device.
     /**
-     * 
+     * 加载后缀为 idc 文件，并且解析
     */
     loadConfigurationLocked(device);
 
@@ -296,9 +296,13 @@ status_t EventHub::openDeviceLocked(const char *devicePath) {
     }
 
     // Configure virtual keys.
+  
     if ((device->classes & INPUT_DEVICE_CLASS_TOUCH)) {
         // Load the virtual keys for the touch screen, if any.
         // We do this now so that we can make sure to load the keymap if necessary.
+        /**
+         *  虚拟按键加载，
+        */
         status_t status = loadVirtualKeyMapLocked(device);
         if (!status) {
             device->classes |= INPUT_DEVICE_CLASS_KEYBOARD;
@@ -308,6 +312,10 @@ status_t EventHub::openDeviceLocked(const char *devicePath) {
     // Load the key map.
     // We need to do this for joysticks too because the key layout may specify axes.
     status_t keyMapStatus = NAME_NOT_FOUND;
+    /**
+     * frameworks/native/services/inputflinger/EventHub.h:103:    INPUT_DEVICE_CLASS_KEYBOARD      = 0x00000001,
+     * frameworks/native/services/inputflinger/EventHub.h:127:    INPUT_DEVICE_CLASS_JOYSTICK      = 0x00000100,
+    */
     if (device->classes & (INPUT_DEVICE_CLASS_KEYBOARD | INPUT_DEVICE_CLASS_JOYSTICK)) {
         // Load the keymap for the device.
         keyMapStatus = loadKeyMapLocked(device);
@@ -318,8 +326,7 @@ status_t EventHub::openDeviceLocked(const char *devicePath) {
         // Register the keyboard as a built-in keyboard if it is eligible.
         if (!keyMapStatus
                 && mBuiltInKeyboardId == NO_BUILT_IN_KEYBOARD
-                && isEligibleBuiltInKeyboard(device->identifier,
-                        device->configuration, &device->keyMap)) {
+                && isEligibleBuiltInKeyboard(device->identifier,device->configuration, &device->keyMap)) {
             mBuiltInKeyboardId = device->id;
         }
 
@@ -348,8 +355,7 @@ status_t EventHub::openDeviceLocked(const char *devicePath) {
 
     // If the device isn't recognized as something we handle, don't monitor it.
     if (device->classes == 0) {
-        ALOGV("Dropping device: id=%d, path='%s', name='%s'",
-                deviceId, devicePath, device->identifier.name.string());
+        ALOGV("Dropping device: id=%d, path='%s', name='%s'",deviceId, devicePath, device->identifier.name.string());
         delete device;
         return -1;
     }
@@ -412,16 +418,35 @@ void EventHub::loadConfigurationLocked(Device* device) {
      * 如果 deviceIdentifier.vendor 和 deviceIdentifier.product 为空，
      * 则以 deviceIdentifier.name 为文件名
     */
-    device->configurationFile = getInputDeviceConfigurationFilePathByDeviceIdentifier(
-            device->identifier, INPUT_DEVICE_CONFIGURATION_FILE_TYPE_CONFIGURATION);
+    device->configurationFile = getInputDeviceConfigurationFilePathByDeviceIdentifier(device->identifier, INPUT_DEVICE_CONFIGURATION_FILE_TYPE_CONFIGURATION);
     if (device->configurationFile.isEmpty()) {
         ALOGD("No input device configuration file found for device '%s'.",device->identifier.name.string());
     } else {
+        /**
+         * PropertyMap* configuration;
+        */
         status_t status = PropertyMap::load(device->configurationFile,&device->configuration);
         if (status) {
             ALOGE("Error loading input device configuration file for device '%s'.  " "Using default configuration.",device->identifier.name.string());
         }
     }
+}
+
+
+
+status_t EventHub::loadVirtualKeyMapLocked(Device* device) {
+    /**
+     * 
+     * 虚拟按键加载，目前该文件不存在
+    */
+    // The virtual key map is supplied by the kernel as a system board property file.
+    String8 path;
+    path.append("/sys/board_properties/virtualkeys.");
+    path.append(device->identifier.name);
+    if (access(path.string(), R_OK)) {
+        return NAME_NOT_FOUND;
+    }
+    return VirtualKeyMap::load(path, &device->virtualKeyMap);
 }
 
 

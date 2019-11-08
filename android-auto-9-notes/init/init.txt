@@ -4,3 +4,31 @@ printk.devkmsg 在内核 vendor/nxp-opensource/kernel_imx/Documentation/admin-gu
 
 BOARD_KERNEL_CMDLINE += printk.devkmsg=on
 BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
+
+
+/**
+* automotive 版本驱动异步，模块加载模式  vendor/nxp-opensource/imx/evs_service/evs_service.c
+* 非 automotive 版本，由系统内部prop文件，自动设置
+* 
+*/
+setprop vendor.vehicle.register 1
+
+//  vendor/etc/init/hw/init.car_additional.rc
+on property:vendor.vehicle.register=1
+    start boot_completed_core_sh
+
+//  vendor/etc/init/hw/init.freescale.rc:122
+on property:vendor.all.setup_core.ready=1
+    start boot_completed_main_sh
+
+
+vendor/etc/init/hw/init.freescale.rc:242:
+service boot_completed_core_sh /vendor/bin/init.insmod.sh /vendor/etc/setup.core.cfg vendor.all.setup_core.ready
+
+vendor/etc/init/hw/init.freescale.rc:249:
+service boot_completed_main_sh /vendor/bin/init.insmod.sh /vendor/etc/setup.main.cfg vendor.all.setup_main.ready
+
+
+
+
+

@@ -39,7 +39,7 @@ Event Hub State:
       ConfigurationFile: 
       HaveKeyboardLayoutOverlay: false
     2: cyttsp6_mt1
-      Classes: 0x80000014       # INPUT_DEVICE_CLASS_EXTERNAL | INPUT_DEVICE_CLASS_TOUCH_MT | INPUT_DEVICE_CLASS_TOUCH
+      Classes: 0x80000014                   # INPUT_DEVICE_CLASS_EXTERNAL | INPUT_DEVICE_CLASS_TOUCH_MT | INPUT_DEVICE_CLASS_TOUCH
       Path: /dev/input/event1
       Enabled: true
       Descriptor: a98ecc2fbcd7400435e28358b6c52622d87adb87

@@ -1,0 +1,217 @@
+INPUT MANAGER (dumpsys input)
+
+Input Manager State:
+  Interactive: true
+  System UI Visibility: 0x508
+  Pointer Speed: 0
+  Pointer Gestures Enabled: true
+  Show Touches: false
+  Pointer Capture Enabled: false
+
+Event Hub State:
+  BuiltInKeyboardId: -2
+  Devices:
+    -1: Virtual
+      Classes: 0x40000023
+      Path: <virtual>
+      Enabled: true
+      Descriptor: a718a782d34bc767f4689c232d64d527998ea7fd
+      Location: 
+      ControllerNumber: 0
+      UniqueId: <virtual>
+      Identifier: bus=0x0000, vendor=0x0000, product=0x0000, version=0x0000
+      KeyLayoutFile: /system/usr/keylayout/Generic.kl
+      KeyCharacterMapFile: /system/usr/keychars/Virtual.kcm
+      ConfigurationFile: 
+      HaveKeyboardLayoutOverlay: false
+    1: sc-powerkey
+      Classes: 0x00000001
+      Path: /dev/input/event0
+      Enabled: true
+      Descriptor: 89da3e57a2cf73e56012b67712c511376490634e
+      Location: imx-sc-pwrkey/input0
+      ControllerNumber: 0
+      UniqueId: 
+      Identifier: bus=0x0019, vendor=0x0000, product=0x0000, version=0x0000
+      KeyLayoutFile: /system/usr/keylayout/Generic.kl
+      KeyCharacterMapFile: /system/usr/keychars/Generic.kcm
+      ConfigurationFile: 
+      HaveKeyboardLayoutOverlay: false
+    6: uinput_hardkey
+      Classes: 0x80000023
+      Path: /dev/input/event1
+      Enabled: true
+      Descriptor: c001757e9e3b57ce31522a4bb9eda66a51745752
+      Location: 
+      ControllerNumber: 0
+      UniqueId: 
+      Identifier: bus=0x0003, vendor=0x1235, product=0xfedd, version=0x0001
+      KeyLayoutFile: /system/usr/keylayout/Generic.kl
+      KeyCharacterMapFile: /system/usr/keychars/Generic.kcm
+      ConfigurationFile: 
+      HaveKeyboardLayoutOverlay: false
+    7: uinput_hardkey_knob
+      Classes: 0x80000041
+      Path: /dev/input/event2
+      Enabled: true
+      Descriptor: c363b201727d868d3c6ac366a2e021e15e39bfa7
+      Location: 
+      ControllerNumber: 0
+      UniqueId: 
+      Identifier: bus=0x0003, vendor=0x1236, product=0xfede, version=0x0001
+      KeyLayoutFile: /system/usr/keylayout/Generic.kl
+      KeyCharacterMapFile: /system/usr/keychars/Generic.kcm
+      ConfigurationFile: 
+      HaveKeyboardLayoutOverlay: false
+
+Input Reader State:
+  Device -1: Virtual
+    Generation: 2
+    IsExternal: false
+    HasMic:     false
+    Sources: 0x00000301
+    KeyboardType: 2
+    Keyboard Input Mapper:
+      Parameters:
+        HasAssociatedDisplay: false
+        OrientationAware: false
+        HandlesKeyRepeat: false
+      KeyboardType: 2
+      Orientation: 0
+      KeyDowns: 0 keys currently down
+      MetaState: 0x0
+      DownTime: 0
+  Device 1: sc-powerkey
+    Generation: 4
+    IsExternal: false
+    HasMic:     false
+    Sources: 0x00000101
+    KeyboardType: 1
+    Keyboard Input Mapper:
+      Parameters:
+        HasAssociatedDisplay: false
+        OrientationAware: false
+        HandlesKeyRepeat: false
+      KeyboardType: 1
+      Orientation: 0
+      KeyDowns: 0 keys currently down
+      MetaState: 0x0
+      DownTime: 0
+  Device 6: uinput_hardkey
+    Generation: 18
+    IsExternal: true
+    HasMic:     false
+    Sources: 0x00000301
+    KeyboardType: 2
+    Keyboard Input Mapper:
+      Parameters:
+        HasAssociatedDisplay: false
+        OrientationAware: false
+        HandlesKeyRepeat: false
+      KeyboardType: 2
+      Orientation: 0
+      KeyDowns: 0 keys currently down
+      MetaState: 0x0
+      DownTime: 0
+  Device 7: uinput_hardkey_knob
+    Generation: 20
+    IsExternal: true
+    HasMic:     false
+    Sources: 0x00000501
+    KeyboardType: 1
+    Keyboard Input Mapper:
+      Parameters:
+        HasAssociatedDisplay: false
+        OrientationAware: false
+        HandlesKeyRepeat: false
+      KeyboardType: 1
+      Orientation: 0
+      KeyDowns: 0 keys currently down
+      MetaState: 0x0
+      DownTime: 0
+  Configuration:
+    ExcludedDeviceNames: []
+    VirtualKeyQuietTime: 0.0ms
+    PointerVelocityControlParameters: scale=1.000, lowThreshold=500.000, highThreshold=3000.000, acceleration=3.000
+    WheelVelocityControlParameters: scale=1.000, lowThreshold=15.000, highThreshold=50.000, acceleration=4.000
+    PointerGesture:
+      Enabled: true
+      QuietInterval: 100.0ms
+      DragMinSwitchSpeed: 50.0px/s
+      TapInterval: 150.0ms
+      TapDragInterval: 300.0ms
+      TapSlop: 20.0px
+      MultitouchSettleInterval: 100.0ms
+      MultitouchMinDistance: 15.0px
+      SwipeTransitionAngleCosine: 0.3
+      SwipeMaxWidthRatio: 0.2
+      MovementSpeedRatio: 0.8
+      ZoomSpeedRatio: 0.3
+      Viewports:
+        ViewportInternal:
+          Viewport: displayId=0, orientation=0, uniqueId='', logicalFrame=[0, 0, 800, 480], physicalFrame=[0, 0, 800, 480], deviceSize=[800, 480]
+        ViewportExternal:
+          Viewport: displayId=0, orientation=0, uniqueId='', logicalFrame=[0, 0, 800, 480], physicalFrame=[0, 0, 800, 480], deviceSize=[800, 480]
+        ViewportVirtual:
+
+Input Dispatcher State:
+  DispatchEnabled: 1
+  DispatchFrozen: 0
+  FocusedApplication: name='AppWindowToken{44aa3b8 token=Token{22c261b ActivityRecord{260782a u0 com.autolink.launcher2/.Launcher t43}}}', dispatchingTimeout=5000.000ms
+  FocusedWindow: name='Window{10ebd24 u0 com.autolink.launcher2/com.autolink.launcher2.Launcher}'
+  TouchStates: <no displays touched>
+  Windows:
+    0: name='Window{380228c u0 StatusBar}', displayId=0, paused=false, hasFocus=false, hasWallpaper=false, visible=true, canReceiveKeys=false, flags=0x81840048, type=0x000007d0, layer=0, frame=[0,0][800,73], scale=1.000000, touchableRegion=[0,0][800,73], inputFeatures=0x00000000, ownerPid=1990, ownerUid=10017, dispatchingTimeout=5000.000ms
+    1: name='Window{ab65b31 u0 com.autolink.volume}', displayId=0, paused=false, hasFocus=false, hasWallpaper=false, visible=true, canReceiveKeys=false, flags=0x01000028, type=0x000007f6, layer=0, frame=[400,276][400,276], scale=1.000000, touchableRegion=<empty>, inputFeatures=0x00000000, ownerPid=3495, ownerUid=10033, dispatchingTimeout=5000.000ms
+    2: name='Window{42f6865 u0 com.autolink.speech}', displayId=0, paused=false, hasFocus=false, hasWallpaper=false, visible=true, canReceiveKeys=false, flags=0x01000028, type=0x000007f6, layer=0, frame=[0,407][93,480], scale=1.000000, touchableRegion=[0,407][93,480], inputFeatures=0x00000000, ownerPid=2865, ownerUid=10045, dispatchingTimeout=5000.000ms
+    3: name='Window{10e9829 u0 AssistPreviewPanel}', displayId=0, paused=false, hasFocus=false, hasWallpaper=false, visible=false, canReceiveKeys=false, flags=0x01000118, type=0x000007f1, layer=0, frame=[0,480][800,480], scale=1.000000, touchableRegion=<empty>, inputFeatures=0x00000000, ownerPid=1990, ownerUid=10017, dispatchingTimeout=5000.000ms
+    4: name='Window{2990af2 u0 DockedStackDivider}', displayId=0, paused=false, hasFocus=false, hasWallpaper=false, visible=false, canReceiveKeys=false, flags=0x21840028, type=0x000007f2, layer=0, frame=[0,0][0,0], scale=1.000000, touchableRegion=[0,-48][48,48], inputFeatures=0x00000000, ownerPid=1990, ownerUid=10017, dispatchingTimeout=5000.000ms
+    5: name='Window{10ebd24 u0 com.autolink.launcher2/com.autolink.launcher2.Launcher}', displayId=0, paused=false, hasFocus=true, hasWallpaper=true, visible=true, canReceiveKeys=true, flags=0x81910120, type=0x00000001, layer=0, frame=[0,0][800,480], scale=1.000000, touchableRegion=[0,0][800,480], inputFeatures=0x00000000, ownerPid=2346, ownerUid=10030, dispatchingTimeout=5000.000ms
+    6: name='Window{56e2b34 u0 com.android.systemui.ImageWallpaper}', displayId=0, paused=false, hasFocus=false, hasWallpaper=false, visible=true, canReceiveKeys=false, flags=0x00010318, type=0x000007dd, layer=0, frame=[0,0][2568,1280], scale=1.000000, touchableRegion=[0,0][2568,1280], inputFeatures=0x00000000, ownerPid=1990, ownerUid=10017, dispatchingTimeout=5000.000ms
+  MonitoringChannels:
+    0: 'WindowManager (server)'
+  RecentQueue: length=10
+    DeviceResetEvent(deviceId=5), policyFlags=0x00000000, age=748032.0ms
+    ConfigurationChangedEvent(), policyFlags=0x00000000, age=748032.0ms
+    DeviceResetEvent(deviceId=5), policyFlags=0x00000000, age=746405.1ms
+    ConfigurationChangedEvent(), policyFlags=0x00000000, age=746405.1ms
+    DeviceResetEvent(deviceId=4), policyFlags=0x00000000, age=746333.3ms
+    ConfigurationChangedEvent(), policyFlags=0x00000000, age=746333.3ms
+    DeviceResetEvent(deviceId=6), policyFlags=0x00000000, age=742998.1ms
+    ConfigurationChangedEvent(), policyFlags=0x00000000, age=742998.1ms
+    DeviceResetEvent(deviceId=7), policyFlags=0x00000000, age=742949.8ms
+    ConfigurationChangedEvent(), policyFlags=0x00000000, age=742949.8ms
+  PendingEvent: <none>
+  InboundQueue: <empty>
+  ReplacedKeys: <empty>
+  Connections:
+    0: channelName='WindowManager (server)', windowName='monitor', status=NORMAL, monitor=true, inputPublisherBlocked=false
+      OutboundQueue: <empty>
+      WaitQueue: <empty>
+    1: channelName='2990af2 DockedStackDivider (server)', windowName='Window{2990af2 u0 DockedStackDivider}', status=NORMAL, monitor=false, inputPublisherBlocked=false
+      OutboundQueue: <empty>
+      WaitQueue: <empty>
+    2: channelName='10e9829 AssistPreviewPanel (server)', windowName='Window{10e9829 u0 AssistPreviewPanel}', status=NORMAL, monitor=false, inputPublisherBlocked=false
+      OutboundQueue: <empty>
+      WaitQueue: <empty>
+    3: channelName='380228c StatusBar (server)', windowName='Window{380228c u0 StatusBar}', status=NORMAL, monitor=false, inputPublisherBlocked=false
+      OutboundQueue: <empty>
+      WaitQueue: <empty>
+    4: channelName='10ebd24 com.autolink.launcher2/com.autolink.launcher2.Launcher (server)', windowName='Window{10ebd24 u0 com.autolink.launcher2/com.autolink.launcher2.Launcher}', status=NORMAL, monitor=false, inputPublisherBlocked=false
+      OutboundQueue: <empty>
+      WaitQueue: <empty>
+    5: channelName='42f6865 com.autolink.speech (server)', windowName='Window{42f6865 u0 com.autolink.speech}', status=NORMAL, monitor=false, inputPublisherBlocked=false
+      OutboundQueue: <empty>
+      WaitQueue: <empty>
+    6: channelName='56e2b34 com.android.systemui.ImageWallpaper (server)', windowName='Window{56e2b34 u0 com.android.systemui.ImageWallpaper}', status=NORMAL, monitor=false, inputPublisherBlocked=false
+      OutboundQueue: <empty>
+      WaitQueue: <empty>
+    7: channelName='ab65b31 com.autolink.volume (server)', windowName='Window{ab65b31 u0 com.autolink.volume}', status=NORMAL, monitor=false, inputPublisherBlocked=false
+      OutboundQueue: <empty>
+      WaitQueue: <empty>
+  AppSwitch: not pending
+  Configuration:
+    KeyRepeatDelay: 50.0ms
+    KeyRepeatTimeout: 500.0ms
+
+
