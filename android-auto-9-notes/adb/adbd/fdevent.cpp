@@ -1,5 +1,33 @@
+
+//  @   system/core/adb/fdevent.cpp
+
+
+struct PollNode {
+  fdevent* fde;
+  adb_pollfd pollfd;
+
+  explicit PollNode(fdevent* fde) : fde(fde) {
+      memset(&pollfd, 0, sizeof(pollfd));
+      pollfd.fd = fde->fd;
+
+#if defined(__linux__)
+      // Always enable POLLRDHUP, so the host server can take action when some clients disconnect.
+      // Then we can avoid leaving many sockets in CLOSE_WAIT state. See http://b/23314034.
+      pollfd.events = POLLRDHUP;
+#endif
+  }
+};
+
+//  @   system/core/adb/sysdeps.h
+struct adb_pollfd {
+    int fd;
+    short events;
+    short revents;
+};
+
+
 /**
- * 
+ * @    
 */
 void fdevent_install(fdevent* fde, int fd, fd_func func, void* arg) {
     check_main_thread();
@@ -9,12 +37,18 @@ void fdevent_install(fdevent* fde, int fd, fd_func func, void* arg) {
     fde->fd = fd;
     fde->func = func;
     fde->arg = arg;
+    /**
+     * 设置 fd 阻塞模式
+    */
     if (!set_file_block_mode(fd, false)) {
         // Here is not proper to handle the error. If it fails here, some error is
         // likely to be detected by poll(), then we can let the callback function
         // to handle it.
         LOG(ERROR) << "failed to set non-blocking mode for fd " << fd;
     }
+    /**
+     * 
+    */
     auto pair = g_poll_node_map.emplace(fde->fd, PollNode(fde));
     CHECK(pair.second) << "install existing fd " << fd;
     D("fdevent_install %s", dump_fde(fde).c_str());
@@ -133,10 +167,15 @@ static void fdevent_run_setup() {
         std::lock_guard<std::mutex> lock(run_queue_mutex);
         CHECK(run_queue_notify_fd.get() == -1);
         int s[2];
+        /**
+         * 创建socket 对
+        */
         if (adb_socketpair(s) != 0) {
             PLOG(FATAL) << "failed to create run queue notify socketpair";
         }
-
+        /**
+         * 分别设置非阻塞模式
+        */
         if (!set_file_block_mode(s[0], false) || !set_file_block_mode(s[1], false)) {
             PLOG(FATAL) << "failed to make run queue notify socket nonblocking";
         }
@@ -168,11 +207,18 @@ static void fdevent_run_func(int fd, unsigned ev, void* /* userdata */) {
 
 static void fdevent_process() {
     std::vector<adb_pollfd> pollfds;
+    /**
+     * 这里在 fdevent_install 中调用
+    */
     for (const auto& pair : g_poll_node_map) {
         pollfds.push_back(pair.second.pollfd);
     }
     CHECK_GT(pollfds.size(), 0u);
     D("poll(), pollfds = %s", dump_pollfds(pollfds).c_str());
+    /**
+     * 
+     * 等待事件触发
+    */
     int ret = adb_poll(&pollfds[0], pollfds.size(), -1);
     if (ret == -1) {
         PLOG(ERROR) << "poll(), ret = " << ret;
