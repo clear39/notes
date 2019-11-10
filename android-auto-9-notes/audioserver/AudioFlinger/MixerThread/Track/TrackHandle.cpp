@@ -4,4 +4,5 @@ AudioFlinger::TrackHandle::TrackHandle(const sp<AudioFlinger::PlaybackThread::Tr
     : BnAudioTrack(),
       mTrack(track)
 {
+    
 }

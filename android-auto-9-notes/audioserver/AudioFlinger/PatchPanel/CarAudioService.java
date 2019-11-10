@@ -73,8 +73,7 @@ public class CarAudioService extends ICarAudio.Stub implements CarServiceBase {
                 break;
             }
         }
-        Preconditions.checkNotNull(sourcePortInfo,
-                "Specified source is not available: " + sourceAddress);
+        Preconditions.checkNotNull(sourcePortInfo,"Specified source is not available: " + sourceAddress);
 
         // Find the output port associated with the given carUsage
         AudioDevicePort sinkPort = Preconditions.checkNotNull(getAudioPort(usage),

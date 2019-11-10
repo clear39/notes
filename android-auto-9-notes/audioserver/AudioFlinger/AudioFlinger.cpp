@@ -1072,7 +1072,7 @@ void AudioFlinger::setRecordSilenced(uid_t uid, bool silenced)
  * system/media/audio/include/system/audio.h:494:
  * typedef int audio_patch_handle_t;
  * 
- * mAudioPatch = mCarAudioManager.createAudioPatch(HARDCODED_TUNER_ADDRESS,AudioAttributes.USAGE_MEDIA, 0);
+ * 
  * 
  * */
 status_t AudioFlinger::createAudioPatch(const struct audio_patch *patch,audio_patch_handle_t *handle)
