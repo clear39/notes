@@ -70,6 +70,7 @@ static status_t startGraphicsAllocatorService() {
     using android::hardware::configstore::V1_0::ISurfaceFlingerConfigs;
     /**
      * 返回false,表示有单独hwbinder服务启动
+     * 01-01 08:00:06.774  1579  1579 I ConfigStore: android::hardware::configstore::V1_0::ISurfaceFlingerConfigs::startGraphicsAllocatorService retrieved: 0
     */
     if (!getBool<ISurfaceFlingerConfigs,&ISurfaceFlingerConfigs::startGraphicsAllocatorService>(false)) {
         return OK;

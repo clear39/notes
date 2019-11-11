@@ -1,0 +1,64 @@
+01-01 08:00:06.774  1579  1579 I ConfigStore: android::hardware::configstore::V1_0::ISurfaceFlingerConfigs::startGraphicsAllocatorService retrieved: 0
+01-01 08:00:06.779  1579  1579 I SurfaceFlinger: Using HWComposer service: 'default'
+01-01 08:00:06.779  1579  1579 I SurfaceFlinger: SurfaceFlinger is starting
+01-01 08:00:06.786  1579  1579 I ConfigStore: android::hardware::configstore::V1_0::ISurfaceFlingerConfigs::vsyncEventPhaseOffsetNs retrieved: 1000000 (default)
+01-01 08:00:06.786  1579  1579 I ConfigStore: android::hardware::configstore::V1_0::ISurfaceFlingerConfigs::vsyncSfEventPhaseOffsetNs retrieved: 1000000 (default)
+01-01 08:00:06.786  1579  1579 I ConfigStore: android::hardware::configstore::V1_0::ISurfaceFlingerConfigs::hasSyncFramework retrieved: 1
+01-01 08:00:06.787  1579  1579 I ConfigStore: android::hardware::configstore::V1_0::ISurfaceFlingerConfigs::presentTimeOffsetFromVSyncNs retrieved: 0
+01-01 08:00:06.787  1579  1579 I ConfigStore: android::hardware::configstore::V1_0::ISurfaceFlingerConfigs::useHwcForRGBtoYUV retrieved: 0
+01-01 08:00:06.787  1579  1579 I ConfigStore: android::hardware::configstore::V1_0::ISurfaceFlingerConfigs::maxVirtualDisplaySize retrieved: 0 (default)
+01-01 08:00:06.787  1579  1579 I ConfigStore: android::hardware::configstore::V1_0::ISurfaceFlingerConfigs::useVrFlinger retrieved: 0 (default)
+01-01 08:00:06.787  1579  1579 I ConfigStore: android::hardware::configstore::V1_0::ISurfaceFlingerConfigs::maxFrameBufferAcquiredBuffers retrieved: 3
+01-01 08:00:06.787  1579  1579 I ConfigStore: android::hardware::configstore::V1_0::ISurfaceFlingerConfigs::hasWideColorDisplay retrieved: 0
+01-01 08:00:06.800  1579  1579 I ConfigStore: android::hardware::configstore::V1_1::ISurfaceFlingerConfigs::primaryDisplayOrientation retrieved: ORIENTATION_0 (default)
+01-01 08:00:06.802  1579  1579 I SurfaceFlinger: Enabling HWC virtual displays
+01-01 08:00:06.802  1579  1579 I SurfaceFlinger: Disabling Triple Buffering
+01-01 08:00:06.802  1579  1579 I SurfaceFlinger: Treble testing override: 'false'
+01-01 08:00:06.802  1579  1579 I SurfaceFlinger: SurfaceFlinger's main thread ready to run. Initializing graphics H/W...
+01-01 08:00:06.802  1579  1579 I SurfaceFlinger: Phase offest NS: 1000000
+01-01 08:00:06.849  1579  1579 D libEGL  : loaded /vendor/lib64/egl/libEGL_VIVANTE.so
+01-01 08:00:07.042  1579  1579 D libEGL  : loaded /vendor/lib64/egl/libGLESv1_CM_VIVANTE.so
+01-01 08:00:07.271  1579  1579 D libEGL  : loaded /vendor/lib64/egl/libGLESv2_VIVANTE.so
+01-01 08:00:07.471  1579  1579 I ConfigStore: android::hardware::configstore::V1_0::ISurfaceFlingerConfigs::hasWideColorDisplay retrieved: 0
+01-01 08:00:07.471  1579  1579 I ConfigStore: android::hardware::configstore::V1_0::ISurfaceFlingerConfigs::hasHDRDisplay retrieved: 0
+01-01 08:00:07.471  1579  1579 W SurfaceFlinger: no suitable EGLConfig found, trying a simpler query
+01-01 08:00:07.471  1579  1579 I SurfaceFlinger: EGL information:
+01-01 08:00:07.471  1579  1579 I SurfaceFlinger: vendor    : Android
+01-01 08:00:07.471  1579  1579 I SurfaceFlinger: version   : 1.4 Android META-EGL
+01-01 08:00:07.471  1579  1579 I SurfaceFlinger: extensions: EGL_KHR_get_all_proc_addresses EGL_ANDROID_presentation_time EGL_KHR_swap_buffers_with_damage EGL_ANDROID_get_native_client_buffer EGL_ANDROID_front_ 
+01-01 08:00:07.471  1579  1579 I SurfaceFlinger: Client API: OpenGL_ES
+01-01 08:00:07.471  1579  1579 I SurfaceFlinger: EGLSurface: 8-8-8-8, config=0x15
+01-01 08:00:07.503  1579  1579 I SurfaceFlinger: OpenGL ES informations:
+01-01 08:00:07.503  1579  1579 I SurfaceFlinger: vendor    : Vivante Corporation
+01-01 08:00:07.503  1579  1579 I SurfaceFlinger: renderer  : Vivante GC7000L
+01-01 08:00:07.503  1579  1579 I SurfaceFlinger: version   : OpenGL ES 3.1 V6.2.4.p4.190076
+01-01 08:00:07.503  1579  1579 I SurfaceFlinger: extensions: GL_EXT_debug_marker GL_OES_vertex_type_10_10_10_2 GL_OES_vertex_half_float GL_OES_element_index_uint GL_OES_mapbuffer GL_OES_vertex_array_object GL_Os
+01-01 08:00:07.503  1579  1579 I SurfaceFlinger: GL_MAX_TEXTURE_SIZE = 8192
+01-01 08:00:07.503  1579  1579 I SurfaceFlinger: GL_MAX_VIEWPORT_DIMS = 8192
+01-01 08:00:07.661  1579  1579 E HWComposer: getSupportedPerFrameMetadata: getSupportedPerFrameMetadata failed for display 0: Unsupported (8)
+01-01 08:00:07.685  1579  1579 I display : open gpu gralloc module!
+01-01 08:00:07.687  1579  1579 E gralloc : gralloc1_device_open invalid name:fb0
+01-01 08:00:07.687  1579  1579 I v_egl   : FramebufferSurface: bufferCount=3
+01-01 08:00:08.131  1579  1579 D SurfaceFlinger: shader cache generated - 24 shaders in 406.836639 ms
+01-01 08:00:08.136  1579  1579 D SurfaceFlinger: Set power mode=2, type=0 flinger=0xee22b7658000
+01-01 08:00:08.136  1579  1579 D SurfaceFlinger: Finished set power mode=2, type=0
+01-01 08:00:08.700  1579  1668 W SurfaceFlinger: Timed out waiting for hw vsync; faking it
+01-01 08:00:10.548  1579  1579 D SurfaceFlinger: Set power mode=2, type=0 flinger=0xee22b7658000
+11-06 17:16:54.672  1579  1579 I SurfaceFlinger: Enter boot animation
+11-06 17:16:54.676  1579  1579 W SurfaceFlinger: Unable to determine the display type for display 1
+11-06 17:16:55.690  1579  1579 E HWComposer: getSupportedPerFrameMetadata: getSupportedPerFrameMetadata failed for display 1: Unsupported (8)
+11-06 17:16:55.694  1579  1579 E gralloc : gralloc1_device_open invalid name:fb0
+11-06 17:16:55.694  1579  1579 I v_egl   : FramebufferSurface: bufferCount=3
+11-06 17:16:55.775  1579  1579 D SurfaceFlinger: Set power mode=2, type=1 flinger=0xee22b7658000
+11-06 17:16:55.776  1579  1579 D SurfaceFlinger: Finished set power mode=2, type=1
+11-06 17:16:55.788  1579  1802 D SurfaceFlinger: duplicate layer name: changing Display Root to Display Root#1
+11-06 17:16:55.792  1579  1802 D SurfaceFlinger: duplicate layer name: changing Display Overlays to Display Overlays#1
+11-06 17:16:55.794  1579  1802 D SurfaceFlinger: duplicate layer name: changing mBelowAppWindowsContainers to mBelowAppWindowsContainers#1
+11-06 17:16:55.798  1579  1802 D SurfaceFlinger: duplicate layer name: changing animationLayer to animationLayer#1
+11-06 17:16:55.800  1579  2366 D SurfaceFlinger: duplicate layer name: changing boostedAnimationLayer to boostedAnimationLayer#1
+11-06 17:16:55.802  1579  2448 D SurfaceFlinger: duplicate layer name: changing homeAnimationLayer to homeAnimationLayer#1
+11-06 17:16:55.803  1579  1802 D SurfaceFlinger: duplicate layer name: changing splitScreenDividerAnchor to splitScreenDividerAnchor#1
+11-06 17:16:55.820  1579  1802 D SurfaceFlinger: duplicate layer name: changing mAboveAppWindowsContainers to mAboveAppWindowsContainers#1
+11-06 17:16:55.824  1579  1802 D SurfaceFlinger: duplicate layer name: changing mImeWindowsContainers to mImeWindowsContainers#1
+11-06 17:16:57.520  1579  1663 I SurfaceFlinger: Boot is finished (10145 ms)
+11-06 17:16:57.933  1579  2366 W SurfaceFlinger: Attempting to destroy on removed layer: 9e64117 DockedStackDivider#0
