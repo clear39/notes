@@ -13,7 +13,7 @@ Event Hub State:
   BuiltInKeyboardId: -2
   Devices:
     -1: Virtual
-      Classes: 0x40000023
+      Classes: 0x40000023   # INPUT_DEVICE_CLASS_KEYBOARD | INPUT_DEVICE_CLASS_ALPHAKEY | INPUT_DEVICE_CLASS_DPAD | INPUT_DEVICE_CLASS_VIRTUAL;
       Path: <virtual>
       Enabled: true
       Descriptor: a718a782d34bc767f4689c232d64d527998ea7fd

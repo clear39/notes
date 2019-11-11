@@ -2,6 +2,38 @@
 
 //  @   /work/workcodes/tsu-aosp-p9.0.0_2.1.0-auto-ga/frameworks/native/services/inputflinger/InputReader.cpp
 
+void InputReader::refreshConfigurationLocked(uint32_t changes) {
+    mPolicy->getReaderConfiguration(&mConfig);
+    mEventHub->setExcludedDevices(mConfig.excludedDeviceNames);
+
+    if (changes) {
+        ALOGI("Reconfiguring input devices.  changes=0x%08x", changes);
+        nsecs_t now = systemTime(SYSTEM_TIME_MONOTONIC);
+
+        if (changes & InputReaderConfiguration::CHANGE_MUST_REOPEN) {
+            mEventHub->requestReopenDevices();
+        } else {
+            for (size_t i = 0; i < mDevices.size(); i++) {
+                InputDevice* device = mDevices.valueAt(i);
+                device->configure(now, &mConfig, changes);
+            }
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
 bool InputReaderThread::threadLoop() {
     mReader->loopOnce();
     return true;
@@ -120,7 +152,7 @@ void InputReader::addDeviceLocked(nsecs_t when, int32_t deviceId) {
 
     InputDeviceIdentifier identifier = mEventHub->getDeviceIdentifier(deviceId);
     uint32_t classes = mEventHub->getDeviceClasses(deviceId);
-    int32_t controllerNumber = mEventHub->getDeviceControllerNumber(deviceId);
+    int32_t controllerNumber = mEventHub->getDeviceControllerNumber(deviceId); // 0
 
     InputDevice* device = createDeviceLocked(deviceId, controllerNumber, identifier, classes);
     device->configure(when, &mConfig, 0);
@@ -139,6 +171,12 @@ void InputReader::addDeviceLocked(nsecs_t when, int32_t deviceId) {
         notifyExternalStylusPresenceChanged();
     }
 }
+
+
+int32_t InputReader::bumpGenerationLocked() {
+    return ++mGeneration;
+}
+
 
 
 InputDevice* InputReader::createDeviceLocked(int32_t deviceId, int32_t controllerNumber,const InputDeviceIdentifier& identifier, uint32_t classes) {
@@ -233,4 +271,20 @@ void InputReader::getInputDevicesLocked(Vector<InputDeviceInfo>& outInputDevices
 }
 
 
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
+void InputReader::processEventsForDeviceLocked(int32_t deviceId,const RawEvent* rawEvents, size_t count) {
+    ssize_t deviceIndex = mDevices.indexOfKey(deviceId);
+    if (deviceIndex < 0) {
+        ALOGW("Discarding event for unknown deviceId %d.", deviceId);
+        return;
+    }
+
+    InputDevice* device = mDevices.valueAt(deviceIndex);
+    if (device->isIgnored()) {
+        //ALOGD("Discarding event for ignored deviceId %d.", deviceId);
+        return;
+    }
+
+    device->process(rawEvents, count);
+}
