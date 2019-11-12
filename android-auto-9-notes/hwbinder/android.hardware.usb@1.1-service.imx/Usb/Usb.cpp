@@ -1,4 +1,7 @@
 //  @   vendor/nxp-opensource/imx/usb/Usb.cpp
+/**
+ * 
+ */
 Usb::Usb() : mLock(PTHREAD_MUTEX_INITIALIZER),
     mRoleSwitchLock(PTHREAD_MUTEX_INITIALIZER),
     mPartnerLock(PTHREAD_MUTEX_INITIALIZER),
@@ -12,6 +15,9 @@ Usb::Usb() : mLock(PTHREAD_MUTEX_INITIALIZER),
         ALOGE("pthread_condattr_setclock failed: %s", strerror(errno));
         abort();
     }
+    /**
+     * pthread_cond_t mPartnerCV;
+    */
     if (pthread_cond_init(&mPartnerCV, &attr))  {
         ALOGE("pthread_cond_init failed: %s", strerror(errno));
         abort();
@@ -40,20 +46,8 @@ struct PortRole {
     uint32_t role;
 };
 
-std::string appendRoleNodeHelper(const std::string &portName,PortRoleType type) {
-  std::string node("/sys/class/typec/" + portName);
 
-  switch (type) {
-    case PortRoleType::DATA_ROLE:
-      return node + "/data_role";
-    case PortRoleType::POWER_ROLE:
-      return node + "/power_role";
-    case PortRoleType::MODE:
-      return node + "/port_type";
-    default:
-      return "";
-  }
-}
+////////////////////////////////////////////////////////////////////////////////////////////
 
 Return<void> Usb::switchRole(const hidl_string &portName, const V1_0::PortRole &newRole) {
     /**
@@ -110,6 +104,20 @@ Return<void> Usb::switchRole(const hidl_string &portName, const V1_0::PortRole &
   return Void();
 }
   
+std::string appendRoleNodeHelper(const std::string &portName,PortRoleType type) {
+  std::string node("/sys/class/typec/" + portName);
+
+  switch (type) {
+    case PortRoleType::DATA_ROLE:
+      return node + "/data_role";
+    case PortRoleType::POWER_ROLE:
+      return node + "/power_role";
+    case PortRoleType::MODE:
+      return node + "/port_type";
+    default:
+      return "";
+  }
+}
   
   
   

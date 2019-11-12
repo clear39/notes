@@ -33,3 +33,41 @@ status_t KeyLayoutMap::load(const String8& filename, sp<KeyLayoutMap>* outMap) {
     }
     return status;
 }
+
+
+status_t KeyLayoutMap::mapKey(int32_t scanCode, int32_t usageCode,int32_t* outKeyCode, uint32_t* outFlags) const {
+    const Key* key = getKey(scanCode, usageCode);
+    if (!key) {
+#if DEBUG_MAPPING
+        ALOGD("mapKey: scanCode=%d, usageCode=0x%08x ~ Failed.", scanCode, usageCode);
+#endif
+        *outKeyCode = AKEYCODE_UNKNOWN;
+        *outFlags = 0;
+        return NAME_NOT_FOUND;
+    }
+
+    *outKeyCode = key->keyCode;
+    *outFlags = key->flags;
+
+#if DEBUG_MAPPING
+    ALOGD("mapKey: scanCode=%d, usageCode=0x%08x ~ Result keyCode=%d, outFlags=0x%08x.",
+            scanCode, usageCode, *outKeyCode, *outFlags);
+#endif
+    return NO_ERROR;
+}
+
+const KeyLayoutMap::Key* KeyLayoutMap::getKey(int32_t scanCode, int32_t usageCode) const {
+    if (usageCode) {
+        ssize_t index = mKeysByUsageCode.indexOfKey(usageCode);
+        if (index >= 0) {
+            return &mKeysByUsageCode.valueAt(index);
+        }
+    }
+    if (scanCode) {
+        ssize_t index = mKeysByScanCode.indexOfKey(scanCode);
+        if (index >= 0) {
+            return &mKeysByScanCode.valueAt(index);
+        }
+    }
+    return NULL;
+}

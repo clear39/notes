@@ -2,6 +2,52 @@
 https://blog.csdn.net/xiezhi123456/article/details/80596294
 
 
+11-12 11:59:42.052  1651 31085 I android.hardware.usb.gadget@1.0-service.imx: event=1 on fd=6
+11-12 11:59:42.094  1651  1651 I android.hardware.usb.gadget@1.0-service.imx: setCurrentUsbFunctions None
+11-12 11:59:42.139  1651 31085 I android.hardware.usb.gadget@1.0-service.imx: event=1 on fd=6
+11-12 11:59:42.152  1651 31085 I android.hardware.usb.gadget@1.0-service.imx: event=1 on fd=7
+11-12 11:59:42.152  1651  1651 I android.hardware.usb.gadget@1.0-service.imx: mMonitor destroyed
+11-12 11:59:42.316  1651  1651 I android.hardware.usb.gadget@1.0-service.imx: setCurrentUsbFunctions Adb
+11-12 11:59:42.316  1651  1651 I android.hardware.usb.gadget@1.0-service.imx: Service started
+11-12 11:59:42.821  1651  1527 I android.hardware.usb.gadget@1.0-service.imx: GADGET pulled up
+11-12 11:59:42.822  1651  1651 I android.hardware.usb.gadget@1.0-service.imx: monitorFfs signalled true
+11-12 11:59:42.822  1651  1651 I android.hardware.usb.gadget@1.0-service.imx: Usb Gadget setcurrent functions called successfully
+11-12 11:59:44.425  1651  1651 I android.hardware.usb.gadget@1.0-service.imx: setCurrentUsbFunctions None
+11-12 11:59:44.469  1651  1527 I android.hardware.usb.gadget@1.0-service.imx: event=1 on fd=6
+11-12 11:59:44.477  1651  1527 I android.hardware.usb.gadget@1.0-service.imx: event=1 on fd=7
+11-12 11:59:44.478  1651  1651 I android.hardware.usb.gadget@1.0-service.imx: mMonitor destroyed
+11-12 11:59:44.604  1651  1651 I android.hardware.usb.gadget@1.0-service.imx: setCurrentUsbFunctions Accessory
+11-12 11:59:44.604  1651  1651 I android.hardware.usb.gadget@1.0-service.imx: setCurrentUsbFunctions Adb
+11-12 11:59:44.605  1651  1651 I android.hardware.usb.gadget@1.0-service.imx: Service started
+11-12 11:59:45.111  1651  1562 I android.hardware.usb.gadget@1.0-service.imx: GADGET pulled up
+11-12 11:59:45.112  1651  1651 I android.hardware.usb.gadget@1.0-service.imx: monitorFfs signalled true
+11-12 11:59:45.112  1651  1651 I android.hardware.usb.gadget@1.0-service.imx: Usb Gadget setcurrent functions called successfully
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 //  @   vendor/nxp-opensource/imx/usb
 
 
@@ -28,29 +74,4 @@ cc_binary {
 
 
 
-//  @   vendor/nxp-opensource/imx/usb/service.cpp
-int main() {
-  android::sp<IUsb> service = new Usb();
-  android::sp<IUsbGadget> service2 = new UsbGadget();
 
-  configureRpcThreadpool(2, true /*callerWillJoin*/);
-  status_t status = service->registerAsService();
-
-  if (status != OK) {
-    ALOGE("Cannot register USB HAL service");
-    return 1;
-  }
-
-  status = service2->registerAsService();
-
-  if (status != OK) {
-    ALOGE("Cannot register USB Gadget HAL service");
-    return 1;
-  }
-
-  ALOGI("USB HAL Ready.");
-  joinRpcThreadpool();
-  // Under noraml cases, execution will not reach this line.
-  ALOGI("USB HAL failed to join thread pool.");
-  return 1;
-}
