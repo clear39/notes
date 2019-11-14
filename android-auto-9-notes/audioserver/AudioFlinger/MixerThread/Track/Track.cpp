@@ -1,4 +1,13 @@
 // Track constructor must be called with AudioFlinger::mLock and ThreadBase::mLock held
+
+/***
+ * frameworks/av/services/audioflinger/PlaybackTracks.h:23:class Track : public TrackBase, public VolumeProvider {
+ * frameworks/av/services/audioflinger/Tracks.cpp 
+ * 
+ * 
+ * 
+ * */
+
 AudioFlinger::PlaybackThread::Track::Track(
             PlaybackThread *thread,
             const sp<Client>& client,
@@ -29,6 +38,8 @@ AudioFlinger::PlaybackThread::Track::Track(
     mName(TRACK_NAME_FAILURE),  // set to TRACK_NAME_PENDING on constructor success.
     /**
      * PlaybackThread::mSinkBuffer
+     * 
+     * effect_buffer_t *PlaybackThread::sinkBuffer() const { return reinterpret_cast<effect_buffer_t *>(mSinkBuffer); };
     */
     mMainBuffer(thread->sinkBuffer()),
     mAuxBuffer(NULL),
