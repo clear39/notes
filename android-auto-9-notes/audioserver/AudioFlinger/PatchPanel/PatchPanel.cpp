@@ -42,6 +42,9 @@ struct audio_port_config {
  * typedef int audio_patch_handle_t;
  * 
  * 
+ * status_t AudioFlinger::createAudioPatch(const struct audio_patch *patch,audio_patch_handle_t *handle)
+ * --> mPatchPanel->createAudioPatch(patch, handle);
+ * 
  * */
 status_t AudioFlinger::PatchPanel::createAudioPatch(const struct audio_patch *patch,audio_patch_handle_t *handle)
 {
