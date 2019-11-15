@@ -48,9 +48,10 @@ public class UsbDeviceManager implements ActivityManagerInternal.ScreenObserver 
         }
         mControlFds.put(UsbManager.FUNCTION_PTP, ptpFd);
 
-        boolean secureAdbEnabled = SystemProperties.getBoolean("ro.adb.secure", false);
-        boolean dataEncrypted = "1".equals(SystemProperties.get("vold.decrypt"));
+        boolean secureAdbEnabled = SystemProperties.getBoolean("ro.adb.secure", false); // false
+        boolean dataEncrypted = "1".equals(SystemProperties.get("vold.decrypt"));   // false
         if (secureAdbEnabled && !dataEncrypted) {
+            /**这里不创建 */
             mDebuggingManager = new UsbDebuggingManager(context);
         }
 
@@ -122,6 +123,11 @@ public class UsbDeviceManager implements ActivityManagerInternal.ScreenObserver 
 
         mContext.registerReceiver(languageChangedReceiver,new IntentFilter(Intent.ACTION_LOCALE_CHANGED));
 
+
+
+        /**
+         * UsbUEventObserver 是通过socket 监听  NETLINK_KOBJECT_UEVENT 事件
+         */
         // Watch for USB configuration changes
         mUEventObserver = new UsbUEventObserver();
         //     private static final String USB_STATE_MATCH = "DEVPATH=/devices/virtual/android_usb/android0";
@@ -130,6 +136,11 @@ public class UsbDeviceManager implements ActivityManagerInternal.ScreenObserver 
         mUEventObserver.startObserving(ACCESSORY_START_MATCH);
 
         // register observer to listen for settings changes
+        /**
+         * 监听adb设置开关，触发AdbSettingsObserver
+         * AdbSettingsObserver.onChange
+         * --> 
+         */
         mContentResolver.registerContentObserver(Settings.Global.getUriFor(Settings.Global.ADB_ENABLED),false, new AdbSettingsObserver());
     }
 

@@ -1,0 +1,9 @@
+
+
+lixuqing1@AutoLink:~/aosp-p9.x-auto-ga$ find system/ device/autolink/ -name "*.rc" | xargs grep start-system-server  -nr
+
+system/core/rootdir/init.zygote64.rc:1:service zygote /system/bin/app_process64 -Xzygote /system/bin --zygote --start-system-server
+system/core/rootdir/init.zygote64_32.rc:1:service zygote /system/bin/app_process64 -Xzygote /system/bin --zygote --start-system-server --socket-name=zygote
+system/core/rootdir/init.zygote32.rc:1:service zygote /system/bin/app_process -Xzygote /system/bin --zygote --start-system-server
+system/core/rootdir/init.zygote_auto.rc:1:service zygote /system/bin/app_process64 -Xzygote /system/bin --zygote --start-system-server --socket-name=zygote
+system/core/rootdir/init.zygote32_64.rc:1:service zygote /system/bin/app_process32 -Xzygote /system/bin --zygote --start-system-server --socket-name=zygote

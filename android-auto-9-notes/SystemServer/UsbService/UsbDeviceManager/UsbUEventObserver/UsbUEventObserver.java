@@ -1,4 +1,6 @@
 //  @   frameworks/base/services/usb/java/com/android/server/usb/UsbDeviceManager.java
+
+
 private final class UsbUEventObserver extends UEventObserver {
     @Override
     public void onUEvent(UEventObserver.UEvent event) {
@@ -15,9 +17,18 @@ private final class UsbUEventObserver extends UEventObserver {
     }
 }
 
-//  @   /work/workcodes/aosp-p9.0.0_2.1.0-auto-ga/frameworks/base/core/java/android/os/UEventObserver.java
+//  @   frameworks/base/core/java/android/os/UEventObserver.java
 public abstract class UEventObserver {
 
+    public UEventObserver() {
+    }
+
+    /***
+     * "DEVPATH=/devices/virtual/android_usb/android0";
+     * "DEVPATH=/devices/virtual/misc/usb_accessory";
+     * 
+     * 
+     */
     public final void startObserving(String match) {
         if (match == null || match.isEmpty()) {
             throw new IllegalArgumentException("match substring must be non-empty");
@@ -25,6 +36,16 @@ public abstract class UEventObserver {
 
         final UEventThread t = getThread();
         t.addObserver(match, this);
+    }
+
+    private static UEventThread getThread() {
+        synchronized (UEventObserver.class) {
+            if (sThread == null) {
+                sThread = new UEventThread();
+                sThread.start();
+            }
+            return sThread;
+        }
     }
 
 }

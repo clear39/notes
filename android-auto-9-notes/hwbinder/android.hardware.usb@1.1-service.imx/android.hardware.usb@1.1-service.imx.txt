@@ -72,6 +72,32 @@ cc_binary {
     proprietary: true,
 }
 
+// IUsbCallback
+frameworks/base/services/usb/java/com/android/server/usb/UsbPortManager.java:418:    
+private static class HALCallback extends IUsbCallback.Stub {
+
+frameworks/base/services/usb/java/com/android/server/usb/UsbPortManager.java:95:    
+private HALCallback mHALCallback = new HALCallback(null, this);
+
+
+
+
+
+
+//  IUsbGadgetCallback
+frameworks/base/services/usb/java/com/android/server/usb/UsbDeviceManager.java:1847:        
+private class UsbGadgetCallback extends IUsbGadgetCallback.Stub {
+
+frameworks/base/services/usb/java/com/android/server/usb/UsbDeviceManager.java:1760:                    
+mGadgetProxy.getCurrentUsbFunctions(new UsbGadgetCallback());
+
+frameworks/base/services/usb/java/com/android/server/usb/UsbDeviceManager.java:1917:                    
+UsbGadgetCallback usbGadgetCallback = new UsbGadgetCallback(mCurrentRequest,
+frameworks/base/services/usb/java/com/android/server/usb/UsbDeviceManager.java:1919:                    
+mGadgetProxy.setCurrentUsbFunctions(config, usbGadgetCallback,
+
+
+
 
 
 

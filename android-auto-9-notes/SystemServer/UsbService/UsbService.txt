@@ -1,3 +1,10 @@
+// 禁用掉usb通知 
+setprop persist.charging.notify 0
+
+// 禁用掉adb通知 
+setprop persist.adb.notify 0
+
+
 
 private void startOtherServices() {
     if (mPackageManager.hasSystemFeature(PackageManager.FEATURE_USB_HOST) || mPackageManager.hasSystemFeature(PackageManager.FEATURE_USB_ACCESSORY) || isEmulator) {
