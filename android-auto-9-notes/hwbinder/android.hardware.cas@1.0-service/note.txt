@@ -13,7 +13,7 @@ service vendor.cas-hal-1-0 /vendor/bin/hw/android.hardware.cas@1.0-service
 
 
 
-//  @/work/workcodes/aosp-p9.x-auto-alpha/hardware/interfaces/cas/1.0/default/service.cpp
+//  @   hardware/interfaces/cas/1.0/default/service.cpp
 int main() {
     ALOGD("android.hardware.cas@1.0-service starting...");
 

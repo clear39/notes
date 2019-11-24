@@ -1,4 +1,4 @@
-//  @/work/workcodes/aosp-p9.x-auto-alpha/hardware/interfaces/automotive/vehicle/2.0/default/impl/vhal_v2_0/DefaultConfig.h
+//  @   hardware/interfaces/automotive/vehicle/2.0/default/impl/vhal_v2_0/DefaultConfig.h
 
 struct ConfigDeclaration {
     VehiclePropConfig config;  //   ./vehicle/2.0/types.hal:2567:struct VehiclePropConfig {

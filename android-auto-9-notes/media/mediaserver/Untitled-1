@@ -1,0 +1,18 @@
+
+
+
+AudioFlinger
+
+SurfaceFlinger
+
+CarRadio
+
+CarService 主要是车辆信息管控 跟hal层车辆信息
+
+MediaPlayer
+
+
+
+Evs
+
+

@@ -25,7 +25,7 @@ class VehiclePropertyStore {
 
 
 
-//  @/work/workcodes/aosp-p9.x-auto-alpha/hardware/interfaces/automotive/vehicle/2.0/default/common/src/VehiclePropertyStore.cpp
+//  hardware/interfaces/automotive/vehicle/2.0/default/common/src/VehiclePropertyStore.cpp
 //  tokenFunc 默认参数为null
 void VehiclePropertyStore::registerProperty(const VehiclePropConfig& config,VehiclePropertyStore::TokenFunction tokenFunc) {
     MuxGuard g(mLock);
