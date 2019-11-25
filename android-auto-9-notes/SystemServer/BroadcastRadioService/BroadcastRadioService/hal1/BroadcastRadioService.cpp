@@ -25,6 +25,9 @@ static void nativeFinalize(JNIEnv *env, jobject obj, jlong nativeContext) {
 static jobject nativeLoadModules(JNIEnv *env, jobject obj, jlong nativeContext) {
     ALOGV("%s", __func__);
     lock_guard<mutex> lk(gContextMutex);
+    /**
+     * auto nativeContext = new ServiceContext();
+    */
     auto& ctx = getNativeContext(nativeContext);
 
     // Get list of registered HIDL HAL implementations.
@@ -34,8 +37,7 @@ static jobject nativeLoadModules(JNIEnv *env, jobject obj, jlong nativeContext) 
         ALOGE("Can't reach service manager, using default service implementation only");
         services = std::vector<hidl_string>({ "default" });
     } else {
-        manager->listByInterface(V1_0::IBroadcastRadioFactory::descriptor,
-                [&services](const hidl_vec<hidl_string> &registered) {
+        manager->listByInterface(V1_0::IBroadcastRadioFactory::descriptor,[&services](const hidl_vec<hidl_string> &registered) {
             services = registered;
         });
     }

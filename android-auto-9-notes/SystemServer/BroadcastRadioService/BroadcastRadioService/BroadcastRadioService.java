@@ -28,3 +28,27 @@ public class BroadcastRadioService extends SystemService {
     }
 
 }
+
+
+private class ServiceImpl extends IRadioService.Stub {
+
+    @Override
+    public List<RadioManager.ModuleProperties> listModules() {
+        enforcePolicyAccess();
+        synchronized (mLock) {
+            if (mModules != null) return mModules;
+            /***
+             * private final com.android.server.broadcastradio.hal1.BroadcastRadioService mHal1 = new com.android.server.broadcastradio.hal1.BroadcastRadioService();
+             */
+            mModules = mHal1.loadModules();
+             /***
+             * private final com.android.server.broadcastradio.hal2.BroadcastRadioService mHal2 = new com.android.server.broadcastradio.hal2.BroadcastRadioService();
+             */
+            mModules.addAll(mHal2.loadModules(getNextId(mModules)));
+
+            return mModules;
+        }
+    }
+
+
+}
