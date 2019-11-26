@@ -12,16 +12,6 @@ static jlong nativeInit(JNIEnv *env, jobject obj) {
 }
 
 
-static void nativeFinalize(JNIEnv *env, jobject obj, jlong nativeContext) {
-    ALOGV("%s", __func__);
-    lock_guard<mutex> lk(gContextMutex);
-
-    auto ctx = reinterpret_cast<ServiceContext*>(nativeContext);
-    delete ctx;
-}
-
-
-
 static jobject nativeLoadModules(JNIEnv *env, jobject obj, jlong nativeContext) {
     ALOGV("%s", __func__);
     lock_guard<mutex> lk(gContextMutex);
@@ -34,8 +24,7 @@ static jobject nativeLoadModules(JNIEnv *env, jobject obj, jlong nativeContext) 
         ALOGE("Can't reach service manager, using default service implementation only");
         services = std::vector<hidl_string>({ "default" });
     } else {
-        manager->listByInterface(V1_0::IBroadcastRadioFactory::descriptor,
-                [&services](const hidl_vec<hidl_string> &registered) {
+        manager->listByInterface(V1_0::IBroadcastRadioFactory::descriptor,[&services](const hidl_vec<hidl_string> &registered) {
             services = registered;
         });
     }
@@ -43,6 +32,9 @@ static jobject nativeLoadModules(JNIEnv *env, jobject obj, jlong nativeContext) 
     // Scan provided list for actually implemented modules.
     ctx.mModules.clear();
     auto jModules = make_javaref(env, env->NewObject(gjni.ArrayList.clazz, gjni.ArrayList.cstor));
+    /**
+     * 
+    */
     for (auto&& serviceName : services) {
         ALOGV("checking service: %s", serviceName.c_str());
 
@@ -58,7 +50,13 @@ static jobject nativeLoadModules(JNIEnv *env, jobject obj, jlong nativeContext) 
             halRev = HalRevision::V1_1;
             halMinor = 1;
         }
-
+        /*
+        const std::vector<Class> gAllClasses = {
+            Class::AM_FM,
+            Class::SAT,
+            Class::DT,
+        };
+        */
         // Second level of scanning - that's unfortunate.
         for (auto&& clazz : gAllClasses) {
             sp<V1_0::IBroadcastRadio> module10 = nullptr;
@@ -68,8 +66,7 @@ static jobject nativeLoadModules(JNIEnv *env, jobject obj, jlong nativeContext) 
                     module10 = module;
                     module11 = V1_1::IBroadcastRadio::castFrom(module).withDefault(nullptr);
                 } else if (res != Result::INVALID_ARGUMENTS) {
-                    ALOGE("couldn't load %s:%s module",
-                            serviceName.c_str(), V1_0::toString(clazz).c_str());
+                    ALOGE("couldn't load %s:%s module",serviceName.c_str(), V1_0::toString(clazz).c_str());
                 }
             });
             if (module10 == nullptr) continue;
@@ -77,8 +74,7 @@ static jobject nativeLoadModules(JNIEnv *env, jobject obj, jlong nativeContext) 
             auto idx = ctx.mModules.size();
             ctx.mModules.push_back({module10, halRev, {}});
             auto& nModule = ctx.mModules[idx];
-            ALOGI("loaded broadcast radio module %zu: %s:%s (HAL 1.%d)",
-                    idx, serviceName.c_str(), V1_0::toString(clazz).c_str(), halMinor);
+            ALOGI("loaded broadcast radio module %zu: %s:%s (HAL 1.%d)",idx, serviceName.c_str(), V1_0::toString(clazz).c_str(), halMinor);
 
             JavaRef<jobject> jModule = nullptr;
             Result halResult = Result::OK;
@@ -104,6 +100,19 @@ static jobject nativeLoadModules(JNIEnv *env, jobject obj, jlong nativeContext) 
 
     return jModules.release();
 }
+
+
+static void nativeFinalize(JNIEnv *env, jobject obj, jlong nativeContext) {
+    ALOGV("%s", __func__);
+    lock_guard<mutex> lk(gContextMutex);
+
+    auto ctx = reinterpret_cast<ServiceContext*>(nativeContext);
+    delete ctx;
+}
+
+
+
+
 
 static jobject nativeOpenTuner(JNIEnv *env, jobject obj, long nativeContext, jint moduleId,
         jobject bandConfig, bool withAudio, jobject callback) {
@@ -143,8 +152,7 @@ static jobject nativeOpenTuner(JNIEnv *env, jobject obj, long nativeContext, jin
         if (fmIt != module.bands.end()) bandConfigHal = *fmIt;
 
         if (bandConfigHal.spacings.size() > 1) {
-            bandConfigHal.spacings = hidl_vec<uint32_t>({ *std::min_element(
-                    bandConfigHal.spacings.begin(), bandConfigHal.spacings.end()) });
+            bandConfigHal.spacings = hidl_vec<uint32_t>({ *std::min_element(bandConfigHal.spacings.begin(), bandConfigHal.spacings.end()) });
         }
     }
 

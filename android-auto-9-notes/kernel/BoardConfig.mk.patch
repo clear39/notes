@@ -1,0 +1,19 @@
+diff --git a/imx8q/autolink_8q/BoardConfig.mk b/imx8q/autolink_8q/BoardConfig.mk
+index 06e997b..c9111e4 100755
+--- a/imx8q/autolink_8q/BoardConfig.mk
++++ b/imx8q/autolink_8q/BoardConfig.mk
+@@ -76,14 +76,6 @@ BOARD_VENDOR_KERNEL_MODULES += \
+ ifeq ($(PRODUCT_IMX_CAR_M4),true)
+ BOARD_VENDOR_KERNEL_MODULES += \
+                             $(KERNEL_OUT)/drivers/hid/usbhid/usbhid.ko \
+-                            $(KERNEL_OUT)/drivers/usb/cdns3/cdns3.ko \
+-                            $(KERNEL_OUT)/drivers/usb/chipidea/ci_hdrc.ko \
+-                            $(KERNEL_OUT)/drivers/usb/chipidea/ci_hdrc_imx.ko \
+-                            $(KERNEL_OUT)/drivers/usb/chipidea/usbmisc_imx.ko \
+-                            $(KERNEL_OUT)/drivers/usb/core/usbcore.ko \
+-                            $(KERNEL_OUT)/drivers/usb/host/xhci-hcd.ko \
+-                            $(KERNEL_OUT)/drivers/usb/host/ehci-hcd.ko \
+-                            $(KERNEL_OUT)/drivers/usb/storage/usb-storage.ko \
+                             $(KERNEL_OUT)/drivers/gpu/drm/bridge/ds90ub94x.ko \
+                             $(KERNEL_OUT)/drivers/gpu/imx/imx8_prg.ko \
+                             $(KERNEL_OUT)/drivers/gpu/imx/imx8_dprc.ko \

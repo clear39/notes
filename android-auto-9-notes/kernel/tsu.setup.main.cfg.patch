@@ -1,0 +1,18 @@
+diff --git a/imx8q/autolink_8q/tsu.setup.main.cfg b/imx8q/autolink_8q/tsu.setup.main.cfg
+index 05ca917..6d1fb7f 100755
+--- a/imx8q/autolink_8q/tsu.setup.main.cfg
++++ b/imx8q/autolink_8q/tsu.setup.main.cfg
+@@ -1,13 +1,4 @@
+ insmod /vendor/lib/modules/mx8_bt_rfkill.ko
+-insmod /vendor/lib/modules/usbcore.ko
+-insmod /vendor/lib/modules/usbhid.ko
+-insmod /vendor/lib/modules/xhci-hcd.ko
+-insmod /vendor/lib/modules/cdns3.ko
+-insmod /vendor/lib/modules/ehci-hcd.ko
+-insmod /vendor/lib/modules/usbmisc_imx.ko
+-insmod /vendor/lib/modules/ci_hdrc.ko
+-insmod /vendor/lib/modules/ci_hdrc_imx.ko
+-insmod /vendor/lib/modules/usb-storage.ko
+ insmod /vendor/lib/modules/sd_mod.ko
+ insmod /vendor/lib/modules/usbserial.ko
+ insmod /vendor/lib/modules/usb_wwan.ko

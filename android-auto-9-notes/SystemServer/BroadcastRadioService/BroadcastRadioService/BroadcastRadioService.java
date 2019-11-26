@@ -7,6 +7,9 @@ public class BroadcastRadioService extends SystemService {
             boolean withAudio, ITunerCallback callback) throws RemoteException {
 
         if (DEBUG) Slog.i(TAG, "Opening module " + moduleId);
+        /**
+         * 权限确认
+         */
         enforcePolicyAccess();
         if (callback == null) {
             throw new IllegalArgumentException("Callback must not be empty");
@@ -21,9 +24,25 @@ public class BroadcastRadioService extends SystemService {
 
     }
 
-    private void enforcePolicyAccess() {
-        if (PackageManager.PERMISSION_GRANTED != getContext().checkCallingPermission(Manifest.permission.ACCESS_BROADCAST_RADIO)) {
-            throw new SecurityException("ACCESS_BROADCAST_RADIO permission not granted");
+}
+
+
+private class ServiceImpl extends IRadioService.Stub {
+
+    /**
+     * RadioManagerExt.initModules()
+     * --> mRadioManager.listModules(mModules);
+     */
+    @Override
+    public List<RadioManager.ModuleProperties> listModules() {
+        enforcePolicyAccess();
+        synchronized (mLock) {
+            if (mModules != null) return mModules;
+
+            mModules = mHal1.loadModules();
+            mModules.addAll(mHal2.loadModules(getNextId(mModules)));
+
+            return mModules;
         }
     }
 

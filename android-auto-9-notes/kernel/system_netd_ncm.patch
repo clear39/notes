@@ -1,0 +1,25 @@
+diff --git a/server/NetlinkHandler.cpp b/server/NetlinkHandler.cpp
+index 2bc9c279..67f79f34 100644
+--- a/server/NetlinkHandler.cpp
++++ b/server/NetlinkHandler.cpp
+@@ -195,6 +195,20 @@ void NetlinkHandler::notify(int code, const char *format, ...) {
+ 
+ void NetlinkHandler::notifyInterfaceAdded(const char *name) {
+     notify(ResponseCode::InterfaceChange, "Iface added %s", name);
++    ALOGE("wincao notifyInterfaceAdded into name = %s \n",name);
++    /* add by win for carplay */
++    int ret = 0;
++    if (!strcmp("usb0",name)) {
++        //ret = system("/system/bin/dhcpcd usb0");
++        //ALOGE("wincao start dhcpd ret = [%d] ... \n",ret);
++        //ret = system("ip -6 route add ::/0 dev_usb0");
++        //ALOGE("wincao start add route ipv6 ret = [%d] ... \n",ret);
++        ret = system("ifconfig usb0 192.168.2.2 up");
++        ALOGE("wincao ifconfig usb0 ret = [%d] ... \n",ret);
++        ret = system("ip route add default dev usb0 table legacy_system");
++        ALOGE("wincao ip route add default dev usb0 table legacy_system  ret = [%d]\n",ret);
++    }
++    /* end for carplay */
+ }
+ 
+ void NetlinkHandler::notifyInterfaceRemoved(const char *name) {

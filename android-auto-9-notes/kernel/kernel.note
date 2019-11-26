@@ -1,0 +1,11 @@
+# 拷贝 menuconfig.sh 到 vendor/nxp-opensource/kernel_imx/ 目录下，直接运行该脚本，配置内核".config"文件
+# 生成的“.config” 文件在 vendor/nxp-opensource/kernel_imx/out 目录下
+cp menuconfig.sh    vendor/nxp-opensource/kernel_imx/
+
+
+# 将 vendor/nxp-opensource/kernel_imx/out/.config 拷贝到  vendor/nxp-opensource/kernel_imx/arch/arm64/configs/autolink_android_car_defconfig
+cp vendor/nxp-opensource/kernel_imx/out/.config   vendor/nxp-opensource/kernel_imx/arch/arm64/configs/autolink_android_car_defconfig
+
+# 进行make编译后
+# 用 out/target/product/autolink_8q/obj/KERNEL_OBJ/.config vendor/nxp-opensource/kernel_imx/out/.config 文件进行对比
+# 即可知道当前配置了那些属性

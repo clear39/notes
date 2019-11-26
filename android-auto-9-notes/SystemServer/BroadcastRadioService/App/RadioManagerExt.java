@@ -65,5 +65,18 @@ public class RadioManagerExt {
         }
     }
 
+
+    /* Select only one region. HAL 2.x moves region selection responsibility from the app to the
+     * Broadcast Radio service, so we won't implement region selection based on bands in the app.
+     */
+    private @Nullable List<BandDescriptor> reduceAmFmBands(@Nullable BandDescriptor[] bands) {
+        if (bands == null || bands.length == 0) return null;
+        int region = bands[0].getRegion();
+        Log.d(TAG, "Auto-selecting region " + region);
+
+        return Arrays.stream(bands).filter(band -> band.getRegion() == region).
+                collect(Collectors.toList());
+    }
+
     
 }
