@@ -15,6 +15,9 @@ static jlong nativeInit(JNIEnv *env, jobject obj) {
 static jobject nativeLoadModules(JNIEnv *env, jobject obj, jlong nativeContext) {
     ALOGV("%s", __func__);
     lock_guard<mutex> lk(gContextMutex);
+    /**
+     * auto nativeContext = new ServiceContext();
+    */
     auto& ctx = getNativeContext(nativeContext);
 
     // Get list of registered HIDL HAL implementations.
