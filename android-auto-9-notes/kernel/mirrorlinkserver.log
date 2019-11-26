@@ -1,0 +1,165 @@
+autolink_8q:/ # lsof -p 2928
+COMMAND     PID       USER   FD      TYPE             DEVICE  SIZE/OFF       NODE NAME
+mirrorlinkserve  2928       root  cwd       DIR              253,0      4096          2 /
+mirrorlinkserve  2928       root  rtd       DIR              253,0      4096          2 /
+mirrorlinkserve  2928       root  txt       REG              253,0    134384       1863 /system/bin/mirrorlinkserver
+mirrorlinkserve  2928       root  mem       REG              253,0    134384       1863 /system/bin/mirrorlinkserver
+mirrorlinkserve  2928       root  mem   unknown                                         /dev/ashmem/AudioFlinger::Client(2928) (deleted)
+mirrorlinkserve  2928       root  mem       CHR              10,59                12586 /dev/binder
+mirrorlinkserve  2928       root  mem       REG              253,0    133912        393 /system/lib64/libaupnp.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68352        100 /system/lib64/libalesosal.so
+mirrorlinkserve  2928       root  mem       REG              253,0    136488        564 /system/lib64/libbufferhubqueue.so
+mirrorlinkserve  2928       root  mem       REG              253,0    134912        566 /system/lib64/libbase.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68112        406 /system/lib64/libmsg_wrapper.so
+mirrorlinkserve  2928       root  mem       REG              253,0    134040        712 /system/lib64/libz.so
+mirrorlinkserve  2928       root  mem       REG              253,0    133736        114 /system/lib64/libavncs.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68792        376 /system/lib64/libprotobuf-c.so
+mirrorlinkserve  2928       root  mem       REG              253,0    399840        567 /system/lib64/libcamera_client.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68192        578 /system/lib64/libsync.so
+mirrorlinkserve  2928       root  mem       REG              253,0    266456        344 /system/lib64/libxmlsec1-openssl.so
+mirrorlinkserve  2928       root  mem       REG              253,0   1126600         62 /system/lib64/libc.so
+mirrorlinkserve  2928       root  mem       REG              253,0    201040        685 /system/lib64/libhidlbase.so
+mirrorlinkserve  2928       root  mem       REG              253,0    535928        601 /system/lib64/android.hardware.media.omx@1.0.so
+mirrorlinkserve  2928       root  mem       REG              253,0    417112        116 /system/lib64/libssl_mls.so
+mirrorlinkserve  2928       root  mem       REG              253,0    134200        370 /system/lib64/libaudioutils.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68120        463 /system/lib64/libmls_iface.so
+mirrorlinkserve  2928       root  mem       REG              253,0    316336        694 /system/lib64/libdexfile.so
+mirrorlinkserve  2928       root  mem       REG              253,0    201336        455 /system/lib64/libexpat.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68176        467 /system/lib64/libhardware.so
+mirrorlinkserve  2928       root  mem       REG              253,0    135704        396 /system/lib64/android.hidl.token@1.0.so
+mirrorlinkserve  2928       root  mem       REG              253,0     69752        700 /system/lib64/libspeexresampler.so
+mirrorlinkserve  2928       root  mem       REG              253,0    331096        397 /system/lib64/libRScpp.so
+mirrorlinkserve  2928       root  mem       REG              253,0    534280        380 /system/lib64/libaudioclient.so
+mirrorlinkserve  2928       root  mem       REG              253,0    201840        435 /system/lib64/android.hidl.memory@1.0.so
+mirrorlinkserve  2928       root  mem       REG              253,0    266152         80 /system/lib64/libxslt.so
+mirrorlinkserve  2928       root  mem       REG              253,0    332024        642 /system/lib64/libunwindstack.so
+mirrorlinkserve  2928       root  mem       REG              253,0   1519696        313 /system/lib64/libxml2_mls.so
+mirrorlinkserve  2928       root  mem       REG              253,0     67992        103 /system/lib64/android.hardware.graphics.common@1.1.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68152        495 /system/lib64/libmls_plat_touch.so
+mirrorlinkserve  2928       root  mem       REG              253,0    135904        597 /system/lib64/android.hardware.cas.native@1.0.so
+mirrorlinkserve  2928       root  mem       REG              253,0    333040        337 /system/lib64/libjpeg.so
+mirrorlinkserve  2928       root  mem       REG              253,0    267376        710 /system/lib64/libupnp.so
+mirrorlinkserve  2928       root  mem       REG              253,0    269808         77 /system/lib64/libmedia_omx.so
+mirrorlinkserve  2928       root  mem       REG              253,0     72816        591 /system/lib64/libcamera_metadata.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68808        598 /system/lib64/libstagefright_codecbase.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68488        692 /system/lib64/libscreenrecord.so
+mirrorlinkserve  2928       root  mem       REG              253,0   1624456        449 /system/lib64/libcrypto.so.1.0.0
+mirrorlinkserve  2928       root  mem       REG              253,0     68304        612 /system/lib64/libnetd_client.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68112        373 /system/lib64/libmls_rtpc.so
+mirrorlinkserve  2928       root  mem       REG              253,0    135896        680 /system/lib64/android.hardware.graphics.allocator@2.0.so
+mirrorlinkserve  2928       root  mem       REG              253,0    398176        632 /system/lib64/libsonivox.so
+mirrorlinkserve  2928       root  mem       REG              253,0    417112         70 /system/lib64/libssl.so.1.0.0
+mirrorlinkserve  2928       root  mem       REG              253,0     68744        336 /system/lib64/android.hidl.token@1.0-utils.so
+mirrorlinkserve  2928       root  mem       REG              253,0    666536         89 /system/lib64/libgui.so
+mirrorlinkserve  2928       root  mem       REG              253,0     69152        371 /system/lib64/libmediautils.so
+mirrorlinkserve  2928       root  mem       REG              253,0     67992        314 /system/lib64/android.hardware.graphics.common@1.0.so
+mirrorlinkserve  2928       root  mem       REG              253,0    201784        453 /system/lib64/libhwbinder.so
+mirrorlinkserve  2928       root  mem       REG              253,0    202024        457 /system/lib64/libmemunreachable.so
+mirrorlinkserve  2928       root  mem       REG              253,0    136784        363 /system/lib64/android.hardware.configstore@1.1.so
+mirrorlinkserve  2928       root  mem       REG              253,0    535616         95 /system/lib64/libmedia.so
+mirrorlinkserve  2928       root  mem       REG              253,0     69056        401 /system/lib64/libstagefright_xmlparser.so
+mirrorlinkserve  2928       root  mem       REG              253,0    397240        716 /system/lib64/libxmlsec1.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68296        621 /system/lib64/libgraphicsenv.so
+mirrorlinkserve  2928       root  mem       REG              253,0   2580392        683 /system/lib64/libicui18n.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68184        354 /system/lib64/libmls_plat_hardkey.so
+mirrorlinkserve  2928       root  mem       REG              253,0    134312         73 /system/lib64/libmedia_helper.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68128        475 /system/lib64/libnativewindow.so
+mirrorlinkserve  2928       root  mem       REG              253,0   2250336        688 /system/lib64/libtspi.so.1
+mirrorlinkserve  2928       root  mem       REG              253,0     68792        702 /system/lib64/libhidlmemory.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68336         88 /system/lib64/librpcserver.so
+mirrorlinkserve  2928       root  mem       REG              253,0    598432        668 /system/lib64/libbinder.so
+mirrorlinkserve  2928       root  mem       REG              253,0    468392        611 /system/lib64/libhidltransport.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68192        309 /system/lib64/libion.so
+mirrorlinkserve  2928       root  mem       REG              253,0    203480         84 /system/lib64/libEGL.so
+mirrorlinkserve  2928       root  mem       REG              253,0    134592        697 /system/lib64/libbacktrace.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68136        709 /system/lib64/libmls_plat_audio_out.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68280        633 /system/lib64/libvndksupport.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68208        362 /system/lib64/android.hardware.configstore-utils.so
+mirrorlinkserve  2928       root  mem       REG              253,0   1624456        658 /system/lib64/libcrypto_mls.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68008        583 /system/lib64/android.hardware.media@1.0.so
+mirrorlinkserve  2928       root  mem       REG              253,0    133568         67 /system/lib64/libGLESv2.so
+mirrorlinkserve  2928       root  mem       REG              253,0   1258248        126 /system/lib64/libstagefright.so
+mirrorlinkserve  2928       root  mem       REG              253,0    265464        507 /system/lib64/libm.so
+mirrorlinkserve  2928       root  mem       REG              253,0     67496        346 /system/lib64/libdl.so
+mirrorlinkserve  2928       root  mem       REG              253,0    397824        372 /system/lib64/libcurl.so
+mirrorlinkserve  2928       root  mem       REG              253,0    465184        667 /system/lib64/libpdx_default_transport.so
+mirrorlinkserve  2928       root  mem       REG              253,0    139120        360 /system/lib64/libmls_certmgr.so
+mirrorlinkserve  2928       root  mem       REG              253,0   1190728        679 /system/lib64/libcrypto.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68200        445 /system/lib64/libmls_devmgr.so
+mirrorlinkserve  2928       root  mem       REG              253,0     69112         92 /system/lib64/libmediaextractor.so
+mirrorlinkserve  2928       root  mem       REG              253,0    135872        616 /system/lib64/android.hidl.allocator@1.0.so
+mirrorlinkserve  2928       root  mem       REG              253,0   1786552        565 /system/lib64/libicuuc.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68720        434 /system/lib64/libaudiomanager.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68104        581 /system/lib64/libhidlallocatorutils.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68952        377 /system/lib64/libutilscallstack.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68112        361 /system/lib64/libmls_rtps.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68112        359 /system/lib64/libmls_plat_screen.so
+mirrorlinkserve  2928       root  mem       REG              253,0    200816        452 /system/lib64/libdrmframework.so
+mirrorlinkserve  2928       root  mem       REG              253,0    136312        111 /system/lib64/android.hardware.graphics.mapper@2.0.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68128        703 /system/lib64/libmls_plat_connection.so
+mirrorlinkserve  2928       root  mem       REG              253,0    926864        378 /system/lib64/libc++.so
+mirrorlinkserve  2928       root  mem       REG              253,0    202584        663 /system/lib64/android.hardware.configstore@1.0.so
+mirrorlinkserve  2928       root  mem       REG              253,0    200312         94 /system/lib64/liblzma.so
+mirrorlinkserve  2928       root  mem       REG              253,0    134944        648 /system/lib64/libcutils.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68216        681 /system/lib64/libmls_dapmgr.so
+mirrorlinkserve  2928       root  mem       REG              253,0    136800        107 /system/lib64/liblog.so
+mirrorlinkserve  2928       root  mem       REG              253,0    334928        462 /system/lib64/android.hardware.cas@1.0.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68112        646 /system/lib64/librle.so
+mirrorlinkserve  2928       root  mem       REG              253,0    134920        701 /system/lib64/libutils.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68200        425 /system/lib64/libmls_audmgr.so
+mirrorlinkserve  2928       root  mem       REG              253,0    337936        335 /system/lib64/libssl.so
+mirrorlinkserve  2928       root  mem       REG              253,0    136536        383 /system/lib64/android.hardware.graphics.mapper@2.1.so
+mirrorlinkserve  2928       root  mem       REG              253,0     69432        422 /system/lib64/libmediametrics.so
+mirrorlinkserve  2928       root  mem       REG              253,0    269720        561 /system/lib64/android.hardware.graphics.bufferqueue@1.0.so
+mirrorlinkserve  2928       root  mem       REG              253,0    201568        655 /system/lib64/libstagefright_foundation.so
+mirrorlinkserve  2928       root  mem       REG              253,0    201632        644 /system/lib64/libui.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68208         93 /system/lib64/libmls_dispmgr.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68104        557 /system/lib64/libmls_plat_dhcp.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68680        638 /system/lib64/libziparchive.so
+mirrorlinkserve  2928       root  mem       REG              253,0    135120        603 /system/lib64/libunwind.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68232        498 /system/lib64/libstdc++.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68024        441 /system/lib64/libmls_plat_dap.so
+mirrorlinkserve  2928       root  mem       REG              253,0     68720        474 /system/lib64/libstagefright_omx_utils.so
+mirrorlinkserve  2928       root  mem       REG              253,0    135696        331 /system/lib64/android.hidl.memory.token@1.0.so
+mirrorlinkserve  2928       root  mem       REG               0,19    131072       8259 /dev/__properties__/u:object_r:exported_system_prop:s0
+mirrorlinkserve  2928       root  mem       REG               0,19    131072       8231 /dev/__properties__/u:object_r:debug_prop:s0
+mirrorlinkserve  2928       root  mem       REG               0,19    131072       8270 /dev/__properties__/u:object_r:log_tag_prop:s0
+mirrorlinkserve  2928       root  mem       REG               0,19    131072       8271 /dev/__properties__/u:object_r:logd_prop:s0
+mirrorlinkserve  2928       root  mem       REG               0,19    131072       8269 /dev/__properties__/u:object_r:log_prop:s0
+mirrorlinkserve  2928       root  mem       REG               0,19    131072       8240 /dev/__properties__/u:object_r:exported2_default_prop:s0
+mirrorlinkserve  2928       root  mem       REG               0,19    131072       8306 /dev/__properties__/properties_serial
+mirrorlinkserve  2928       root  mem       REG               0,19     34728       8207 /dev/__properties__/property_info
+mirrorlinkserve  2928       root  mem       REG               0,19    131072       8251 /dev/__properties__/u:object_r:exported_default_prop:s0
+mirrorlinkserve  2928       root  mem       REG               0,19    131072       8231 /dev/__properties__/u:object_r:debug_prop:s0
+mirrorlinkserve  2928       root  mem       REG               0,19    131072       8306 /dev/__properties__/properties_serial
+mirrorlinkserve  2928       root  mem       REG              253,0   1741568       2017 /system/bin/linker64
+mirrorlinkserve  2928       root  mem       REG               0,19     34728       8207 /dev/__properties__/property_info
+mirrorlinkserve  2928       root    0u      CHR                1,3       0t0       7491 /dev/null
+mirrorlinkserve  2928       root    1u      CHR                1,3       0t0       7491 /dev/null
+mirrorlinkserve  2928       root    2u      CHR                1,3       0t0       7491 /dev/null
+mirrorlinkserve  2928       root    3u  netlink                          0t0      29810 KOBJECT_UEVENT
+mirrorlinkserve  2928       root    4w      CHR             10,223       0t0      12595 /dev/uinput
+mirrorlinkserve  2928       root    5w      CHR             10,223       0t0      12595 /dev/uinput
+mirrorlinkserve  2928       root    6r     FIFO               0,11       0t0      29812 pipe:[29812]
+mirrorlinkserve  2928       root    7w     FIFO               0,11       0t0      29812 pipe:[29812]
+mirrorlinkserve  2928       root    8u     unix                          0t0      29814 socket
+mirrorlinkserve  2928       root    9u      CHR              10,59       0t0      12586 /dev/binder
+mirrorlinkserve  2928       root   10u      CHR              10,60       0t0      12596 /dev/ashmem
+mirrorlinkserve  2928       root   11u      CHR              10,60       0t0      12596 /dev/ashmem
+mirrorlinkserve  2928       root   12u     unix                          0t0      22408 /data/data/com.mirrorlink.android.service/files/SocketAh
+mirrorlinkserve  2928       root   13u     unix                          0t0      22409 /data/data/com.mirrorlink.android.service/files/SocketAh_internal2928
+mirrorlinkserve  2928       root   14u     unix                          0t0      22410 /data/data/com.mirrorlink.android.service/files/SocketAh_internal2928
+mirrorlinkserve  2928       root   15u     unix                          0t0      29063 socket
+mirrorlinkserve  2928       root   16u     unix                          0t0      29064 /data/data/com.mirrorlink.android.service/files/SocketApi
+mirrorlinkserve  2928       root   17u     unix                          0t0      29065 /data/data/com.mirrorlink.android.service/files/SocketApi_internal2928
+mirrorlinkserve  2928       root   18u     unix                          0t0      29066 /data/data/com.mirrorlink.android.service/files/SocketApi_internal2928
+mirrorlinkserve  2928       root   19u     unix                          0t0      29067 socket
+mirrorlinkserve  2928       root   20u     unix                          0t0      29159 /data/data/com.mirrorlink.android.service/files/SocketAh
+mirrorlinkserve  2928       root   21u     unix                          0t0      30798 /data/data/com.mirrorlink.android.service/files/SocketApi
+mirrorlinkserve  2928       root   22r     FIFO               0,11       0t0      23006 pipe:[23006]
+mirrorlinkserve  2928       root   23w     FIFO               0,11       0t0      23006 pipe:[23006]
+mirrorlinkserve  2928       root   24u     IPv4                          0t0      23010 TCP :49152->:0 (LISTEN)
+mirrorlinkserve  2928       root   25u     IPv4                          0t0      23011 UDP :45232->:0
+mirrorlinkserve  2928       root   26u     sock                          0t0      23012 socket:[23012]
+mirrorlinkserve  2928       root   27u     IPv4                          0t0      23013 UDP :1900->:0
+autolink_8q:/ # 
