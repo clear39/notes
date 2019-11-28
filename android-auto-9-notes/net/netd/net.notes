@@ -21,6 +21,17 @@ console:/ # cat /data/misc/net/rt_tables
 1003 wlan0
 
 
+cd /config/usb_gadget/g1
+echo "" > UDC
+mkdir functions/ncm.usb0
+ln -s functions/ncm.usb0 configs/b.1
+echo ci_hdrc.0 > UDC
+ifconfig usb0 192.168.2.2 up
+echo 0x0001 > idProduct
+echo 0x2c7a > idVendor
+ip route add default dev usb0 table main
+
+
 
 //  ip rule策略路由
 ip rule add from all table 200 pref 30000
