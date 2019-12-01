@@ -29,7 +29,7 @@ echo ci_hdrc.0 > UDC
 ifconfig usb0 192.168.2.2 up
 echo 0x0001 > idProduct
 echo 0x2c7a > idVendor
-ip route add default dev usb0 table main
+ip route add default dev usb0 table legacy_system
 
 
 
