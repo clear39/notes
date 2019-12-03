@@ -1,0 +1,300 @@
+
+#ifndef NTPD_H
+#define NTPD_H 1
+
+
+#include "config.h"
+
+#include <stdio.h>
+#include <ctype.h>
+#include <dirent.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <inttypes.h>
+#include <netdb.h>
+#include <setjmp.h>
+#include <signal.h>
+#include <paths.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <sys/time.h>
+#include <string.h>
+#include <stdarg.h>
+#include <time.h>
+
+
+
+
+struct globals *const ptr_to_globals;
+
+
+
+
+/* Having next pointer as a first member allows easy creation
+ * of "llist-compatible" structs, and using llist_FOO functions
+ * on them.
+ */
+typedef struct llist_t {
+	struct llist_t *link;
+	char *data;
+} llist_t;
+
+
+void llist_add_to(llist_t **old_head, void *data) FAST_FUNC;
+void llist_add_to_end(llist_t **list_head, void *data) FAST_FUNC;
+void *llist_pop(llist_t **elm) FAST_FUNC;
+void llist_unlink(llist_t **head, llist_t *elm) FAST_FUNC;
+void llist_free(llist_t *elm, void (*freeit)(void *data)) FAST_FUNC;
+llist_t *llist_rev(llist_t *list) FAST_FUNC;
+llist_t *llist_find_str(llist_t *first, const char *str) FAST_FUNC;
+
+
+typedef int smallint;
+typedef unsigned smalluint;
+
+typedef struct len_and_sockaddr {
+	socklen_t len;
+	union {
+		struct sockaddr sa;
+		struct sockaddr_in sin;
+#if ENABLE_FEATURE_IPV6
+		struct sockaddr_in6 sin6;
+#endif
+	} u;
+} len_and_sockaddr;
+enum {
+	LSA_LEN_SIZE = offsetof(len_and_sockaddr, u),
+	LSA_SIZEOF_SA = sizeof(
+		union {
+			struct sockaddr sa;
+			struct sockaddr_in sin;
+#if ENABLE_FEATURE_IPV6
+			struct sockaddr_in6 sin6;
+#endif
+		}
+	)
+};
+
+
+
+
+#define SET_PTR_TO_GLOBALS(x) do { \
+        (*(struct globals**)&ptr_to_globals) = (void*)(x); \
+        barrier(); \
+} while (0)
+
+
+
+
+
+uint32_t option_mask32;
+
+static char* strftime_fmt(char *buf, unsigned len, time_t *tp, const char *fmt)
+{
+        time_t t;
+        if (!tp) {
+                tp = &t;
+                time(tp);
+        }
+        /* Returns pointer to NUL  */
+        return buf + strftime(buf, len, fmt, localtime(tp));
+}
+
+
+
+char* FAST_FUNC strftime_YYYYMMDDHHMMSS(char *buf, unsigned len, time_t *tp)
+{
+        return strftime_fmt(buf, len, tp, "%Y-%m-%d %H:%M:%S");
+}
+
+
+
+char* FAST_FUNC xasprintf(const char *format, ...)
+{
+        va_list p;
+        int r;
+        char *string_ptr;
+
+        va_start(p, format);
+        r = vasprintf(&string_ptr, format, p);
+        va_end(p);
+
+        if (r < 0)
+            ALOGE("xasprintf exec fail.");
+        return string_ptr;
+}
+
+int FAST_FUNC setsockopt_int(int fd, int level, int optname, int optval)
+{
+    return setsockopt(fd, level, optname, &optval, sizeof(int));
+}
+
+
+void* FAST_FUNC xmalloc(size_t size)
+{
+        void *ptr = malloc(size);
+        if (ptr == NULL && size != 0)
+            ALOGE("malloc size:%ld fail.",size);
+        return ptr;
+}
+
+
+void* FAST_FUNC xzalloc(size_t size)
+{
+        void *ptr = xmalloc(size);
+        memset(ptr, 0, size);
+        return ptr;
+}
+
+
+/* host: "1.2.3.4[:port]", "www.google.com[:port]"
+ * port: if neither of above specifies port # */
+static len_and_sockaddr* str2sockaddr(
+		const char *host, int port,
+IF_FEATURE_IPV6(sa_family_t af,)
+		int ai_flags)
+{
+IF_NOT_FEATURE_IPV6(sa_family_t af = AF_INET;)
+	int rc;
+	len_and_sockaddr *r;
+	struct addrinfo *result = NULL;
+	struct addrinfo *used_res;
+	const char *org_host = host; /* only for error msg */
+	const char *cp;
+	struct addrinfo hint;
+
+	if (ENABLE_FEATURE_UNIX_LOCAL && is_prefixed_with(host, "local:")) {
+		struct sockaddr_un *sun;
+
+		r = xzalloc(LSA_LEN_SIZE + sizeof(struct sockaddr_un));
+		r->len = sizeof(struct sockaddr_un);
+		r->u.sa.sa_family = AF_UNIX;
+		sun = (struct sockaddr_un *)&r->u.sa;
+		safe_strncpy(sun->sun_path, host + 6, sizeof(sun->sun_path));
+		return r;
+	}
+
+	r = NULL;
+
+	/* Ugly parsing of host:addr */
+	if (ENABLE_FEATURE_IPV6 && host[0] == '[') {
+		/* Even uglier parsing of [xx]:nn */
+		host++;
+		cp = strchr(host, ']');
+		if (!cp || (cp[1] != ':' && cp[1] != '\0')) {
+			/* Malformed: must be [xx]:nn or [xx] */
+			ALOGE("bad address '%s'", org_host);
+			if (ai_flags & DIE_ON_ERROR)
+				xfunc_die();
+			return NULL;
+		}
+	} else {
+		cp = strrchr(host, ':');
+		if (ENABLE_FEATURE_IPV6 && cp && strchr(host, ':') != cp) {
+			/* There is more than one ':' (e.g. "::1") */
+			cp = NULL; /* it's not a port spec */
+		}
+	}
+	if (cp) { /* points to ":" or "]:" */
+		int sz = cp - host + 1;
+
+		host = safe_strncpy(alloca(sz), host, sz);
+		if (ENABLE_FEATURE_IPV6 && *cp != ':') {
+			cp++; /* skip ']' */
+			if (*cp == '\0') /* [xx] without port */
+				goto skip;
+		}
+		cp++; /* skip ':' */
+		port = bb_strtou(cp, NULL, 10);
+		if (errno || (unsigned)port > 0xffff) {
+			ALOGE("bad port spec '%s'", org_host);
+			if (ai_flags & DIE_ON_ERROR)
+				xfunc_die();
+			return NULL;
+		}
+ skip: ;
+	}
+
+	/* Next two if blocks allow to skip getaddrinfo()
+	 * in case host name is a numeric IP(v6) address.
+	 * getaddrinfo() initializes DNS resolution machinery,
+	 * scans network config and such - tens of syscalls.
+	 */
+	/* If we were not asked specifically for IPv6,
+	 * check whether this is a numeric IPv4 */
+	IF_FEATURE_IPV6(if(af != AF_INET6)) {
+		struct in_addr in4;
+		if (inet_aton(host, &in4) != 0) {
+			r = xzalloc(LSA_LEN_SIZE + sizeof(struct sockaddr_in));
+			r->len = sizeof(struct sockaddr_in);
+			r->u.sa.sa_family = AF_INET;
+			r->u.sin.sin_addr = in4;
+			goto set_port;
+		}
+	}
+#if ENABLE_FEATURE_IPV6
+	/* If we were not asked specifically for IPv4,
+	 * check whether this is a numeric IPv6 */
+	if (af != AF_INET) {
+		struct in6_addr in6;
+		if (inet_pton(AF_INET6, host, &in6) > 0) {
+			r = xzalloc(LSA_LEN_SIZE + sizeof(struct sockaddr_in6));
+			r->len = sizeof(struct sockaddr_in6);
+			r->u.sa.sa_family = AF_INET6;
+			r->u.sin6.sin6_addr = in6;
+			goto set_port;
+		}
+	}
+#endif
+
+	memset(&hint, 0 , sizeof(hint));
+	hint.ai_family = af;
+	/* Need SOCK_STREAM, or else we get each address thrice (or more)
+	 * for each possible socket type (tcp,udp,raw...): */
+	hint.ai_socktype = SOCK_STREAM;
+	hint.ai_flags = ai_flags & ~DIE_ON_ERROR;
+	rc = getaddrinfo(host, NULL, &hint, &result);
+	if (rc || !result) {
+		ALOGE("bad address '%s'", org_host);
+		if (ai_flags & DIE_ON_ERROR)
+			xfunc_die();
+		goto ret;
+	}
+	used_res = result;
+#if ENABLE_FEATURE_PREFER_IPV4_ADDRESS
+	while (1) {
+		if (used_res->ai_family == AF_INET)
+			break;
+		used_res = used_res->ai_next;
+		if (!used_res) {
+			used_res = result;
+			break;
+		}
+	}
+#endif
+	r = xmalloc(LSA_LEN_SIZE + used_res->ai_addrlen);
+	r->len = used_res->ai_addrlen;
+	memcpy(&r->u.sa, used_res->ai_addr, used_res->ai_addrlen);
+
+ set_port:
+	set_nport(&r->u.sa, htons(port));
+ ret:
+	if (result)
+		freeaddrinfo(result);
+	return r;
+}
+
+
+len_and_sockaddr* FAST_FUNC host2sockaddr(const char *host, int port)
+{
+        return str2sockaddr(host, port, AF_UNSPEC, 0);
+}
+
+
+
+
+
+
+
+
+#endif
