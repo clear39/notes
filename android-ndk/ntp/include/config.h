@@ -22,6 +22,10 @@
 
 #define ENABLE_DEBUG 0
 
+#define ENABLE_FEATURE_NTPD_CONF 1
+
+#define ENABLE_FEATURE_CROND_D 1
+
 #define RETURNS_MALLOC __attribute__ ((malloc))
 #define NORETURN __attribute__ ((__noreturn__))
 #define UNUSED_PARAM __attribute__ ((__unused__))
@@ -29,7 +33,7 @@
 # define FIX_ALIASING __attribute__((__may_alias__))
 
 
-#define GETOPT_RESET() (optind = 0)
+#define ENABLE_LONG_OPTS 1
 
 typedef int smallint;
 

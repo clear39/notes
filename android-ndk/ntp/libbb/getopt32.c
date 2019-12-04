@@ -6,10 +6,12 @@
  *
  * Licensed under GPLv2 or later, see file LICENSE in this source tree.
  */
+#include "libbb.h"
+
 #if ENABLE_LONG_OPTS
 # include <getopt.h>
 #endif
-#include "libbb.h"
+
 
 //kbuild:lib-y += getopt32.o
 
@@ -328,6 +330,10 @@ static const struct option bb_null_long_options[1] = {
 static uint32_t
 vgetopt32(char **argv, const char *applet_opts, const char *applet_long_options, va_list p)
 {
+	ALOGV("vgetopt32 applet_opts:%s",applet_opts);
+#if ENABLE_LONG_OPTS
+	ALOGV("vgetopt32 applet_long_options:%s", applet_long_options );
+#endif
 	int argc;
 	unsigned flags = 0;
 	unsigned requires = 0;
@@ -360,31 +366,33 @@ vgetopt32(char **argv, const char *applet_opts, const char *applet_long_options,
 		applet_opts++;
 		/* point it past terminating NUL */
 		opt_complementary = applet_opts + len;
+		ALOGV("opt_complementary : (%s)",opt_complementary);
 	}
 
 	/* skip another bbox extension */
 	dont_die_flag = applet_opts[0];
+	ALOGV("dont_die_flag: (%c)",dont_die_flag);
 	if (dont_die_flag == '!')
 		applet_opts++;
 
 	applet_opts = strcpy(alloca(len + 1), applet_opts);
-
+	ALOGV("applet_opts : (%s)",applet_opts);
 	/* skip GNU extension */
-	s = (const unsigned char *)applet_opts;
+	s = (const unsigned char *)applet_opts;  // nqNxk:wp:*S:lI:d46aAbgL
 	if (*s == '+' || *s == '-')
 		s++;
 	c = 0;
 	while (*s) {
-		if (c >= 32)
+		if (c >= 32){ //不能超过32个参数
 			break;
+		}
 		on_off->opt_char = *s;
 		on_off->switch_on = (1U << c);
 		if (*++s == ':') {
 			on_off->optarg = va_arg(p, void **);
 			if (s[1] == '+' || s[1] == '*') {
 				/* 'o:+' or 'o:*' */
-				on_off->param_type = (s[1] == '+') ?
-					PARAM_INT : PARAM_LIST;
+				on_off->param_type = (s[1] == '+') ? PARAM_INT : PARAM_LIST;
 				overlapping_strcpy((char*)s + 1, (char*)s + 2);
 			}
 			/* skip possible 'o::' (or 'o:+:' !) */
@@ -436,6 +444,7 @@ vgetopt32(char **argv, const char *applet_opts, const char *applet_long_options,
 		}
 	}
 #endif /* ENABLE_LONG_OPTS */
+	ALOGV("vgetopt32 opt_complementary: (%s)",opt_complementary); // dd:wn:Il
 
 	s = (const unsigned char *)opt_complementary;
 	if (s) for (; *s; s++) {
@@ -521,21 +530,32 @@ vgetopt32(char **argv, const char *applet_opts, const char *applet_long_options,
 	 * run_nofork_applet() does this, but we might end up here
 	 * also via gunzip_main() -> gzip_main(). Play safe.
 	 */
-	GETOPT_RESET();
+	optind = 0;
 
 	/* skip 0: some applets cheat: they do not actually HAVE argv[0] */
 	argc = 1 + string_array_len(argv + 1);
+
+	ALOGV("vgetopt32 flags:%#x",flags);
+
+	ALOGV("vgetopt32 argc:%d",argc);
+
+	for(int j= 0;j < argc;j++){
+		ALOGV("vgetopt32 argv[%d]:%s",j,*(argv+j));
+	}
+
+	ALOGV("vgetopt32 2 applet_opts:%s",applet_opts);//	nqNxk:wp:S:lI:d46aAbgL
 
 	/* Note: just "getopt() <= 0" will not work well for
 	 * "fake" short options, like this one:
 	 * wget $'-\203' "Test: test" http://kernel.org/
 	 * (supposed to act as --header, but doesn't) */
 #if ENABLE_LONG_OPTS
-	while ((c = getopt_long(argc, argv, applet_opts,
-			long_options, NULL)) != -1) {
+	while ((c = getopt_long(argc, argv, applet_opts,long_options, NULL)) != -1) {
 #else
 	while ((c = getopt(argc, argv, applet_opts)) != -1) {
 #endif
+		ALOGV("vgetopt32 getopt:%#x",c); //0x6c
+		
 		/* getopt prints "option requires an argument -- X"
 		 * and returns '?' if an option has no arg, but one is reqd */
 		c &= 0xff; /* fight libc's sign extension */
@@ -584,11 +604,16 @@ vgetopt32(char **argv, const char *applet_opts, const char *applet_long_options,
 		goto error;
 
 	option_mask32 = flags;
+
+	ALOGV("vgetopt32 2 flags:%#x",flags);
+
 	return flags;
 
  error:
+	
 	if (dont_die_flag != '!')
 		bb_show_usage();
+	ALOGV("vgetopt32 fail");
 	return (int32_t)-1;
 }
 

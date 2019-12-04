@@ -2473,7 +2473,9 @@ static NOINLINE void ntp_init(char **argv)
 #endif
 	opts = getopt32(argv, "^"
 			"nqNx" /* compat */
+#if ENABLE_FEATURE_NTP_AUTH
 			"k:"  /* compat */
+#endif
 			"wp:*S:"
 			"l" /* NOT compat */
 			"I:" /* compat */
@@ -2491,13 +2493,17 @@ static NOINLINE void ntp_init(char **argv)
 	);
 #endif
 	ALOGV("ntp_init 2 opts(%u)",opts);
+
 //	if (opts & OPT_x) /* disable stepping, only slew is allowed */
 //		G.time_was_stepped = 1;
 
 #if ENABLE_FEATURE_NTPD_SERVER
+
 	G_listen_fd = -1;
 	if (opts & OPT_l) {
+
 		ALOGV("ntp_init OPT_l");
+
 		G_listen_fd = create_and_bind_dgram_or_die(NULL, 123);
 		ALOGV("create_and_bind_dgram_or_die (G_listen_fd:%d) (if_name:%s)",G_listen_fd,G.if_name);
 		if (G.if_name) {
@@ -2507,7 +2513,9 @@ static NOINLINE void ntp_init(char **argv)
 				
 		}
 		socket_want_pktinfo(G_listen_fd);
+
 		setsockopt_int(G_listen_fd, IPPROTO_IP, IP_TOS, IPTOS_DSCP_AF21);
+
 	}
 #endif
 	/* I hesitate to set -20 prio. -15 should be high enough for timekeeping */
@@ -2515,6 +2523,7 @@ static NOINLINE void ntp_init(char **argv)
 		setpriority(PRIO_PROCESS, 0, -15);
 
 	if (!(opts & OPT_n)) {
+		ALOGV("ntp_init bb_daemonize_or_rexec");
 		bb_daemonize_or_rexec(DAEMON_DEVNULL_STDIO, argv);
 		logmode = LOGMODE_NONE;
 	}
@@ -2580,7 +2589,7 @@ static NOINLINE void ntp_init(char **argv)
 	}
 #endif
 
-	ALOGV("ntp_init %p" , peers );
+	ALOGV("ntp_init 3 peers:%p %d" , peers,ENABLE_FEATURE_NTPD_CONF);
 
 	if (peers) {
 #if ENABLE_FEATURE_NTP_AUTH
@@ -2689,6 +2698,7 @@ int ntpd_main(int argc UNUSED_PARAM, char **argv)
 	SET_PTR_TO_GLOBALS(&G);
 
 	ntp_init(argv);
+	//ALOGV(" bb_got_signal:%d cnt:%u",bb_got_signal,cnt);
 
 	/* If ENABLE_FEATURE_NTPD_SERVER, + 1 for listen_fd: */
 	cnt = G.peer_cnt + ENABLE_FEATURE_NTPD_SERVER;

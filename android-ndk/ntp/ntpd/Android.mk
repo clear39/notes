@@ -22,16 +22,13 @@ LOCAL_SRC_FILES:= \
 	../libbb/time.c	\
 	../libbb/signals.c	\
 	../libbb/vfork_daemon_rexec.c	\
-
-
-
+	../libbb/parse_config.c	\
+	../libbb/wfopen_input.c	\
+	../libbb/skip_whitespace.c	\
+	../libbb/wfopen.c	\
 
 
 LOCAL_MODULE:= ntpd
-
-# options.c:623:21: error: passing 'const char *' to parameter of type 'char *' discards qualifiers.
-# [-Werror,-Wincompatible-pointer-types-discards-qualifiers]
-#LOCAL_CLANG_CFLAGS += -Wno-incompatible-pointer-types-discards-qualifiers
 
 LOCAL_SHARED_LIBRARIES := \
 	libcutils \
@@ -55,6 +52,9 @@ LOCAL_CFLAGS += \
 	-Wno-unused-variable	\
 	-Wabsolute-value	\
 	-Werror
+
+
+LOCAL_INIT_RC := ntpd.rc
 
 include $(BUILD_EXECUTABLE)
 
