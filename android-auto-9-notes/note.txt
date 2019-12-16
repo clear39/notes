@@ -81,7 +81,8 @@ C 代码中打印堆栈:
 #include <utils/CallStack.h>  
 CallStack stack;  
 stack.update();
-stack.dump();/stack.log("Track");
+stack.dump();
+//stack.log("Track");
 
 生成库文件名: libutilscallstack libbacktrace
 

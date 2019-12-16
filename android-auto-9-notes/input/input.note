@@ -1,5 +1,7 @@
 getevent
 
+cat /proc/bus/input/devices
+
 *.kcm 为键盘布局文件
 *.kl 
 
