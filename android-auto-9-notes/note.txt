@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////////
-//surfaceflingr中的gpu信息输出
+//surfaceflinger中的gpu信息输出
 cmd gpu vkjson
 
 
@@ -15,7 +15,13 @@ cmd gpu vkjson
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  开启init日志
 printk.devkmsg 在内核 vendor/nxp-opensource/kernel_imx/Documentation/admin-guide/kernel-parameters.txt
+//	device/autolink/autolink_8q/BoardConfig.mk
 BOARD_KERNEL_CMDLINE += printk.devkmsg=on
+
+// 内核日志开启
+#BOARD_KERNEL_CMDLINE += loglevel=1
+
+
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  关闭selinux
@@ -25,11 +31,17 @@ BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
 setprop persist.sys.disable_rescure true
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
-
+// 关闭4G
 settings put global mobile_data 0
 
-// 
+// 开启开发者模式
 settings put global development_settings_enabled
+
+// adb
+settings put Global adb_enabled		1
+
+//ncm
+settings put Global adb_enabled		2
 
 
 
@@ -79,10 +91,10 @@ s androidboot.veritymode=enforcing skip_initramfs rootwait androidboot.dtbo_idx=
 //////////////////////////////////////////////////////////////////////////////////////////////////////////
 C 代码中打印堆栈:
 #include <utils/CallStack.h>  
-CallStack stack;  
+android::CallStack stack;
 stack.update();
-stack.dump();
-//stack.log("Track");
+//stack.dump();
+stack.log("usb");
 
 生成库文件名: libutilscallstack libbacktrace
 
