@@ -15,3 +15,21 @@ cp vendor/nxp-opensource/kernel_imx/out/.config   vendor/nxp-opensource/kernel_i
 # Ubuntu系统启用IPv6的两种方法 https://www.cnblogs.com/boowii/p/6072476.html
 # ubuntu 配置ip地址为ipv4
 sudo gedit /etc/default/ufw
+
+
+
+内核打印日志等级
+
+#define KERN_EMERG      "<0>"    /* system is unusable */
+#define KERN_ALERT      "<1>"    /* action must be taken immediately */
+#define KERN_CRIT       "<2>"    /* critical conditions */
+#define KERN_ERR        "<3>"    /* error conditions */
+#define KERN_WARNING    "<4>"    /* warning conditions */
+#define KERN_NOTICE     "<5>"    /* normal but significant */
+#define KERN_INFO       "<6>"    /* informational */
+#define KERN_DEBUG      "<7>"    /* debug-level messages */
+
+cat /proc/sys/kernel/printk
+
+echo 7 >  /proc/sys/kernel/printk
+

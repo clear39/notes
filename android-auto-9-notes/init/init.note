@@ -1,5 +1,19 @@
 
 
+// 写入/system/etc/prop.default中
+INSTALLED_DEFAULT_PROP_TARGET += 
+
+
+
+
+
+
+
+
+
+
+
+
 printk.devkmsg 在内核 vendor/nxp-opensource/kernel_imx/Documentation/admin-guide/kernel-parameters.txt
 
 BOARD_KERNEL_CMDLINE += printk.devkmsg=on
