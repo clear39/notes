@@ -1,4 +1,6 @@
 
+//  
+
 AudioFlinger::PlaybackThread::PlaybackThread(const sp<AudioFlinger>& audioFlinger,
                                              AudioStreamOut* output,
                                              audio_io_handle_t id,
@@ -143,7 +145,8 @@ void AudioFlinger::PlaybackThread::readOutputParameters_l()
     if (mType == DUPLICATING && mMixerBufferEnabled && mEffectBufferEnabled) {
         // For best precision, we use float instead of the associated output
         // device format (typically PCM 16 bit).
-
+          //  system/media/audio/include/system/audio-base.h:146:    AUDIO_FORMAT_PCM_16_BIT            = 0x1u,        // (PCM | PCM_SUB_16_BIT)
+          //  system/media/audio/include/system/audio-base.h:150:    AUDIO_FORMAT_PCM_FLOAT             = 0x5u,        // (PCM | PCM_SUB_FLOAT)
         mFormat = AUDIO_FORMAT_PCM_FLOAT;
         mFrameSize = mChannelCount * audio_bytes_per_sample(mFormat);
         mBufferSize = mFrameSize * mFrameCount;
@@ -201,8 +204,11 @@ void AudioFlinger::PlaybackThread::readOutputParameters_l()
     // For sink buffer size, we use the frame size from the downstream sink to avoid problems
     // with non PCM formats for compressed music, e.g. AAC, and Offload threads.
     const size_t sinkBufferSize = mNormalFrameCount * mFrameSize;
+
+
+
     /**
-     * 
+     * 注意这里创建缓存区
      * frameworks/av/services/audioflinger/Threads.h:812: 
      * void*                           mSinkBuffer;         // frame size aligned sink buffer
      * 
@@ -215,6 +221,8 @@ void AudioFlinger::PlaybackThread::readOutputParameters_l()
     mMixerBuffer = NULL;
     
     if (mMixerBufferEnabled) {// true
+      
+        //  system/media/audio/include/system/audio-base.h:150:    AUDIO_FORMAT_PCM_FLOAT             = 0x5u,        // (PCM | PCM_SUB_FLOAT)
         mMixerBufferFormat = AUDIO_FORMAT_PCM_FLOAT; // also valid: AUDIO_FORMAT_PCM_16_BIT.
         mMixerBufferSize = mNormalFrameCount * mChannelCount * audio_bytes_per_sample(mMixerBufferFormat);
         (void)posix_memalign(&mMixerBuffer, 32, mMixerBufferSize);

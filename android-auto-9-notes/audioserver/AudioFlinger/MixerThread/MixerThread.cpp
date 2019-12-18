@@ -30,6 +30,9 @@ AudioFlinger::MixerThread::MixerThread(const sp<AudioFlinger>& audioFlinger, Aud
             "mFrameCount=%zu, mNormalFrameCount=%zu",
             mSampleRate, mChannelMask, mChannelCount, mFormat, mFrameSize, mFrameCount,
             mNormalFrameCount);
+
+
+
     mAudioMixer = new AudioMixer(mNormalFrameCount, mSampleRate);
 
     if (type == DUPLICATING) {
@@ -353,8 +356,7 @@ sp<AudioFlinger::PlaybackThread::Track> AudioFlinger::PlaybackThread::createTrac
             if (notificationsPerBuffer > 0) {
                 // Avoid possible arithmetic overflow during multiplication.
                 if (notificationsPerBuffer > SIZE_MAX / mFrameCount) {
-                    ALOGE("Requested notificationPerBuffer=%u ignored for HAL frameCount=%zu",
-                          notificationsPerBuffer, mFrameCount);
+                    ALOGE("Requested notificationPerBuffer=%u ignored for HAL frameCount=%zu", notificationsPerBuffer, mFrameCount);
                 } else {
                     minFrameCount = mFrameCount * notificationsPerBuffer;
                 }
@@ -403,11 +405,9 @@ sp<AudioFlinger::PlaybackThread::Track> AudioFlinger::PlaybackThread::createTrac
         }
         if (notificationFrameCount == 0 || notificationFrameCount > maxNotificationFrames) {
             if (notificationFrameCount == 0) {
-                ALOGD("Client defaulted notificationFrames to %zu for frameCount %zu",
-                    maxNotificationFrames, frameCount);
+                ALOGD("Client defaulted notificationFrames to %zu for frameCount %zu",maxNotificationFrames, frameCount);
             } else {
-                ALOGW("Client adjusted notificationFrames from %zu to %zu for frameCount %zu",
-                      notificationFrameCount, maxNotificationFrames, frameCount);
+                ALOGW("Client adjusted notificationFrames from %zu to %zu for frameCount %zu",notificationFrameCount, maxNotificationFrames, frameCount);
             }
             notificationFrameCount = maxNotificationFrames;
         }
@@ -482,6 +482,7 @@ sp<AudioFlinger::PlaybackThread::Track> AudioFlinger::PlaybackThread::createTrac
         uint32_t strategy = AudioSystem::getStrategyForStream(streamType);
         for (size_t i = 0; i < mTracks.size(); ++i) {
             sp<Track> t = mTracks[i];
+            // isExternalTrack 为 TYPE_DEFAULT
             if (t != 0 && t->isExternalTrack()) {
                 uint32_t actual = AudioSystem::getStrategyForStream(t->streamType());
                 if (sessionId == t->sessionId() && strategy != actual) {
@@ -498,9 +499,9 @@ sp<AudioFlinger::PlaybackThread::Track> AudioFlinger::PlaybackThread::createTrac
      * 
      * 
      * enum track_type {
- 52     ┊   TYPE_DEFAULT,
- 53     ┊   TYPE_OUTPUT,
- 54     ┊   TYPE_PATCH,
+ 52     ┊   TYPE_DEFAULT,           //  Track 和 RecordTrack MmapTrack
+ 53     ┊   TYPE_OUTPUT,            //  OutputTrack
+ 54     ┊   TYPE_PATCH,     //  PatchRecord 和 PatchTrack
  55     };  
      * 
      * 
