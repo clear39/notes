@@ -1,7 +1,11 @@
 
-class NBAIO_Port : public RefBase {}
+class NBAIO_Port : public RefBase {
+    
+}
 
-class NBAIO_Sink : public NBAIO_Port {}
+class NBAIO_Sink : public NBAIO_Port {
+
+}
 
 class AudioStreamOutSink : public NBAIO_Sink {
 
