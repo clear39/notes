@@ -1,0 +1,5 @@
+
+
+////    LOCAL_POST_INSTALL_CMD 使用
+
+external/toybox/Android.mk:412: LOCAL_POST_INSTALL_CMD := $(hide) $(foreach t,$(ALL_TOOLS),ln -sf toybox $(TARGET_OUT)/bin/$(t);)

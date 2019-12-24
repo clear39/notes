@@ -66,14 +66,6 @@ llndk_library {
 
 3) VNDK:
 如果 vendor_available 或 vndk.enabled 为 true，则可以编译两种变体（核心变体和供应商变体）
-
-
-
-
-
-
-
-
 cc_library_shared {
     name: "libexample",
 

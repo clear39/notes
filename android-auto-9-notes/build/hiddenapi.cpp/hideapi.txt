@@ -1,6 +1,60 @@
+// hidl-gen
+hidl-gen: invalid option -- '-'
+usage: hidl-gen [-p <root path>] -o <output path> -L <language> [-O <owner>] (-r <interface root>)+ [-v] [-d <depfile>] FQNAME...
+
+Process FQNAME, PACKAGE(.SUBPACKAGE)*@[0-9]+.[0-9]+(::TYPE)?, to create output.
+
+         -h: Prints this menu.
+         -L <language>: The following options are available:
+            check           : Parses the interface to see if valid but doesn't write any files.
+            c++             : (internal) (deprecated) Generates C++ interface files for talking to HIDL interfaces.
+            c++-headers     : (internal) Generates C++ headers for interface files for talking to HIDL interfaces.
+            c++-sources     : (internal) Generates C++ sources for interface files for talking to HIDL interfaces.
+            export-header   : Generates a header file from @export enumerations to help maintain legacy code.
+            c++-impl        : Generates boilerplate implementation of a hidl interface in C++ (for convenience).
+            c++-impl-headers: c++-impl but headers only
+            c++-impl-sources: c++-impl but sources only
+            c++-adapter     : Takes a x.(y+n) interface and mocks an x.y interface.
+            c++-adapter-headers: c++-adapter but helper headers only
+            c++-adapter-sources: c++-adapter but helper sources only
+            c++-adapter-main: c++-adapter but the adapter binary source only
+            java            : (internal) Generates Java library for talking to HIDL interfaces in Java.
+            java-constants  : (internal) Like export-header but for Java (always created by -Lmakefile if @export exists).
+            vts             : (internal) Generates vts proto files for use in vtsd.
+            makefile        : (removed) Used to generate makefiles for -Ljava and -Ljava-constants.
+            androidbp       : (internal) Generates Soong bp files for -Lc++-headers, -Lc++-sources, -Ljava, -Ljava-constants, and -Lc++-adapter.
+            androidbp-impl  : Generates boilerplate bp files for implementation created with -Lc++-impl.
+            hash            : Prints hashes of interface in `current.txt` format to standard out.
+         -O <owner>: The owner of the module for -Landroidbp(-impl)?.
+         -o <output path>: Location to output files.
+         -p <root path>: Android build root, defaults to $ANDROID_BUILD_TOP or pwd.
+         -r <package:path root>: E.g., android.hardware:hardware/interfaces.
+         -v: verbose output.
+         -d <depfile>: location of depfile to write to.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // 工具 hiddenapi
 // 将dex文件中的类/方法/成员 根据对应的属性设置acess flag
 // 源码路径：	/work/workcodes/aosp-p9.x-auto-alpha/art/tools/hiddenapi
+
+
+
 
 
 
@@ -9,8 +63,7 @@ No arguments specified
 Command: out/host/linux-x86/bin/hiddenapi
 Usage: hiddenapi [options]...
 
-  --dex=<filename>: specify dex file whose members' access flags are to be set.
-      				At least one --dex parameter must be specified.
+  --dex=<filename>: specify dex file whose members' access flags are to be set. At least one --dex parameter must be specified.
   --light-greylist=<filename>:
   --dark-greylist=<filename>:
   --blacklist=<filename>: text files with signatures of methods/fields to be marked
