@@ -1,0 +1,59 @@
+
+
+service uncrypt /system/bin/uncrypt
+    class main
+    socket uncrypt stream 600 system system
+    disabled
+    oneshot
+
+service setup-bcb /system/bin/uncrypt --setup-bcb
+    class main
+    socket uncrypt stream 600 system system
+    disabled
+    oneshot
+
+service clear-bcb /system/bin/uncrypt --clear-bcb
+    class main
+    socket uncrypt stream 600 system system
+    disabled
+    oneshot
+
+
+
+
+
+//  @   frameworks/base/core/res/AndroidManifest.xml
+<receiver android:name="com.android.server.MasterClearReceiver"
+        android:permission="android.permission.MASTER_CLEAR">
+
+    <intent-filter android:priority="100" >
+
+        <!-- For Checkin, Settings, etc.: action=FACTORY_RESET -->
+        <action android:name="android.intent.action.FACTORY_RESET" />
+
+        <!-- As above until all the references to the deprecated MASTER_CLEAR get updated to FACTORY_RESET. -->
+        <action android:name="android.intent.action.MASTER_CLEAR" />
+
+        <!-- MCS always uses REMOTE_INTENT: category=MASTER_CLEAR -->
+        <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+        <category android:name="android.intent.category.MASTER_CLEAR" />
+
+    </intent-filter>
+
+</receiver>
+
+
+
+
+// 设置调用
+public static void resetSystem(Context context) {
+        try {
+            Intent intent = new Intent("android.intent.action.FACTORY_RESET");
+            intent.setPackage("android");
+            intent.addFlags(Intent.FLAG_FROM_BACKGROUND);
+            intent.putExtra("android.intent.extra.REASON", "MasterClearConfirm");
+            context.sendBroadcast(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }

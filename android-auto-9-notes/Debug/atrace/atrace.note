@@ -1,0 +1,5 @@
+
+
+打开  /sys/kernel/debug/tracing/trace_marker 文件描述符
+
+systrace

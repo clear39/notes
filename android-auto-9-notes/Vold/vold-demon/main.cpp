@@ -1,4 +1,5 @@
 //  @system/vold/vold.rc
+
 service vold /system/bin/vold \
         --blkid_context=u:r:blkid:s0 --blkid_untrusted_context=u:r:blkid_untrusted:s0 \
         --fsck_context=u:r:fsck:s0 --fsck_untrusted_context=u:r:fsck_untrusted:s0
@@ -12,12 +13,20 @@ service vold /system/bin/vold \
 
 //	@system/vold/main.cpp
 int main(int argc, char** argv) {
+    /**
+     * 查看atrace记录
+    */
     atrace_set_tracing_enabled(false);
+
+
     setenv("ANDROID_LOG_TAGS", "*:v", 1);
+
+    
     android::base::InitLogging(argv, android::base::LogdLogger(android::base::SYSTEM));
 
     LOG(INFO) << "Vold 3.0 (the awakening) firing up";
 
+    // #define ATRACE_BEGIN(name) atrace_begin(ATRACE_TAG, name)
     ATRACE_BEGIN("main");
 
 
@@ -96,6 +105,7 @@ int main(int argc, char** argv) {
     // connected before Vold launched
     coldboot("/sys/block");
 
+    // end main
     ATRACE_END();
 
     android::IPCThreadState::self()->joinThreadPool();

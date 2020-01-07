@@ -1,1 +1,45 @@
 //  @   hardware/qcom/bootctrl
+
+
+
+COMMAND     PID       USER   FD      TYPE             DEVICE  SIZE/OFF       NODE NAME
+boot@1.0-servic  1558       root  cwd       DIR              253,0      4096          2 /
+boot@1.0-servic  1558       root  rtd       DIR              253,0      4096          2 /
+boot@1.0-servic  1558       root  txt       REG              253,1     68344        183 /vendor/bin/hw/android.hardware.boot@1.0-service
+boot@1.0-servic  1558       root  mem       REG              253,1     68344        183 /vendor/bin/hw/android.hardware.boot@1.0-service
+boot@1.0-servic  1558       root  mem       REG              253,1    136880        323 /vendor/lib64/hw/bootctrl.avb.so
+boot@1.0-servic  1558       root  mem       REG              253,1     68416        329 /vendor/lib64/hw/android.hardware.boot@1.0-impl.so
+boot@1.0-servic  1558       root  mem       CHR              10,58                12576 /dev/hwbinder
+boot@1.0-servic  1558       root  mem       REG              253,0     68304        610 /system/lib64/libnetd_client.so
+boot@1.0-servic  1558       root  mem       REG              253,0    201784        530 /system/lib64/vndk-sp-28/libhwbinder.so
+boot@1.0-servic  1558       root  mem       REG              253,0     68152        531 /system/lib64/vndk-sp-28/libhardware.so
+boot@1.0-servic  1558       root  mem       REG              253,0    926864        523 /system/lib64/vndk-sp-28/libc++.so
+boot@1.0-servic  1558       root  mem       REG              253,0   1126600         62 /system/lib64/libc.so
+boot@1.0-servic  1558       root  mem       REG              253,0    201040        539 /system/lib64/vndk-sp-28/libhidlbase.so
+boot@1.0-servic  1558       root  mem       REG              253,0    136800        106 /system/lib64/liblog.so
+boot@1.0-servic  1558       root  mem       REG              253,0    134912        538 /system/lib64/vndk-sp-28/libcutils.so
+boot@1.0-servic  1558       root  mem       REG              253,0     68280        630 /system/lib64/libvndksupport.so
+boot@1.0-servic  1558       root  mem       REG              253,0    134904        532 /system/lib64/vndk-sp-28/libbase.so
+boot@1.0-servic  1558       root  mem       REG              253,0    134920        541 /system/lib64/vndk-sp-28/libutils.so
+boot@1.0-servic  1558       root  mem       REG              253,0    468376        535 /system/lib64/vndk-sp-28/libhidltransport.so
+boot@1.0-servic  1558       root  mem       REG              253,0     67496        344 /system/lib64/libdl.so
+boot@1.0-servic  1558       root  mem       REG               0,19    131072       8519 /dev/__properties__/u:object_r:log_prop:s0
+boot@1.0-servic  1558       root  mem       REG              253,0    265464        505 /system/lib64/libm.so
+boot@1.0-servic  1558       root  mem       REG              253,0    136064        168 /system/lib64/vndk-28/android.hardware.boot@1.0.so
+boot@1.0-servic  1558       root  mem       REG              253,0    926864        376 /system/lib64/libc++.so
+boot@1.0-servic  1558       root  mem       REG               0,19    131072       8481 /dev/__properties__/u:object_r:debug_prop:s0
+boot@1.0-servic  1558       root  mem       REG               0,19    131072       8501 /dev/__properties__/u:object_r:exported_default_prop:s0
+boot@1.0-servic  1558       root  mem       REG               0,19    131072       8517 /dev/__properties__/u:object_r:hwservicemanager_prop:s0
+boot@1.0-servic  1558       root  mem       REG               0,19    131072       8490 /dev/__properties__/u:object_r:exported2_default_prop:s0
+boot@1.0-servic  1558       root  mem       REG               0,19    131072       8556 /dev/__properties__/properties_serial
+boot@1.0-servic  1558       root  mem       REG               0,19     34728       8457 /dev/__properties__/property_info
+boot@1.0-servic  1558       root  mem       REG               0,19    131072       8501 /dev/__properties__/u:object_r:exported_default_prop:s0
+boot@1.0-servic  1558       root  mem       REG               0,19    131072       8481 /dev/__properties__/u:object_r:debug_prop:s0
+boot@1.0-servic  1558       root  mem       REG               0,19    131072       8556 /dev/__properties__/properties_serial
+boot@1.0-servic  1558       root  mem       REG              253,0   1741568       2015 /system/bin/linker64
+boot@1.0-servic  1558       root  mem       REG               0,19     34728       8457 /dev/__properties__/property_info
+boot@1.0-servic  1558       root    0u      CHR                1,3       0t0      12574 /dev/null
+boot@1.0-servic  1558       root    1u      CHR                1,3       0t0      12574 /dev/null
+boot@1.0-servic  1558       root    2u      CHR                1,3       0t0      12574 /dev/null
+boot@1.0-servic  1558       root    3u      CHR              10,58       0t0      12576 /dev/hwbinder
+boot@1.0-servic  1558       root    4w      REG               0,10         0       2121 /sys/kernel/debug/tracing/trace_marker

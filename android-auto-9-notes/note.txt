@@ -38,10 +38,7 @@ settings put global mobile_data 0
 settings put global development_settings_enabled
 
 // adb
-settings put Global adb_enabled		1
-
-//ncm
-settings put Global adb_enabled		2
+settings 	put 	Global adb_enabled			1
 
 
 

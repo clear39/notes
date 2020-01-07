@@ -1,0 +1,22 @@
+
+
+// 问题对策
+
+[  0% 1/1574] build out/target/product/autolink_8q/obj/PACKAGING/vndk_intermediates/check-list-timestamp
+FAILED: out/target/product/autolink_8q/obj/PACKAGING/vndk_intermediates/check-list-timestamp 
+/bin/bash -c "(( diff --old-line-format=\"Removed %L\" 	  --new-line-format=\"Added %L\" 	  --unchanged-line-format=\"\" 	  build/make/target/product/vndk/28.txt out/target/product/autolink_8q/obj/PACKAGING/vndk_intermediates/libs.txt 	  || ( echo -e \" error: VNDK library list has been changed.\\n\" \"       Changing the VNDK library list is not allowed in API locked branches.\"; exit 1 )) ) && (mkdir -p out/target/product/autolink_8q/obj/PACKAGING/vndk_intermediates/ ) && (touch out/target/product/autolink_8q/obj/PACKAGING/vndk_intermediates/check-list-timestamp )"
+Added VNDK-core: android.hardware.fm1388@1.0.so
+Removed VNDK-core: android.hardware.fm1388@1.0.so
+ error: VNDK library list has been changed.
+        Changing the VNDK library list is not allowed in API locked branches.
+
+
+build/make/target/product/vndk/28.txt和out/target/product/generic_x86_64/obj/PACKAGING/vndk_intermediates/libs.txt内容不一致，
+我这边的问题是在hardware/interface执行update-makefile.sh时新增了一个库的Android.bp，
+然后build/make/target/product/vndk/28.txt里面没有添加我多出来的那个库就报错了
+
+// 执行一下命令即可解决
+cp  out/target/product/autolink_8q/obj/PACKAGING/vndk_intermediates/libs.txt build/make/target/product/vndk/28.txt
+
+
+
