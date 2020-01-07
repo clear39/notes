@@ -86,6 +86,9 @@ AudioFlinger::ThreadBase::TrackBase::TrackBase(
     }
 
     if (client != 0) {
+        /**
+         * 区分 mCblkMemory 和 mCblk
+        */
         mCblkMemory = client->heap()->allocate(size);
         if (mCblkMemory == 0 ||  (mCblk = static_cast<audio_track_cblk_t *>(mCblkMemory->pointer())) == NULL) {
             ALOGE("not enough memory for AudioTrack size=%zu", size);
@@ -173,4 +176,14 @@ AudioFlinger::ThreadBase::TrackBase::TrackBase(
 #endif
 
     }
+}
+
+
+
+//    @   frameworks/av/services/audioflinger/TrackBase.h
+sp<IMemory> TrackBase::getCblk() const {
+    /**
+     * 有TrackBase构造函数中 mCblkMemory = client->heap()->allocate(size); 创建
+    */
+     return mCblkMemory; 
 }

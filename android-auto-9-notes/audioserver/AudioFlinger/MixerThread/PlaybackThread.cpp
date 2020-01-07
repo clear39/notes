@@ -221,7 +221,6 @@ void AudioFlinger::PlaybackThread::readOutputParameters_l()
     mMixerBuffer = NULL;
     
     if (mMixerBufferEnabled) {// true
-      
         //  system/media/audio/include/system/audio-base.h:150:    AUDIO_FORMAT_PCM_FLOAT             = 0x5u,        // (PCM | PCM_SUB_FLOAT)
         mMixerBufferFormat = AUDIO_FORMAT_PCM_FLOAT; // also valid: AUDIO_FORMAT_PCM_16_BIT.
         mMixerBufferSize = mNormalFrameCount * mChannelCount * audio_bytes_per_sample(mMixerBufferFormat);
@@ -248,4 +247,75 @@ void AudioFlinger::PlaybackThread::readOutputParameters_l()
     for (size_t i = 0; i < effectChains.size(); i ++) {
         mAudioFlinger->moveEffectChain_l(effectChains[i]->sessionId(), this, this, false);
     }
+}
+
+
+
+/**
+ * status_t AudioFlinger::PlaybackThread::Track::start(AudioSystem::sync_event_t event = AudioSystem::SYNC_EVENT_NONE, audio_session_t triggerSession = AUDIO_SESSION_NONE)
+ * 
+*/
+// addTrack_l() must be called with ThreadBase::mLock held
+status_t AudioFlinger::PlaybackThread::addTrack_l(const sp<Track>& track)
+{
+    status_t status = ALREADY_EXISTS;
+
+    if (mActiveTracks.indexOf(track) < 0) {
+        // the track is newly added, make sure it fills up all its
+        // buffers before playing. This is to ensure the client will
+        // effectively get the latency it requested.
+        if (track->isExternalTrack()) {
+            TrackBase::track_state state = track->mState;
+            mLock.unlock();
+            status = AudioSystem::startOutput(mId, track->streamType(), track->sessionId());
+            mLock.lock();
+            // abort track was stopped/paused while we released the lock
+            if (state != track->mState) {
+                if (status == NO_ERROR) {
+                    mLock.unlock();
+                    AudioSystem::stopOutput(mId, track->streamType(),track->sessionId());
+                    mLock.lock();
+                }
+                return INVALID_OPERATION;
+            }
+            // abort if start is rejected by audio policy manager
+            if (status != NO_ERROR) {
+                return PERMISSION_DENIED;
+            }
+#ifdef ADD_BATTERY_DATA
+            // to track the speaker usage
+            addBatteryData(IMediaPlayerService::kBatteryDataAudioFlingerStart);
+#endif
+        }
+
+        // set retry count for buffer fill
+        if (track->isOffloaded()) {
+            if (track->isStopping_1()) {
+                track->mRetryCount = kMaxTrackStopRetriesOffload;
+            } else {
+                track->mRetryCount = kMaxTrackStartupRetriesOffload;
+            }
+            track->mFillingUpStatus = mStandby ? Track::FS_FILLING : Track::FS_FILLED;
+        } else {
+            track->mRetryCount = kMaxTrackStartupRetries;
+            track->mFillingUpStatus =  track->sharedBuffer() != 0 ? Track::FS_FILLED : Track::FS_FILLING;
+        }
+
+        track->mResetDone = false;
+        track->mPresentationCompleteFrames = 0;
+        /**
+         * 
+        */
+        mActiveTracks.add(track);
+        sp<EffectChain> chain = getEffectChain_l(track->sessionId());
+        if (chain != 0) {
+            ALOGV("addTrack_l() starting track on chain %p for session %d", chain.get(), track->sessionId());
+            chain->incActiveTrackCnt();
+        }
+
+        status = NO_ERROR;
+    }
+
+    onAddNewTrack_l();
+    return status;
 }

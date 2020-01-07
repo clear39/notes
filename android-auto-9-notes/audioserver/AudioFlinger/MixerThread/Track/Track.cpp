@@ -1,7 +1,12 @@
 // Track constructor must be called with AudioFlinger::mLock and ThreadBase::mLock held
 
+//    frameworks/av/services/audioflinger/PlaybackTracks.h
+class Track : public TrackBase, public VolumeProvider {
+
+}
+
 /***
- * frameworks/av/services/audioflinger/PlaybackTracks.h:23:class Track : public TrackBase, public VolumeProvider {
+ * :23:
  * frameworks/av/services/audioflinger/Tracks.cpp 
  * 
  * 
@@ -122,4 +127,102 @@ bool TrackBase::isOutputTrack() const {
 
 bool TrackBase::isPatchTrack() const { 
     return (mType == TYPE_PATCH);
+}
+
+
+/**
+ * 
+ * status_t AudioFlinger::TrackHandle::start() 
+ * 
+ * 
+*/
+status_t AudioFlinger::PlaybackThread::Track::start(AudioSystem::sync_event_t event = AudioSystem::SYNC_EVENT_NONE,
+                             audio_session_t triggerSession = AUDIO_SESSION_NONE)
+{
+    status_t status = NO_ERROR;
+    ALOGV("start(%d), calling pid %d session %d",  mName, IPCThreadState::self()->getCallingPid(), mSessionId);
+
+    sp<ThreadBase> thread = mThread.promote();
+    if (thread != 0) {
+        if (isOffloaded()) {
+            Mutex::Autolock _laf(thread->mAudioFlinger->mLock);
+            Mutex::Autolock _lth(thread->mLock);
+            sp<EffectChain> ec = thread->getEffectChain_l(mSessionId);
+            if (thread->mAudioFlinger->isNonOffloadableGlobalEffectEnabled_l() ||  (ec != 0 && ec->isNonOffloadableEnabled())) {
+                invalidate();
+                return PERMISSION_DENIED;
+            }
+        }
+        Mutex::Autolock _lth(thread->mLock);
+        track_state state = mState;
+        // here the track could be either new, or restarted
+        // in both cases "unstop" the track
+
+        // initial state-stopping. next state-pausing.
+        // What if resume is called ?
+
+        if (state == PAUSED || state == PAUSING) {
+            if (mResumeToStopping) {
+                // happened we need to resume to STOPPING_1
+                mState = TrackBase::STOPPING_1;
+                ALOGV("PAUSED => STOPPING_1 (%d) on thread %p", mName, this);
+            } else {
+                mState = TrackBase::RESUMING;
+                ALOGV("PAUSED => RESUMING (%d) on thread %p", mName, this);
+            }
+        } else {
+            mState = TrackBase::ACTIVE;
+            ALOGV("? => ACTIVE (%d) on thread %p", mName, this);
+        }
+
+        // states to reset position info for non-offloaded/direct tracks
+        if (!isOffloaded() && !isDirect() && (state == IDLE || state == STOPPED || state == FLUSHED)) {
+            mFrameMap.reset();
+        }
+        PlaybackThread *playbackThread = (PlaybackThread *)thread.get();
+        if (isFastTrack()) {
+            // refresh fast track underruns on start because that field is never cleared
+            // by the fast mixer; furthermore, the same track can be recycled, i.e. start
+            // after stop.
+            mObservedUnderruns = playbackThread->getFastTrackUnderruns(mFastIndex);
+        }
+        /**
+         * 在 PlaybackThread 中实现
+        */
+        status = playbackThread->addTrack_l(this);
+        if (status == INVALID_OPERATION || status == PERMISSION_DENIED) {
+            triggerEvents(AudioSystem::SYNC_EVENT_PRESENTATION_COMPLETE);
+            //  restore previous state if start was rejected by policy manager
+            if (status == PERMISSION_DENIED) {
+                mState = state;
+            }
+        }
+
+        if (status == NO_ERROR || status == ALREADY_EXISTS) {
+            // for streaming tracks, remove the buffer read stop limit.
+            /**
+             * 
+             * 
+            */
+            mAudioTrackServerProxy->start();
+        }
+
+        // track was already in the active list, not a problem
+        if (status == ALREADY_EXISTS) {
+            status = NO_ERROR;
+        } else {
+            // Acknowledge any pending flush(), so that subsequent new data isn't discarded.
+            // It is usually unsafe to access the server proxy from a binder thread.
+            // But in this case we know the mixer thread (whether normal mixer or fast mixer)
+            // isn't looking at this track yet:  we still hold the normal mixer thread lock,
+            // and for fast tracks the track is not yet in the fast mixer thread's active set.
+            // For static tracks, this is used to acknowledge change in position or loop.
+            ServerProxy::Buffer buffer;
+            buffer.mFrameCount = 1;
+            (void) mAudioTrackServerProxy->obtainBuffer(&buffer, true /*ackFlush*/);
+        }
+    } else {
+        status = BAD_VALUE;
+    }
+    return status;
 }

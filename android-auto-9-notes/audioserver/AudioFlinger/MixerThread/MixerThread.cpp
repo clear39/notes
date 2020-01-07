@@ -73,8 +73,7 @@ AudioFlinger::MixerThread::MixerThread(const sp<AudioFlinger>& audioFlinger, Aud
         break;
     }
     ALOGW_IF(initFastMixer == false && mFrameCount < mNormalFrameCount,
-            "FastMixer is preferred for this sink as frameCount %zu is less than threshold %zu",
-            mFrameCount, mNormalFrameCount);
+            "FastMixer is preferred for this sink as frameCount %zu is less than threshold %zu", mFrameCount, mNormalFrameCount);
     if (initFastMixer) {
         audio_format_t fastMixerFormat;
         if (mMixerBufferEnabled && mEffectBufferEnabled) {
@@ -205,7 +204,9 @@ AudioFlinger::MixerThread::MixerThread(const sp<AudioFlinger>& audioFlinger, Aud
 
 
 
-
+/**
+ * sp<IAudioTrack> AudioFlinger::createTrack(const CreateTrackInput& input,CreateTrackOutput& output,status_t *status)
+*/
 sp<AudioFlinger::PlaybackThread::Track> AudioFlinger::PlaybackThread::createTrack_l(
         const sp<AudioFlinger::Client>& client,
         audio_stream_type_t streamType,
@@ -426,8 +427,7 @@ sp<AudioFlinger::PlaybackThread::Track> AudioFlinger::PlaybackThread::createTrac
         if (audio_is_linear_pcm(format)) { // TODO maybe use audio_has_proportional_frames()?
             if (sampleRate != mSampleRate || format != mFormat || channelMask != mChannelMask) {
                 ALOGE("createTrack_l() Bad parameter: sampleRate %u format %#x, channelMask 0x%08x "
-                        "for output %p with format %#x",
-                        sampleRate, format, channelMask, mOutput, mFormat);
+                        "for output %p with format %#x",sampleRate, format, channelMask, mOutput, mFormat);
                 lStatus = BAD_VALUE;
                 goto Exit;
             }
@@ -436,9 +436,8 @@ sp<AudioFlinger::PlaybackThread::Track> AudioFlinger::PlaybackThread::createTrac
 
     case OFFLOAD:
         if (sampleRate != mSampleRate || format != mFormat || channelMask != mChannelMask) {
-            ALOGE("createTrack_l() Bad parameter: sampleRate %d format %#x, channelMask 0x%08x \""
-                    "for output %p with format %#x",
-                    sampleRate, format, channelMask, mOutput, mFormat);
+            ALOGE("createTrack_l() Bad parameter: sampleRate %d format %#x, channelMask 0x%08x \"" 
+            "for output %p with format %#x",sampleRate, format, channelMask, mOutput, mFormat);
             lStatus = BAD_VALUE;
             goto Exit;
         }

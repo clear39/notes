@@ -1,8 +1,28 @@
 //  @   frameworks/native/libs/binder/MemoryDealer.cpp
 
+
+
+struct chunk_t {
+    chunk_t(size_t start, size_t size)
+    : start(start), size(size), free(1), prev(0), next(0) {
+    }
+    size_t              start;
+    size_t              size : 28;
+    int                 free : 4;
+    mutable chunk_t*    prev;
+    mutable chunk_t*    next;
+};
+
 // align all the memory blocks on a cache-line boundary
 const int SimpleBestFitAllocator::kMemoryAlign = 32;
 
+
+/**
+ *sp<IAudioTrack> AudioFlinger::createTrack(
+ *-->  registerPid(clientPid);
+ * ---->AudioFlinger::Client::Client(const sp<AudioFlinger>& audioFlinger, pid_t pid)
+ * ------> MemoryDealer::MemoryDealer(size_t size, const char* name, uint32_t flags)
+*/
 SimpleBestFitAllocator::SimpleBestFitAllocator(size_t size)
 {
     size_t pagesize = getpagesize();
@@ -12,15 +32,20 @@ SimpleBestFitAllocator::SimpleBestFitAllocator(size_t size)
     mList.insertHead(node);
 }
 
-
-size_t SimpleBestFitAllocator::allocate(size_t size, uint32_t flags)
+/**
+ * sp<IAudioTrack> AudioFlinger::createTrack(
+ * ->AudioFlinger::PlaybackThread::Track::Track()
+ * ---> AudioFlinger::ThreadBase::TrackBase::TrackBase()
+ * ---->mCblkMemory = client->heap()->allocate(size);
+*/
+size_t SimpleBestFitAllocator::allocate(size_t size, uint32_t flags = 0)
 {
     Mutex::Autolock _l(mLock);
     ssize_t offset = alloc(size, flags);
     return offset;
 }
 
-
+//  @   system/libhidl/libhidlcache/MemoryDealer.cpp:46:    enum { PAGE_ALIGNED = 0x00000001 };
 ssize_t SimpleBestFitAllocator::alloc(size_t size, uint32_t flags)
 {
     if (size == 0) {
@@ -62,14 +87,11 @@ ssize_t SimpleBestFitAllocator::alloc(size_t size, uint32_t flags)
                 mList.insertBefore(free_chunk, split);
             }
 
-            ALOGE_IF((flags&PAGE_ALIGNED) && 
-                    ((free_chunk->start*kMemoryAlign)&(pagesize-1)),
-                    "PAGE_ALIGNED requested, but page is not aligned!!!");
+            ALOGE_IF((flags&PAGE_ALIGNED) &&  ((free_chunk->start*kMemoryAlign)&(pagesize-1)), "PAGE_ALIGNED requested, but page is not aligned!!!");
 
             const ssize_t tail_free = free_size - (size+extra);
             if (tail_free > 0) {
-                chunk_t* split = new chunk_t(
-                        free_chunk->start + free_chunk->size, tail_free);
+                chunk_t* split = new chunk_t(free_chunk->start + free_chunk->size, tail_free);
                 mList.insertAfter(free_chunk, split);
             }
         }
