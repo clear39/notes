@@ -75,6 +75,9 @@ AudioFlinger::ThreadBase::TrackBase::TrackBase(
         return;
     }
 
+/**
+ * 注意这里是椎小buffer大小 + sizeof(audio_track_cblk_t)
+*/
     size_t size = sizeof(audio_track_cblk_t);
     if (buffer == NULL && alloc == ALLOC_CBLK) {
         // check overflow when computing allocation size for streaming tracks.
@@ -87,7 +90,7 @@ AudioFlinger::ThreadBase::TrackBase::TrackBase(
 
     if (client != 0) {
         /**
-         * 区分 mCblkMemory 和 mCblk
+         * 区分 mCblkMemory(IMemory) 和 mCblk
         */
         mCblkMemory = client->heap()->allocate(size);
         if (mCblkMemory == 0 ||  (mCblk = static_cast<audio_track_cblk_t *>(mCblkMemory->pointer())) == NULL) {
@@ -106,6 +109,9 @@ AudioFlinger::ThreadBase::TrackBase::TrackBase(
 
     // construct the shared structure in-place.
     if (mCblk != NULL) {
+        /**
+         * 在已经分配的内存上构建audio_track_cblk_t，会触发构造函数调用
+        */
         new(mCblk) audio_track_cblk_t();
         switch (alloc) {
         case ALLOC_READONLY: {

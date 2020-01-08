@@ -1,6 +1,4 @@
 
-
-
 class MemoryBase : public BnMemory {
 
 }
@@ -10,8 +8,7 @@ class Allocation : public MemoryBase {
     
 }
 
-//  @   /work/workcodes/aosp-p9.x-auto-ga/frameworks/native/libs/binder/MemoryDealer.cpp
-
+//  @   frameworks/native/libs/binder/MemoryDealer.cpp
 Allocation::Allocation(
         const sp<MemoryDealer>& dealer,
         const sp<IMemoryHeap>& heap, ssize_t offset, size_t size)
@@ -21,4 +18,15 @@ Allocation::Allocation(
     void* const start_ptr = (void*)(intptr_t(heap->base()) + offset);
     memset(start_ptr, 0xda, size);
 #endif
+}
+
+
+
+void* IMemory::pointer() const {
+    ssize_t offset;
+    sp<IMemoryHeap> heap = getMemory(&offset);
+    void* const base = heap!=0 ? heap->base() : MAP_FAILED;
+    if (base == MAP_FAILED)
+        return 0;
+    return static_cast<char*>(base) + offset;
 }

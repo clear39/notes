@@ -19,7 +19,11 @@ AudioTrackServerProxy::AudioTrackServerProxy(audio_track_cblk_t* cblk, void *buf
     mPlaybackRate = AUDIO_PLAYBACK_RATE_DEFAULT;
 }
 
-
+/**
+ * status_t AudioFlinger::TrackHandle::start() 
+ * -->status_t AudioFlinger::PlaybackThread::Track::start()
+ * 
+*/
 void AudioTrackServerProxy::start()
 {
     mStopLast = android_atomic_acquire_load(&mCblk->u.mStreaming.mStop);
