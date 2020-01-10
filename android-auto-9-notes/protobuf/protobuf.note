@@ -1,0 +1,178 @@
+//  工具源码路径 @   external/protobuf/src/google/protobuf/compiler/parser.cc
+
+//c编译命令/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+out/soong/host/linux-x86/bin/aprotoc 
+--cpp_out=:out/soong/.intermediates/frameworks/native/services/surfaceflinger/layerproto/liblayers_proto/android_arm_armv7-a-neon_cortex-a9_core_shared/gen/proto 
+-I .  
+frameworks/native/services/surfaceflinger/layerproto/layerstrace.proto
+
+
+
+//aprotoc 帮助文档/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+$ out/soong/host/linux-x86/bin/aprotoc  --help
+
+Usage: out/soong/host/linux-x86/bin/aprotoc [OPTION] PROTO_FILES
+Parse PROTO_FILES and generate output based on the options given:
+  -IPATH, --proto_path=PATH   Specify the directory in which to search for
+                              imports.  May be specified multiple times;
+                              directories will be searched in order.  If not
+                              given, the current working directory is used.
+  --version                   Show version info and exit.
+  -h, --help                  Show this text and exit.
+  --encode=MESSAGE_TYPE       Read a text-format message of the given type
+                              from standard input and write it in binary
+                              to standard output.  The message type must
+                              be defined in PROTO_FILES or their imports.
+  --decode=MESSAGE_TYPE       Read a binary message of the given type from
+                              standard input and write it in text format
+                              to standard output.  The message type must
+                              be defined in PROTO_FILES or their imports.
+  --decode_raw                Read an arbitrary protocol message from
+                              standard input and write the raw tag/value
+                              pairs in text format to standard output.  No
+                              PROTO_FILES should be given when using this
+                              flag.
+  -oFILE,                     Writes a FileDescriptorSet (a protocol buffer,
+    --descriptor_set_out=FILE defined in descriptor.proto) containing all of
+                              the input files to FILE.
+  --include_imports           When using --descriptor_set_out, also include
+                              all dependencies of the input files in the
+                              set, so that the set is self-contained.
+  --include_source_info       When using --descriptor_set_out, do not strip
+                              SourceCodeInfo from the FileDescriptorProto.
+                              This results in vastly larger descriptors that
+                              include information about the original
+                              location of each decl in the source file as
+                              well as surrounding comments.
+  --dependency_out=FILE       Write a dependency output file in the format
+                              expected by make. This writes the transitive
+                              set of input file paths to FILE
+  --error_format=FORMAT       Set the format in which to print errors.
+                              FORMAT may be 'gcc' (the default) or 'msvs'
+                              (Microsoft Visual Studio format).
+  --print_free_field_numbers  Print the free field numbers of the messages
+                              defined in the given proto files. Groups share
+                              the same field number space with the parent 
+                              message. Extension ranges are counted as 
+                              occupied fields numbers.
+
+  --plugin=EXECUTABLE         Specifies a plugin executable to use.
+                              Normally, protoc searches the PATH for
+                              plugins, but you may specify additional
+                              executables not in the path using this flag.
+                              Additionally, EXECUTABLE may be of the form
+                              NAME=PATH, in which case the given plugin name
+                              is mapped to the given executable even if
+                              the executable's own name differs.
+  --cpp_out=OUT_DIR           Generate C++ header and source.
+  --csharp_out=OUT_DIR        Generate C# source file.
+  --java_out=OUT_DIR          Generate Java source file.
+  --javamicro_out=OUT_DIR     Generate Java Micro source file.
+  --javanano_out=OUT_DIR      Generate Java Nano source file.
+  --js_out=OUT_DIR            Generate JavaScript source.
+  --objc_out=OUT_DIR          Generate Objective C header and source.
+  --python_out=OUT_DIR        Generate Python source file.
+  --ruby_out=OUT_DIR          Generate Ruby source file.
+
+
+
+// c模板    @   frameworks/native/services/surfaceflinger/layerproto/Android.bp
+cc_library_shared {
+    name: "liblayers_proto",
+    vendor_available: true,
+    export_include_dirs: ["include"],
+
+    srcs: [
+        "LayerProtoParser.cpp",
+        "layers.proto",
+        "layerstrace.proto",
+    ],
+
+    shared_libs: [
+        "android.hardware.graphics.common@1.1",
+        "libui",
+        "libprotobuf-cpp-lite",
+        "libbase",
+    ],
+
+    proto: {
+        export_proto_headers: true,
+    },
+
+    cppflags: [
+        "-Werror",
+        "-Wno-unused-parameter",
+        "-Wno-format",
+        "-Wno-c++98-compat-pedantic",
+        "-Wno-float-conversion",
+        "-Wno-disabled-macro-expansion",
+        "-Wno-float-equal",
+        "-Wno-sign-conversion",
+        "-Wno-padded",
+        "-Wno-old-style-cast",
+        "-Wno-undef",
+    ],
+
+}
+
+
+
+
+out/soong/host/linux-x86/bin/aprotoc 
+--javanano_out=store_unknown_fields=true,enum_style=java:out/soong/.intermediates/frameworks/autolink/autolink-service/tbox-protos/android_common/gen/proto/frameworks/autolink/autolink-service/src/com/autolink/server/tbox/tbox2/HuComm.srcjar.tmp 
+-I .  frameworks/autolink/autolink-service/src/com/autolink/server/tbox/tbox2/HuComm.proto && out/soong/host/linux-x86/bin/soong_zip 
+-jar 
+-o out/soong/.intermediates/frameworks/autolink/autolink-service/tbox-protos/android_common/gen/proto/frameworks/autolink/autolink-service/src/com/autolink/server/tbox/tbox2/HuComm.srcjar 
+-C out/soong/.intermediates/frameworks/autolink/autolink-service/tbox-protos/android_common/gen/proto/frameworks/autolink/autolink-service/src/com/autolink/server/tbox/tbox2/HuComm.srcjar.tmp 
+-D out/soong/.intermediates/frameworks/autolink/autolink-service/tbox-protos/android_common/gen/proto/frameworks/autolink/autolink-service/src/com/autolink/server/tbox/tbox2/HuComm.srcjar.tmp 
+
+
+// java模板    @   frameworks/native/services/surfaceflinger/layerproto/Android.bp
+java_library_static {
+    name: "tbox-protos",
+    host_supported: true,
+    proto: {
+        type: "nano",
+        output_params: [
+            "store_unknown_fields=true",
+            "enum_style=java",
+        ],
+    },
+    srcs: ["src/com/autolink/server/tbox/**/*.proto"],
+    no_framework_libs: true,
+    java_version: "1.8",
+    target: {
+        android: {
+                        jarjar_rules: "jarjar-rules.txt",
+        },
+        host: {
+                        static_libs: ["libprotobuf-java-nano"],
+        },
+
+    },
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -3,8 +3,7 @@
 int main(int, char**) {
     signal(SIGPIPE, SIG_IGN);
 
-    hardware::configureRpcThreadpool(1 /* maxThreads */,
-            false /* callerWillJoin */);
+    hardware::configureRpcThreadpool(1 /* maxThreads */,false /* callerWillJoin */);
     /**
      * 判读是否本地启动 IAllocator 还是通过hwbinder访问启动服务
      * 这里 startGraphicsAllocatorService 没有做任何事情，通过 hwbinder访问启动服务
@@ -36,8 +35,7 @@ int main(int, char**) {
 
     // publish surface flinger
     sp<IServiceManager> sm(defaultServiceManager());
-    sm->addService(String16(SurfaceFlinger::getServiceName()), flinger, false,
-                   IServiceManager::DUMP_FLAG_PRIORITY_CRITICAL | IServiceManager::DUMP_FLAG_PROTO);
+    sm->addService(String16(SurfaceFlinger::getServiceName()), flinger, false,IServiceManager::DUMP_FLAG_PRIORITY_CRITICAL | IServiceManager::DUMP_FLAG_PROTO);
 
     // publish GpuService
     /**

@@ -41,8 +41,10 @@ AudioFlinger::MixerThread::MixerThread(const sp<AudioFlinger>& audioFlinger, Aud
         // Do not create or use mFastMixer, mOutputSink, mPipeSink, or mNormalSink.
         return;
     }
+
     // create an NBAIO sink for the HAL output stream, and negotiate
     mOutputSink = new AudioStreamOutSink(output->stream);
+
     size_t numCounterOffers = 0;
     const NBAIO_Format offers[1] = {Format_from_SR_C(mSampleRate, mChannelCount, mFormat)};
 #if !LOG_NDEBUG
@@ -51,10 +53,12 @@ AudioFlinger::MixerThread::MixerThread(const sp<AudioFlinger>& audioFlinger, Aud
     (void)
 #endif
             mOutputSink->negotiate(offers, 1, NULL, numCounterOffers);
+    
     ALOG_ASSERT(index == 0);
 
     // initialize fast mixer depending on configuration
     bool initFastMixer;
+    
     switch (kUseFastMixer) { // 这里 kUseFastMixer = FastMixer_Static
     case FastMixer_Never:
         initFastMixer = false;
@@ -72,9 +76,15 @@ AudioFlinger::MixerThread::MixerThread(const sp<AudioFlinger>& audioFlinger, Aud
         initFastMixer = mFrameCount < mNormalFrameCount && (mOutDevice & AUDIO_DEVICE_OUT_ALL_A2DP) == 0;
         break;
     }
-    ALOGW_IF(initFastMixer == false && mFrameCount < mNormalFrameCount,
-            "FastMixer is preferred for this sink as frameCount %zu is less than threshold %zu", mFrameCount, mNormalFrameCount);
-    if (initFastMixer) {
+
+    ALOGW_IF(initFastMixer == false && mFrameCount < mNormalFrameCount, "FastMixer is preferred for this sink as frameCount %zu is less than threshold %zu", mFrameCount, mNormalFrameCount);
+   
+
+    /**
+     * 
+    */
+   if (initFastMixer) {
+
         audio_format_t fastMixerFormat;
         if (mMixerBufferEnabled && mEffectBufferEnabled) {
             fastMixerFormat = AUDIO_FORMAT_PCM_FLOAT;
@@ -164,15 +174,20 @@ AudioFlinger::MixerThread::MixerThread(const sp<AudioFlinger>& audioFlinger, Aud
 #ifdef TEE_SINK
         state->mTeeSink = mTeeSink.get();
 #endif
+        
         mFastMixerNBLogWriter = audioFlinger->newWriter_l(kFastMixerLogSize, "FastMixer");
+
         state->mNBLogWriter = mFastMixerNBLogWriter.get();
         sq->end();
         sq->push(FastMixerStateQueue::BLOCK_UNTIL_PUSHED);
 
         // start the fast mixer
         mFastMixer->run("FastMixer", PRIORITY_URGENT_AUDIO);
+
         pid_t tid = mFastMixer->getTid();
+
         sendPrioConfigEvent(getpid_cached, tid, kPriorityFastMixer, false /*forApp*/);
+
         stream()->setHalThreadPriority(kPriorityFastMixer);
 
 #ifdef AUDIO_WATCHDOG
@@ -184,7 +199,7 @@ AudioFlinger::MixerThread::MixerThread(const sp<AudioFlinger>& audioFlinger, Aud
         sendPrioConfigEvent(getpid_cached, tid, kPriorityFastMixer, false /*forApp*/);
 #endif
 
-    }
+    }// initFastMixer = true
 
     switch (kUseFastMixer) {
     case FastMixer_Never:
@@ -199,6 +214,10 @@ AudioFlinger::MixerThread::MixerThread(const sp<AudioFlinger>& audioFlinger, Aud
         mNormalSink = initFastMixer ? mPipeSink : mOutputSink;
         break;
     }
+
+
+
+
 }
 
 

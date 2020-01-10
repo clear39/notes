@@ -326,8 +326,52 @@ status_t AudioFlinger::PlaybackThread::addTrack_l(const sp<Track>& track)
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+
+/*
+The derived values that are cached:
+ - mSinkBufferSize from frame count * frame size
+ - mActiveSleepTimeUs from activeSleepTimeUs()
+ - mIdleSleepTimeUs from idleSleepTimeUs()
+ - mStandbyDelayNs from mActiveSleepTimeUs (DIRECT only) or forced to at least
+   kDefaultStandbyTimeInNsecs when connected to an A2DP device.
+ - maxPeriod from frame count and sample rate (MIXER only)
+
+The parameters that affect these derived values are:
+ - frame count
+ - frame size
+ - sample rate
+ - device type: A2DP or not
+ - device latency
+ - format: PCM or not
+ - active sleep time
+ - idle sleep time
+*/
+
+void AudioFlinger::PlaybackThread::cacheParameters_l()
+{
+    mSinkBufferSize = mNormalFrameCount * mFrameSize;
+    mActiveSleepTimeUs = activeSleepTimeUs();
+    mIdleSleepTimeUs = idleSleepTimeUs();
+
+    // make sure standby delay is not too short when connected to an A2DP sink to avoid
+    // truncating audio when going to standby.
+    mStandbyDelayNs = AudioFlinger::mStandbyTimeInNsecs;
+    /**
+     * 
+    */
+    if ((mOutDevice & AUDIO_DEVICE_OUT_ALL_A2DP) != 0) {
+        if (mStandbyDelayNs < kDefaultStandbyTimeInNsecs) {
+            mStandbyDelayNs = kDefaultStandbyTimeInNsecs;
+        }
+    }
+}
+
+
 bool AudioFlinger::PlaybackThread::threadLoop()
 {
+    /**
+     * 
+    */
     tlNBLogWriter = mNBLogWriter.get();
 
     Vector< sp<Track> > tracksToRemove;
@@ -342,7 +386,9 @@ bool AudioFlinger::PlaybackThread::threadLoop()
     // DUPLICATING
     // FIXME could this be made local to while loop?
     writeFrames = 0;
-
+    /**
+     * 
+    */
     cacheParameters_l();
     mSleepTimeUs = mIdleSleepTimeUs;
 
@@ -353,6 +399,9 @@ bool AudioFlinger::PlaybackThread::threadLoop()
     CpuStats cpuStats;
     const String8 myName(String8::format("thread %p type %d TID %d", this, mType, gettid()));
 
+    /**
+     * 
+    */
     acquireWakeLock();
 
     // mNBLogWriter logging APIs can only be called by a single thread, typically the
@@ -368,14 +417,41 @@ bool AudioFlinger::PlaybackThread::threadLoop()
     // suspended mode (for now) to help schedule the wait time until next iteration.
     nsecs_t timeLoopNextNs = 0;
 
+    /**
+     * Silent(沉默的)
+     * 
+     *  第一步判断 mMasterMute 为false，
+     * 
+     * 第二步如果mMasterMute 为false 检测 mOutDevice 是否为 AUDIO_DEVICE_OUT_REMOTE_SUBMIX 类型，如果是，不理会 "ro.audio.silent" ;
+     * 
+     * 如果不是，执行第三步 再次检测系统属性"ro.audio.silent"是否不为0
+     * 如果不为0，则 setMasterMute_l(true); 
+     * 
+     * setMasterMute_l 中 给 mMasterMute 赋值为 true
+    */
     checkSilentMode_l();
 
+    /**
+     * 由有 PlaybackThread 继承 ThreadBase（继承Thread）
+     * 
+     * frameworks/av/services/audioflinger/Threads.h:22:class ThreadBase : public Thread {}
+     * 
+     * Thread::exitPending  为线程函数  @   system/core/libutils/Threads.cpp 
+    */
     while (!exitPending())
     {
+        /**
+         * 这里用户唤醒 sMediaLogService 服务 
+        */
         // Log merge requests are performed during AudioFlinger binder transactions, but
         // that does not cover audio playback. It's requested here for that reason.
         mAudioFlinger->requestLogMerge();
 
+
+        /**
+         * 默认 cpuStats 没有任何动作
+         * 开启该功能 frameworks/av/services/audioflinger/Configuration.h:42://#define DEBUG_CPU_USAGE 10
+        */
         cpuStats.sample(myName);
 
         Vector< sp<EffectChain> > effectChains;
@@ -383,7 +459,10 @@ bool AudioFlinger::PlaybackThread::threadLoop()
         { // scope for mLock
 
             Mutex::Autolock _l(mLock);
-
+            /**
+             * 这里是在 ThreadBase中实现
+             *  ConfigEvent 事件处理
+            */
             processConfigEvents_l();
 
             // See comment at declaration of logString for why this is done under mLock
@@ -399,8 +478,10 @@ bool AudioFlinger::PlaybackThread::threadLoop()
             bool kernelLocationUpdate = false;
             if (mNormalSink != 0) {
                 // Note: The DuplicatingThread may not have a mNormalSink.
-                // We always fetch the timestamp here because often the downstream
-                // sink will block while writing.
+                // We always fetch the timestamp here because often the downstream  sink will block while writing.(我们总是在这里获取时间戳，因为通常下游接收器在写入时会阻塞。)
+                /**
+                 * frameworks/av/media/libaudioclient/include/media/AudioTimestamp.h
+                */
                 ExtendedTimestamp timestamp; // use private copy to fetch
                 (void) mNormalSink->getTimestamp(timestamp);
 
@@ -408,15 +489,11 @@ bool AudioFlinger::PlaybackThread::threadLoop()
                 // and the normal mixer period is the same as the fast mixer period, or there
                 // is some error from the HAL.
                 if (mTimestamp.mTimeNs[ExtendedTimestamp::LOCATION_KERNEL] >= 0) {
-                    mTimestamp.mPosition[ExtendedTimestamp::LOCATION_KERNEL_LASTKERNELOK] =
-                            mTimestamp.mPosition[ExtendedTimestamp::LOCATION_KERNEL];
-                    mTimestamp.mTimeNs[ExtendedTimestamp::LOCATION_KERNEL_LASTKERNELOK] =
-                            mTimestamp.mTimeNs[ExtendedTimestamp::LOCATION_KERNEL];
+                    mTimestamp.mPosition[ExtendedTimestamp::LOCATION_KERNEL_LASTKERNELOK] =  mTimestamp.mPosition[ExtendedTimestamp::LOCATION_KERNEL];
+                    mTimestamp.mTimeNs[ExtendedTimestamp::LOCATION_KERNEL_LASTKERNELOK] = mTimestamp.mTimeNs[ExtendedTimestamp::LOCATION_KERNEL];
 
-                    mTimestamp.mPosition[ExtendedTimestamp::LOCATION_SERVER_LASTKERNELOK] =
-                            mTimestamp.mPosition[ExtendedTimestamp::LOCATION_SERVER];
-                    mTimestamp.mTimeNs[ExtendedTimestamp::LOCATION_SERVER_LASTKERNELOK] =
-                            mTimestamp.mTimeNs[ExtendedTimestamp::LOCATION_SERVER];
+                    mTimestamp.mPosition[ExtendedTimestamp::LOCATION_SERVER_LASTKERNELOK] = mTimestamp.mPosition[ExtendedTimestamp::LOCATION_SERVER];
+                    mTimestamp.mTimeNs[ExtendedTimestamp::LOCATION_SERVER_LASTKERNELOK] =  mTimestamp.mTimeNs[ExtendedTimestamp::LOCATION_SERVER];
                 }
 
                 if (timestamp.mTimeNs[ExtendedTimestamp::LOCATION_KERNEL] >= 0) {
@@ -426,12 +503,12 @@ bool AudioFlinger::PlaybackThread::threadLoop()
                 }
 
                 // copy over kernel info
-                mTimestamp.mPosition[ExtendedTimestamp::LOCATION_KERNEL] =
-                        timestamp.mPosition[ExtendedTimestamp::LOCATION_KERNEL]
-                        + mSuspendedFrames; // add frames discarded when suspended
-                mTimestamp.mTimeNs[ExtendedTimestamp::LOCATION_KERNEL] =
-                        timestamp.mTimeNs[ExtendedTimestamp::LOCATION_KERNEL];
+                mTimestamp.mPosition[ExtendedTimestamp::LOCATION_KERNEL] =  timestamp.mPosition[ExtendedTimestamp::LOCATION_KERNEL]  + mSuspendedFrames; // add frames discarded when suspended
+                mTimestamp.mTimeNs[ExtendedTimestamp::LOCATION_KERNEL] = timestamp.mTimeNs[ExtendedTimestamp::LOCATION_KERNEL];
             }
+
+
+
             // mFramesWritten for non-offloaded tracks are contiguous
             // even after standby() is called. This is useful for the track frame
             // to sink frame mapping.
@@ -450,16 +527,15 @@ bool AudioFlinger::PlaybackThread::threadLoop()
                     // If we haven't written anything, mLastWriteTime will be -1
                     // and we use systemTime().
                     mTimestamp.mPosition[ExtendedTimestamp::LOCATION_SERVER] = mFramesWritten;
-                    mTimestamp.mTimeNs[ExtendedTimestamp::LOCATION_SERVER] = mLastWriteTime == -1
-                            ? systemTime() : mLastWriteTime;
+                    /**
+                     * 
+                    */
+                    mTimestamp.mTimeNs[ExtendedTimestamp::LOCATION_SERVER] = mLastWriteTime == -1 ? systemTime() : mLastWriteTime;
                 }
 
                 for (const sp<Track> &t : mActiveTracks) {
                     if (!t->isFastTrack()) {
-                        t->updateTrackFrameInfo(
-                                t->mAudioTrackServerProxy->framesReleased(),
-                                mFramesWritten,
-                                mTimestamp);
+                        t->updateTrackFrameInfo( t->mAudioTrackServerProxy->framesReleased(),mFramesWritten, mTimestamp);
                     }
                 }
             }
@@ -468,13 +544,15 @@ bool AudioFlinger::PlaybackThread::threadLoop()
             if (z % 100 == 0) {
                 timespec ts;
                 clock_gettime(CLOCK_MONOTONIC, &ts);
-                LOGT("This is an integer %d, this is a float %f, this is my "
-                    "pid %p %% %s %t", 42, 3.14, "and this is a timestamp", ts);
+                LOGT("This is an integer %d, this is a float %f, this is my " "pid %p %% %s %t", 42, 3.14, "and this is a timestamp", ts);
                 LOGT("A deceptive null-terminated string %\0");
             }
             ++z;
 #endif
             saveOutputTracks();
+
+
+
             if (mSignalPending) {
                 // A signal was raised while we were unlocked
                 mSignalPending = false;
@@ -633,12 +711,10 @@ bool AudioFlinger::PlaybackThread::threadLoop()
             //ALOGV("writing effect buffer to sink buffer format %#x", mFormat);
 
             if (requireMonoBlend()) {
-                mono_blend(mEffectBuffer, mEffectBufferFormat, mChannelCount, mNormalFrameCount,
-                           true /*limit*/);
+                mono_blend(mEffectBuffer, mEffectBufferFormat, mChannelCount, mNormalFrameCount,true /*limit*/);
             }
 
-            memcpy_by_audio_format(mSinkBuffer, mFormat, mEffectBuffer, mEffectBufferFormat,
-                    mNormalFrameCount * mChannelCount);
+            memcpy_by_audio_format(mSinkBuffer, mFormat, mEffectBuffer, mEffectBufferFormat,mNormalFrameCount * mChannelCount);
         }
 
         // enable changes in effect chain
@@ -666,8 +742,7 @@ bool AudioFlinger::PlaybackThread::threadLoop()
                         mBytesRemaining -= ret;
                         mFramesWritten += ret / mFrameSize;
                     }
-                } else if ((mMixerStatus == MIXER_DRAIN_TRACK) ||
-                        (mMixerStatus == MIXER_DRAIN_ALL)) {
+                } else if ((mMixerStatus == MIXER_DRAIN_TRACK) || (mMixerStatus == MIXER_DRAIN_ALL)) {
                     threadLoop_drain();
                 }
                 if (mType == MIXER && !mStandby) {
@@ -676,8 +751,7 @@ bool AudioFlinger::PlaybackThread::threadLoop()
                         mNumDelayedWrites++;
                         if ((lastWriteFinished - lastWarning) > kWarningThrottleNs) {
                             ATRACE_NAME("underrun");
-                            ALOGW("write blocked for %llu msecs, %d delayed writes, thread %p",
-                                    (unsigned long long) ns2ms(delta), mNumDelayedWrites, this);
+                            ALOGW("write blocked for %llu msecs, %d delayed writes, thread %p", (unsigned long long) ns2ms(delta), mNumDelayedWrites, this);
                             lastWarning = lastWriteFinished;
                         }
                     }
@@ -706,8 +780,7 @@ bool AudioFlinger::PlaybackThread::threadLoop()
                         // it's OK if deltaMs (and deltaNs) is an overestimate.
                         nsecs_t deltaNs;
                         // deltaNs = lastWriteFinished - previousLastWriteFinished;
-                        __builtin_sub_overflow(
-                            lastWriteFinished,previousLastWriteFinished, &deltaNs);
+                        __builtin_sub_overflow(lastWriteFinished,previousLastWriteFinished, &deltaNs);
                         const int32_t deltaMs = deltaNs / 1000000;
 
                         const int32_t throttleMs = (int32_t)mHalfBufferMs - deltaMs;
@@ -798,6 +871,7 @@ bool AudioFlinger::PlaybackThread::threadLoop()
     releaseWakeLock();
 
     ALOGV("Thread %p type %d exiting", this, mType);
+
     return false;
 }
 
@@ -809,6 +883,71 @@ bool AudioFlinger::PlaybackThread::threadLoop()
 
 
 
+// post condition: mConfigEvents.isEmpty()
+void AudioFlinger::ThreadBase::processConfigEvents_l()
+{
+    bool configChanged = false;
 
+    while (!mConfigEvents.isEmpty()) {
+
+        ALOGV("processConfigEvents_l() remaining events %zu", mConfigEvents.size());
+
+        sp<ConfigEvent> event = mConfigEvents[0];
+        mConfigEvents.removeAt(0);
+        switch (event->mType) {
+        case CFG_EVENT_PRIO: {
+            PrioConfigEventData *data = (PrioConfigEventData *)event->mData.get();
+            // FIXME Need to understand why this has to be done asynchronously
+            int err = requestPriority(data->mPid, data->mTid, data->mPrio, data->mForApp, true /*asynchronous*/);
+            if (err != 0) {
+                ALOGW("Policy SCHED_FIFO priority %d is unavailable for pid %d tid %d; error %d",data->mPrio, data->mPid, data->mTid, err);
+            }
+        } break;
+        case CFG_EVENT_IO: {
+            IoConfigEventData *data = (IoConfigEventData *)event->mData.get();
+            ioConfigChanged(data->mEvent, data->mPid);
+        } break;
+        case CFG_EVENT_SET_PARAMETER: {
+            SetParameterConfigEventData *data = (SetParameterConfigEventData *)event->mData.get();
+            if (checkForNewParameter_l(data->mKeyValuePairs, event->mStatus)) {
+                configChanged = true;
+                mLocalLog.log("CFG_EVENT_SET_PARAMETER: (%s) configuration changed", data->mKeyValuePairs.string());
+            }
+        } break;
+        case CFG_EVENT_CREATE_AUDIO_PATCH: {
+            const audio_devices_t oldDevice = getDevice();
+            CreateAudioPatchConfigEventData *data =  (CreateAudioPatchConfigEventData *)event->mData.get();
+            event->mStatus = createAudioPatch_l(&data->mPatch, &data->mHandle);
+            const audio_devices_t newDevice = getDevice();
+            mLocalLog.log("CFG_EVENT_CREATE_AUDIO_PATCH: old device %#x (%s) new device %#x (%s)",
+                    (unsigned)oldDevice, devicesToString(oldDevice).c_str(),  (unsigned)newDevice, devicesToString(newDevice).c_str());
+        } break;
+        case CFG_EVENT_RELEASE_AUDIO_PATCH: {
+            const audio_devices_t oldDevice = getDevice();
+            ReleaseAudioPatchConfigEventData *data =  (ReleaseAudioPatchConfigEventData *)event->mData.get();
+            event->mStatus = releaseAudioPatch_l(data->mHandle);
+            const audio_devices_t newDevice = getDevice();
+            mLocalLog.log("CFG_EVENT_RELEASE_AUDIO_PATCH: old device %#x (%s) new device %#x (%s)",
+                    (unsigned)oldDevice, devicesToString(oldDevice).c_str(),
+                    (unsigned)newDevice, devicesToString(newDevice).c_str());
+        } break;
+        default:
+            ALOG_ASSERT(false, "processConfigEvents_l() unknown event type %d", event->mType);
+            break;
+        }
+        {
+            Mutex::Autolock _l(event->mLock);
+            if (event->mWaitStatus) {
+                event->mWaitStatus = false;
+                event->mCond.signal();
+            }
+        }
+        ALOGV_IF(mConfigEvents.isEmpty(), "processConfigEvents_l() DONE thread %p", this);
+    }
+
+    if (configChanged) {
+        cacheParameters_l();
+    }
+}
 
 

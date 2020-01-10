@@ -1,0 +1,9 @@
+
+//  @   /work/workcodes/tsu-aosp-p9.0.0_2.1.0-auto-ga/hardware/interfaces/graphics/allocator/2.0/default/android.hardware.graphics.allocator@2.0-service.rc
+
+service vendor.gralloc-2-0 /vendor/bin/hw/android.hardware.graphics.allocator@2.0-service
+    class hal animation
+    user system
+    group graphics drmrpc
+    capabilities SYS_NICE
+    onrestart restart surfaceflinger

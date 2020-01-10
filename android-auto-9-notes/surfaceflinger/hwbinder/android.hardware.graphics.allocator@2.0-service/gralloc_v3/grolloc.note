@@ -1,0 +1,22 @@
+
+
+//  @   vendor/nxp-opensource/imx/display/gralloc_v3
+
+/**
+hardware/libhardware/include/hardware/hardware.h:111:    uint16_t module_api_version;
+hardware/libhardware/include/hardware/hardware.h:112:#define version_major module_api_version
+*/
+
+struct private_module_t HAL_MODULE_INFO_SYM = {
+    .base = {
+        .tag = HARDWARE_MODULE_TAG,
+        .version_major = GRALLOC_MODULE_API_VERSION_1_0,        //  hardware/libhardware/include/hardware/gralloc1.h:25:#define GRALLOC_MODULE_API_VERSION_1_0 HARDWARE_MODULE_API_VERSION(1, 0)
+        .version_minor = 0,
+        .id = GRALLOC_HARDWARE_MODULE_ID,
+        .name = "Graphics Memory Module",
+        .author = "Freescale Semiconductor, Inc.",
+        .methods = &gralloc_module_methods,
+        .dso = 0,
+        .reserved = {0},
+    },
+};

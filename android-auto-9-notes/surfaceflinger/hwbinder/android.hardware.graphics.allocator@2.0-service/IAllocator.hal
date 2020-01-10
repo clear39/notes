@@ -1,0 +1,44 @@
+//  @   /work/workcodes/tsu-aosp-p9.0.0_2.1.0-auto-ga/hardware/interfaces/graphics/allocator/2.0/IAllocator.hal
+
+
+package android.hardware.graphics.allocator@2.0;
+
+import android.hardware.graphics.mapper@2.0;
+
+interface IAllocator {
+    /**
+     * Retrieves implementation-defined debug information, which will be
+     * displayed during, for example, `dumpsys SurfaceFlinger`.
+     *
+     * @return debugInfo is a string of debug information.
+     */
+    @entry
+    @exit
+    @callflow(next="*")
+    dumpDebugInfo() generates (string debugInfo);
+
+    /**
+     * Allocates buffers with the properties specified by the descriptor.
+     *
+     * @param descriptor specifies the properties of the buffers to allocate.
+     * @param count is the number of buffers to allocate.
+     * @return error is NONE upon success. Otherwise,
+     *         BAD_DESCRIPTOR when the descriptor is invalid.
+     *         NO_RESOURCES when the allocation cannot be fulfilled at this
+     *                      time.
+     *         UNSUPPORTED when any of the property encoded in the descriptor
+     *                     is not supported.
+     * @return stride is the number of pixels between two consecutive rows of
+     *         the buffers, when the concept of consecutive rows is defined.
+     *         Otherwise, it has no meaning.
+     * @return buffers is an array of raw handles to the newly allocated
+     *         buffers.
+     */
+    @entry
+    @exit
+    @callflow(next="*")
+    allocate(BufferDescriptor descriptor, uint32_t count)
+        generates (Error error,
+                   uint32_t stride,
+                   vec<handle> buffers);
+};

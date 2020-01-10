@@ -1,0 +1,290 @@
+$ simpleperf --help     或者    simpleperf help 
+
+Usage: simpleperf [common options] subcommand [args_for_subcommand]
+common options:
+    -h/--help     Print this help information.
+    --log <severity> Set the minimum severity of logging. Possible severities include verbose, debug, warning, info, error, fatal. Default is info.
+    --version     Print version of simpleperf.
+
+
+subcommands:
+    debug-unwind        Debug/test offline unwinding    (调试/测试脱机展开).
+    dump                           dump perf record file
+    help                              print help information for simpleperf           //  simpleperf --help或者-h 一样   simpleperf help list
+    kmem                          collect kernel memory allocation information
+    list                                  list available event types
+    record              record sampling info in perf.data
+    report              report sampling information in perf.data
+    report-sample       report raw sample information in perf.data
+    stat                gather performance counter information
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+$ simpleperf debug-unwind --help           /                      simpleperf help debug-unwind
+Usage: simpleperf debug-unwind [options]
+       Given a perf.data generated with "-g --no-unwind", it converts
+       regs/stack data of samples into callchains, and write result into
+       a new perf.data. The new perf.data can be passed to
+       unwind_result_reporter.py to generate a text report.
+
+-i <file>  The path of record file generated with "-g --no-unwind".     Default is perf.data.
+
+-o <file>  The path ot write new perf.data. Default is perf.data.debug.
+
+--symfs <dir>  Look for files with symbols relative to this directory.
+
+--time time    Only unwind samples recorded at selected time.
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+$ simpleperf dump --help                                         
+Usage: simpleperf dumprecord [options] [perf_record_file]
+    Dump different parts of a perf record file. Default file is perf.data.
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+$ simpleperf kmem --help                                         
+Usage: kmem (record [record options] | report [report options])
+kmem record
+-g        Enable call graph recording. Same as '--call-graph fp'.
+--slab    Collect slab allocation information. Default option.
+Other record options provided by simpleperf record command are also available.
+kmem report
+--children  Print the accumulated allocation info appeared in the callchain.
+            Can be used on perf.data recorded with `--call-graph fp` option.
+-g [callee|caller]  Print call graph for perf.data recorded with
+                    `--call-graph fp` option. If callee mode is used, the graph
+                     shows how functions are called from others. Otherwise, the
+                     graph shows how functions call others. Default is callee
+                     mode. The percentage shown in the graph is determined by
+                     the hit count of the callchain.
+-i          Specify path of record file, default is perf.data
+-o report_file_name  Set report file name, default is stdout.
+--slab      Report slab allocation information. Default option.
+--slab-sort key1,key2,...
+            Select the keys to sort and print slab allocation information.
+            Should be used with --slab option. Possible keys include:
+              hit         -- the allocation count.
+              caller      -- the function calling allocation.
+              ptr         -- the address of the allocated space.
+              bytes_req   -- the total requested space size.
+              bytes_alloc -- the total allocated space size.
+              fragment    -- the extra allocated space size  (bytes_alloc - bytes_req).
+              gfp_flags   -- the flags used for allocation.
+              pingpong    -- the count of allocations that are freed not on the cpu allocating them.
+            The default slab sort keys are:
+              hit,caller,bytes_req,bytes_alloc,fragment,pingpong.
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+$ simpleperf list --help                                         
+Usage: simpleperf list [options] [hw|sw|cache|raw|tracepoint]
+       List all available event types.
+       Filters can be used to show only event types belong to selected types:
+         hw          hardware events
+         sw          software events
+         cache       hardware cache events
+         raw         raw pmu events
+         tracepoint  tracepoint events
+Options:
+--show-features    Show features supported on the device, including:
+                     dwarf-based-call-graph
+                     trace-offcpu
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+$ simpleperf record --help                                       
+Usage: simpleperf record [options] [--] [command [command-args]]
+       Gather sampling information of running [command]. And -a/-p/-t option
+       can be used to change target of sampling information.
+       The default options are: -e cpu-cycles -f 4000 -o perf.data.
+Select monitored threads:
+-a     System-wide collection.
+--app package_name    Profile the process of an Android application.
+                      On non-rooted devices, the app must be debuggable,
+                      because we use run-as to switch to the app's context.
+-p pid1,pid2,...       Record events on existing processes. Mutually exclusive with -a.
+
+-t tid1,tid2,... Record events on existing threads. Mutually exclusive with -a.
+
+Select monitored event types:
+-e event1[:modifier1],event2[:modifier2],...
+             Select the event list to sample. Use `simpleperf list` to find
+             all possible event names. Modifiers can be added to define how
+             the event should be monitored.
+             Possible modifiers are:
+                u - monitor user space events only
+                k - monitor kernel space events only
+--group event1[:modifier],event2[:modifier2],...
+             Similar to -e option. But events specified in the same --group
+             option are monitored as a group, and scheduled in and out at the
+             same time.
+--trace-offcpu   Generate samples when threads are scheduled off cpu.
+                 Similar to "-c 1 -e sched:sched_switch".
+
+Select monitoring options:
+-f freq      Set event sample frequency. It means recording at most [freq]
+             samples every second. For non-tracepoint events, the default
+             option is -f 4000. A -f/-c option affects all event types
+             following it until meeting another -f/-c option. For example,
+             for "-f 1000 cpu-cycles -c 1 -e sched:sched_switch", cpu-cycles
+             has sample freq 1000, sched:sched_switch event has sample period 1.
+-c count     Set event sample period. It means recording one sample when
+             [count] events happen. For tracepoint events, the default option
+             is -c 1.
+--call-graph fp | dwarf[,<dump_stack_size>]
+             Enable call graph recording. Use frame pointer or dwarf debug
+             frame as the method to parse call graph in stack.
+             Default is dwarf,65528.
+-g           Same as '--call-graph dwarf'.
+--clockid clock_id      Generate timestamps of samples using selected clock.
+                        Possible values are: realtime, monotonic,
+                        monotonic_raw, boottime, perf. Default is perf.
+--cpu cpu_item1,cpu_item2,...
+             Collect samples only on the selected cpus. cpu_item can be cpu
+             number like 1, or cpu range like 0-3.
+--duration time_in_sec  Monitor for time_in_sec seconds instead of running
+                        [command]. Here time_in_sec may be any positive
+                        floating point number.
+-j branch_filter1,branch_filter2,...
+             Enable taken branch stack sampling. Each sample captures a series
+             of consecutive taken branches.
+             The following filters are defined:
+                any: any type of branch
+                any_call: any function call or system call
+                any_ret: any function return or system call return
+                ind_call: any indirect branch
+                u: only when the branch target is at the user level
+                k: only when the branch target is in the kernel
+             This option requires at least one branch type among any, any_call,
+             any_ret, ind_call.
+-b           Enable taken branch stack sampling. Same as '-j any'.
+-m mmap_pages   Set the size of the buffer used to receiving sample data from
+                the kernel. It should be a power of 2. If not set, the max
+                possible value <= 1024 will be used.
+--no-inherit  Don't record created child threads/processes.
+
+Dwarf unwinding options:
+--no-post-unwind   If `--call-graph dwarf` option is used, then the user's stack
+                   will be recorded in perf.data and unwound after recording.
+                   However, this takes a lot of disk space. Use this option to
+                   unwind while recording.
+--no-unwind   If `--call-graph dwarf` option is used, then the user's stack
+              will be unwound by default. Use this option to disable the
+              unwinding of the user's stack.
+--no-callchain-joiner  If `--call-graph dwarf` option is used, then by default
+                       callchain joiner is used to break the 64k stack limit
+                       and build more complete call graphs. However, the built
+                       call graphs may not be correct in all cases.
+--callchain-joiner-min-matching-nodes count
+               When callchain joiner is used, set the matched nodes needed to join
+               callchains. The count should be >= 1. By default it is 1.
+
+Recording file options:
+--no-dump-kernel-symbols  Don't dump kernel symbols in perf.data. By default
+                          kernel symbols will be dumped when needed.
+--no-dump-symbols       Don't dump symbols in perf.data. By default symbols are
+                        dumped in perf.data, to support reporting in another
+                        environment.
+-o record_file_name    Set record file name, default is perf.data.
+--exit-with-parent            Stop recording when the process starting
+                              simpleperf dies.
+--start_profiling_fd fd_no    After starting profiling, write "STARTED" to
+                              <fd_no>, then close <fd_no>.
+--symfs <dir>    Look for files with symbols relative to this directory.
+                 This option is used to provide files with symbol table and
+                 debug information, which are used for unwinding and dumping symbols.
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+$ simpleperf report --help                                       
+Usage: simpleperf report [options]
+The default options are: -i perf.data --sort comm,pid,tid,dso,symbol.
+-b    Use the branch-to addresses in sampled take branches instead of the
+      instruction addresses. Only valid for perf.data recorded with -b/-j
+      option.
+--children    Print the overhead accumulated by appearing in the callchain.
+--comms comm1,comm2,...   Report only for selected comms.
+--dsos dso1,dso2,...      Report only for selected dsos.
+--full-callgraph  Print full call graph. Used with -g option. By default, brief call graph is printed.
+-g [callee|caller]    Print call graph. If callee mode is used, the graph
+                      shows how functions are called from others. Otherwise,
+                      the graph shows how functions call others.
+                      Default is caller mode.
+-i <file>  Specify path of record file, default is perf.data.
+--kallsyms <file>     Set the file to read kernel symbols.
+--max-stack <frames>  Set max stack frames shown when printing call graph.
+-n         Print the sample count for each item.
+--no-demangle         Don't demangle symbol names.
+--no-show-ip          Don't show vaddr in file for unknown symbols.
+-o report_file_name   Set report file name, default is stdout.
+--percent-limit <percent>  Set min percentage shown when printing call graph.
+--pids pid1,pid2,...  Report only for selected pids.
+--raw-period          Report period count instead of period percentage.
+--sort key1,key2,...  Select keys used to sort and print the report. The
+                      appearance order of keys decides the order of keys used
+                      to sort and print the report.
+                      Possible keys include:
+                        pid             -- process id
+                        tid             -- thread id
+                        comm            -- thread name (can be changed during
+                                           the lifetime of a thread)
+                        dso             -- shared library
+                        symbol          -- function name in the shared library
+                        vaddr_in_file   -- virtual address in the shared library
+                      Keys can only be used with -b option:
+                        dso_from        -- shared library branched from
+                        dso_to          -- shared library branched to
+                        symbol_from     -- name of function branched from
+                        symbol_to       -- name of function branched to
+                      The default sort keys are:
+                        comm,pid,tid,dso,symbol
+--symbols symbol1;symbol2;...    Report only for selected symbols.
+--symfs <dir>         Look for files with symbols relative to this directory.
+--tids tid1,tid2,...  Report only for selected tids.
+--vmlinux <file>      Parse kernel symbols from <file>.
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+$ simpleperf  report-sample --help                               
+Usage: simpleperf report-sample [options]
+--dump-protobuf-report  <file>
+           Dump report file generated by
+           `simpleperf report-sample --protobuf -o <file>`.
+-i <file>  Specify path of record file, default is perf.data.
+-o report_file_name  Set report file name, default is stdout.
+--protobuf  Use protobuf format in report_sample.proto to output samples.
+            Need to set a report_file_name when using this option.
+--show-callchain  Print callchain samples.
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+$ simpleperf stat --help                                         
+Usage: simpleperf stat [options] [command [command-args]]
+       Gather performance counter information of running [command].
+       And -a/-p/-t option can be used to change target of counter information.
+-a           Collect system-wide information.
+--app package_name    Profile the process of an Android application.
+                      On non-rooted devices, the app must be debuggable,
+                      because we use run-as to switch to the app's context.
+--cpu cpu_item1,cpu_item2,...
+                 Collect information only on the selected cpus. cpu_item can
+                 be a cpu number like 1, or a cpu range like 0-3.
+--csv            Write report in comma separate form.
+--duration time_in_sec  Monitor for time_in_sec seconds instead of running
+                        [command]. Here time_in_sec may be any positive
+                        floating point number.
+--interval time_in_ms   Print stat for every time_in_ms milliseconds.
+                        Here time_in_ms may be any positive floating point
+                        number.
+-e event1[:modifier1],event2[:modifier2],...
+                 Select the event list to count. Use `simpleperf list` to find
+                 all possible event names. Modifiers can be added to define
+                 how the event should be monitored. Possible modifiers are:
+                   u - monitor user space events only
+                   k - monitor kernel space events only
+--group event1[:modifier],event2[:modifier2],...
+             Similar to -e option. But events specified in the same --group
+             option are monitored as a group, and scheduled in and out at the
+             same time.
+--no-inherit     Don't stat created child threads/processes.
+-o output_filename  Write report to output_filename instead of standard output.
+-p pid1,pid2,... Stat events on existing processes. Mutually exclusive with -a.
+-t tid1,tid2,... Stat events on existing threads. Mutually exclusive with -a.
+--verbose        Show result in verbose mode.
