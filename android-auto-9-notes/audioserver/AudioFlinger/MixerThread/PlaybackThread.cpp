@@ -708,8 +708,12 @@ bool AudioFlinger::PlaybackThread::threadLoop()
             }
 
             mBytesRemaining = mCurrentWriteLength;
+
             if (isSuspended()) {
                 // Simulate write to HAL when suspended (e.g. BT SCO phone call).
+                /**
+                 * 
+                */
                 mSleepTimeUs = suspendSleepTimeUs(); // assumes full buffer.
                 const size_t framesRemaining = mBytesRemaining / mFrameSize;
                 mBytesWritten += mBytesRemaining;
