@@ -34,7 +34,10 @@ NBAIO_Sink::NBAIO_Sink(const NBAIO_Format& format = Format_Invalid) : NBAIO_Port
 
 
 
-
+/**
+ * AudioFlinger::MixerThread::MixerThread()
+ *  ---> mOutputSink->negotiate(offers, 1, NULL, numCounterOffers);
+*/
 ssize_t AudioStreamOutSink::negotiate(const NBAIO_Format offers[], size_t numOffers,NBAIO_Format counterOffers[], size_t& numCounterOffers)
 {
     if (!Format_isValid(mFormat)) {
@@ -58,18 +61,22 @@ bool Format_isValid(const NBAIO_Format& format)
     return format.mSampleRate != 0 && format.mChannelCount != 0 && format.mFormat != AUDIO_FORMAT_INVALID && format.mFrameSize != 0;
 }
 
-//  @   frameworks/av/media/libnbaio/NBAIO.cpp
+/***
+ *   @   frameworks/av/media/libnbaio/NBAIO.cpp
+ */ 
 // Default implementation that only accepts my mFormat
 ssize_t NBAIO_Port::negotiate(const NBAIO_Format offers[], size_t numOffers,NBAIO_Format counterOffers[], size_t& numCounterOffers)
 {
     ALOGV("negotiate offers=%p numOffers=%zu countersOffers=%p numCounterOffers=%zu",offers, numOffers, counterOffers, numCounterOffers);
     if (Format_isValid(mFormat)) {
+
         for (size_t i = 0; i < numOffers; ++i) {
             if (Format_isEqual(offers[i], mFormat)) {
                 mNegotiated = true;
                 return i;
             }
         }
+        
         if (numCounterOffers > 0) {
             counterOffers[0] = mFormat;
         }
@@ -84,10 +91,13 @@ ssize_t NBAIO_Port::negotiate(const NBAIO_Format offers[], size_t numOffers,NBAI
 bool Format_isEqual(const NBAIO_Format& format1, const NBAIO_Format& format2)
 {
     return format1.mSampleRate == format2.mSampleRate &&
-            format1.mChannelCount == format2.mChannelCount && format1.mFormat == format2.mFormat &&
+            format1.mChannelCount == format2.mChannelCount && 
+            format1.mFormat == format2.mFormat &&
             format1.mFrameSize == format2.mFrameSize;
 }
 
 
 
-virtual NBAIO_Format NBAIO_Port::format() const { return mNegotiated ? mFormat : Format_Invalid; }
+virtual NBAIO_Format NBAIO_Port::format() const {
+    return mNegotiated ? mFormat : Format_Invalid;
+}

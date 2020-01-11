@@ -534,6 +534,11 @@ bool AudioFlinger::PlaybackThread::threadLoop()
                 }
 
                 for (const sp<Track> &t : mActiveTracks) {
+                    /**
+                     * @    frameworks/av/services/audioflinger/PlaybackTracks.h
+                     * 
+                     * (mFlags & AUDIO_OUTPUT_FLAG_FAST) != 0;
+                    */
                     if (!t->isFastTrack()) {
                         t->updateTrackFrameInfo( t->mAudioTrackServerProxy->framesReleased(),mFramesWritten, mTimestamp);
                     }
@@ -549,6 +554,11 @@ bool AudioFlinger::PlaybackThread::threadLoop()
             }
             ++z;
 #endif
+
+            /**
+             * 该方法只有 DuplicatingThread 有实现
+             *  所以这里没有任何动作
+            */
             saveOutputTracks();
 
 
@@ -581,14 +591,30 @@ bool AudioFlinger::PlaybackThread::threadLoop()
 
                 continue;
             }
+
+            /**
+             * mActiveTracks 中没有激活的 Track，或者线程被挂起
+             * 
+            */
             if ((!mActiveTracks.size() && systemTime() > mStandbyTimeNs) || isSuspended()) {
+                /**
+                 * return !mStandby;
+                 * 如果 mStandby 为false ，处理 mStandby
+                */
                 // put audio hardware into standby after short delay
                 if (shouldStandby_l()) {
 
+                    /**
+                     * 在 PlaybackThread 中实现
+                     * 
+                    */
                     threadLoop_standby();
 
                     // This is where we go into standby
                     if (!mStandby) {
+                        /**
+                         * frameworks/av/services/audioflinger/TypedLogger.h
+                        */
                         LOG_AUDIO_STATE();
                     }
                     mStandby = true;
@@ -597,7 +623,10 @@ bool AudioFlinger::PlaybackThread::threadLoop()
                 if (!mActiveTracks.size() && mConfigEvents.isEmpty()) {
                     // we're about to wait, flush the binder command buffer
                     IPCThreadState::self()->flushCommands();
-
+                   /**
+                    * 同 saveOutputTracks 一样 只有 DuplicatingThread 有实现
+                    *  所以这里没有任何动作
+                   */
                     clearOutputTracks();
 
                     if (exitPending()) {
@@ -626,6 +655,9 @@ bool AudioFlinger::PlaybackThread::threadLoop()
                     continue;
                 }
             }
+            /**
+             * 
+            */
             // mMixerStatusIgnoringFastTracks is also updated internally
             mMixerStatus = prepareTracks_l(&tracksToRemove);
 
@@ -787,10 +819,7 @@ bool AudioFlinger::PlaybackThread::threadLoop()
                         if ((signed)mHalfBufferMs >= throttleMs && throttleMs > 0) {
                             usleep(throttleMs * 1000);
                             // notify of throttle start on verbose log
-                            ALOGV_IF(mThreadThrottleEndMs == mThreadThrottleTimeMs,
-                                    "mixer(%p) throttle begin:"
-                                    " ret(%zd) deltaMs(%d) requires sleep %d ms",
-                                    this, ret, deltaMs, throttleMs);
+                            ALOGV_IF(mThreadThrottleEndMs == mThreadThrottleTimeMs,  "mixer(%p) throttle begin:" " ret(%zd) deltaMs(%d) requires sleep %d ms", this, ret, deltaMs, throttleMs);
                             mThreadThrottleTimeMs += throttleMs;
                             // Throttle must be attributed to the previous mixer loop's write time
                             // to allow back-to-back throttling.
@@ -800,9 +829,7 @@ bool AudioFlinger::PlaybackThread::threadLoop()
                             if (diff > 0) {
                                 // notify of throttle end on debug log
                                 // but prevent spamming for bluetooth
-                                ALOGD_IF(!audio_is_a2dp_out_device(outDevice()) &&
-                                         !audio_is_hearing_aid_out_device(outDevice()),
-                                        "mixer(%p) throttle end: throttle time(%u)", this, diff);
+                                ALOGD_IF(!audio_is_a2dp_out_device(outDevice()) && !audio_is_hearing_aid_out_device(outDevice()), "mixer(%p) throttle end: throttle time(%u)", this, diff);
                                 mThreadThrottleEndMs = mThreadThrottleTimeMs;
                             }
                         }
@@ -821,6 +848,10 @@ bool AudioFlinger::PlaybackThread::threadLoop()
                     // compute expected next time vs current time.
                     // (negative deltas are treated as delays).
                     nsecs_t deltaNs = timeLoopNextNs - nowNs;
+                    /**
+                     * frameworks/av/services/audioflinger/Threads.h:643:    static const nsecs_t kMaxNextBufferDelayNs = 100000000;
+                     * 
+                    */
                     if (deltaNs < -kMaxNextBufferDelayNs) {
                         // Delays longer than the max allowed trigger a reset.
                         ALOGV("DelayNs: %lld, resetting timeLoopNextNs", (long long) deltaNs);
@@ -835,6 +866,7 @@ bool AudioFlinger::PlaybackThread::threadLoop()
                     // update sleep time (which is >= 0)
                     mSleepTimeUs = deltaNs / 1000;
                 }
+
                 if (!mSignalPending && mConfigEvents.isEmpty() && !exitPending()) {
                     mWaitWorkCV.waitRelative(mLock, microseconds((nsecs_t)mSleepTimeUs));
                 }
@@ -859,7 +891,8 @@ bool AudioFlinger::PlaybackThread::threadLoop()
 
         // FIXME Note that the above .clear() is no longer necessary since effectChains
         // is now local to this block, but will keep it for now (at least until merge done).
-    }
+
+    }// while (!exitPending())
 
     threadLoop_exit();
 
