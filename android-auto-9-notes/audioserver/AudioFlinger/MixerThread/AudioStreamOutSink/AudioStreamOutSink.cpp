@@ -14,10 +14,7 @@ class AudioStreamOutSink : public NBAIO_Sink {
 /**
  * @    frameworks/av/media/libnbaio/AudioStreamOutSink.cpp
 */
-AudioStreamOutSink::AudioStreamOutSink(sp<StreamOutHalInterface> stream) :
-        NBAIO_Sink(),
-        mStream(stream),
-        mStreamBufferSizeBytes(0)
+AudioStreamOutSink::AudioStreamOutSink(sp<StreamOutHalInterface> stream) : NBAIO_Sink(), mStream(stream), mStreamBufferSizeBytes(0)
 {
     ALOG_ASSERT(stream != 0);
 }
@@ -100,4 +97,52 @@ bool Format_isEqual(const NBAIO_Format& format1, const NBAIO_Format& format2)
 
 virtual NBAIO_Format NBAIO_Port::format() const {
     return mNegotiated ? mFormat : Format_Invalid;
+}
+
+
+
+
+
+
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+status_t AudioStreamOutSink::getTimestamp(ExtendedTimestamp &timestamp)
+{
+    uint64_t position64;
+    struct timespec time;
+    if (mStream->getPresentationPosition(&position64, &time) != OK) {
+        return INVALID_OPERATION;
+    }
+    timestamp.mPosition[ExtendedTimestamp::LOCATION_KERNEL] = position64;
+    timestamp.mTimeNs[ExtendedTimestamp::LOCATION_KERNEL] = audio_utils_ns_from_timespec(&time);
+    return OK;
+}
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+ssize_t AudioStreamOutSink::write(const void *buffer, size_t count)
+{
+    if (!mNegotiated) {
+        return NEGOTIATE;
+    }
+    ALOG_ASSERT(Format_isValid(mFormat));
+    size_t written;
+    /**
+     * 
+    */
+    status_t ret = mStream->write(buffer, count * mFrameSize, &written);
+    if (ret == OK && written > 0) {
+        written /= mFrameSize;
+        /**
+         * mFramesWritten 统计已经写入的数据帧数
+        */
+        mFramesWritten += written;
+        return written;
+    } else {
+        // FIXME verify HAL implementations are returning the correct error codes e.g. WOULD_BLOCK
+        ALOGE_IF(ret != OK, "Error while writing data to HAL: %d", ret);
+        return ret;
+    }
 }

@@ -1,3 +1,15 @@
+//      @       frameworks/av/include/media/AudioBufferProvider.h
+class AudioBufferProvider{
+
+}
+
+
+//      @       frameworks/av/media/libmedia/include/media/ExtendedAudioBufferProvider.h
+class ExtendedAudioBufferProvider : public AudioBufferProvider {
+
+}
+
+
 
 //      @       frameworks/av/services/audioflinger/TrackBase.h
 class TrackBase : public ExtendedAudioBufferProvider, public RefBase {

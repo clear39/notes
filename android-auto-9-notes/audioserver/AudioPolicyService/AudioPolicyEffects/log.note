@@ -1,0 +1,14 @@
+
+
+/**
+*audio_effects配置文件 frameworks/av/media/libeffects/data/audio_effects.xml 详细配置
+*/
+
+frameworks/av/services/audiopolicy/service/AudioPolicyInterfaceImpl.cpp:228:        audioPolicyEffects = mAudioPolicyEffects;
+frameworks/av/services/audiopolicy/service/AudioPolicyInterfaceImpl.cpp:265:        audioPolicyEffects = mAudioPolicyEffects;
+frameworks/av/services/audiopolicy/service/AudioPolicyInterfaceImpl.cpp:376:        audioPolicyEffects = mAudioPolicyEffects;
+frameworks/av/services/audiopolicy/service/AudioPolicyInterfaceImpl.cpp:625:        audioPolicyEffects = mAudioPolicyEffects;
+frameworks/av/services/audiopolicy/service/AudioPolicyInterfaceImpl.cpp:825:        audioPolicyEffects = mAudioPolicyEffects;
+frameworks/av/services/audiopolicy/service/AudioPolicyService.h:689:    sp<AudioPolicyEffects> mAudioPolicyEffects;
+frameworks/av/services/audiopolicy/service/AudioPolicyService.cpp:87:        mAudioPolicyEffects = audioPolicyEffects;
+frameworks/av/services/audiopolicy/service/AudioPolicyService.cpp:104:    mAudioPolicyEffects.clear();

@@ -69,7 +69,7 @@ AudioFlinger::PlaybackThread::PlaybackThread(const sp<AudioFlinger>& audioFlinge
         if (mOutput->audioHwDev->canSetMasterMute()) {
             mMasterMute = false;
         }
-    }
+    }                   
 
     readOutputParameters_l();
 
@@ -89,11 +89,12 @@ void AudioFlinger::PlaybackThread::readOutputParameters_l()
     // unfortunately we have no way of recovering from errors here, hence the LOG_ALWAYS_FATAL
     mSampleRate = mOutput->getSampleRate();
     mChannelMask = mOutput->getChannelMask();
+
     if (!audio_is_output_channel(mChannelMask)) {
         LOG_ALWAYS_FATAL("HAL channel mask %#x not valid for output", mChannelMask);
     }
-    if ((mType == MIXER || mType == DUPLICATING)
-            && !isValidPcmSinkChannelMask(mChannelMask)) {
+
+    if ((mType == MIXER || mType == DUPLICATING)  && !isValidPcmSinkChannelMask(mChannelMask)) {
         LOG_ALWAYS_FATAL("HAL channel mask %#x not supported for mixed output",mChannelMask);
     }
     mChannelCount = audio_channel_count_from_out_mask(mChannelMask);
@@ -211,12 +212,10 @@ void AudioFlinger::PlaybackThread::readOutputParameters_l()
      * 注意这里创建缓存区
      * frameworks/av/services/audioflinger/Threads.h:812: 
      * void*                           mSinkBuffer;         // frame size aligned sink buffer
-     * 
     */
     (void)posix_memalign(&mSinkBuffer, 32, sinkBufferSize);
 
-    // We resize the mMixerBuffer according to the requirements of the sink buffer which
-    // drives the output.
+    // We resize the mMixerBuffer according to the requirements of the sink buffer which drives the output.
     free(mMixerBuffer);
     mMixerBuffer = NULL;
     
@@ -231,7 +230,7 @@ void AudioFlinger::PlaybackThread::readOutputParameters_l()
 
     free(mEffectBuffer);
     mEffectBuffer = NULL;
-    if (mEffectBufferEnabled) {// true
+    if (mEffectBufferEnabled) {// true，静态指定
         mEffectBufferFormat = EFFECT_BUFFER_FORMAT;
         mEffectBufferSize = mNormalFrameCount * mChannelCount * audio_bytes_per_sample(mEffectBufferFormat);
         (void)posix_memalign(&mEffectBuffer, 32, mEffectBufferSize);
@@ -264,7 +263,7 @@ status_t AudioFlinger::PlaybackThread::addTrack_l(const sp<Track>& track)
         // the track is newly added, make sure it fills up all its
         // buffers before playing. This is to ensure the client will
         // effectively get the latency it requested.
-        if (track->isExternalTrack()) {
+        if (track->isExternalTrack()) {//isExternalTrack  根据  track中的 mType 是否为  TYPE_OUTPUT 或者 TYPE_PATCH，正常多媒体播放都为 TYPE_DEFAULT
             TrackBase::track_state state = track->mState;
             mLock.unlock();
             status = AudioSystem::startOutput(mId, track->streamType(), track->sessionId());
@@ -367,6 +366,18 @@ void AudioFlinger::PlaybackThread::cacheParameters_l()
 }
 
 
+effect_buffer_t *PlaybackThread::sinkBuffer() const { 
+    /**
+     * PlaybackThread::mSinkBuffer
+    */
+    return reinterpret_cast<effect_buffer_t *>(mSinkBuffer); 
+};
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * 
+*/
 bool AudioFlinger::PlaybackThread::threadLoop()
 {
     /**
@@ -566,35 +577,13 @@ bool AudioFlinger::PlaybackThread::threadLoop()
             if (mSignalPending) {
                 // A signal was raised while we were unlocked
                 mSignalPending = false;
-            } else if (waitingAsyncCallback_l()) {
-                if (exitPending()) {
-                    break;
-                }
-                bool released = false;
-                if (!keepWakeLock()) {
-                    releaseWakeLock_l();
-                    released = true;
-                }
-
-                const int64_t waitNs = computeWaitTimeNs_l();
-                ALOGV("wait async completion (wait time: %lld)", (long long)waitNs);
-                status_t status = mWaitWorkCV.waitRelative(mLock, waitNs);
-                if (status == TIMED_OUT) {
-                    mSignalPending = true; // if timeout recheck everything
-                }
-                ALOGV("async completion/wake");
-                if (released) {
-                    acquireWakeLock_l();
-                }
-                mStandbyTimeNs = systemTime() + mStandbyDelayNs;
-                mSleepTimeUs = 0;
-
-                continue;
+            } else if (waitingAsyncCallback_l()) {//    waitingAsyncCallback_l 在 PlaybackThread实现 返回 false，只有OffloadThread才会有实现
+                。。。。。。
             }
 
             /**
              * mActiveTracks 中没有激活的 Track，或者线程被挂起
-             * 
+             * systemTime() > mStandbyTimeNs 当前时间是否大于上一次计算得到的Standby时间
             */
             if ((!mActiveTracks.size() && systemTime() > mStandbyTimeNs) || isSuspended()) {
                 /**
@@ -618,7 +607,7 @@ bool AudioFlinger::PlaybackThread::threadLoop()
                         LOG_AUDIO_STATE();
                     }
                     mStandby = true;
-                }
+                }//     shouldStandby_l()
 
                 if (!mActiveTracks.size() && mConfigEvents.isEmpty()) {
                     // we're about to wait, flush the binder command buffer
@@ -645,8 +634,12 @@ bool AudioFlinger::PlaybackThread::threadLoop()
                     mBytesWritten = 0;
                     mBytesRemaining = 0;
                     checkSilentMode_l();
-
+                   
+                   /**
+                    * mStandbyTimeNs为计算下一次standby时间
+                   */
                     mStandbyTimeNs = systemTime() + mStandbyDelayNs;
+
                     mSleepTimeUs = mIdleSleepTimeUs;
                     if (mType == MIXER) {
                         sleepTimeShift = 0;
@@ -654,7 +647,8 @@ bool AudioFlinger::PlaybackThread::threadLoop()
 
                     continue;
                 }
-            }
+            }// (!mActiveTracks.size() && systemTime() > mStandbyTimeNs) || isSuspended()
+
             /**
              * 
             */
@@ -670,13 +664,18 @@ bool AudioFlinger::PlaybackThread::threadLoop()
             // or modified if an effect is created or deleted
             lockEffectChains_l(effectChains);
         } // mLock scope ends
+        /***
+         *  正常播放日志结果
+         * 01-13 08:15:52.985  3832  3847 V AudioFlinger_Thread: thread 0xf3703dc0 type MIXER TID 3847 threadLoop() mBytesRemaining:0,mMixerStatus:2(MIXER_TRACKS_READY)
+         */
+        ALOGVV("%s threadLoop() mBytesRemaining:%zu,mMixerStatus:%d",myName.c_str(),mBytesRemaining,mMixerStatus);
 
         if (mBytesRemaining == 0) {
             mCurrentWriteLength = 0;
-            if (mMixerStatus == MIXER_TRACKS_READY) {
+            if (mMixerStatus == MIXER_TRACKS_READY) {//2
                 // threadLoop_mix() sets mCurrentWriteLength
                 threadLoop_mix();
-            } else if ((mMixerStatus != MIXER_DRAIN_TRACK)  && (mMixerStatus != MIXER_DRAIN_ALL)) {
+            } else if ((mMixerStatus != MIXER_DRAIN_TRACK /*3*/)  && (mMixerStatus != MIXER_DRAIN_ALL /*4*/)) {
                 // threadLoop_sleepTime sets mSleepTimeUs to 0 if data
                 // must be written to HAL
                 threadLoop_sleepTime();
@@ -705,14 +704,14 @@ bool AudioFlinger::PlaybackThread::threadLoop()
                 }
 
                 memcpy_by_audio_format(buffer, format, mMixerBuffer, mMixerBufferFormat,  mNormalFrameCount * mChannelCount);
-            }
+             }// mMixerBufferValid
 
             mBytesRemaining = mCurrentWriteLength;
 
             if (isSuspended()) {
                 // Simulate write to HAL when suspended (e.g. BT SCO phone call).
                 /**
-                 * 
+                 * mSleepTimeUs = (uint32_t)(((mNormalFrameCount * 1000) / mSampleRate) * 1000)
                 */
                 mSleepTimeUs = suspendSleepTimeUs(); // assumes full buffer.
                 const size_t framesRemaining = mBytesRemaining / mFrameSize;
@@ -720,7 +719,7 @@ bool AudioFlinger::PlaybackThread::threadLoop()
                 mFramesWritten += framesRemaining;
                 mSuspendedFrames += framesRemaining; // to adjust kernel HAL position
                 mBytesRemaining = 0;
-            }
+            }// isSuspended()
 
             // only process effects if we're going to write
             if (mSleepTimeUs == 0 && mType != OFFLOAD) {
@@ -728,7 +727,8 @@ bool AudioFlinger::PlaybackThread::threadLoop()
                     effectChains[i]->process_l();
                 }
             }
-        }
+        }//mBytesRemaining == 0
+
         // Process effect chains for offloaded thread even if no audio
         // was read from audio track: process only updates effect state
         // and thus does have to be synchronized with audio writes but may have
@@ -756,7 +756,8 @@ bool AudioFlinger::PlaybackThread::threadLoop()
         // enable changes in effect chain
         unlockEffectChains(effectChains);
 
-        if (!waitingAsyncCallback()) {
+        if (!waitingAsyncCallback()) {//    waitingAsyncCallback_l 在 PlaybackThread实现 返回 false，只有OffloadThread才会有实现
+            //执行这里
             // mSleepTimeUs == 0 means we must write to audio hardware
             if (mSleepTimeUs == 0) {
                 ssize_t ret = 0;
@@ -765,6 +766,8 @@ bool AudioFlinger::PlaybackThread::threadLoop()
                 // set to -1, which properly results in no throttling after the first write.
                 nsecs_t previousLastWriteFinished = lastWriteFinished;
                 nsecs_t delta = 0;
+
+
                 if (mBytesRemaining) {
                     // FIXME rewrite to reduce number of system calls
                     mLastWriteTime = systemTime();  // also used for dumpsys
@@ -781,6 +784,8 @@ bool AudioFlinger::PlaybackThread::threadLoop()
                 } else if ((mMixerStatus == MIXER_DRAIN_TRACK) || (mMixerStatus == MIXER_DRAIN_ALL)) {
                     threadLoop_drain();
                 }
+
+
                 if (mType == MIXER && !mStandby) {
                     // write blocked detection
                     if (delta > maxPeriod) {
@@ -985,6 +990,88 @@ void AudioFlinger::ThreadBase::processConfigEvents_l()
     if (configChanged) {
         cacheParameters_l();
     }
+}
+
+
+
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * 
+*/
+// shared by MIXER and DIRECT, overridden by DUPLICATING ()
+ssize_t AudioFlinger::PlaybackThread::threadLoop_write()
+{
+    LOG_HIST_TS();
+    mInWrite = true;
+    ssize_t bytesWritten;
+    /**
+     * 
+    */
+    const size_t offset = mCurrentWriteLength - mBytesRemaining;
+
+    // If an NBAIO sink is present, use it to write the normal mixer's submix
+    if (mNormalSink != 0) {
+        /**
+         * count 为 通过mBytesRemaining 和 mFrameSize 折算成 多少帧
+        */
+        const size_t count = mBytesRemaining / mFrameSize;
+
+        ATRACE_BEGIN("write");
+        // update the setpoint when AudioFlinger::mScreenState changes
+        uint32_t screenState = AudioFlinger::mScreenState;
+        if (screenState != mScreenState) {
+            mScreenState = screenState;
+            MonoPipe *pipe = (MonoPipe *)mPipeSink.get();
+            if (pipe != NULL) {
+                pipe->setAvgFrames((mScreenState & 1) ? (pipe->maxFrames() * 7) / 8 : mNormalFrameCount * 2);
+            }
+        }
+        /***
+         * framesWritten 返回当前写入了多少数据帧
+        */
+        ssize_t framesWritten = mNormalSink->write((char *)mSinkBuffer + offset, count);
+
+        ATRACE_END();
+        /**
+         * bytesWritten 保存当前写入的数据总数
+        */
+        if (framesWritten > 0) {
+            bytesWritten = framesWritten * mFrameSize;
+        } else {
+            bytesWritten = framesWritten;
+        }
+    // otherwise use the HAL / AudioStreamOut directly
+    } else {
+        // Direct output and offload threads
+        if (mUseAsyncWrite) {
+            ALOGW_IF(mWriteAckSequence & 1, "threadLoop_write(): out of sequence write request");
+            mWriteAckSequence += 2;
+            mWriteAckSequence |= 1;
+            ALOG_ASSERT(mCallbackThread != 0);
+            mCallbackThread->setWriteBlocked(mWriteAckSequence);
+        }
+        // FIXME We should have an implementation of timestamps for direct output threads.
+        // They are used e.g for multichannel PCM playback over HDMI.
+        bytesWritten = mOutput->write((char *)mSinkBuffer + offset, mBytesRemaining);
+
+        if (mUseAsyncWrite &&  ((bytesWritten < 0) || (bytesWritten == (ssize_t)mBytesRemaining))) {
+            // do not wait for async callback in case of error of full write
+            mWriteAckSequence &= ~1;
+            ALOG_ASSERT(mCallbackThread != 0);
+            mCallbackThread->setWriteBlocked(mWriteAckSequence);
+        }
+    }
+
+    mNumWrites++;
+    mInWrite = false;
+    mStandby = false;
+    return bytesWritten;
 }
 
 

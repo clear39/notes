@@ -1,0 +1,289 @@
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+播放音乐 dumpsys media.audio_flinger
+后面可以接参数：
+-m  Dumping memory:
+        需要设置 libc.debug.malloc.program 属性，否则提示（logcat 提示  MemoryLeackTrackUtil: no malloc info, libc.debug.malloc.program property should be set ）
+          
+--unreachable   Dumping unreachable memory:
+       
+/////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+Libraries NOT loaded:
+Libraries loaded:
+ Library dynamics_processing
+  path: /vendor/lib/soundfx/libdynproc.so
+  Dynamics Processing / The Android Open Source Project
+    UUID: e0e6539b-1781-7261-676f-6d7573696340
+    TYPE: 7261676f-6d75-7369-6364-28e2fd3ac39e
+    apiVersion: 00020000
+    flags: 00000050
+ Library loudness_enhancer
+  path: /vendor/lib/soundfx/libldnhncr.so
+  Loudness Enhancer / The Android Open Source Project
+    UUID: fa415329-2034-4bea-b5dc-5b381c8d1e2c
+    TYPE: fe3199be-aed0-413f-87bb-11260eb63cf1
+    apiVersion: 00020000
+    flags: 00000008
+ Library downmix
+  path: /vendor/lib/soundfx/libdownmix.so
+  Multichannel Downmix To Stereo / The Android Open Source Project
+    UUID: 93f04452-e4fe-41cc-91f9-e475b6d1d69f
+    TYPE: 381e49cc-a858-4aa2-87f6-e8388e7601b2
+    apiVersion: 00020000
+    flags: 00000008
+ Library visualizer
+  path: /vendor/lib/soundfx/libvisualizer.so
+  Visualizer / The Android Open Source Project
+    UUID: d069d9e0-8329-11df-9168-0002a5d5c51b
+    TYPE: e46b26a0-dddd-11db-8afd-0002a5d5c51b
+    apiVersion: 00020000
+    flags: 00000008
+ Library reverb
+  path: /vendor/lib/soundfx/libreverbwrapper.so
+  Insert Preset Reverb / NXP Software Ltd.
+    UUID: 172cdf00-a3bc-11df-a72f-0002a5d5c51b
+    TYPE: 47382d60-ddd8-11db-bf3a-0002a5d5c51b
+    apiVersion: 00020000
+    flags: 00000048
+  Auxiliary Preset Reverb / NXP Software Ltd.
+    UUID: f29a1400-a3bb-11df-8ddc-0002a5d5c51b
+    TYPE: 47382d60-ddd8-11db-bf3a-0002a5d5c51b
+    apiVersion: 00020000
+    flags: 00000001
+  Insert Environmental Reverb / NXP Software Ltd.
+    UUID: c7a511a0-a3bb-11df-860e-0002a5d5c51b
+    TYPE: c2e5d5f0-94bd-4763-9cac-4e234d06839e
+    apiVersion: 00020000
+    flags: 00000048
+  Auxiliary Environmental Reverb / NXP Software Ltd.
+    UUID: 4a387fc0-8ab3-11df-8bad-0002a5d5c51b
+    TYPE: c2e5d5f0-94bd-4763-9cac-4e234d06839e
+    apiVersion: 00020000
+    flags: 00000001
+ Library bundle
+  path: /vendor/lib/soundfx/libbundlewrapper.so
+  Volume / NXP Software Ltd.
+    UUID: 119341a0-8469-11df-81f9-0002a5d5c51b
+    TYPE: 09e8ede0-ddde-11db-b4f6-0002a5d5c51b
+    apiVersion: 00020000
+    flags: 00000050
+  Equalizer / NXP Software Ltd.
+    UUID: ce772f20-847d-11df-bb17-0002a5d5c51b
+    TYPE: 0bed4300-ddd6-11db-8f34-0002a5d5c51b
+    apiVersion: 00020000
+    flags: 00000048
+  Virtualizer / NXP Software Ltd.
+    UUID: 1d4033c0-8557-11df-9f2d-0002a5d5c51b
+    TYPE: 37cc2c00-dddd-11db-8577-0002a5d5c51b
+    apiVersion: 00020000
+    flags: 00000250
+  Dynamic Bass Boost / NXP Software Ltd.
+    UUID: 8631f300-72e2-11df-b57e-0002a5d5c51b
+    TYPE: 0634f220-ddd4-11db-a0fc-0002a5d5c51b
+    apiVersion: 00020000
+    flags: 00000248
+XML effect configuration loaded successfully.
+
+
+
+Clients:
+  pid: 3558
+Notification Clients:
+  pid: 1759
+  pid: 1774
+  pid: 3697
+Global session refs:
+  session   pid count
+       17  1774     1
+Hardware status: 0
+Standby Time mSec: 3000
+
+
+  playback threads
+/// AudioFlinger::PlaybackThread::dump()/////////////////////////////////////////////////////////////////
+Output thread 0xed4835c0, name AudioOut_D, tid 3714, type 0 (MIXER):
+  I/O handle: 13                                                         //mId
+  Standby: no                                                           //  mStandby
+  Sample rate: 48000 Hz                                       //mSampleRate     通过从硬件抽象层获取
+  HAL frame count: 1024                                     //mFrameCount 通过从硬件抽象层获取  mBufferSize / mFrameSize;
+  HAL format: 0x1 (AUDIO_FORMAT_PCM_16_BIT)   //mHALFormat
+  HAL buffer size: 4096 bytes                           //mBufferSize   通过从硬件抽象层获取 
+  Channel count: 2                                                //mChannelCount
+  Channel mask: 0x00000003 (front-left, front-right)    //mChannelMask          通过从硬件抽象层获取 
+  Processing format: 0x1 (AUDIO_FORMAT_PCM_16_BIT)  //mFormat
+  Processing frame size: 4 bytes                                                      //mFrameSize  通过从硬件抽象层获取
+  Pending config events: none                   // 这里对应mConfigEvents
+  Output device: 0x1000000 (AUDIO_DEVICE_OUT_BUS)       //mOutDevice
+  Input device: 0 (AUDIO_DEVICE_NONE)                               //mInDevice
+  Audio source: 0 (default)                                                           //  mAudioSource
+
+  Normal frame count: 1024          //mNormalFrameCount
+  Last write occurred (msecs): 10                 //  ns2ms(systemTime() - mLastWriteTime)
+  Total writes: 637                                               //mNumWrites
+  Delayed writes: 0                                             //mNumDelayedWrites
+  Blocked in write: yes
+  Suspend count: 0
+  Sink buffer : 0xedf09000
+  Mixer buffer: 0xedf6b000
+  Effect buffer: 0xed71e000
+  Fast track availMask=0xfe
+
+  Standby delay ns=3000000000                               //mStandbyDelayNs
+
+// 
+  AudioStreamOut: 0xedf49f80 flags 0x2 (AUDIO_OUTPUT_FLAG_PRIMARY)
+  Frames written: 652288
+  Suspended frames: 0
+
+  //如果存在FastMixer，则会打印  ( PipeSink frames written: )
+ 
+
+  Hal stream dump:
+      Signal power history:
+       01-13 07:29:54.921: [  -43.6  -32.3  -31.6  -32.2  -32.7  -32.5  -33.3  -32.3  -31.5  -33.1
+       01-13 07:29:55.407:    -34.8  -35.4  -36.6  -36.7  -36.2  -35.7  -35.2  -35.9  -36.4  -35.4
+       01-13 07:29:55.899:    -37.0  -40.2  -36.8  -33.2  -33.9  -36.7  -33.1  -35.2  -36.9  -35.4
+       01-13 07:29:56.411:    -31.2  -33.5  -34.6  -34.4  -34.3  -34.4  -34.9  -31.0  -31.9  -32.5
+       01-13 07:29:56.899:    -32.7  -33.0  -37.1  -38.6  -36.1  -34.2  -33.7  -32.1  -32.4  -32.5
+       01-13 07:29:57.411:    -32.3  -33.5  -30.6  -31.1  -32.1  -32.8  -34.2  -34.1  -34.4  -34.2
+       01-13 07:29:57.903:    -34.3  -34.0  -34.4  -34.5  -34.4  -34.4  -35.0  -34.9  -34.5  -34.4
+       01-13 07:29:58.415:    -34.1  -34.4  -34.9  -35.2  -33.3  -32.7  -33.0  -32.5  -32.2  -32.9
+       01-13 07:29:58.907:    -34.9  -35.1  -31.9  -31.3  -31.4  -32.8  -34.1  -34.7  -35.3  -35.3
+       01-13 07:29:59.395:    -33.4  -33.7  -35.3  -34.6  -34.3  -35.0  -33.7  -31.5  -31.7  -32.5
+       01-13 07:29:59.907:    -33.1  -33.3  -33.0  -33.0  -33.4  -34.3  -34.7  -34.3  -35.3  -36.6
+       01-13 07:30:00.399:    -42.3  -36.5  -32.9  -31.4  -38.5 ] sum(23.7)
+       01-13 07:30:01.315: [  -33.1  -32.6  -32.5  -32.4  -32.4  -32.9  -33.7  -34.1  -32.8  -33.3
+       01-13 07:30:01.807:    -34.0  -34.3  -35.6 ] sum(14.7)
+       01-13 07:30:02.403: [  -44.2  -34.1  -35.5  -35.1  -35.1  -35.9  -37.3  -33.3  -35.3  -37.9
+       01-13 07:30:02.915:    -46.1 ] sum(11.2)
+       01-13 07:30:05.903: [  -41.4  -40.1  -39.6  -40.2  -41.5  -42.1  -43.2  -43.8  -42.3  -41.4
+       01-13 09:53:35.729:    -42.3  -44.6  -41.4  -40.9  -40.6  -41.3  -42.5  -42.6  -42.7  -35.6
+       01-13 09:53:36.221:    -35.5  -36.9  -40.4  -38.0  -38.4  -39.2  -39.4  -40.0  -40.4  -44.9
+       01-13 09:53:36.713:    -38.9  -38.3  -39.7  -39.9  -32.5  -33.5  -34.4  -36.3  -38.1  -37.6
+       01-13 09:53:37.225:    -38.9  -38.3  -37.6  -37.7  -37.8  -37.9  -38.0  -38.9  -38.6  -34.7
+       01-13 09:53:37.713:    -34.6
+
+
+///AudioFlinger::MixerThread::dumpInternals()/////////////////////////////////////////////////////////////////
+
+  Thread throttle time (msecs): 0
+  AudioMixer tracks: 0      //  AudioMixer 中的 track 只有名称为 0 的track（这里是track名称，不是数量）
+  Master mono: off
+  No FastMixer                     // FastMixer 没有创建
+
+
+///AudioFlinger::PlaybackThread::dumpTracks()/////////////////////////////////////////////////////////////////
+  Stream volumes in dB: 0:-24, 1:-inf, 2:-inf, 3:-22, 4:-30, 5:-inf, 6:-inf, 7:-inf, 8:-inf, 9:0, 10:-58, 11:0, 12:0
+  Normal mixer raw underrun counters: partial=0 empty=0
+
+///AudioFlinger::MixerThread::dumpInternals()/////////////////////////////////////////////////////////////////
+  1 Tracks of which 1 are active        // Tracks前的数字1为 mTracks 的总数量，which后面的数字1为mActiveTracks（已经激活的tracks）的数量
+
+    T Name Active Client Session S  Flags   Format     (Chn mask)      SRate     ST  (L dB)   (R dB)   (VS dB)        Server           FrmCnt  FrmRdy F Underruns  Flushed   (Main Buf)              (Aux Buf)
+         0              yes   3558      17         A  0x001 00000001 00000003         44100      3        0             0              0            000654AB         22560   14093     A       944             0               EDF09000          00000000
+/*
+T:  表示的为mType(三种状态 TYPE_DEFAULT,TYPE_OUTPUT,TYPE_PATCH)属性，其中 TYPE_DEFAULT和TYPE_OUTPUT 如果有静态buffer则打印为"S",否则不打印，如果为TYPE_PATCH打印"P",其他打印"?"
+ Name:  表示
+Active:   表示是否工作
+Client:   
+Session:  mSessionId
+S:  对应 mState(Track状态) 值， mTerminated:"T";IDLE:"I";STOPPING_1:"s1"(for Fast and Offload);STOPPING_2:"s2"(for Fast and Offload);STOPPED:"S";RESUMING:"r";ACTIVE:"A";PAUSING:"p";PAUSED:"P";
+                                                                 FLUSHED:"F";STARTING_1:"r1"(for RecordTrack);STARTING_2:"r2"(for RecordTrack);default:"?";
+Flags:       对应  mCblk->mFlags
+Format:       对应  mFormat
+Chn mask:   对应  mChannelMask
+SRate:      对应  mAudioTrackServerProxy->getSampleRate()
+ST：这里值为"3",对应mStreamType值,媒体流类型
+L dB:
+R dB:
+VS dB:这里值数值后面可能会有"A"或者为空   （"%5.2g%c ",20.0 * log10(vsVolume.first) ,vsVolume.second)
+Server:对应mCblk->mServer
+FrmCnt:
+FrmRdy:
+F:
+Underruns:
+Flushed:
+Main Buf:     对应 mMainBuffer
+Aux Buf:       对应 mAuxBuffer
+  */
+
+
+  ///AudioFlinger::MixerThread::dumpInternals()/////////////////////////////////////////////////////////////////
+  0 Effect Chains                 //  Vector< sp<EffectChain> > mEffectChains;  (createEffect)
+
+  Local log:
+   01-13 05:30:09.236 CFG_EVENT_CREATE_AUDIO_PATCH: old device 0x1000000 (AUDIO_DEVICE_OUT_BUS) new device 0x1000000 (AUDIO_DEVICE_OUT_BUS)
+   01-13 07:29:54.907 AT::add       (0xedf72f00)      0     no   3558      17 A  0x000 00000001 00000003  44100  3     0     0     0  00000000  22560       0 f         0        0 EDF09000 00000000
+   01-13 07:30:00.656 AT::remove    (0xedf72f00)      0     no   3558      17 P  0x601 00000001 00000003  44100  3     0     0     0  0003D18C  22560   15975 A       944        0 EDF09000 00000000
+   01-13 07:30:01.300 AT::add       (0xedf72f00)      0     no   3558      17 r  0x001 00000001 00000003  44100  3     0     0     0  0003D18C  22560   22560 f       944        0 EDF09000 00000000
+   01-13 07:30:01.980 AT::remove    (0xedf72f00)      0     no   3558      17 P  0x601 00000001 00000003  44100  3     0     0     0  00043FCC  22560   18796 A       944        0 EDF09000 00000000
+   01-13 07:30:02.423 AT::add       (0xedf72f00)      0     no   3558      17 r  0x001 00000001 00000003  44100  3     0     0     0  00043FCC  22560   22560 f       944        0 EDF09000 00000000
+   01-13 07:30:02.963 AT::remove    (0xedf72f00)      0     no   3558      17 P  0x401 00000001 00000003  44100  3     0     0     0  00049452  22560   22560 A       944        0 EDF09000 00000000
+   01-13 09:53:35.236 AT::add       (0xedf72f00)      0     no   3558      17 r  0x001 00000001 00000003  44100  3     0     0     0  00049452  22560   22560 f       944        0 EDF09000 00000000
+
+
+
+
+
+
+Output thread 0xed3036c0, name AudioOut_15, tid 3715, type 0 (MIXER):
+  I/O handle: 21
+  Standby: yes
+  Sample rate: 48000 Hz
+  HAL frame count: 1024
+  HAL format: 0x1 (AUDIO_FORMAT_PCM_16_BIT)
+  HAL buffer size: 4096 bytes
+  Channel count: 2
+  Channel mask: 0x00000003 (front-left, front-right)
+  Processing format: 0x1 (AUDIO_FORMAT_PCM_16_BIT)
+  Processing frame size: 4 bytes
+  Pending config events: none
+  Output device: 0x1000000 (AUDIO_DEVICE_OUT_BUS)
+  Input device: 0 (AUDIO_DEVICE_NONE)
+  Audio source: 0 (default)
+  Normal frame count: 1024
+  Last write occurred (msecs): 18136031
+  Total writes: 0
+  Delayed writes: 0
+  Blocked in write: no
+  Suspend count: 0
+  Sink buffer : 0xedf0a000
+  Mixer buffer: 0xed723000
+  Effect buffer: 0xedf54000
+  Fast track availMask=0xfe
+  Standby delay ns=3000000000
+  AudioStreamOut: 0xedf49f48 flags 0x2 (AUDIO_OUTPUT_FLAG_PRIMARY)
+  Frames written: 0
+  Suspended frames: 0
+  Hal stream dump:
+      Signal power history: (none)
+  Thread throttle time (msecs): 0
+  AudioMixer tracks: 
+  Master mono: off
+  No FastMixer
+  Stream volumes in dB: 0:-24, 1:-inf, 2:-inf, 3:-inf, 4:-30, 5:-inf, 6:-inf, 7:-inf, 8:-inf, 9:0, 10:-58, 11:0, 12:0
+  Normal mixer raw underrun counters: partial=0 empty=0
+  0 Tracks
+  0 Effect Chains
+  Local log:
+   01-13 05:30:09.244 CFG_EVENT_CREATE_AUDIO_PATCH: old device 0x1000000 (AUDIO_DEVICE_OUT_BUS) new device 0x1000000 (AUDIO_DEVICE_OUT_BUS)
+  record threads
+  mmap threads
+
+USB audio module:
+  No output streams.
+
+  No input streams.
+
+Reroute submix audio module:
+ route[0] rate in=0 out=0, addr=[]
+ route[1] rate in=0 out=0, addr=[]
+ route[2] rate in=0 out=0, addr=[]
+ route[3] rate in=0 out=0, addr=[]
+ route[4] rate in=0 out=0, addr=[]
+ route[5] rate in=0 out=0, addr=[]
+ route[6] rate in=0 out=0, addr=[]
+ route[7] rate in=0 out=0, addr=[]
+ route[8] rate in=0 out=0, addr=[]
+ route[9] rate in=48000 out=48000, addr=[]

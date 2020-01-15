@@ -1,0 +1,118 @@
+autolink_8q:/ # logcat --pid 3832                                              
+--------- beginning of main
+01-13 08:15:52.982  3832  3844 V AudioFlinger_Track: start(0xf3e51000 0), calling pid 1777 session 9
+01-13 08:15:52.982  3832  3844 V AudioFlinger_Track: PAUSED => RESUMING (0) on thread 0xf3e51000
+01-13 08:15:52.982  3832  3844 V AudioPolicyIntefaceImpl: startOutput()
+01-13 08:15:52.982  3832  3844 V AudioPolicyEffects: addOutputSessionEffects(): no output processing needed for this stream
+01-13 08:15:52.982  3832  3844 V APM_AudioPolicyManager: startOutput() output 13, stream 3, session 9
+01-13 08:15:52.982  3832  3844 V APM_AudioPolicyManager: setBeaconMute(1) mBeaconMuteRefCount=1 mBeaconPlayingRefCount=0
+01-13 08:15:52.982  3832  3844 V APM::AudioPolicyEngine: getDeviceForStrategy() no device found for strategy 0
+01-13 08:15:52.982  3832  3844 V APM::AudioPolicyEngine: getDeviceForStrategy() strategy 0, device 1000000
+01-13 08:15:52.982  3832  3844 V APM_AudioPolicyManager: getOutputsForDevice() device 1000000
+01-13 08:15:52.982  3832  3844 V APM_AudioPolicyManager: output 0 isDuplicated=0 device=1000000
+01-13 08:15:52.982  3832  3844 V APM_AudioPolicyManager: getOutputsForDevice() found output 13
+01-13 08:15:52.982  3832  3844 V APM_AudioPolicyManager: output 1 isDuplicated=0 device=1000000
+01-13 08:15:52.982  3832  3844 V APM_AudioPolicyManager: getOutputsForDevice() found output 21
+01-13 08:15:52.982  3832  3844 V APM_AudioPolicyManager: selectOutputForMusicEffects activeOnly 1 output 13 flags 0x00000002
+01-13 08:15:52.982  3832  3844 V APM_AudioPolicyManager: selectOutputForMusicEffects selected output 13
+01-13 08:15:52.982  3832  3844 V APM_AudioPolicyManager: setOutputDevice() device 1000000 delayMs 0
+01-13 08:15:52.982  3832  3844 V APM_AudioPolicyManager: setOutputDevice() prevDevice 0x1000000
+01-13 08:15:52.982  3832  3844 V APM_AudioPolicyManager: setOutputDevice: suppressing checkDeviceMuteStrategies
+01-13 08:15:52.982  3832  3844 V APM_AudioPolicyManager: setOutputDevice() setting same device 0x1000000 or null device
+01-13 08:15:52.982  3832  3844 V APM_AudioPolicyManager: getDeviceForStrategy() from cache strategy 3, device 1000000
+01-13 08:15:52.982  3832  3844 V APM::AudioPolicyEngine: getDeviceForStrategy() no device found for strategy 0
+01-13 08:15:52.982  3832  3844 V APM::AudioPolicyEngine: getDeviceForStrategy() strategy 0, device 1000000
+01-13 08:15:52.982  3832  3844 V APM::AudioPolicyEngine: getDeviceForStrategy() strategy 3, device 1000000
+01-13 08:15:52.982  3832  3844 V APM_AudioPolicyManager: getOutputsForDevice() device 1000000
+01-13 08:15:52.982  3832  3844 V APM_AudioPolicyManager: output 0 isDuplicated=0 device=1000000
+01-13 08:15:52.982  3832  3844 V APM_AudioPolicyManager: getOutputsForDevice() found output 13
+01-13 08:15:52.982  3832  3844 V APM_AudioPolicyManager: output 1 isDuplicated=0 device=1000000
+01-13 08:15:52.982  3832  3844 V APM_AudioPolicyManager: getOutputsForDevice() found output 21
+01-13 08:15:52.982  3832  3844 V APM_AudioPolicyManager: getOutputsForDevice() device 1000000
+01-13 08:15:52.982  3832  3844 V APM_AudioPolicyManager: output 0 isDuplicated=0 device=1000000
+01-13 08:15:52.982  3832  3844 V APM_AudioPolicyManager: getOutputsForDevice() found output 13
+01-13 08:15:52.982  3832  3844 V APM_AudioPolicyManager: output 1 isDuplicated=0 device=1000000
+01-13 08:15:52.982  3832  3844 V APM_AudioPolicyManager: getOutputsForDevice() found output 21
+01-13 08:15:52.982  3832  3844 V APM_AudioPolicyManager: checkOutputForStrategy(): policy related outputs
+01-13 08:15:52.982  3832  3844 V APM_AudioPolicyManager:  previous outputs: adding 13
+01-13 08:15:52.982  3832  3844 V APM_AudioPolicyManager:  previous outputs: adding 21
+01-13 08:15:52.982  3832  3844 V APM_AudioPolicyManager:  new outputs: adding 13
+01-13 08:15:52.982  3832  3844 V APM_AudioPolicyManager:  new outputs: adding 21
+01-13 08:15:52.982  3832  3844 V APM::AudioPolicyEngine: getDeviceForStrategy() no device found for strategy 0
+01-13 08:15:52.983  3832  3844 V APM::AudioPolicyEngine: getDeviceForStrategy() strategy 0, device 1000000
+01-13 08:15:52.983  3832  3844 V APM::AudioPolicyEngine: getDeviceForStrategy() no device found for strategy 1
+01-13 08:15:52.983  3832  3844 V APM::AudioPolicyEngine: getDeviceForStrategy() strategy 1, device 1000000
+01-13 08:15:52.983  3832  3844 V APM::AudioPolicyEngine: getDeviceForStrategy() no device found for strategy 2
+01-13 08:15:52.983  3832  3844 V APM::AudioPolicyEngine: getDeviceForStrategy() strategy 2, device 1000000
+01-13 08:15:52.983  3832  3844 V APM::AudioPolicyEngine: getDeviceForStrategy() no device found for strategy 0
+01-13 08:15:52.983  3832  3844 V APM::AudioPolicyEngine: getDeviceForStrategy() strategy 0, device 1000000
+01-13 08:15:52.983  3832  3844 V APM::AudioPolicyEngine: getDeviceForStrategy() strategy 3, device 1000000
+01-13 08:15:52.983  3832  3844 V APM::AudioPolicyEngine: getDeviceForStrategy() no device found for strategy 0
+01-13 08:15:52.983  3832  3844 V APM::AudioPolicyEngine: getDeviceForStrategy() strategy 0, device 1000000
+01-13 08:15:52.983  3832  3844 V APM::AudioPolicyEngine: getDeviceForStrategy() strategy 4, device 1000000
+01-13 08:15:52.983  3832  3844 V APM::AudioPolicyEngine: getDeviceForStrategy() no device found for strategy 5
+01-13 08:15:52.983  3832  3844 V APM::AudioPolicyEngine: getDeviceForStrategy() strategy 5, device 1000000
+01-13 08:15:52.983  3832  3844 V APM::AudioPolicyEngine: getDeviceForStrategy() no device found for strategy 6
+01-13 08:15:52.983  3832  3844 V APM::AudioPolicyEngine: getDeviceForStrategy() strategy 6, device 1000000
+01-13 08:15:52.983  3832  3844 V APM::AudioPolicyEngine: getDeviceForStrategy() no device found for strategy 7
+01-13 08:15:52.983  3832  3844 V APM::AudioPolicyEngine: getDeviceForStrategy() strategy 7, device 1000000
+01-13 08:15:52.983  3832  3844 V APM::AudioPolicyEngine: getDeviceForStrategy() no device found for strategy 8
+01-13 08:15:52.983  3832  3844 V APM::AudioPolicyEngine: getDeviceForStrategy() strategy 8, device 1000000
+01-13 08:15:52.983  3832  3844 V AudioFlinger_Thread: getEffectChain_l 9 0
+
+
+
+
+01-13 08:15:52.983  3832  3844 V AudioFlinger_Thread: signal playback thread                            //   在   onAddNewTrack_l() 中触发,而该函数只有在 PlaybackThread::addTrack_l 中调用
+01-13 08:15:52.983  3832  3844 V AudioFlinger_Thread: broadcast_l() thread:0xf3703dc0
+
+
+
+01-13 08:15:52.983  3832  3847 V AudioFlinger_Thread: thread 0xf3703dc0 type MIXER TID 3847 waking up
+
+
+
+01-13 08:15:52.984  3832  3847 V AudioFlinger_Thread: acquireWakeLock_l() AudioOut_D status 0
+01-13 08:15:52.984  3832  3847 D AudioFlinger_Thread: updateWakeLockUids_l AudioOut_D uids:10045 
+01-13 08:15:52.984  3832  3847 V AudioFlinger_Thread: updateWakeLockUids_l() AudioOut_D status 0
+01-13 08:15:52.984  3832  3847 V AudioFlinger_Thread: thread 0xf3703dc0 type MIXER TID 3847 threadLoop()
+01-13 08:15:52.985  3832  3847 V AudioFlinger_Thread: getTimestamp error - no valid kernel position
+01-13 08:15:52.985  3832  3847 V AudioFlinger_Thread: getEffectChain_l 0 0
+01-13 08:15:52.985  3832  3847 V AudioFlinger_Thread: track 0 s=001469d9 [OK] on thread 0xf3703dc0
+01-13 08:15:52.985  3832  3847 V AudioFlinger_Thread: getEffectChain_l 0 0
+
+01-13 08:15:52.985  3832  3847 V AudioFlinger_Thread: thread 0xf3703dc0 type MIXER TID 3847 threadLoop() mBytesRemaining:0,mMixerStatus:2
+
+
+01-13 08:15:52.986  3832  3847 V AudioFlinger_Thread: thread 0xf3703dc0 type MIXER TID 3847 threadLoop() mSleepTimeUs:0 mMixerStatus:2
+01-13 08:15:52.997  3832  3847 V AudioFlinger_Thread: thread 0xf3703dc0 type MIXER TID 3847 threadLoop()
+01-13 08:15:52.997  3832  3847 V AudioFlinger_Thread: getTimestamp error - no valid kernel position
+
+01-13 08:15:52.997  3832  3847 V AudioFlinger_Thread: getEffectChain_l 0 0
+01-13 08:15:52.997  3832  3847 V AudioFlinger_Thread: track 0 s=00146d85 [OK] on thread 0xf3703dc0
+01-13 08:15:52.997  3832  3847 V AudioFlinger_Thread: getEffectChain_l 0 0
+01-13 08:15:52.997  3832  3847 V AudioFlinger_Thread: thread 0xf3703dc0 type MIXER TID 3847 threadLoop() mBytesRemaining:0,mMixerStatus:2
+01-13 08:15:52.998  3832  3847 V AudioFlinger_Thread: thread 0xf3703dc0 type MIXER TID 3847 threadLoop() mSleepTimeUs:0 mMixerStatus:2
+01-13 08:15:53.009  3832  3847 V AudioFlinger_Thread: thread 0xf3703dc0 type MIXER TID 3847 threadLoop()
+01-13 08:15:53.009  3832  3847 V AudioFlinger_Thread: getTimestamp error - no valid kernel position
+01-13 08:15:53.009  3832  3847 V AudioFlinger_Thread: getEffectChain_l 0 0
+01-13 08:15:53.009  3832  3847 V AudioFlinger_Thread: track 0 s=00147132 [OK] on thread 0xf3703dc0
+01-13 08:15:53.009  3832  3847 V AudioFlinger_Thread: getEffectChain_l 0 0
+01-13 08:15:53.010  3832  3847 V AudioFlinger_Thread: thread 0xf3703dc0 type MIXER TID 3847 threadLoop() mBytesRemaining:0,mMixerStatus:2
+01-13 08:15:53.010  3832  3847 V AudioFlinger_Thread: thread 0xf3703dc0 type MIXER TID 3847 threadLoop() mSleepTimeUs:0 mMixerStatus:2
+01-13 08:15:53.029  3832  3847 V AudioFlinger_Thread: thread 0xf3703dc0 type MIXER TID 3847 threadLoop()
+01-13 08:15:53.030  3832  3847 V AudioFlinger_Thread: getTimestamp error - no valid kernel position
+01-13 08:15:53.030  3832  3847 V AudioFlinger_Thread: getEffectChain_l 0 0
+01-13 08:15:53.030  3832  3847 V AudioFlinger_Thread: track 0 s=001474df [OK] on thread 0xf3703dc0
+01-13 08:15:53.030  3832  3847 V AudioFlinger_Thread: getEffectChain_l 0 0
+01-13 08:15:53.030  3832  3847 V AudioFlinger_Thread: thread 0xf3703dc0 type MIXER TID 3847 threadLoop() mBytesRemaining:0,mMixerStatus:2
+01-13 08:15:53.031  3832  3847 V AudioFlinger_Thread: thread 0xf3703dc0 type MIXER TID 3847 threadLoop() mSleepTimeUs:0 mMixerStatus:2
+01-13 08:15:53.053  3832  3847 V AudioFlinger_Thread: thread 0xf3703dc0 type MIXER TID 3847 threadLoop()
+01-13 08:15:53.053  3832  3847 V AudioFlinger_Thread: getTimestamp error - no valid kernel position
+01-13 08:15:53.053  3832  3847 V AudioFlinger_Thread: getEffectChain_l 0 0
+01-13 08:15:53.053  3832  3847 V AudioFlinger_Thread: track 0 s=0014788c [OK] on thread 0xf3703dc0
+01-13 08:15:53.053  3832  3847 V AudioFlinger_Thread: getEffectChain_l 0 0
+01-13 08:15:53.054  3832  3847 V AudioFlinger_Thread: thread 0xf3703dc0 type MIXER TID 3847 threadLoop() mBytesRemaining:0,mMixerStatus:2
+01-13 08:15:53.055  3832  3847 V AudioFlinger_Thread: thread 0xf3703dc0 type MIXER TID 3847 threadLoop() mSleepTimeUs:0 mMixerStatus:2
+01-13 08:15:53.074  3832  3847 V AudioFlinger_Thread: thread 0xf3703dc0 type MIXER TID 3847 threadLoop()
+01-13 08:15:53.074  3832  3847 V AudioFlinger_Thread: getTimestamp error - no valid kernel position

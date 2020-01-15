@@ -6,13 +6,11 @@ class Track : public TrackBase, public VolumeProvider {
 }
 
 /***
- * :23:
  * frameworks/av/services/audioflinger/Tracks.cpp 
  * 
  * 
  * 
  * */
-
 AudioFlinger::PlaybackThread::Track::Track(
             PlaybackThread *thread,
             const sp<Client>& client,
@@ -129,6 +127,13 @@ bool TrackBase::isPatchTrack() const {
     return (mType == TYPE_PATCH);
 }
 
+/**
+ * @system/media/audio/include/system/audio-base.h:360:    AUDIO_OUTPUT_FLAG_FAST             = 0x4,
+*/
+bool        Track::isFastTrack() const { 
+     return (mFlags & AUDIO_OUTPUT_FLAG_FAST) != 0; 
+}
+
 
 /**
  * 
@@ -136,8 +141,7 @@ bool TrackBase::isPatchTrack() const {
  * 
  * 
 */
-status_t AudioFlinger::PlaybackThread::Track::start(AudioSystem::sync_event_t event = AudioSystem::SYNC_EVENT_NONE,
-                             audio_session_t triggerSession = AUDIO_SESSION_NONE)
+status_t AudioFlinger::PlaybackThread::Track::start(AudioSystem::sync_event_t event = AudioSystem::SYNC_EVENT_NONE,audio_session_t triggerSession = AUDIO_SESSION_NONE)
 {
     status_t status = NO_ERROR;
     ALOGV("start(%d), calling pid %d session %d",  mName, IPCThreadState::self()->getCallingPid(), mSessionId);
@@ -224,5 +228,38 @@ status_t AudioFlinger::PlaybackThread::Track::start(AudioSystem::sync_event_t ev
     } else {
         status = BAD_VALUE;
     }
+    return status;
+}
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * 
+*/
+// AudioBufferProvider interface
+status_t AudioFlinger::PlaybackThread::Track::getNextBuffer(AudioBufferProvider::Buffer* buffer)
+{
+    ServerProxy::Buffer buf;
+    size_t desiredFrames = buffer->frameCount;
+    buf.mFrameCount = desiredFrames;
+    status_t status = mServerProxy->obtainBuffer(&buf);
+    buffer->frameCount = buf.mFrameCount;
+    buffer->raw = buf.mRaw;
+    if (buf.mFrameCount == 0 && !isStopping() && !isStopped() && !isPaused()) {
+        ALOGV("underrun,  framesReady(%zu) < framesDesired(%zd), state: %d",buf.mFrameCount, desiredFrames, mState);
+        mAudioTrackServerProxy->tallyUnderrunFrames(desiredFrames);
+    } else {
+        mAudioTrackServerProxy->tallyUnderrunFrames(0);
+    }
+
     return status;
 }

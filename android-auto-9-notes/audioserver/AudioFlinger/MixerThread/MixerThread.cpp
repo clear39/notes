@@ -81,10 +81,9 @@ AudioFlinger::MixerThread::MixerThread(const sp<AudioFlinger>& audioFlinger, Aud
    
 
     /**
-     * 
+     * 通过dumpsys 命令打印  No FastMixer 所以 initFastMixer 为false
     */
    if (initFastMixer) {
-
         audio_format_t fastMixerFormat;
         if (mMixerBufferEnabled && mEffectBufferEnabled) {
             fastMixerFormat = AUDIO_FORMAT_PCM_FLOAT;
@@ -211,7 +210,7 @@ AudioFlinger::MixerThread::MixerThread(const sp<AudioFlinger>& audioFlinger, Aud
         break;
     case FastMixer_Static: //   frameworks/av/services/audioflinger/Threads.cpp:171:} kUseFastMixer = FastMixer_Static;
         // 执行这里 
-        mNormalSink = initFastMixer ? mPipeSink : mOutputSink;
+        mNormalSink = initFastMixer ? mPipeSink : mOutputSink;// false
         break;
     }
 
@@ -261,6 +260,7 @@ sp<AudioFlinger::PlaybackThread::Track> AudioFlinger::PlaybackThread::createTrac
     // special case for FAST flag considered OK if fast mixer is present
     /**
      * hasFastMixer 判断 mFastMixer 是否为空 
+     * @    system/media/audio/include/system/audio-base.h:360:    AUDIO_OUTPUT_FLAG_FAST             = 0x4,
     */
     if (hasFastMixer()) {
         outputFlags = (audio_output_flags_t)(outputFlags | AUDIO_OUTPUT_FLAG_FAST);
@@ -331,6 +331,7 @@ sp<AudioFlinger::PlaybackThread::Track> AudioFlinger::PlaybackThread::createTrac
                 channelMask, sampleRate, mSampleRate, hasFastMixer(), tid, mFastTrackAvailMask);
         *flags = (audio_output_flags_t)(*flags & ~AUDIO_OUTPUT_FLAG_FAST);
       }
+
     }
 
     if (!audio_has_proportional_frames(format)) {
@@ -359,8 +360,7 @@ sp<AudioFlinger::PlaybackThread::Track> AudioFlinger::PlaybackThread::createTrac
             alignment <<= 1;
         }
         if (((uintptr_t)sharedBuffer->pointer() & (alignment - 1)) != 0) {
-            ALOGE("Invalid buffer alignment: address %p, channel count %u",
-                  sharedBuffer->pointer(), channelCount);
+            ALOGE("Invalid buffer alignment: address %p, channel count %u",sharedBuffer->pointer(), channelCount);
             lStatus = BAD_VALUE;
             goto Exit;
         }
@@ -442,12 +442,10 @@ sp<AudioFlinger::PlaybackThread::Track> AudioFlinger::PlaybackThread::createTrac
      * mType 为线程创建的类型，这里 由构造函数 可知 mType = MIXER
      * */
     switch (mType) {
-
     case DIRECT:
         if (audio_is_linear_pcm(format)) { // TODO maybe use audio_has_proportional_frames()?
             if (sampleRate != mSampleRate || format != mFormat || channelMask != mChannelMask) {
-                ALOGE("createTrack_l() Bad parameter: sampleRate %u format %#x, channelMask 0x%08x "
-                        "for output %p with format %#x",sampleRate, format, channelMask, mOutput, mFormat);
+                ALOGE("createTrack_l() Bad parameter: sampleRate %u format %#x, channelMask 0x%08x "  "for output %p with format %#x",sampleRate, format, channelMask, mOutput, mFormat);
                 lStatus = BAD_VALUE;
                 goto Exit;
             }
@@ -456,8 +454,7 @@ sp<AudioFlinger::PlaybackThread::Track> AudioFlinger::PlaybackThread::createTrac
 
     case OFFLOAD:
         if (sampleRate != mSampleRate || format != mFormat || channelMask != mChannelMask) {
-            ALOGE("createTrack_l() Bad parameter: sampleRate %d format %#x, channelMask 0x%08x \"" 
-            "for output %p with format %#x",sampleRate, format, channelMask, mOutput, mFormat);
+            ALOGE("createTrack_l() Bad parameter: sampleRate %d format %#x, channelMask 0x%08x \""      "for output %p with format %#x",sampleRate, format, channelMask, mOutput, mFormat);
             lStatus = BAD_VALUE;
             goto Exit;
         }
@@ -512,23 +509,18 @@ sp<AudioFlinger::PlaybackThread::Track> AudioFlinger::PlaybackThread::createTrac
             }
         }
 
-    /***
-     * frameworks/av/services/audioflinger/PlaybackTracks.h:23:class Track : public TrackBase, public VolumeProvider {
-     * frameworks/av/services/audioflinger/Tracks.cpp 
-     * 
-     * 
-     * enum track_type {
- 52     ┊   TYPE_DEFAULT,           //  Track 和 RecordTrack MmapTrack
- 53     ┊   TYPE_OUTPUT,            //  OutputTrack
- 54     ┊   TYPE_PATCH,     //  PatchRecord 和 PatchTrack
- 55     };  
-     * 
-     * 
-     * */
-        track = new Track(this, client, streamType, attr, sampleRate, format,
-                          channelMask, frameCount,
-                          nullptr /* buffer */, (size_t)0 /* bufferSize */, sharedBuffer,
-                          sessionId, uid, *flags, TrackBase::TYPE_DEFAULT, portId);
+        /***
+         * frameworks/av/services/audioflinger/PlaybackTracks.h:23:class Track : public TrackBase, public VolumeProvider {
+         * frameworks/av/services/audioflinger/Tracks.cpp 
+         * 
+         * enum track_type {
+         *     TYPE_DEFAULT,           //  Track 和 RecordTrack MmapTrack
+         *     TYPE_OUTPUT,            //  OutputTrack
+         *     TYPE_PATCH,     //  PatchRecord 和 PatchTrack
+         * };  
+         * 
+         * */
+        track = new Track(this, client, streamType, attr, sampleRate, format,channelMask, frameCount,nullptr /* buffer */, (size_t)0 /* bufferSize */, sharedBuffer,sessionId, uid, *flags, TrackBase::TYPE_DEFAULT, portId);
 
         lStatus = track != 0 ? track->initCheck() : (status_t) NO_MEMORY;
         if (lStatus != NO_ERROR) {
@@ -538,6 +530,9 @@ sp<AudioFlinger::PlaybackThread::Track> AudioFlinger::PlaybackThread::createTrac
         }
         mTracks.add(track);
 
+        /**
+         * 从 dumpsys获得信息 这里集合为空，不可能获得chain
+        */
         sp<EffectChain> chain = getEffectChain_l(sessionId);
         if (chain != 0) {
             ALOGV("createTrack_l() setting main buffer %p", chain->inBuffer());
@@ -562,18 +557,19 @@ Exit:
 }
 
 
-effect_buffer_t *PlaybackThread::sinkBuffer() const { 
-    /**
-     * PlaybackThread::mSinkBuffer
-    */
-    return reinterpret_cast<effect_buffer_t *>(mSinkBuffer); 
-};
 
 
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * 
+ * 
+*/
 // prepareTracks_l() must be called with ThreadBase::mLock held
 AudioFlinger::PlaybackThread::mixer_state AudioFlinger::MixerThread::prepareTracks_l( Vector< sp<Track> > *tracksToRemove)
 {
+    /**
+     * 将 mTracks成员mDeletedTrackNames 中的成员从mAudioMixer中销毁
+    */
     // clean up deleted track names in AudioMixer before allocating new tracks
     (void)mTracks.processDeletedTrackNames([this](int name) {
         // for each name, destroy it in the AudioMixer
@@ -581,6 +577,9 @@ AudioFlinger::PlaybackThread::mixer_state AudioFlinger::MixerThread::prepareTrac
             mAudioMixer->destroy(name);
         }
     });
+    /**
+     * 清空 mTracks的mDeletedTrackNames集合
+    */
     mTracks.clearDeletedTrackNames();
 
     mixer_state mixerStatus = MIXER_IDLE;
@@ -598,6 +597,11 @@ AudioFlinger::PlaybackThread::mixer_state AudioFlinger::MixerThread::prepareTrac
     if (masterMute) {
         masterVolume = 0;
     }
+
+
+    /**
+     * 由于集合为空  getEffectChain_l 获取不到成员chain
+    */
     // Delegate master volume control to effect in output mix effect chain if needed
     sp<EffectChain> chain = getEffectChain_l(AUDIO_SESSION_OUTPUT_MIX);
     if (chain != 0) {
@@ -613,7 +617,8 @@ AudioFlinger::PlaybackThread::mixer_state AudioFlinger::MixerThread::prepareTrac
     bool didModify = false;
     FastMixerStateQueue::block_t block = FastMixerStateQueue::BLOCK_UNTIL_PUSHED;
     bool coldIdle = false;
-    if (mFastMixer != 0) {
+
+    if (mFastMixer != 0) {// mFastMixer为空
         sq = mFastMixer->sq();
         state = sq->begin();
         coldIdle = state->mCommand == FastMixerState::COLD_IDLE;
@@ -623,14 +628,18 @@ AudioFlinger::PlaybackThread::mixer_state AudioFlinger::MixerThread::prepareTrac
     mEffectBufferValid = false; // mEffectBuffer has no valid data until tracks found.
 
     for (size_t i=0 ; i<count ; i++) {
+
         const sp<Track> t = mActiveTracks[i];
 
         // this const just means the local variable doesn't change
         Track* const track = t.get();
 
+        /**
+         * @system/media/audio/include/system/audio-base.h:360:    AUDIO_OUTPUT_FLAG_FAST             = 0x4,
+         *   isFastTrack 返回值 (mFlags & AUDIO_OUTPUT_FLAG_FAST) != 0; 
+        */
         // process fast tracks
         if (track->isFastTrack()) {
-
             // It's theoretically possible (though unlikely) for a fast track to be created
             // and then removed within the same normal mix cycle.  This is not a problem, as
             // the track never becomes active so it's fast mixer slot is never touched.
@@ -646,18 +655,14 @@ AudioFlinger::PlaybackThread::mixer_state AudioFlinger::MixerThread::prepareTrac
             // and whether it had a recent underrun.
             FastTrackDump *ftDump = &mFastMixerDumpState.mTracks[j];
             FastTrackUnderruns underruns = ftDump->mUnderruns;
-            uint32_t recentFull = (underruns.mBitFields.mFull -
-                    track->mObservedUnderruns.mBitFields.mFull) & UNDERRUN_MASK;
-            uint32_t recentPartial = (underruns.mBitFields.mPartial -
-                    track->mObservedUnderruns.mBitFields.mPartial) & UNDERRUN_MASK;
-            uint32_t recentEmpty = (underruns.mBitFields.mEmpty -
-                    track->mObservedUnderruns.mBitFields.mEmpty) & UNDERRUN_MASK;
+            uint32_t recentFull = (underruns.mBitFields.mFull - track->mObservedUnderruns.mBitFields.mFull) & UNDERRUN_MASK;
+            uint32_t recentPartial = (underruns.mBitFields.mPartial -  track->mObservedUnderruns.mBitFields.mPartial) & UNDERRUN_MASK;
+            uint32_t recentEmpty = (underruns.mBitFields.mEmpty -  track->mObservedUnderruns.mBitFields.mEmpty) & UNDERRUN_MASK;
             uint32_t recentUnderruns = recentPartial + recentEmpty;
             track->mObservedUnderruns = underruns;
             // don't count underruns that occur while stopping or pausing
             // or stopped which can occur when flush() is called while active
-            if (!(track->isStopping() || track->isPausing() || track->isStopped()) &&
-                    recentUnderruns > 0) {
+            if (!(track->isStopping() || track->isPausing() || track->isStopped()) &&recentUnderruns > 0) {
                 // FIXME fast mixer will pull & mix partial buffers, but we count as a full underrun
                 track->mAudioTrackServerProxy->tallyUnderrunFrames(recentUnderruns * mFrameCount);
             } else {
@@ -720,8 +725,7 @@ AudioFlinger::PlaybackThread::mixer_state AudioFlinger::MixerThread::prepareTrac
                 {
                     uint32_t latency = 0;
                     status_t result = mOutput->stream->getLatency(&latency);
-                    ALOGE_IF(result != OK,
-                            "Error when retrieving output stream latency: %d", result);
+                    ALOGE_IF(result != OK, "Error when retrieving output stream latency: %d", result);
                     size_t audioHALFrames = (latency * mSampleRate) / 1000;
                     int64_t framesWritten = mBytesWritten / mFrameSize;
                     if (!(mStandby || track->presentationComplete(framesWritten, audioHALFrames))) {
@@ -762,11 +766,8 @@ AudioFlinger::PlaybackThread::mixer_state AudioFlinger::MixerThread::prepareTrac
                 sp<AudioTrackServerProxy> proxy = track->mAudioTrackServerProxy;
                 // cache the combined master volume and stream type volume for fast mixer; this
                 // lacks any synchronization or barrier so VolumeProvider may read a stale value
-                const float vh = track->getVolumeHandler()->getVolume(
-                        proxy->framesReleased()).first;
-                float volume = masterVolume
-                        * mStreamTypes[track->streamType()].volume
-                        * vh;
+                const float vh = track->getVolumeHandler()->getVolume( proxy->framesReleased()).first;
+                float volume = masterVolume * mStreamTypes[track->streamType()].volume  * vh;
                 track->mCachedVolume = volume;
                 gain_minifloat_packed_t vlr = proxy->getVolumeLR();
                 float vlf = volume * float_from_gain(gain_minifloat_unpack_left(vlr));
@@ -799,14 +800,13 @@ AudioFlinger::PlaybackThread::mixer_state AudioFlinger::MixerThread::prepareTrac
                 track->mObservedUnderruns.mBitFields.mMostRecent = UNDERRUN_FULL;
             }
             continue;
-        }
+        }// track->isFastTrack()
 
         {   // local variable scope to avoid goto warning
 
         audio_track_cblk_t* cblk = track->cblk();
 
-        // The first time a track is added we wait
-        // for all its buffers to be filled before processing it
+        // The first time a track is added we wait for all its buffers to be filled before processing it
         int name = track->name();
 
         // if an active track doesn't exist in the AudioMixer, create it.
@@ -848,7 +848,7 @@ AudioFlinger::PlaybackThread::mixer_state AudioFlinger::MixerThread::prepareTrac
             ATRACE_INT(traceName.c_str(), framesReady);
         }
 
-        if ((framesReady >= minFrames) && track->isReady() && !track->isPaused() && !track->isTerminated())
+        if (    (framesReady >= minFrames)      && track->isReady()     &&      !track->isPaused() && !track->isTerminated()    )
         {
             ALOGVV("track %d s=%08x [OK] on thread %p", name, cblk->mServer, this);
 
@@ -857,6 +857,13 @@ AudioFlinger::PlaybackThread::mixer_state AudioFlinger::MixerThread::prepareTrac
             // track->mainBuffer() != mSinkBuffer or mMixerBuffer means
             // there is an effect chain connected to the track
             chain.clear();
+            /**
+             * track->mainBuffer  函数在  effect_buffer_t *mainBuffer() const { return mMainBuffer; }     //      @ frameworks/av/services/audioflinger/PlaybackTracks.h
+             * 而 track 中的 mMainBuffer 来源 thread->sinkBuffer() 获取
+             * PlaybackThread::sinkBuffer() 得到 mSinkBuffer
+             * 
+             * 当然 track可以通过setMainBuffer更改mMainBuffer 
+            */
             if (track->mainBuffer() != mSinkBuffer && track->mainBuffer() != mMixerBuffer) {
                 if (mEffectBufferEnabled) {
                     mEffectBufferValid = true; // Later can set directly.
@@ -868,6 +875,7 @@ AudioFlinger::PlaybackThread::mixer_state AudioFlinger::MixerThread::prepareTrac
                 } else {
                     ALOGW("prepareTracks_l(): track %d attached to effect but no chain found on "  "session %d",  name, track->sessionId());
                 }
+
             }
 
 
@@ -902,6 +910,8 @@ AudioFlinger::PlaybackThread::mixer_state AudioFlinger::MixerThread::prepareTrac
                     track->setPaused();
                 }
             } else {
+                
+                 // 正常播放执行这里   
                 sp<AudioTrackServerProxy> proxy = track->mAudioTrackServerProxy;
                 gain_minifloat_packed_t vlr = proxy->getVolumeLR();
                 vlf = float_from_gain(gain_minifloat_unpack_left(vlr));
@@ -933,6 +943,8 @@ AudioFlinger::PlaybackThread::mixer_state AudioFlinger::MixerThread::prepareTrac
                 }
                 // vaf is represented as [0.0, 1.0] float by rescaling sendLevel
                 vaf = v * sendLevel * (1. / MAX_GAIN_INT);
+
+
             }
 
             track->setFinalVolume((vrf + vlf) / 2.f);
@@ -954,8 +966,7 @@ AudioFlinger::PlaybackThread::mixer_state AudioFlinger::MixerThread::prepareTrac
                 track->mHasVolumeController = false;
             }
 
-            // For dedicated VoIP outputs, let the HAL apply the stream volume. Track volume is
-            // still applied by the mixer.
+            // For dedicated VoIP outputs, let the HAL apply the stream volume. Track volume is still applied by the mixer.
             if ((mOutput->flags & AUDIO_OUTPUT_FLAG_VOIP_RX) != 0) {
                 v = mStreamTypes[track->streamType()].mute ? 0.0f : v;
                 if (v != mLeftVolFloat) {
@@ -973,6 +984,9 @@ AudioFlinger::PlaybackThread::mixer_state AudioFlinger::MixerThread::prepareTrac
                    vaf = min(1.0f, vaf / v);
                }
             }
+            /**
+             * 这里非常重要 Track 继承 TrackBase（继承 AudioBufferProvider）
+            */
             // XXX: these things DON'T need to be done each time
             mAudioMixer->setBufferProvider(name, track);
             mAudioMixer->enable(name);
@@ -991,18 +1005,10 @@ AudioFlinger::PlaybackThread::mixer_state AudioFlinger::MixerThread::prepareTrac
             } else if (reqSampleRate > maxSampleRate) {
                 reqSampleRate = maxSampleRate;
             }
-            mAudioMixer->setParameter(
-                name,
-                AudioMixer::RESAMPLE,
-                AudioMixer::SAMPLE_RATE,
-                (void *)(uintptr_t)reqSampleRate);
+            mAudioMixer->setParameter(name,AudioMixer::RESAMPLE,AudioMixer::SAMPLE_RATE,(void *)(uintptr_t)reqSampleRate);
 
             AudioPlaybackRate playbackRate = track->mAudioTrackServerProxy->getPlaybackRate();
-            mAudioMixer->setParameter(
-                name,
-                AudioMixer::TIMESTRETCH,
-                AudioMixer::PLAYBACK_RATE,
-                &playbackRate);
+            mAudioMixer->setParameter(name,AudioMixer::TIMESTRETCH,AudioMixer::PLAYBACK_RATE, &playbackRate);
 
             /*
              * Select the appropriate output buffer for the track.
@@ -1014,31 +1020,40 @@ AudioFlinger::PlaybackThread::mixer_state AudioFlinger::MixerThread::prepareTrac
              * channel accumulation.  If this buffer is enabled
              * (mMixerBufferEnabled true), then selected tracks will accumulate
              * into it.
+             * 
+             * 
+             * 
+             *@ frameworks/av/services/audioflinger/AudioFlinger.h:386:    static const bool kEnableExtendedPrecision = true;
+             * mMixerBufferEnabled = kEnableExtendedPrecision
+             * 
+             *  
+             * track->mainBuffer  函数在  effect_buffer_t *mainBuffer() const { return mMainBuffer; }     //      @ frameworks/av/services/audioflinger/PlaybackTracks.h
+             * 而 track 中的 mMainBuffer 来源 thread->sinkBuffer() 获取
+             * PlaybackThread::sinkBuffer() 得到 mSinkBuffer
+             * 
+             * 当然 track可以通过setMainBuffer更改mMainBuffer 
              *
+             * 这里 track->mainBuffer() == mSinkBuffer  满足
              */
             if (mMixerBufferEnabled  && (track->mainBuffer() == mSinkBuffer || track->mainBuffer() == mMixerBuffer)) {
-                mAudioMixer->setParameter(
-                        name,
-                        AudioMixer::TRACK,
-                        AudioMixer::MIXER_FORMAT, (void *)mMixerBufferFormat);
-                mAudioMixer->setParameter(
-                        name,
-                        AudioMixer::TRACK,
-                        AudioMixer::MAIN_BUFFER, (void *)mMixerBuffer);
+                mAudioMixer->setParameter(name, AudioMixer::TRACK,AudioMixer::MIXER_FORMAT, (void *)mMixerBufferFormat);
+
+                /**
+                 * 
+                */
+                mAudioMixer->setParameter(name,AudioMixer::TRACK,AudioMixer::MAIN_BUFFER, (void *)mMixerBuffer);
+
                 // TODO: override track->mainBuffer()?
                 mMixerBufferValid = true;
             } else {
-                mAudioMixer->setParameter(
-                        name,
-                        AudioMixer::TRACK,
-                        AudioMixer::MIXER_FORMAT, (void *)EFFECT_BUFFER_FORMAT);
-                mAudioMixer->setParameter(
-                        name,
-                        AudioMixer::TRACK,
-                        AudioMixer::MAIN_BUFFER, (void *)track->mainBuffer());
+                mAudioMixer->setParameter(name,AudioMixer::TRACK,AudioMixer::MIXER_FORMAT, (void *)EFFECT_BUFFER_FORMAT);
+                mAudioMixer->setParameter(name,AudioMixer::TRACK,AudioMixer::MAIN_BUFFER, (void *)track->mainBuffer());
             }
             mAudioMixer->setParameter(name,AudioMixer::TRACK,AudioMixer::AUX_BUFFER, (void *)track->auxBuffer());
-
+            
+           /**
+            * @ frameworks/av/services/audioflinger/Threads.cpp:111:static const int8_t kMaxTrackRetries = 50;
+           */
             // reset retry count
             track->mRetryCount = kMaxTrackRetries;
 
@@ -1048,6 +1063,7 @@ AudioFlinger::PlaybackThread::mixer_state AudioFlinger::MixerThread::prepareTrac
             if (mMixerStatusIgnoringFastTracks != MIXER_TRACKS_READY || mixerStatus != MIXER_TRACKS_ENABLED) {
                 mixerStatus = MIXER_TRACKS_READY;
             }
+
         } else {
             if (framesReady < desiredFrames && !track->isStopped() && !track->isPaused()) {
                 ALOGV("track(%p) underrun,  framesReady(%zu) < framesDesired(%zd)",  track, framesReady, desiredFrames);
@@ -1064,8 +1080,7 @@ AudioFlinger::PlaybackThread::mixer_state AudioFlinger::MixerThread::prepareTrac
             }
 
             ALOGVV("track %d s=%08x [NOT READY] on thread %p", name, cblk->mServer, this);
-            if ((track->sharedBuffer() != 0) || track->isTerminated() ||
-                    track->isStopped() || track->isPaused()) {
+            if ((track->sharedBuffer() != 0) || track->isTerminated() || track->isStopped() || track->isPaused()) {
                 // We have consumed all the buffers of this track.
                 // Remove it from the list of active tracks.
                 // TODO: use actual buffer filling status instead of latency when available from
@@ -1090,8 +1105,7 @@ AudioFlinger::PlaybackThread::mixer_state AudioFlinger::MixerThread::prepareTrac
                 // If one track is not ready, mark the mixer also not ready if:
                 //  - the mixer was ready during previous round OR
                 //  - no other track is ready
-                } else if (mMixerStatusIgnoringFastTracks == MIXER_TRACKS_READY ||
-                                mixerStatus != MIXER_TRACKS_READY) {
+                } else if (mMixerStatusIgnoringFastTracks == MIXER_TRACKS_READY || mixerStatus != MIXER_TRACKS_READY) {
                     mixerStatus = MIXER_TRACKS_ENABLED;
                 }
             }
@@ -1107,8 +1121,7 @@ AudioFlinger::PlaybackThread::mixer_state AudioFlinger::MixerThread::prepareTrac
     if (didModify) {
         state->mFastTracksGen++;
         // if the fast mixer was active, but now there are no fast tracks, then put it in cold idle
-        if (kUseFastMixer == FastMixer_Dynamic &&
-                state->mCommand == FastMixerState::MIX_WRITE && state->mTrackMask <= 1) {
+        if (kUseFastMixer == FastMixer_Dynamic && state->mCommand == FastMixerState::MIX_WRITE && state->mTrackMask <= 1) {
             state->mCommand = FastMixerState::COLD_IDLE;
             state->mColdFutexAddr = &mFastMixerFutex;
             state->mColdGen++;
@@ -1178,8 +1191,7 @@ AudioFlinger::PlaybackThread::mixer_state AudioFlinger::MixerThread::prepareTrac
     // sink or mix buffer must be cleared if all tracks are connected to an
     // effect chain as in this case the mixer will not write to the sink or mix buffer
     // and track effects will accumulate into it
-    if ((mBytesRemaining == 0) && ((mixedTracks != 0 && mixedTracks == tracksWithEffect) ||
-            (mixedTracks == 0 && fastTracks > 0))) {
+    if ((mBytesRemaining == 0) && ((mixedTracks != 0 && mixedTracks == tracksWithEffect) ||  (mixedTracks == 0 && fastTracks > 0))) {
         // FIXME as a performance optimization, should remember previous zero status
         if (mMixerBufferValid) {
             memset(mMixerBuffer, 0, mMixerBufferSize);
@@ -1203,4 +1215,24 @@ AudioFlinger::PlaybackThread::mixer_state AudioFlinger::MixerThread::prepareTrac
         mixerStatus = MIXER_TRACKS_READY;
     }
     return mixerStatus;
+}
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void AudioFlinger::MixerThread::threadLoop_mix()
+{
+    // mix buffers...
+    mAudioMixer->process();
+    mCurrentWriteLength = mSinkBufferSize;
+    // increase sleep time progressively when application underrun condition clears.
+    // Only increase sleep time if the mixer is ready for two consecutive times to avoid
+    // that a steady state of alternating ready/not ready conditions keeps the sleep time
+    // such that we would underrun the audio HAL.
+    if ((mSleepTimeUs == 0) && (sleepTimeShift > 0)) {
+        sleepTimeShift--;
+    }
+    mSleepTimeUs = 0;
+    mStandbyTimeNs = systemTime() + mStandbyDelayNs;
+    //TODO: delay standby when effects have a tail
+
 }
