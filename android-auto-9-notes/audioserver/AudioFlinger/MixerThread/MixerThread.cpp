@@ -997,14 +997,25 @@ AudioFlinger::PlaybackThread::mixer_state AudioFlinger::MixerThread::prepareTrac
             mAudioMixer->setParameter(name,AudioMixer::TRACK, AudioMixer::FORMAT, (void *)track->format());
             mAudioMixer->setParameter(name,AudioMixer::TRACK,AudioMixer::CHANNEL_MASK, (void *)(uintptr_t)track->channelMask());
             mAudioMixer->setParameter(name,AudioMixer::TRACK,AudioMixer::MIXER_CHANNEL_MASK, (void *)(uintptr_t)mChannelMask);
+           
+           /**
+            * 这里统计采样率是否和目标采样率一样
+           */
             // limit track sample rate to 2 x output sample rate, which changes at re-configuration
+            /**
+             * frameworks/av/media/libaudioprocessing/include/media/AudioResamplerPublic.h:32:#define AUDIO_RESAMPLER_DOWN_RATIO_MAX 256
+             * 这里 mSampleRate 为 44100 HZ
+            */
             uint32_t maxSampleRate = mSampleRate * AUDIO_RESAMPLER_DOWN_RATIO_MAX;
-            uint32_t reqSampleRate = track->mAudioTrackServerProxy->getSampleRate();
+            uint32_t reqSampleRate = track->mAudioTrackServerProxy->getSampleRate();// 41800 HZ
             if (reqSampleRate == 0) {
-                reqSampleRate = mSampleRate;
+                reqSampleRate = mSampleRate;            
             } else if (reqSampleRate > maxSampleRate) {
                 reqSampleRate = maxSampleRate;
             }
+            /**
+             * 设置采样率
+            */
             mAudioMixer->setParameter(name,AudioMixer::RESAMPLE,AudioMixer::SAMPLE_RATE,(void *)(uintptr_t)reqSampleRate);
 
             AudioPlaybackRate playbackRate = track->mAudioTrackServerProxy->getPlaybackRate();
@@ -1050,7 +1061,7 @@ AudioFlinger::PlaybackThread::mixer_state AudioFlinger::MixerThread::prepareTrac
                 mAudioMixer->setParameter(name,AudioMixer::TRACK,AudioMixer::MAIN_BUFFER, (void *)track->mainBuffer());
             }
             mAudioMixer->setParameter(name,AudioMixer::TRACK,AudioMixer::AUX_BUFFER, (void *)track->auxBuffer());
-            
+
            /**
             * @ frameworks/av/services/audioflinger/Threads.cpp:111:static const int8_t kMaxTrackRetries = 50;
            */

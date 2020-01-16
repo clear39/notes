@@ -43,6 +43,7 @@ class DownmixerBufferProvider : public CopyBufferProvider {
         ALOGE("AudioMixer() error %d querying number of effects", ret);
         return NO_INIT;
     }
+    
     ALOGV("EffectQueryNumberEffects() numEffects=%d", numEffects);
 
     for (uint32_t i = 0 ; i < numEffects ; i++) {

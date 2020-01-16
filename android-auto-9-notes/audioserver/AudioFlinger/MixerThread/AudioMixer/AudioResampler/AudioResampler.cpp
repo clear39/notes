@@ -1,6 +1,9 @@
 
 
-
+/**
+ * -----> bool AudioMixer::Track::setResampler(uint32_t trackSampleRate, uint32_t devSampleRate)
+ * -------->mResampler.reset(AudioResampler::create(mMixerInFormat,resamplerChannelCount,devSampleRate, quality));
+*/
 AudioResampler* AudioResampler::create(audio_format_t format, int inChannelCount,int32_t sampleRate, src_quality quality) 
 {
     bool atFinalQuality;
@@ -32,6 +35,7 @@ AudioResampler* AudioResampler::create(audio_format_t format, int inChannelCount
         uint32_t deltaMHz = qualityMHz(quality);  // 6
         uint32_t newMHz = currentMHz + deltaMHz;// 0 + 6
         if ((qualityIsSupported(quality) && newMHz <= maxMHz /*130*/) || atFinalQuality) {
+           // 01-15 03:36:16.024  1772  1807 V AudioResampler: resampler load 0 -> 6 MHz due to delta +6 MHz from quality 6
             ALOGV("resampler load %u -> %u MHz due to delta +%u MHz from quality %d",currentMHz, newMHz, deltaMHz, quality);
             currentMHz = newMHz;//6
             break;
@@ -68,29 +72,11 @@ AudioResampler* AudioResampler::create(audio_format_t format, int inChannelCount
 
     switch (quality) {
     default:
-    case LOW_QUALITY:
-        ALOGV("Create linear Resampler");
-        LOG_ALWAYS_FATAL_IF(format != AUDIO_FORMAT_PCM_16_BIT);
-        resampler = new AudioResamplerOrder1(inChannelCount, sampleRate);
-        break;
-    case MED_QUALITY:
-        ALOGV("Create cubic Resampler");
-        LOG_ALWAYS_FATAL_IF(format != AUDIO_FORMAT_PCM_16_BIT);
-        resampler = new AudioResamplerCubic(inChannelCount, sampleRate);
-        break;
-    case HIGH_QUALITY:
-        ALOGV("Create HIGH_QUALITY sinc Resampler");
-        LOG_ALWAYS_FATAL_IF(format != AUDIO_FORMAT_PCM_16_BIT);
-        resampler = new AudioResamplerSinc(inChannelCount, sampleRate);
-        break;
-    case VERY_HIGH_QUALITY:
-        ALOGV("Create VERY_HIGH_QUALITY sinc Resampler = %d", quality);
-        LOG_ALWAYS_FATAL_IF(format != AUDIO_FORMAT_PCM_16_BIT);
-        resampler = new AudioResamplerSinc(inChannelCount, sampleRate, quality);
-        break;
+        。。。。。。
     case DYN_LOW_QUALITY:
     case DYN_MED_QUALITY://这里
     case DYN_HIGH_QUALITY:
+        //      01-15 03:36:16.024  1772  1807 V AudioResampler: Create dynamic Resampler = 6
         ALOGV("Create dynamic Resampler = %d", quality);
         if (format == AUDIO_FORMAT_PCM_FLOAT) {//这里
             resampler = new AudioResamplerDyn<float, float, float>(inChannelCount,sampleRate, quality);
@@ -128,4 +114,28 @@ void AudioResampler::init_routine()
             }
         }
     }
+}
+
+
+
+AudioResampler::AudioResampler(int inChannelCount,
+        int32_t sampleRate, src_quality quality) :
+        mChannelCount(inChannelCount),
+        mSampleRate(sampleRate), mInSampleRate(sampleRate), mInputIndex(0),
+        mPhaseFraction(0),
+        mQuality(quality) {
+
+    const int maxChannels = quality < DYN_LOW_QUALITY ? 2 : 8;
+    if (inChannelCount < 1
+            || inChannelCount > maxChannels) {
+        LOG_ALWAYS_FATAL("Unsupported sample format %d quality %d channels",
+                quality, inChannelCount);
+    }
+    if (sampleRate <= 0) {
+        LOG_ALWAYS_FATAL("Unsupported sample rate %d Hz", sampleRate);
+    }
+
+    // initialize common members
+    mVolume[0] = mVolume[1] = 0;
+    mBuffer.frameCount = 0;
 }

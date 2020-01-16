@@ -14,6 +14,7 @@ Track::Track(): bufferProvider(nullptr)
 */
 status_t AudioMixer::Track::prepareForDownmix()
 {
+    //      01-15 03:25:54.894  1809  1844 V AudioMixer: AudioMixer::prepareForDownmix(0xf1eb270c) with mask 0x3
     ALOGV("AudioMixer::prepareForDownmix(%p) with mask 0x%x",this, channelMask);
 
     // discard the previous downmixer if there was one
@@ -70,27 +71,38 @@ void AudioMixer::Track::unprepareForDownmix() {
 */
 status_t AudioMixer::Track::prepareForReformat()
 {
+    //      01-15 03:25:54.894  1809  1844 V AudioMixer: AudioMixer::prepareForReformat(0xf1eb270c) with format 0x1
     ALOGV("AudioMixer::prepareForReformat(%p) with format %#x", this, mFormat);
     // discard previous reformatters
     unprepareForReformat();
     // only configure reformatters as needed
-    const audio_format_t targetFormat = mDownmixRequiresFormat != AUDIO_FORMAT_INVALID  ? mDownmixRequiresFormat : mMixerInFormat;
+    /**
+     * mDownmixRequiresFormat = AUDIO_FORMAT_INVALID
+     * targetFormat = mMixerInFormat(AUDIO_FORMAT_PCM_FLOAT)
+     * 
+     * @        system/media/audio/include/system/audio-base.h:146:    AUDIO_FORMAT_PCM_16_BIT            = 0x1u,        // (PCM | PCM_SUB_16_BIT)
+    */
+    const audio_format_t targetFormat = mDownmixRequiresFormat != AUDIO_FORMAT_INVALID  ? mDownmixRequiresFormat : mMixerInFormat; //AUDIO_FORMAT_PCM_FLOAT
     bool requiresReconfigure = false;
     if (mFormat != targetFormat) {
+        //执行这里
         mReformatBufferProvider.reset(new ReformatBufferProvider(audio_channel_count_from_out_mask(channelMask),mFormat,targetFormat,kCopyBufferFrameCount));
         requiresReconfigure = true;
-    } else if (mFormat == AUDIO_FORMAT_PCM_FLOAT) {
+    } else if (mFormat == AUDIO_FORMAT_PCM_FLOAT) {//   system/media/audio/include/system/audio-base.h:150:    AUDIO_FORMAT_PCM_FLOAT             = 0x5u,        // (PCM | PCM_SUB_FLOAT)
         // Input and output are floats, make sure application did not provide > 3db samples
         // that would break volume application (b/68099072)
         // TODO: add a trusted source flag to avoid the overhead
         mReformatBufferProvider.reset(new ClampFloatBufferProvider(audio_channel_count_from_out_mask(channelMask),kCopyBufferFrameCount));
         requiresReconfigure = true;
     }
-
+   
+   // mMixerInFormat = AUDIO_FORMAT_PCM_FLOAT
     if (targetFormat != mMixerInFormat) {
         mPostDownmixReformatBufferProvider.reset(new ReformatBufferProvider(audio_channel_count_from_out_mask(mMixerChannelMask),targetFormat,mMixerInFormat,kCopyBufferFrameCount));
         requiresReconfigure = true;
     }
+    //  01-15 03:36:15.987  1772  1807 V AudioMixer: AudioMixer::prepareForReformat(0xe500c46c) with format 0x1,0x5,0x5
+    //  ALOGV("AudioMixer::prepareForReformat(%p) with format %#x,%#x,%#x", this, mFormat,targetFormat,mMixerInFormat);
     if (requiresReconfigure) {
         reconfigureBufferProviders();
     }
@@ -105,6 +117,7 @@ void AudioMixer::Track::reconfigureBufferProviders()
     bufferProvider = mInputBufferProvider;
 
     if (mReformatBufferProvider.get() != nullptr) {
+        // 这里被创建
         mReformatBufferProvider->setBufferProvider(bufferProvider);
         bufferProvider = mReformatBufferProvider.get();
     }
@@ -127,31 +140,46 @@ void AudioMixer::Track::reconfigureBufferProviders()
 }
 
 
-
+/**
+ * void AudioMixer::setParameter(int name, int target, int param, void *value)
+ * 
+ * trackSampleRate 为当前 track的采样率
+ * devSampleRate 当前设备所支持的采样率
+ * 
+ * 当设备或者线程当前的采样率和track的采样率不一样触发调用
+*/
 bool AudioMixer::Track::setResampler(uint32_t trackSampleRate, uint32_t devSampleRate)
 {
     ALOGV("%s",__func__);
     if (trackSampleRate != devSampleRate || mResampler.get() != nullptr) {
         if (sampleRate != trackSampleRate) {
+
             sampleRate = trackSampleRate;
+
             if (mResampler.get() == nullptr) {
+                //      01-15 03:36:16.024  1772  1807 V AudioMixer: Creating resampler from track 44100 Hz to device 48000 Hz
                 ALOGV("Creating resampler from track %d Hz to device %d Hz", trackSampleRate, devSampleRate);
+
                 AudioResampler::src_quality quality;
                 // force lowest quality level resampler if use case isn't music or video
                 // FIXME this is flawed for dynamic sample rates, as we choose the resampler
                 // quality level based on the initial ratio, but that could change later.
                 // Should have a way to distinguish tracks with static ratios vs. dynamic ratios.
+                /**
+                 *isMusicRate 返回 return sampleRate >= AUDIO_PROCESSING_MUSIC_RATE;
+                */
                 if (isMusicRate(trackSampleRate)) {
                     quality = AudioResampler::DEFAULT_QUALITY;
                 } else {
                     quality = AudioResampler::DYN_LOW_QUALITY;
                 }
 
-                // TODO: Remove MONO_HACK. Resampler sees #channels after the downmixer
-                // but if none exists, it is the channel count (1 for mono).
+                // TODO: Remove MONO_HACK. Resampler sees #channels after the downmixer but if none exists, it is the channel count (1 for mono).
                 const int resamplerChannelCount = mDownmixerBufferProvider.get() != nullptr ? mMixerChannelCount : channelCount;
+
                 //      01-15 03:25:54.930  1809  1844 V AudioMixer: Creating resampler: format(0x5) channels(2) devSampleRate(48000) quality(0)
                 ALOGV("Creating resampler:" " format(%#x) channels(%d) devSampleRate(%u) quality(%d)\n", mMixerInFormat, resamplerChannelCount, devSampleRate, quality);
+
                 mResampler.reset(AudioResampler::create(mMixerInFormat,resamplerChannelCount,devSampleRate, quality));
             }
             return true;
@@ -240,12 +268,14 @@ AudioMixer::hook_t AudioMixer::Track::getTrackHook(int trackType, uint32_t chann
  * TO: int32_t (Q4.27) or float
  * TI: int32_t (Q4.27) or int16_t (Q0.15) or float
  * TA: int32_t (Q4.27) or float
- */
+ */ 
+ //  (AudioMixer::hook_t) &Track::track__Resample< MIXTYPE_MULTI, float /*TO*/, float /*TI*/, TYPE_AUX>;
+//    (t.get()->*t->hook)(outTemp, numFrames, mResampleTemp.get() /* naked ptr */, aux);
 template <int MIXTYPE, typename TO, typename TI, typename TA>
 void AudioMixer::Track::track__Resample(TO* out, size_t outFrameCount, TO* temp, TA* aux)
 {
     ALOGV("track__Resample\n");
-    mResampler->setSampleRate(sampleRate);
+    mResampler->setSampleRate(sampleRate);//    44100
     /**
      * bool        needsRamp() { return (volumeInc[0] | volumeInc[1] | auxInc) != 0; }
     */
@@ -257,10 +287,15 @@ void AudioMixer::Track::track__Resample(TO* out, size_t outFrameCount, TO* temp,
         mResampler->setVolume(UNITY_GAIN_FLOAT, UNITY_GAIN_FLOAT);
         memset(temp, 0, outFrameCount * mMixerChannelCount * sizeof(TO));
         /**
+         * temp 为  mResampleTemp.get() 
          * 
+         * bufferProvider 为 ReformatBufferProvider
         */
         mResampler->resample((int32_t*)temp, outFrameCount, bufferProvider);
 
+        /**
+         * 
+        */
         volumeMix<MIXTYPE, is_same<TI, float>::value /* USEFLOATVOL */, true /* ADJUSTVOL */>(out, outFrameCount, temp, aux, ramp);
 
     } else { // constant volume gain

@@ -1,5 +1,9 @@
 
-//  @   frameworks/av/media/libaudioprocessing/AudioMixer.cpp
+/**
+ *   @   frameworks/av/media/libaudioprocessing/AudioMixer.cpp
+ * 传入参数：
+ *      sampleRate这个表示线程当前采样率 41800，也是物理硬件支持的采样率
+ * */
 AudioMixer::AudioMixer(size_t frameCount, uint32_t sampleRate)
     : mSampleRate(sampleRate), mFrameCount(frameCount) {
     pthread_once(&sOnceControl, &sInitRoutine);
@@ -19,6 +23,9 @@ bool  AudioMixer::exists(int name) const {
     return mTracks.count(name) > 0;
 }
 
+/**
+ * 
+*/
 status_t AudioMixer::create(int name, audio_channel_mask_t channelMask, audio_format_t format, int sessionId)
 {
     LOG_ALWAYS_FATAL_IF(exists(name), "name %d already exists", name);
@@ -48,6 +55,9 @@ status_t AudioMixer::create(int name, audio_channel_mask_t channelMask, audio_fo
         // Integer volume.
         // Currently integer volume is kept for the legacy integer mixer.
         // Will be removed when the legacy mixer path is removed.
+        /**
+         * frameworks/av/media/libaudioclient/include/media/AudioMixer.h:56:    static const uint16_t UNITY_GAIN_INT = 0x1000;
+        */
         t->volume[0] = UNITY_GAIN_INT;
         t->volume[1] = UNITY_GAIN_INT;
         t->prevVolume[0] = UNITY_GAIN_INT << 16;
@@ -58,6 +68,9 @@ status_t AudioMixer::create(int name, audio_channel_mask_t channelMask, audio_fo
         t->auxInc = 0;
         t->prevAuxLevel = 0;
 
+        /**
+         * frameworks/av/media/libaudioclient/include/media/AudioMixer.h:57:    static const CONSTEXPR float UNITY_GAIN_FLOAT = 1.0f;
+        */
         // Floating point volume.
         t->mVolume[0] = UNITY_GAIN_FLOAT;
         t->mVolume[1] = UNITY_GAIN_FLOAT;
@@ -91,7 +104,7 @@ status_t AudioMixer::create(int name, audio_channel_mask_t channelMask, audio_fo
         t->auxBuffer = NULL;
         t->mInputBufferProvider = NULL;
         t->mMixerFormat = AUDIO_FORMAT_PCM_16_BIT;
-        t->mFormat = format;
+        t->mFormat = format;            //      
         /**
          * frameworks/av/media/libaudioprocessing/AudioMixer.cpp:72:static constexpr bool kUseFloat = true;
          * frameworks/av/media/libaudioprocessing/AudioMixer.cpp:67:static constexpr bool kUseNewMixer = true;
@@ -100,8 +113,26 @@ status_t AudioMixer::create(int name, audio_channel_mask_t channelMask, audio_fo
         */
         t->mMixerInFormat = selectMixerInFormat(format);// AUDIO_FORMAT_PCM_FLOAT
         t->mDownmixRequiresFormat = AUDIO_FORMAT_INVALID; // no format required
+        /**
+         * audio_channel_mask_from_representation_and_bits @    system/media/audio/include/system/audio.h
+         * system/media/audio/include/system/audio-base.h:186:    AUDIO_CHANNEL_REPRESENTATION_POSITION   = 0x0u,
+         * system/media/audio/include/system/audio-base.h:212:    AUDIO_CHANNEL_OUT_STEREO                = 0x3u,     // OUT_FRONT_LEFT | OUT_FRONT_RIGHT
+         * 将 AUDIO_CHANNEL_REPRESENTATION_POSITION 左移 30位 再和 AUDIO_CHANNEL_OUT_STEREO 相与，这里返回值为 0x3
+        */
         t->mMixerChannelMask = audio_channel_mask_from_representation_and_bits(AUDIO_CHANNEL_REPRESENTATION_POSITION, AUDIO_CHANNEL_OUT_STEREO);
+        /**
+         * 
+        */
         t->mMixerChannelCount = audio_channel_count_from_out_mask(t->mMixerChannelMask);
+        /**
+        static const AudioPlaybackRate AUDIO_PLAYBACK_RATE_DEFAULT = {
+                AUDIO_TIMESTRETCH_SPEED_NORMAL,//frameworks/av/media/libaudioprocessing/include/media/AudioResamplerPublic.h:49:#define AUDIO_TIMESTRETCH_SPEED_NORMAL 1.0f
+                AUDIO_TIMESTRETCH_PITCH_NORMAL,//frameworks/av/media/libaudioprocessing/include/media/AudioResamplerPublic.h:61:#define AUDIO_TIMESTRETCH_PITCH_NORMAL 1.0f
+                AUDIO_TIMESTRETCH_STRETCH_DEFAULT,//frameworks/av/media/libaudioprocessing/include/media/AudioResamplerPublic.h:67:    AUDIO_TIMESTRETCH_STRETCH_DEFAULT = 0,
+                AUDIO_TIMESTRETCH_FALLBACK_DEFAULT,//frameworks/av/media/libaudioprocessing/include/media/AudioResamplerPublic.h:84:    AUDIO_TIMESTRETCH_FALLBACK_DEFAULT= 0,
+        };
+
+        */
         t->mPlaybackRate = AUDIO_PLAYBACK_RATE_DEFAULT;
 
         // Check the downmixing (or upmixing) requirements.
@@ -199,6 +230,7 @@ void AudioMixer::setParameter(int name, int target, int param, void *value)
         case SAMPLE_RATE:
             ALOG_ASSERT(valueInt > 0, "bad sample rate %d", valueInt);
             if (track->setResampler(uint32_t(valueInt), mSampleRate)) {
+                //01-15 03:25:54.930  1809  1844 V AudioMixer: setParameter(RESAMPLE, SAMPLE_RATE, 44100)
                 ALOGV("setParameter(RESAMPLE, SAMPLE_RATE, %u)",uint32_t(valueInt));
                 invalidate();
             }
@@ -370,6 +402,19 @@ void AudioMixer::process__validate()
         */
         mGroups[t->mainBuffer].emplace_back(name); // mGroups also in order of name.
 
+        /*
+        enum {
+                NEEDS_CHANNEL_1             = 0x00000000,   // mono(单通道)
+                NEEDS_CHANNEL_2             = 0x00000001,   // stereo（立体声/双通道）
+
+                // sample format is not explicitly specified, and is assumed to be AUDIO_FORMAT_PCM_16_BIT
+
+                NEEDS_MUTE                  = 0x00000100,
+                NEEDS_RESAMPLE              = 0x00001000,
+                NEEDS_AUX                   = 0x00010000,
+       };
+
+        */
         uint32_t n = 0;
         // FIXME can overflow (mask is only 3 bits)
         n |= NEEDS_CHANNEL_1 + t->channelCount - 1;
@@ -380,6 +425,9 @@ void AudioMixer::process__validate()
         if (t->doesResample()) {
             n |= NEEDS_RESAMPLE;
         }
+        /**
+         * t->auxBuffer = NULL
+        */
         if (t->auxLevel != 0 && t->auxBuffer != NULL) {
             n |= NEEDS_AUX;
         }
@@ -398,6 +446,8 @@ void AudioMixer::process__validate()
             t->hook = &Track::track__nop;
         } else {
             // 执行这里
+
+            
             if (n & NEEDS_AUX) {
                 all16BitsStereoNoResample = false;
             }
@@ -541,22 +591,7 @@ void AudioMixer::process__genericResampling()
                 (t.get()->*t->hook)(outTemp, numFrames, mResampleTemp.get() /* naked ptr */, aux);
 
             } else {
-
-                size_t outFrames = 0;
-                while (outFrames < numFrames) {
-                    t->buffer.frameCount = numFrames - outFrames;
-                    t->bufferProvider->getNextBuffer(&t->buffer);
-                    t->mIn = t->buffer.raw;
-                    // t->mIn == nullptr can happen if the track was flushed just after having
-                    // been enabled for mixing.
-                    if (t->mIn == nullptr) break;
-
-                    (t.get()->*t->hook)(outTemp + outFrames * t->mMixerChannelCount, t->buffer.frameCount,mResampleTemp.get() /* naked ptr */,aux != nullptr ? aux + outFrames : nullptr);
-                    outFrames += t->buffer.frameCount;
-
-                    t->bufferProvider->releaseBuffer(&t->buffer);
-                }
-
+               。。。。。。
             }
         }//for (const int name : group) {
 
