@@ -23,6 +23,11 @@ public:
 #define MIX_TYPE_PLAYERS 0
 #define MIX_TYPE_RECORDERS 1
 
+
+#define MIX_ROUTE_FLAG_RENDER 0x1
+#define MIX_ROUTE_FLAG_LOOP_BACK (0x1 << 1)
+#define MIX_ROUTE_FLAG_ALL (MIX_ROUTE_FLAG_RENDER | MIX_ROUTE_FLAG_LOOP_BACK)
+
 class AudioMix {
 public:
     // flag on an AudioMix indicating the activity on this mix (IDLE, MIXING)
