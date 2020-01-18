@@ -1,6 +1,7 @@
 
-//  
-
+/**
+ * 
+*/ 
 AudioFlinger::PlaybackThread::PlaybackThread(const sp<AudioFlinger>& audioFlinger,
                                              AudioStreamOut* output,
                                              audio_io_handle_t id,

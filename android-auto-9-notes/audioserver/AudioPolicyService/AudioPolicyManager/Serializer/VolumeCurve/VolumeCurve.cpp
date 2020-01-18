@@ -33,11 +33,13 @@ device_category VolumeCurve::getDeviceCategory() const { return mDeviceCategory;
 
 audio_stream_type_t VolumeCurve::getStreamType() const { return mStreamType; }
 
-void VolumeCurve::add(const CurvePoint &point) { mCurvePoints.add(point); }
+void VolumeCurve::add(const CurvePoint &point) { 
+        mCurvePoints.add(point);
+ }
 
 
 /*
-<volume stream="AUDIO_STREAM_VOICE_CALL" deviceCategory="DEVICE_CATEGORY_HEADSET">
+<volume stream="AUDIO_STREAM_VOICE_CALL"  deviceCategory="DEVICE_CATEGORY_HEADSET">
     <!--
     
         格式：    mIndex , mAttenuationInMb
@@ -86,8 +88,7 @@ float VolumeCurve::volIndexToDb(int indexInUi, int volIndexMin, int volIndexMax)
             ((float)(volIdx - mCurvePoints[indexInUiPosition - 1].mIndex)) *
                 ( ((mCurvePoints[indexInUiPosition].mAttenuationInMb / 100.0f) -
                         (mCurvePoints[indexInUiPosition - 1].mAttenuationInMb / 100.0f)) /
-                    ((float)(mCurvePoints[indexInUiPosition].mIndex -
-                            mCurvePoints[indexInUiPosition - 1].mIndex)) );
+                    ((float)(mCurvePoints[indexInUiPosition].mIndex - mCurvePoints[indexInUiPosition - 1].mIndex)) );
 
     ALOGV("VOLUME mDeviceCategory %d, mStreamType %d vol index=[%d %d %d], dB=[%.1f %.1f %.1f]",
             mDeviceCategory, mStreamType,
@@ -98,3 +99,6 @@ float VolumeCurve::volIndexToDb(int indexInUi, int volIndexMin, int volIndexMax)
 
     return decibels;
 }
+
+
+

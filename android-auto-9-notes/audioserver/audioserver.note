@@ -1,0 +1,4 @@
+
+
+//查看所有音量值
+#settings list system | grep -i volume

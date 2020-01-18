@@ -1,4 +1,4 @@
-//  @ /work/workcodes/aosp-p9.x-auto-alpha/frameworks/av/services/audiopolicy/service/AudioPolicyService.cpp
+//  @ frameworks/av/services/audiopolicy/service/AudioPolicyService.cpp
 AudioPolicyService::AudioPolicyService()
     : BnAudioPolicyService(), mpAudioPolicyDev(NULL), mpAudioPolicy(NULL),
       mAudioPolicyManager(NULL), mAudioPolicyClient(NULL), mPhoneState(AUDIO_MODE_INVALID)
@@ -86,6 +86,107 @@ void AudioPolicyService::setRecordSilenced(uid_t uid, bool silenced)
         af->setRecordSilenced(uid, silenced);
     }
 }
+
+
+/**
+ * @    frameworks/av/services/audiopolicy/service/AudioPolicyInterfaceImpl.cpp
+ * vim 
+*/
+status_t AudioPolicyService::getOutputForAttr(const audio_attributes_t *attr,
+                                              audio_io_handle_t *output,
+                                              audio_session_t session,
+                                              audio_stream_type_t *stream,
+                                              pid_t pid,
+                                              uid_t uid,
+                                              const audio_config_t *config,
+                                              audio_output_flags_t flags,
+                                              audio_port_handle_t *selectedDeviceId,
+                                              audio_port_handle_t *portId)
+{
+    if (mAudioPolicyManager == NULL) {
+        return NO_INIT;
+    }
+    ALOGV("getOutputForAttr()");
+    Mutex::Autolock _l(mLock);
+
+    const uid_t callingUid = IPCThreadState::self()->getCallingUid();
+    if (!isTrustedCallingUid(callingUid) || uid == (uid_t)-1) {
+        ALOGW_IF(uid != (uid_t)-1 && uid != callingUid,"%s uid %d tried to pass itself off as %d", __FUNCTION__, callingUid, uid);
+        uid = callingUid;
+    }
+    audio_output_flags_t originalFlags = flags;
+    AutoCallerClear acc;
+
+    /**
+     * 
+    */
+    status_t result = mAudioPolicyManager->getOutputForAttr(attr, output, session, stream, uid,config,&flags, selectedDeviceId, portId);
+
+    // FIXME: Introduce a way to check for the the telephony device before opening the output
+    if ((result == NO_ERROR) &&  (flags & AUDIO_OUTPUT_FLAG_INCALL_MUSIC) &&!modifyPhoneStateAllowed(pid, uid)) {
+        // If the app tries to play music through the telephony device and doesn't have permission
+        // the fallback to the default output device.
+        mAudioPolicyManager->releaseOutput(*output, *stream, session);
+        flags = originalFlags;
+        *selectedDeviceId = AUDIO_PORT_HANDLE_NONE;
+        *portId = AUDIO_PORT_HANDLE_NONE;
+        result = mAudioPolicyManager->getOutputForAttr(attr, output, session, stream, uid,config,&flags, selectedDeviceId, portId);
+    }
+    return result;
+}
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+status_t AudioPolicyService::listAudioPorts(audio_port_role_t role,audio_port_type_t type,unsigned int *num_ports,struct audio_port *ports,unsigned int *generation)
+{
+    Mutex::Autolock _l(mLock);
+    if (mAudioPolicyManager == NULL) {
+        return NO_INIT;
+    }
+    AutoCallerClear acc;
+    return mAudioPolicyManager->listAudioPorts(role, type, num_ports, ports, generation);
+}
+
+status_t AudioPolicyService::listAudioPatches(unsigned int *num_patches,struct audio_patch *patches,unsigned int *generation)
+{
+    Mutex::Autolock _l(mLock);
+    if (mAudioPolicyManager == NULL) {
+        return NO_INIT;
+    }
+    AutoCallerClear acc;
+    return mAudioPolicyManager->listAudioPatches(num_patches, patches, generation);
+}
+
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+status_t AudioPolicyService::createAudioPatch(const struct audio_patch *patch,audio_patch_handle_t *handle)
+{
+    Mutex::Autolock _l(mLock);
+    if(!modifyAudioRoutingAllowed()) {
+        return PERMISSION_DENIED;
+    }
+    if (mAudioPolicyManager == NULL) {
+        return NO_INIT;
+    }
+    AutoCallerClear acc;
+    return mAudioPolicyManager->createAudioPatch(patch, handle,IPCThreadState::self()->getCallingUid());
+}
+
+status_t AudioPolicyService::releaseAudioPatch(audio_patch_handle_t handle)
+{
+    Mutex::Autolock _l(mLock);
+    if(!modifyAudioRoutingAllowed()) {
+        return PERMISSION_DENIED;
+    }
+    if (mAudioPolicyManager == NULL) {
+        return NO_INIT;
+    }
+    AutoCallerClear acc;
+    return mAudioPolicyManager->releaseAudioPatch(handle,IPCThreadState::self()->getCallingUid());
+}
+
 
 
 

@@ -1,8 +1,10 @@
 
-
 //  @   packages/services/Car/service/src/com/android/car/CarAudioService.java
-
 public class CarAudioService extends ICarAudio.Stub implements CarServiceBase {
+
+
+
+        
 
     /**
      * @return Array of accumulated device addresses, empty array if we found nothing
@@ -13,6 +15,9 @@ public class CarAudioService extends ICarAudio.Stub implements CarServiceBase {
             enforcePermission(Car.PERMISSION_CAR_CONTROL_AUDIO_SETTINGS);
             List<String> sourceAddresses = new ArrayList<>();
 
+            /**
+             * 
+             */
             AudioDeviceInfo[] devices = mAudioManager.getDevices(AudioManager.GET_DEVICES_INPUTS);
             if (devices.length == 0) {
                 Log.w(CarLog.TAG_AUDIO, "getExternalSources, no input devices found.");
@@ -53,16 +58,14 @@ public class CarAudioService extends ICarAudio.Stub implements CarServiceBase {
 
 
     @Override
-    public CarAudioPatchHandle createAudioPatch(String sourceAddress,
-            @AudioAttributes.AttributeUsage int usage, int gainInMillibels) {
+    public CarAudioPatchHandle createAudioPatch(String sourceAddress, @AudioAttributes.AttributeUsage int usage, int gainInMillibels) {
         synchronized (mImplLock) {
             enforcePermission(Car.PERMISSION_CAR_CONTROL_AUDIO_SETTINGS);
             return createAudioPatchLocked(sourceAddress, usage, gainInMillibels);
         }
     }
 
-    private CarAudioPatchHandle createAudioPatchLocked(String sourceAddress,
-            @AudioAttributes.AttributeUsage int usage, int gainInMillibels) {
+    private CarAudioPatchHandle createAudioPatchLocked(String sourceAddress,@AudioAttributes.AttributeUsage int usage, int gainInMillibels) {
         // Find the named source port
         AudioDeviceInfo sourcePortInfo = null;
         AudioDeviceInfo[] deviceInfos = mAudioManager.getDevices(AudioManager.GET_DEVICES_INPUTS);
@@ -76,42 +79,34 @@ public class CarAudioService extends ICarAudio.Stub implements CarServiceBase {
         Preconditions.checkNotNull(sourcePortInfo,"Specified source is not available: " + sourceAddress);
 
         // Find the output port associated with the given carUsage
-        AudioDevicePort sinkPort = Preconditions.checkNotNull(getAudioPort(usage),
-                "Sink not available for usage: " + AudioAttributes.usageToString(usage));
+        AudioDevicePort sinkPort = Preconditions.checkNotNull(getAudioPort(usage),"Sink not available for usage: " + AudioAttributes.usageToString(usage));
 
         // {@link android.media.AudioPort#activeConfig()} is valid for mixer port only,
         // since audio framework has no clue what's active on the device ports.
         // Therefore we construct an empty / default configuration here, which the audio HAL
         // implementation should ignore.
-        AudioPortConfig sinkConfig = sinkPort.buildConfig(0,
-                AudioFormat.CHANNEL_OUT_DEFAULT, AudioFormat.ENCODING_DEFAULT, null);
+        AudioPortConfig sinkConfig = sinkPort.buildConfig(0,AudioFormat.CHANNEL_OUT_DEFAULT, AudioFormat.ENCODING_DEFAULT, null);
         Log.d(CarLog.TAG_AUDIO, "createAudioPatch sinkConfig: " + sinkConfig);
 
         // Configure the source port to match the output port except for a gain adjustment
         final CarAudioDeviceInfo helper = new CarAudioDeviceInfo(sourcePortInfo);
-        AudioGain audioGain = Preconditions.checkNotNull(helper.getAudioGain(),
-                "Gain controller not available for source port");
+        AudioGain audioGain = Preconditions.checkNotNull(helper.getAudioGain(),"Gain controller not available for source port");
 
         // size of gain values is 1 in MODE_JOINT
-        AudioGainConfig audioGainConfig = audioGain.buildConfig(AudioGain.MODE_JOINT,
-                audioGain.channelMask(), new int[] { gainInMillibels }, 0);
+        AudioGainConfig audioGainConfig = audioGain.buildConfig(AudioGain.MODE_JOINT,audioGain.channelMask(), new int[] { gainInMillibels }, 0);
         // Construct an empty / default configuration excepts gain config here and it's up to the
         // audio HAL how to interpret this configuration, which the audio HAL
         // implementation should ignore.
-        AudioPortConfig sourceConfig = sourcePortInfo.getPort().buildConfig(0,
-                AudioFormat.CHANNEL_IN_DEFAULT, AudioFormat.ENCODING_DEFAULT, audioGainConfig);
+        AudioPortConfig sourceConfig = sourcePortInfo.getPort().buildConfig(0,AudioFormat.CHANNEL_IN_DEFAULT, AudioFormat.ENCODING_DEFAULT, audioGainConfig);
 
         // Create an audioPatch to connect the two ports
         AudioPatch[] patch = new AudioPatch[] { null };
-        int result = AudioManager.createAudioPatch(patch,
-                new AudioPortConfig[] { sourceConfig },
-                new AudioPortConfig[] { sinkConfig });
+        int result = AudioManager.createAudioPatch(patch,new AudioPortConfig[] { sourceConfig },new AudioPortConfig[] { sinkConfig });
         if (result != AudioManager.SUCCESS) {
             throw new RuntimeException("createAudioPatch failed with code " + result);
         }
 
-        Preconditions.checkNotNull(patch[0],
-                "createAudioPatch didn't provide expected single handle");
+        Preconditions.checkNotNull(patch[0],"createAudioPatch didn't provide expected single handle");
         Log.d(CarLog.TAG_AUDIO, "Audio patch created: " + patch[0]);
 
         // Ensure the initial volume on output device port

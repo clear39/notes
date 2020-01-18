@@ -93,7 +93,7 @@ void AudioFlinger::onFirstRef()
     }
 
     /**
-     * 
+     * @        frameworks/av/services/audioflinger/AudioFlinger.h:846:    sp<PatchPanel> mPatchPanel;
     */
     mPatchPanel = new PatchPanel(this);
 

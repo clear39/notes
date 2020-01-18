@@ -16,23 +16,11 @@ void HwModule::setHalVersion(uint32_t major, uint32_t minor) {
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
-/**
- * 在配置文件解析中调用
- * 每个成员对应标签 mixPort
-*/
-void HwModule::setProfiles(const IOProfileCollection &profiles)
-{
-    for (size_t i = 0; i < profiles.size(); i++) {
-        addProfile(profiles[i]);
-    }
-}
-
 const InputProfileCollection &HwModule::getInputProfiles() const { return mInputProfiles; }
 
 const OutputProfileCollection &HwModule::getOutputProfiles() const { return mOutputProfiles; }
 
-status_t HwModule::addOutputProfile(const String8& name, const audio_config_t *config,
-                                    audio_devices_t device, const String8& address)
+status_t HwModule::addOutputProfile(const String8& name, const audio_config_t *config, audio_devices_t device, const String8& address)
 {
     sp<IOProfile> profile = new OutputProfile(name);
 
@@ -62,9 +50,10 @@ status_t HwModule::addInputProfile(const String8& name, const audio_config_t *co
 }
 
 
-
 /**
  * 音频策略文件中解析调用
+ * 在配置文件解析中调用
+ * 每个成员对应标签 mixPort
 */
 void HwModule::setProfiles(const IOProfileCollection &profiles)
 {
@@ -141,8 +130,10 @@ void HwModule::setDeclaredDevices(const DeviceVector &devices)
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-sp<AudioPort> findPortByTagName(const String8 &tagName) const
+/**
+ * @    frameworks/av/services/audiopolicy/common/managerdefinitions/include/HwModule.h
+*/
+sp<AudioPort> HwModule::findPortByTagName(const String8 &tagName) const
 {
     /**
      * mPorts 通过 setDeclaredDevices 以及 addInputProfile 和 addOutputProfile 添加 
@@ -218,6 +209,9 @@ void HwModule::setRoutes(const AudioRouteVector &routes)
 void HwModule::refreshSupportedDevices()
 {
     // Now updating the streams (aka IOProfile until now) supported devices
+    /**
+     * 这里　mInputProfiles　包含当前所有　mixport 
+    */
     for (const auto& stream : mInputProfiles) {
         ALOGV("refreshSupportedDevices mInputProfiles %s",stream->getName().string());
         DeviceVector sourceDevices;

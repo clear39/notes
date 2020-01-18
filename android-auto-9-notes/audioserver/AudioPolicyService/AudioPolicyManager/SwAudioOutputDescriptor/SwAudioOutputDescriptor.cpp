@@ -1,3 +1,8 @@
+//      @       frameworks/av/services/audiopolicy/common/managerdefinitions/include/AudioPort.h
+class AudioPortConfig : public virtual RefBase{
+
+}
+
 class AudioOutputDescriptor: public AudioPortConfig{
 
 }
@@ -34,7 +39,7 @@ AudioOutputDescriptor::AudioOutputDescriptor(const sp<AudioPort>& port,AudioPoli
 
 
 /***
- * profile 为 mixport 标签
+ * profile 为 mixport(对应 IOProfile ) 标签
  * */
 SwAudioOutputDescriptor::SwAudioOutputDescriptor(const sp<IOProfile>& profile,AudioPolicyClientInterface *clientInterface)
     : AudioOutputDescriptor(profile, clientInterface),
@@ -77,8 +82,9 @@ status_t SwAudioOutputDescriptor::open(const audio_config_t *config,
     }
 
     mDevice = device;
-    // if the selected profile is offloaded and no offload info was specified,
-    // create a default one
+    /***
+     *  if the selected profile is offloaded and no offload info was specified,  create a default one
+     */
     if ((mProfile->getFlags() & AUDIO_OUTPUT_FLAG_COMPRESS_OFFLOAD) && lConfig.offload_info.format == AUDIO_FORMAT_DEFAULT) {
         //
         flags = (audio_output_flags_t)(flags | AUDIO_OUTPUT_FLAG_COMPRESS_OFFLOAD);
@@ -99,14 +105,12 @@ status_t SwAudioOutputDescriptor::open(const audio_config_t *config,
 
     /**
      * 这里 mProfile->getModuleHandle() 是由 AudioFlinger::loadHwModule 调用加载得到的 audio_module_handle_t
+     * 
+     * 返回得到 output（标记对应AudioFlinger中创建的线程）
+     * 
+     * openOutput 通过audio_module_handle_t查找到对应的输出设备，并且创建输入流（传递给AudioFlinger中的线程）和播放/混音线程
      * */
-    status_t status = mClientInterface->openOutput(mProfile->getModuleHandle(),
-                                                   output,
-                                                   &lConfig,
-                                                   &mDevice,
-                                                   address,
-                                                   &mLatency,
-                                                   mFlags);
+    status_t status = mClientInterface->openOutput(mProfile->getModuleHandle(),output, &lConfig,&mDevice,address,&mLatency,mFlags);
     LOG_ALWAYS_FATAL_IF(mDevice != device,"%s openOutput returned device %08x when given device %08x",__FUNCTION__, mDevice, device);
 
     if (status == NO_ERROR) {
@@ -115,7 +119,7 @@ status_t SwAudioOutputDescriptor::open(const audio_config_t *config,
         mChannelMask = lConfig.channel_mask;
         mFormat = lConfig.format;
         mId = AudioPort::getNextUniqueId();
-        mIoHandle = *output;
+        mIoHandle = *output;// 这里对应AudioFlinger中的线程
         mProfile->curOpenCount++;
     }
 

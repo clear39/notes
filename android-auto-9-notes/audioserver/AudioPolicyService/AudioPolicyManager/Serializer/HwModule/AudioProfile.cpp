@@ -5,7 +5,7 @@ class AudioProfile : public virtual RefBase{
 }
 
 /***
- * 这里封装 profile
+ * 这里封装 mixPort中的子标签　profile
  * 
     <mixPort name="mixport_bus0_media_out" role="source" flags="AUDIO_OUTPUT_FLAG_PRIMARY">
         <profile name="" format="AUDIO_FORMAT_PCM_16_BIT" samplingRates="48000"  channelMasks="AUDIO_CHANNEL_OUT_STEREO"/>

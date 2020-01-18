@@ -3,7 +3,6 @@ class IOProfile : public AudioPort{
 }
 /***
  * 这里封装 mixPort
- * 
     <mixPort name="mixport_bus0_media_out" role="source" flags="AUDIO_OUTPUT_FLAG_PRIMARY">
         <profile name="" format="AUDIO_FORMAT_PCM_16_BIT" samplingRates="48000"  channelMasks="AUDIO_CHANNEL_OUT_STEREO"/>
     </mixPort>
@@ -25,9 +24,21 @@ bool IOProfile::canOpenNewIo() {
     return false;
 }
 
+/**
+ * 获取mSupportedDevices 所有所支持的  audio_devices_t
+*/
+audio_devices_t  IOProfile::getSupportedDevicesType() const { 
+        return mSupportedDevices.types(); 
+}
 
-//  @   /work/workcodes/aosp-p9.0.0_2.1.0-auto-ga/frameworks/av/services/audiopolicy/common/managerdefinitions/include/AudioPort.h
-void AudioPort::setAudioProfiles(const AudioProfileVector &profiles) { mProfiles = profiles; }
+
+/** 
+ *  @   frameworks/av/services/audiopolicy/common/managerdefinitions/include/AudioPort.h
+ * 这里对应标签 <profile>
+ * */
+void AudioPort::setAudioProfiles(const AudioProfileVector &profiles) { 
+        mProfiles = profiles;
+ }
 
 void IOProfile::setFlags(uint32_t flags) override {
     AudioPort::setFlags(flags);
@@ -36,7 +47,7 @@ void IOProfile::setFlags(uint32_t flags) override {
     }
 }
 
-//  @   /work/workcodes/aosp-p9.0.0_2.1.0-auto-ga/frameworks/av/services/audiopolicy/common/managerdefinitions/include/AudioPort.h
+//  @   frameworks/av/services/audiopolicy/common/managerdefinitions/include/AudioPort.h
 virtual void AudioPort::setFlags(uint32_t flags)
 {
     //force direct flag if offload flag is set: offloading implies a direct output stream
@@ -48,13 +59,17 @@ virtual void AudioPort::setFlags(uint32_t flags)
     mFlags = flags;
 }
 
-//  @   /work/workcodes/aosp-p9.0.0_2.1.0-auto-ga/frameworks/av/services/audiopolicy/common/managerdefinitions/include/AudioPort.h
-void setGains(const AudioGainCollection &gains) { 
+/**
+ *   @   frameworks/av/services/audiopolicy/common/managerdefinitions/include/AudioPort.h
+ * 对应标签 <gains>子集成员<gain>
+ */
+void IOProfile::setGains(const AudioGainCollection &gains) { 
     mGains = gains; 
 }
 
 /**
- * 这里是 HwModule::setRoutes(const AudioRouteVector &routes) 
+ * 这里是 
+ * HwModule::setRoutes(const AudioRouteVector &routes) 
  * --> HwModule::refreshSupportedDevices()
 */
 void IOProfile::setSupportedDevices(const DeviceVector &devices)
@@ -62,12 +77,19 @@ void IOProfile::setSupportedDevices(const DeviceVector &devices)
     mSupportedDevices = devices;
 }
 
+const DeviceVector &getSupportedDevices() const { 
+        return mSupportedDevices;
+}
+
 bool IOProfile::hasSupportedDevices() const { 
     return !mSupportedDevices.isEmpty(); 
 }
 
 
-// chose first device present in mSupportedDevices also part of deviceType
+/**
+ *  chose first device present in mSupportedDevices also part of deviceType
+ * 
+ */
 audio_devices_t IOProfile::getSupportedDeviceForType(audio_devices_t deviceType) const
 {
     for (size_t k = 0; k  < mSupportedDevices.size(); k++) {

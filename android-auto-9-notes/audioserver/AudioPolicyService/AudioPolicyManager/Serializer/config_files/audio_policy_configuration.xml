@@ -98,8 +98,7 @@
 
                     flags="AUDIO_OUTPUT_FLAG_PRIMARY" 存储在 AudioPort::mFlags 中 （方法 AudioPort::setFlags AudioPort::getFlags）
                 -->
-                <mixPort name="mixport_bus0_media_out" role="source"
-                        flags="AUDIO_OUTPUT_FLAG_PRIMARY">
+                <mixPort name="mixport_bus0_media_out" role="source" flags="AUDIO_OUTPUT_FLAG_PRIMARY">
                     <!--
                         frameworks/av/services/audiopolicy/common/managerdefinitions/include/AudioProfile.h:36:
                         class AudioProfile : public virtual RefBase
@@ -117,20 +116,15 @@
                         获取  AudioProfileVector &getAudioProfiles() { return mProfiles; }
                     
                     -->
-                    <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
-                             samplingRates="48000"
-                             channelMasks="AUDIO_CHANNEL_OUT_STEREO"/>
+                    <profile name="" format="AUDIO_FORMAT_PCM_16_BIT" samplingRates="48000" channelMasks="AUDIO_CHANNEL_OUT_STEREO"/>
                 </mixPort>
-                <mixPort name="mixport_bus1_system_sound_out" role="source"
-                        flags="AUDIO_OUTPUT_FLAG_PRIMARY">
-                    <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
-                             samplingRates="48000"
-                             channelMasks="AUDIO_CHANNEL_OUT_STEREO"/>
+
+                <mixPort name="mixport_bus1_system_sound_out" role="source" flags="AUDIO_OUTPUT_FLAG_PRIMARY">
+                    <profile name="" format="AUDIO_FORMAT_PCM_16_BIT" samplingRates="48000" channelMasks="AUDIO_CHANNEL_OUT_STEREO"/>
                 </mixPort>
+
                 <mixPort name="primary input" role="sink">
-                    <profile name="" format="AUDIO_FORMAT_PCM_16_BIT"
-                             samplingRates="8000,11025,16000,22050,24000,32000,44100,48000"
-                             channelMasks="AUDIO_CHANNEL_IN_MONO,AUDIO_CHANNEL_IN_STEREO"/>
+                    <profile name="" format="AUDIO_FORMAT_PCM_16_BIT" samplingRates="8000,11025,16000,22050,24000,32000,44100,48000" channelMasks="AUDIO_CHANNEL_IN_MONO,AUDIO_CHANNEL_IN_STEREO"/>
                 </mixPort>
 
             </mixPorts>
@@ -169,8 +163,7 @@
                     type="AUDIO_DEVICE_OUT_BUS" 只是用来判断是否符合输入输出设备（和role="sink"匹配进行判断）
                     address="bus0_media_out" 存储在 DeviceDescriptor::mAddress 中
                 -->
-                <devicePort tagName="bus0_media_out" role="sink" type="AUDIO_DEVICE_OUT_BUS"
-                        address="bus0_media_out">
+                <devicePort tagName="bus0_media_out" role="sink" type="AUDIO_DEVICE_OUT_BUS" address="bus0_media_out">
                     <gains>
                         <!--
                         frameworks/av/services/audiopolicy/common/managerdefinitions/include/AudioGain.h:25:
@@ -185,11 +178,7 @@
 
                         @   system/media/audio/include/system/audio.h:337:typedef uint32_t audio_gain_mode_t;
                         @   system/media/audio/include/system/audio-base.h
-                        417 enum {
-                        418     AUDIO_GAIN_MODE_JOINT    = 0x1u,                                                                                                                                                                           
-                        419     AUDIO_GAIN_MODE_CHANNELS = 0x2u,
-                        420     AUDIO_GAIN_MODE_RAMP     = 0x4u,
-                        421 };   
+                        enum{	AUDIO_GAIN_MODE_JOINT= 0x1u, AUDIO_GAIN_MODE_CHANNELS = 0x2u,AUDIO_GAIN_MODE_RAMP = 0x4u,	};   
                         mode="AUDIO_GAIN_MODE_JOINT" 存储在 AudioGain::mGain.mode 中
 
                         minValueMB="-3200"  存储在 AudioGain::mGain.min_value 中
@@ -198,15 +187,12 @@
                         stepValueMB="100"       存储在 AudioGain::mGain.step_value 中
 
                         -->
-                        <gain name="" mode="AUDIO_GAIN_MODE_JOINT"
-                                minValueMB="-3200" maxValueMB="600" defaultValueMB="0" stepValueMB="100"/>
+                        <gain name="" mode="AUDIO_GAIN_MODE_JOINT" minValueMB="-3200" maxValueMB="600" defaultValueMB="0" stepValueMB="100"/>
                     </gains>
                 </devicePort>
-                <devicePort tagName="bus1_system_sound_out" role="sink" type="AUDIO_DEVICE_OUT_BUS"
-                        address="bus1_system_sound_out">
+                <devicePort tagName="bus1_system_sound_out" role="sink" type="AUDIO_DEVICE_OUT_BUS" address="bus1_system_sound_out">
                     <gains>
-                        <gain name="" mode="AUDIO_GAIN_MODE_JOINT"
-                                minValueMB="-3200" maxValueMB="600" defaultValueMB="0" stepValueMB="100"/>
+                        <gain name="" mode="AUDIO_GAIN_MODE_JOINT" minValueMB="-3200" maxValueMB="600" defaultValueMB="0" stepValueMB="100"/>
                     </gains>
                 </devicePort>
 
@@ -222,9 +208,13 @@
             <routes>
                 <!--
                     frameworks/av/services/audiopolicy/common/managerdefinitions/include/AudioRoute.h:36:
-                    class AudioRoute  : public virtual RefBase
+                    class AudioRoute  : public virtual RefBase{
+			 AudioPortVector mSources;
+                         sp<AudioPort> mSink;
+                         audio_route_type_t mType;
+		    }
 
-                    route 标签对应封装类 AudioRoute 
+                    route 标签对应类 AudioRoute 
 
                     属性:
                     
@@ -232,6 +222,7 @@
                         AUDIO_ROUTE_MUX = 0,
                         AUDIO_ROUTE_MIX = 1
                     } audio_route_type_t;
+
                     type="mix"  存储在 AudioRoute::mType(类型为 audio_route_type_t) 中
 
                     // sink 属性值 匹配 devicePort的tagName 或者 mixPort的Name

@@ -763,7 +763,8 @@ status_t RouteTraits::deserialize(_xmlDoc /*doc*/, const _xmlNode *root, sp<Audi
     /**
      * ctx 为 HwModule
      * 
-     * 这里是调用 
+     * 这里是调用 sp<AudioPort> HwModule::findPortByTagName(const String8 &tagName) const 查找匹配的
+     * findPortByTagName　中查找的集合是包括了　devicePorts(匹配tagName)　和　mixPorts(匹配name)　所有成员
     */
     // Convert Sink name to port pointer
     sp<AudioPort> sink = ctx->findPortByTagName(String8(sinkAttr.c_str()));
@@ -772,7 +773,7 @@ status_t RouteTraits::deserialize(_xmlDoc /*doc*/, const _xmlNode *root, sp<Audi
         return BAD_VALUE;
     }
 
-    // 添加 
+    // 给AudioRoute添加 
     element->setSink(sink);
 
  
@@ -801,7 +802,8 @@ status_t RouteTraits::deserialize(_xmlDoc /*doc*/, const _xmlNode *root, sp<Audi
     free(sourcesLiteral);
 
     /**
-     * 注意 这里sink变量是上面通过 sink 属性值查找到的AudioPort，设置添加Route
+     * 注意:
+     * 这里sink变量是上面通过 sink 属性值查找到的AudioPort(包括了　devicePorts(匹配tagName)　和　mixPorts(匹配name)　所有成员)，设置添加Route
     */
     sink->addRoute(element);
 
@@ -813,7 +815,7 @@ status_t RouteTraits::deserialize(_xmlDoc /*doc*/, const _xmlNode *root, sp<Audi
         source->addRoute(element);
     }
 
-    //添加
+    //给AudioRoute添加Source
     element->setSources(sources);
     return NO_ERROR;
 }
@@ -855,6 +857,9 @@ status_t RouteTraits::deserialize(_xmlDoc /*doc*/, const _xmlNode *root, sp<Audi
 
     </volumes>
 
+
+    frameworks/av/services/audiopolicy/common/managerdefinitions/include/Serializer.h:208:    typedef VolumeCurvesCollection Collection;
+
 */
 // deserializeCollection<VolumeTraits>(doc, cur, volumes, &config);
 static status_t deserializeCollection(_xmlDoc *doc, const _xmlNode *cur,typename VolumeTraits::Collection &collection,typename VolumeTraits::PtrSerializingCtx serializingContext)
@@ -873,13 +878,17 @@ static status_t deserializeCollection(_xmlDoc *doc, const _xmlNode *cur,typename
         }
         while (child != NULL) {
             if (!xmlStrcmp(child->name, (const xmlChar *)Trait::tag)) {//	const char *const VolumeTraits::tag = "volume";
-                // typename VolumeTraits::sp<VolumeCurve> element;
+                // typename VolumeTraits::sp<VolumeCurve>  element;
                 typename Trait::PtrElement element; 
                 //status_t status = VolumeTraits::deserialize(doc, child, element, serializingContext);  
                 status_t status = Trait::deserialize(doc, child, element, serializingContext);
                 if (status != NO_ERROR) {
                     return status;
                 }
+                /**
+                 * collection 为 VolumeCurvesCollection
+                 *  frameworks/av/services/audiopolicy/common/managerdefinitions/include/Serializer.h:208:    typedef VolumeCurvesCollection Collection;
+                */
                 if (collection.add(element) < 0) {
                     ALOGE("%s: could not add element to %s collection", __FUNCTION__,Trait::collectionTag);
                 }
