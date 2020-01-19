@@ -122,6 +122,11 @@
                 <mixPort name="mixport_bus1_system_sound_out" role="source" flags="AUDIO_OUTPUT_FLAG_PRIMARY">
                     <profile name="" format="AUDIO_FORMAT_PCM_16_BIT" samplingRates="48000" channelMasks="AUDIO_CHANNEL_OUT_STEREO"/>
                 </mixPort>
+		
+		<!--模拟测试添加tuner0-->
+		<mixPort name="mixport_tuner0" role="source" flags="AUDIO_OUTPUT_FLAG_PRIMARY">
+                    <profile name="" format="AUDIO_FORMAT_PCM_16_BIT" samplingRates="48000" channelMasks="AUDIO_CHANNEL_OUT_STEREO"/>
+                </mixPort>
 
                 <mixPort name="primary input" role="sink">
                     <profile name="" format="AUDIO_FORMAT_PCM_16_BIT" samplingRates="8000,11025,16000,22050,24000,32000,44100,48000" channelMasks="AUDIO_CHANNEL_IN_MONO,AUDIO_CHANNEL_IN_STEREO"/>
@@ -240,7 +245,7 @@
                     sources="mixport_bus0_media_out"
                 
                 -->
-                <route type="mix" sink="bus0_media_out" sources="mixport_bus0_media_out"/>
+                <route type="mix" sink="bus0_media_out" sources="mixport_bus0_media_out,mixport_tuner0"/>
                 <route type="mix" sink="bus1_system_sound_out" sources="mixport_bus1_system_sound_out"/>
                 <route type="mix" sink="primary input" sources="Built-In Mic"/>
             </routes>

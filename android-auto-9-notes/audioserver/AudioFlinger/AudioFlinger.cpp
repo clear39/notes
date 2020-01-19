@@ -1073,6 +1073,7 @@ void AudioFlinger::setRecordSilenced(uid_t uid, bool silenced)
  * typedef int audio_patch_handle_t;
  * 
  * 
+ * 这里是有AudioPolicyManager中调用触发
  * 
  * */
 status_t AudioFlinger::createAudioPatch(const struct audio_patch *patch,audio_patch_handle_t *handle)

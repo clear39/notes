@@ -59,9 +59,15 @@ status_t AudioFlinger::PatchPanel::createAudioPatch(const struct audio_patch *pa
         return NO_INIT;
     }
 
-    if (patch->num_sources == 0 || patch->num_sources > AUDIO_PATCH_PORTS_MAX ||
+   /**
+    * system/media/audio/include/system/audio.h:496:#define AUDIO_PATCH_PORTS_MAX   16
+   */
+    if (
+            patch->num_sources == 0 || 
+        patch->num_sources > AUDIO_PATCH_PORTS_MAX ||
             (patch->num_sinks == 0 && patch->num_sources != 2) ||
-            patch->num_sinks > AUDIO_PATCH_PORTS_MAX) {
+            patch->num_sinks > AUDIO_PATCH_PORTS_MAX
+         ) {
         return BAD_VALUE;
     }
     // limit number of sources to 1 for now or 2 sources for special cross hw module case.
@@ -70,7 +76,11 @@ status_t AudioFlinger::PatchPanel::createAudioPatch(const struct audio_patch *pa
         return INVALID_OPERATION;
     }
 
+     /**
+      * 如果 *handle 不等于 AUDIO_PATCH_HANDLE_NONE 则在 mPatches 查找对应的 Patch
+      */   
     if (*handle != AUDIO_PATCH_HANDLE_NONE) {
+
         for (size_t index = 0; *handle != 0 && index < mPatches.size(); index++) {
             if (*handle == mPatches[index]->mHandle) {
                 ALOGV("createAudioPatch() removing patch handle %d", *handle);
@@ -122,8 +132,13 @@ status_t AudioFlinger::PatchPanel::createAudioPatch(const struct audio_patch *pa
 
     Patch *newPatch = new Patch(patch);
 
+/**
+ * AUDIO_PORT_TYPE_MIX = (patch->sources[0].type
+*/
     switch (patch->sources[0].type) {
+
         case AUDIO_PORT_TYPE_DEVICE: {
+
             audio_module_handle_t srcModule = patch->sources[0].ext.device.hw_module;
             ssize_t index = audioflinger->mAudioHwDevs.indexOfKey(srcModule);
             if (index < 0) {
@@ -131,11 +146,11 @@ status_t AudioFlinger::PatchPanel::createAudioPatch(const struct audio_patch *pa
                 status = BAD_VALUE;
                 goto exit;
             }
+
             AudioHwDevice *audioHwDevice = audioflinger->mAudioHwDevs.valueAt(index);
             for (unsigned int i = 0; i < patch->num_sinks; i++) {
                 // support only one sink if connection to a mix or across HW modules
-                if ((patch->sinks[i].type == AUDIO_PORT_TYPE_MIX ||
-                        patch->sinks[i].ext.mix.hw_module != srcModule) &&
+                if ((patch->sinks[i].type == AUDIO_PORT_TYPE_MIX ||  patch->sinks[i].ext.mix.hw_module != srcModule) &&
                         patch->num_sinks > 1) {
                     status = INVALID_OPERATION;
                     goto exit;
@@ -158,10 +173,10 @@ status_t AudioFlinger::PatchPanel::createAudioPatch(const struct audio_patch *pa
                 (  (patch->sinks[0].type == AUDIO_PORT_TYPE_DEVICE) &&
                  ( (patch->sinks[0].ext.device.hw_module != srcModule) || !audioHwDevice->supportsAudioPatches() ) )
                   ) {
+
                 if (patch->num_sources == 2) {
                     if (patch->sources[1].type != AUDIO_PORT_TYPE_MIX ||
-                            (patch->num_sinks != 0 && patch->sinks[0].ext.device.hw_module !=
-                                    patch->sources[1].ext.mix.hw_module)) {
+                            (patch->num_sinks != 0 && patch->sinks[0].ext.device.hw_module != patch->sources[1].ext.mix.hw_module)) {
                         ALOGW("createAudioPatch() invalid source combination");
                         status = INVALID_OPERATION;
                         goto exit;
@@ -187,6 +202,8 @@ status_t AudioFlinger::PatchPanel::createAudioPatch(const struct audio_patch *pa
                         goto exit;
                     }
                 }
+
+
                 audio_devices_t device = patch->sources[0].ext.device.type;
                 String8 address = String8(patch->sources[0].ext.device.address);
                 audio_config_t config = AUDIO_CONFIG_INITIALIZER;
@@ -200,8 +217,7 @@ status_t AudioFlinger::PatchPanel::createAudioPatch(const struct audio_patch *pa
                 if (patch->sources[0].config_mask & AUDIO_PORT_CONFIG_CHANNEL_MASK) {
                     config.channel_mask = patch->sources[0].channel_mask;
                 } else {
-                    config.channel_mask =
-                        audio_channel_in_mask_from_count(newPatch->mPlaybackThread->channelCount());
+                    config.channel_mask = audio_channel_in_mask_from_count(newPatch->mPlaybackThread->channelCount());
                 }
                 if (patch->sources[0].config_mask & AUDIO_PORT_CONFIG_FORMAT) {
                     config.format = patch->sources[0].format;
@@ -209,13 +225,7 @@ status_t AudioFlinger::PatchPanel::createAudioPatch(const struct audio_patch *pa
                     config.format = newPatch->mPlaybackThread->format();
                 }
                 audio_io_handle_t input = AUDIO_IO_HANDLE_NONE;
-                sp<ThreadBase> thread = audioflinger->openInput_l(srcModule,
-                                                                    &input,
-                                                                    &config,
-                                                                    device,
-                                                                    address,
-                                                                    AUDIO_SOURCE_MIC,
-                                                                    AUDIO_INPUT_FLAG_NONE);
+                sp<ThreadBase> thread = audioflinger->openInput_l(srcModule, &input, &config,device, address, AUDIO_SOURCE_MIC,AUDIO_INPUT_FLAG_NONE);
                 newPatch->mRecordThread = (RecordThread *)thread.get();
                 ALOGV("audioflinger->openInput_l() returned %p inChannelMask %08x", newPatch->mRecordThread.get(), config.channel_mask);
                 if (newPatch->mRecordThread == 0) {
@@ -232,8 +242,7 @@ status_t AudioFlinger::PatchPanel::createAudioPatch(const struct audio_patch *pa
                     if (thread == 0) {
                         thread = audioflinger->checkMmapThread_l(patch->sinks[0].ext.mix.handle);
                         if (thread == 0) {
-                            ALOGW("createAudioPatch() bad capture I/O handle %d",
-                                                                  patch->sinks[0].ext.mix.handle);
+                            ALOGW("createAudioPatch() bad capture I/O handle %d",patch->sinks[0].ext.mix.handle);
                             status = BAD_VALUE;
                             goto exit;
                         }
@@ -241,15 +250,12 @@ status_t AudioFlinger::PatchPanel::createAudioPatch(const struct audio_patch *pa
                     status = thread->sendCreateAudioPatchConfigEvent(patch, &halHandle);
                 } else {
                     sp<DeviceHalInterface> hwDevice = audioHwDevice->hwDevice();
-                    status = hwDevice->createAudioPatch(patch->num_sources,
-                                                        patch->sources,
-                                                        patch->num_sinks,
-                                                        patch->sinks,
-                                                        &halHandle);
+                    status = hwDevice->createAudioPatch(patch->num_sources,patch->sources,patch->num_sinks,patch->sinks, &halHandle);
                     if (status == INVALID_OPERATION) goto exit;
                 }
             }
         } break;
+
         case AUDIO_PORT_TYPE_MIX: {
             audio_module_handle_t srcModule =  patch->sources[0].ext.mix.hw_module;
             ssize_t index = audioflinger->mAudioHwDevs.indexOfKey(srcModule);
@@ -286,12 +292,12 @@ status_t AudioFlinger::PatchPanel::createAudioPatch(const struct audio_patch *pa
             if (thread == audioflinger->primaryPlaybackThread_l()) {
                 AudioParameter param = AudioParameter();
                 param.addInt(String8(AudioParameter::keyRouting), (int)type);
-
                 audioflinger->broacastParametersToRecordThreads_l(param.toString());
             }
 
             status = thread->sendCreateAudioPatchConfigEvent(patch, &halHandle);
         } break;
+
         default:
             status = BAD_VALUE;
             goto exit;

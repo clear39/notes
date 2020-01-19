@@ -498,7 +498,9 @@ status_t AudioPolicyManager::checkAndSetVolume(audio_stream_type_t stream,int in
         */
         device = outputDesc->device();
     }
-
+   /**
+    * 
+   */
     float volumeDb = computeVolume(stream, index, device);
     if (outputDesc->isFixedVolume(device) ||
             // Force VoIP volume to max for bluetooth SCO
@@ -584,6 +586,7 @@ audio_io_handle_t AudioPolicyManager::selectOutputForMusicEffects()
                 outputPrimary = output;
             }
         }
+
         if (outputOffloaded != AUDIO_IO_HANDLE_NONE) {
             output = outputOffloaded;
         } else if (outputDeepBuffer != AUDIO_IO_HANDLE_NONE) {
@@ -613,7 +616,7 @@ uint32_t AudioPolicyManager::nextAudioPortGeneration()
 
 /**
  * 
- * 
+ * setOutputDevice(outputDesc,profileType,true,0,NULL,address);
  * 
 */
 uint32_t AudioPolicyManager::setOutputDevice(const sp<AudioOutputDescriptor>& outputDesc,audio_devices_t device,bool force,int delayMs,audio_patch_handle_t *patchHandle,const char *address,bool requiresMuteCheck)
@@ -678,6 +681,9 @@ uint32_t AudioPolicyManager::setOutputDevice(const sp<AudioOutputDescriptor>& ou
 
         if (!deviceList.isEmpty()) {
             struct audio_patch patch;
+            /**
+             * 
+            */
             outputDesc->toAudioPortConfig(&patch.sources[0]);
             patch.num_sources = 1;
             patch.num_sinks = 0;
@@ -699,7 +705,7 @@ uint32_t AudioPolicyManager::setOutputDevice(const sp<AudioOutputDescriptor>& ou
             }
 
             status_t status = mpClientInterface->createAudioPatch(&patch,&afPatchHandle,delayMs);
-            ALOGV("setOutputDevice() createAudioPatch returned %d patchHandle %d""num_sources %d num_sinks %d",status, afPatchHandle, patch.num_sources, patch.num_sinks);
+            ALOGV("setOutputDevice() createAudioPatch returned %d patchHandle %d" " num_sources %d num_sinks %d",status, afPatchHandle, patch.num_sources, patch.num_sinks);
             if (status == NO_ERROR) {
                 if (index < 0) {
                     patchDesc = new AudioPatch(&patch, mUidCached);
@@ -715,6 +721,8 @@ uint32_t AudioPolicyManager::setOutputDevice(const sp<AudioOutputDescriptor>& ou
                 nextAudioPortGeneration();
                 mpClientInterface->onAudioPatchListUpdate();
             }
+
+
         }
 
         // inform all input as well

@@ -1076,3 +1076,77 @@ ssize_t AudioFlinger::PlaybackThread::threadLoop_write()
 }
 
 
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
+ * 
+*/
+status_t AudioFlinger::PlaybackThread::createAudioPatch_l(const struct audio_patch *patch,audio_patch_handle_t *handle)
+{
+    status_t status = NO_ERROR;
+
+    // store new device and send to effects
+    audio_devices_t type = AUDIO_DEVICE_NONE;
+    for (unsigned int i = 0; i < patch->num_sinks; i++) {
+        type |= patch->sinks[i].ext.device.type;
+    }
+
+#ifdef ADD_BATTERY_DATA
+    // when changing the audio output device, call addBatteryData to notify
+    // the change
+    if (mOutDevice != type) {
+        uint32_t params = 0;
+        // check whether speaker is on
+        if (type & AUDIO_DEVICE_OUT_SPEAKER) {
+            params |= IMediaPlayerService::kBatteryDataSpeakerOn;
+        }
+
+        audio_devices_t deviceWithoutSpeaker = AUDIO_DEVICE_OUT_ALL & ~AUDIO_DEVICE_OUT_SPEAKER;
+        // check if any other device (except speaker) is on
+        if (type & deviceWithoutSpeaker) {
+            params |= IMediaPlayerService::kBatteryDataOtherAudioDeviceOn;
+        }
+
+        if (params != 0) {
+            addBatteryData(params);
+        }
+    }
+#endif
+
+    for (size_t i = 0; i < mEffectChains.size(); i++) {
+        mEffectChains[i]->setDevice_l(type);
+    }
+
+    // mPrevOutDevice is the latest device set by createAudioPatch_l(). It is not set when
+    // the thread is created so that the first patch creation triggers an ioConfigChanged callback
+    bool configChanged = mPrevOutDevice != type;
+    mOutDevice = type;
+    mPatch = *patch;
+
+    /**
+     * hardware/libhardware/include/hardware/audio.h:57:#define AUDIO_DEVICE_API_VERSION_2_0 HARDWARE_DEVICE_API_VERSION(2, 0)
+     * hardware/libhardware/include/hardware/audio.h:58:#define AUDIO_DEVICE_API_VERSION_3_0 HARDWARE_DEVICE_API_VERSION(3, 0)
+     * 由于 (mOutput->audioHwDev->supportsAudioPatches() 中是判断 Module的版本（AUDIO_DEVICE_API_VERSION_2_0=2.0） 大于等于 AUDIO_DEVICE_API_VERSION_3_0（3.0）
+    */
+    if (mOutput->audioHwDev->supportsAudioPatches()) {
+        sp<DeviceHalInterface> hwDevice = mOutput->audioHwDev->hwDevice();
+        status = hwDevice->createAudioPatch(patch->num_sources,patch->sources, patch->num_sinks,patch->sinks, handle);
+    } else {
+        char *address;
+        if (strcmp(patch->sinks[0].ext.device.address, "") != 0) {
+            //FIXME: we only support address on first sink with HAL version < 3.0
+            address = audio_device_address_to_parameter(patch->sinks[0].ext.device.type,patch->sinks[0].ext.device.address);
+        } else {
+            address = (char *)calloc(1, 1);
+        }
+        AudioParameter param = AudioParameter(String8(address));
+        free(address);
+        param.addInt(String8(AudioParameter::keyRouting), (int)type);
+        status = mOutput->stream->setParameters(param.toString());
+        *handle = AUDIO_PATCH_HANDLE_NONE;
+    }
+    if (configChanged) {
+        mPrevOutDevice = type;
+        sendIoConfigEvent_l(AUDIO_OUTPUT_CONFIG_CHANGED);
+    }
+    return status;
+}

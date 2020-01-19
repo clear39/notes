@@ -110,7 +110,7 @@ status_t SwAudioOutputDescriptor::open(const audio_config_t *config,
      * 
      * openOutput 通过audio_module_handle_t查找到对应的输出设备，并且创建输入流（传递给AudioFlinger中的线程）和播放/混音线程
      * */
-    status_t status = mClientInterface->openOutput(mProfile->getModuleHandle(),output, &lConfig,&mDevice,address,&mLatency,mFlags);
+    status_t status = mClientInterface->openOutput(mProfile->getModuleHandle(),output, &lConfig,&mDevice,address,&mLatency/*(延迟)*/,mFlags);
     LOG_ALWAYS_FATAL_IF(mDevice != device,"%s openOutput returned device %08x when given device %08x",__FUNCTION__, mDevice, device);
 
     if (status == NO_ERROR) {
@@ -166,4 +166,66 @@ bool AudioOutputDescriptor::setVolume(float volume, audio_stream_type_t stream,a
         return true;
     }
     return false;
+}
+
+
+void AudioOutputDescriptor::toAudioPortConfig(struct audio_port_config *dstConfig,const struct audio_port_config *srcConfig) const
+{
+    dstConfig->config_mask = AUDIO_PORT_CONFIG_SAMPLE_RATE|AUDIO_PORT_CONFIG_CHANNEL_MASK| AUDIO_PORT_CONFIG_FORMAT|AUDIO_PORT_CONFIG_GAIN;
+    if (srcConfig != NULL) {
+        dstConfig->config_mask |= srcConfig->config_mask;
+    }
+    AudioPortConfig::toAudioPortConfig(dstConfig, srcConfig);
+
+    dstConfig->id = mId;
+    dstConfig->role = AUDIO_PORT_ROLE_SOURCE;
+    dstConfig->type = AUDIO_PORT_TYPE_MIX;
+    dstConfig->ext.mix.hw_module = getModuleHandle();
+    dstConfig->ext.mix.usecase.stream = AUDIO_STREAM_DEFAULT;
+}
+
+void AudioPortConfig::toAudioPortConfig(struct audio_port_config *dstConfig,const struct audio_port_config *srcConfig) const
+{
+    if (dstConfig->config_mask & AUDIO_PORT_CONFIG_SAMPLE_RATE) {
+        dstConfig->sample_rate = mSamplingRate;
+        if ((srcConfig != NULL) && (srcConfig->config_mask & AUDIO_PORT_CONFIG_SAMPLE_RATE)) {
+            dstConfig->sample_rate = srcConfig->sample_rate;
+        }
+    } else {
+        dstConfig->sample_rate = 0;
+    }
+
+    if (dstConfig->config_mask & AUDIO_PORT_CONFIG_CHANNEL_MASK) {
+        dstConfig->channel_mask = mChannelMask;
+        if ((srcConfig != NULL) && (srcConfig->config_mask & AUDIO_PORT_CONFIG_CHANNEL_MASK)) {
+            dstConfig->channel_mask = srcConfig->channel_mask;
+        }
+    } else {
+        dstConfig->channel_mask = AUDIO_CHANNEL_NONE;
+    }
+
+    if (dstConfig->config_mask & AUDIO_PORT_CONFIG_FORMAT) {
+        dstConfig->format = mFormat;
+        if ((srcConfig != NULL) && (srcConfig->config_mask & AUDIO_PORT_CONFIG_FORMAT)) {
+            dstConfig->format = srcConfig->format;
+        }
+    } else {
+        dstConfig->format = AUDIO_FORMAT_INVALID;
+    }
+
+    sp<AudioPort> audioport = getAudioPort();
+    if ((dstConfig->config_mask & AUDIO_PORT_CONFIG_GAIN) && audioport != NULL) {
+        dstConfig->gain = mGain;
+        if ((srcConfig != NULL) && (srcConfig->config_mask & AUDIO_PORT_CONFIG_GAIN) && audioport->checkGain(&srcConfig->gain, srcConfig->gain.index) == OK) {
+            dstConfig->gain = srcConfig->gain;
+        }
+    } else {
+        dstConfig->gain.index = -1;
+    }
+
+    if (dstConfig->gain.index != -1) {
+        dstConfig->config_mask |= AUDIO_PORT_CONFIG_GAIN;
+    } else {
+        dstConfig->config_mask &= ~AUDIO_PORT_CONFIG_GAIN;
+    }
 }

@@ -88,3 +88,50 @@ enum device_category {
 
 
 
+/**
+ * @    system/media/audio/include/system/audio.h
+*/
+/* An audio patch represents a connection between one or more source ports and
+ * one or more sink ports. Patches are connected and disconnected by audio policy manager or by
+ * applications via framework APIs.
+ * Each patch is identified by a handle at the interface used to create that patch. For instance,
+ * when a patch is created by the audio HAL, the HAL allocates and returns a handle.
+ * This handle is unique to a given audio HAL hardware module.
+ * But the same patch receives another system wide unique handle allocated by the framework.
+ * This unique handle is used for all transactions inside the framework.
+ */
+typedef int audio_patch_handle_t;
+
+#define AUDIO_PATCH_PORTS_MAX   16
+
+struct audio_patch {
+    audio_patch_handle_t id;            /* patch unique ID */
+    unsigned int      num_sources;      /* number of sources in following array */
+    struct audio_port_config sources[AUDIO_PATCH_PORTS_MAX];
+    unsigned int      num_sinks;        /* number of sinks in following array */
+    struct audio_port_config sinks[AUDIO_PATCH_PORTS_MAX];
+};
+
+
+/**
+ * audio port configuration structure used to specify a particular configuration of an audio port 
+ * 
+ * system/media/audio/include/system/audio.h
+ * 
+ * */
+struct audio_port_config {
+    audio_port_handle_t      id;           /* port unique ID */
+    audio_port_role_t        role;         /* sink or source */
+    audio_port_type_t        type;         /* device, mix ... */
+    unsigned int             config_mask;  /* e.g AUDIO_PORT_CONFIG_ALL */
+    unsigned int             sample_rate;  /* sampling rate in Hz */
+    audio_channel_mask_t     channel_mask; /* channel mask if applicable */
+    audio_format_t           format;       /* format if applicable */
+    struct audio_gain_config gain;         /* gain to apply if applicable */
+    union {
+        struct audio_port_config_device_ext  device;  /* device specific info */
+        struct audio_port_config_mix_ext     mix;     /* mix specific info */
+        struct audio_port_config_session_ext session; /* session specific info */
+    } ext;
+};
+
