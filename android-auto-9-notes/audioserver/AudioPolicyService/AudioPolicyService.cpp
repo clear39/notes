@@ -90,7 +90,10 @@ void AudioPolicyService::setRecordSilenced(uid_t uid, bool silenced)
 
 /**
  * @    frameworks/av/services/audiopolicy/service/AudioPolicyInterfaceImpl.cpp
- * vim 
+ *  
+ * AudioTrack::createTrack_l()
+ * --->AudioTrack::set(...)
+ * -------> AudioFlinger::createTrack(...)
 */
 status_t AudioPolicyService::getOutputForAttr(const audio_attributes_t *attr,
                                               audio_io_handle_t *output,

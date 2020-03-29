@@ -829,9 +829,7 @@ status_t AudioFlinger::systemReady()
  * 应用调用创建接口
  * */
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-sp<IAudioTrack> AudioFlinger::createTrack(const CreateTrackInput& input,
-                                          CreateTrackOutput& output,
-                                          status_t *status)
+sp<IAudioTrack> AudioFlinger::createTrack(const CreateTrackInput& input,CreateTrackOutput& output,status_t *status)
 {
     sp<PlaybackThread::Track> track;
     sp<TrackHandle> trackHandle;
@@ -851,9 +849,7 @@ sp<IAudioTrack> AudioFlinger::createTrack(const CreateTrackInput& input,
     pid_t clientPid = input.clientInfo.clientPid;
     if (updatePid) {
         const pid_t callingPid = IPCThreadState::self()->getCallingPid();
-        ALOGW_IF(clientPid != -1 && clientPid != callingPid,
-                 "%s uid %d pid %d tried to pass itself off as pid %d",
-                 __func__, callingUid, callingPid, clientPid);
+        ALOGW_IF(clientPid != -1 && clientPid != callingPid, "%s uid %d pid %d tried to pass itself off as pid %d",  __func__, callingUid, callingPid, clientPid);
         clientPid = callingPid;
     }
 
@@ -873,11 +869,9 @@ sp<IAudioTrack> AudioFlinger::createTrack(const CreateTrackInput& input,
     output.selectedDeviceId = input.selectedDeviceId;
 
     /**
-     * 
+     * 这里选择对应设备和 output.outputId(MixThread线程ID)
      * */
-    lStatus = AudioSystem::getOutputForAttr(&input.attr, &output.outputId, sessionId, &streamType,
-                                            clientPid, clientUid, &input.config, input.flags,
-                                            &output.selectedDeviceId, &portId);
+    lStatus = AudioSystem::getOutputForAttr(&input.attr, &output.outputId, sessionId, &streamType, clientPid, clientUid, &input.config, input.flags, &output.selectedDeviceId, &portId);
 
     if (lStatus != NO_ERROR || output.outputId == AUDIO_IO_HANDLE_NONE) {
         ALOGE("createTrack() getOutputForAttr() return error %d or invalid output handle", lStatus);

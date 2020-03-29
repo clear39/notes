@@ -147,9 +147,7 @@ status_t AudioTrack::set(
     // force direct flag if format is not linear PCM
     // or offload was requested
     if ((flags & AUDIO_OUTPUT_FLAG_COMPRESS_OFFLOAD)  || !audio_is_linear_pcm(format)) {
-        ALOGV( (flags & AUDIO_OUTPUT_FLAG_COMPRESS_OFFLOAD)
-                    ? "Offload request, forcing to Direct Output"
-                    : "Not linear PCM, forcing to Direct Output");
+        ALOGV( (flags & AUDIO_OUTPUT_FLAG_COMPRESS_OFFLOAD)  ? "Offload request, forcing to Direct Output" : "Not linear PCM, forcing to Direct Output");
         flags = (audio_output_flags_t)
                 // FIXME why can't we allow direct AND fast?
                 ((flags | AUDIO_OUTPUT_FLAG_DIRECT) & ~AUDIO_OUTPUT_FLAG_FAST);
@@ -210,19 +208,15 @@ status_t AudioTrack::set(
             goto exit;
         }
         if (frameCount > 0) {
-            ALOGE("notificationFrames=%d not permitted with non-zero frameCount=%zu",
-                    notificationFrames, frameCount);
+            ALOGE("notificationFrames=%d not permitted with non-zero frameCount=%zu", notificationFrames, frameCount);
             status = BAD_VALUE;
             goto exit;
         }
         mNotificationFramesReq = 0;
         const uint32_t minNotificationsPerBuffer = 1;
         const uint32_t maxNotificationsPerBuffer = 8;
-        mNotificationsPerBufferReq = min(maxNotificationsPerBuffer,
-                max((uint32_t) -notificationFrames, minNotificationsPerBuffer));
-        ALOGW_IF(mNotificationsPerBufferReq != (uint32_t) -notificationFrames,
-                "notificationFrames=%d clamped to the range -%u to -%u",
-                notificationFrames, minNotificationsPerBuffer, maxNotificationsPerBuffer);
+        mNotificationsPerBufferReq = min(maxNotificationsPerBuffer, max((uint32_t) -notificationFrames, minNotificationsPerBuffer));
+        ALOGW_IF(mNotificationsPerBufferReq != (uint32_t) -notificationFrames,  "notificationFrames=%d clamped to the range -%u to -%u", notificationFrames, minNotificationsPerBuffer, maxNotificationsPerBuffer);
     }
     mNotificationFramesAct = 0;
     callingPid = IPCThreadState::self()->getCallingPid();
@@ -327,8 +321,7 @@ status_t AudioTrack::createTrack_l()
 
         bool fastAllowed = sharedBuffer || transferAllowed;
         if (!fastAllowed) {
-            ALOGW("AUDIO_OUTPUT_FLAG_FAST denied by client, not shared buffer and transfer = %s",
-                  convertTransferToText(mTransfer));
+            ALOGW("AUDIO_OUTPUT_FLAG_FAST denied by client, not shared buffer and transfer = %s", convertTransferToText(mTransfer));
             mFlags = (audio_output_flags_t) (mFlags & ~AUDIO_OUTPUT_FLAG_FAST);
         }
     }
@@ -358,10 +351,8 @@ status_t AudioTrack::createTrack_l()
     input.sharedBuffer = mSharedBuffer;
     input.notificationsPerBuffer = mNotificationsPerBufferReq;
     input.speed = 1.0;
-    if (audio_has_proportional_frames(mFormat) && mSharedBuffer == 0 &&
-            (mFlags & AUDIO_OUTPUT_FLAG_FAST) == 0) {
-        input.speed  = !isPurePcmData_l() || isOffloadedOrDirect_l() ? 1.0f :
-                        max(mMaxRequiredSpeed, mPlaybackRate.mSpeed);
+    if (audio_has_proportional_frames(mFormat) && mSharedBuffer == 0 &&  (mFlags & AUDIO_OUTPUT_FLAG_FAST) == 0) {
+        input.speed  = !isPurePcmData_l() || isOffloadedOrDirect_l() ? 1.0f : max(mMaxRequiredSpeed, mPlaybackRate.mSpeed);
     }
     input.flags = mFlags;
     input.frameCount = mReqFrameCount;
@@ -371,9 +362,7 @@ status_t AudioTrack::createTrack_l()
 
     IAudioFlinger::CreateTrackOutput output;
 
-    sp<IAudioTrack> track = audioFlinger->createTrack(input,
-                                                      output,
-                                                      &status);
+    sp<IAudioTrack> track = audioFlinger->createTrack(input, output, &status);
 
     if (status != NO_ERROR || output.outputId == AUDIO_IO_HANDLE_NONE) {
         ALOGE("AudioFlinger could not create track, status: %d output %d", status, output.outputId);
@@ -431,14 +420,12 @@ status_t AudioTrack::createTrack_l()
     mAwaitBoost = false;
     if (mFlags & AUDIO_OUTPUT_FLAG_FAST) {
         if (output.flags & AUDIO_OUTPUT_FLAG_FAST) {
-            ALOGI("AUDIO_OUTPUT_FLAG_FAST successful; frameCount %zu -> %zu",
-                  mReqFrameCount, mFrameCount);
+            ALOGI("AUDIO_OUTPUT_FLAG_FAST successful; frameCount %zu -> %zu", mReqFrameCount, mFrameCount);
             if (!mThreadCanCallJava) {
                 mAwaitBoost = true;
             }
         } else {
-            ALOGW("AUDIO_OUTPUT_FLAG_FAST denied by server; frameCount %zu -> %zu", mReqFrameCount,
-                  mFrameCount);
+            ALOGW("AUDIO_OUTPUT_FLAG_FAST denied by server; frameCount %zu -> %zu", mReqFrameCount, mFrameCount);
         }
     }
     mFlags = output.flags;
@@ -492,9 +479,7 @@ status_t AudioTrack::createTrack_l()
         mProxy = mStaticProxy;
     }
 
-    mProxy->setVolumeLR(gain_minifloat_pack(
-            gain_from_float(mVolume[AUDIO_INTERLEAVE_LEFT]),
-            gain_from_float(mVolume[AUDIO_INTERLEAVE_RIGHT])));
+    mProxy->setVolumeLR(gain_minifloat_pack( gain_from_float(mVolume[AUDIO_INTERLEAVE_LEFT]), gain_from_float(mVolume[AUDIO_INTERLEAVE_RIGHT])));
 
     mProxy->setSendLevel(mSendLevel);
     const uint32_t effectiveSampleRate = adjustSampleRate(mSampleRate, mPlaybackRate.mPitch);
@@ -847,6 +832,112 @@ void AudioTrack::restartIfDisabled()
         // FIXME ignoring status
         mAudioTrack->start();
     }
+}
+
+
+
+status_t AudioTrack::restoreTrack_l(const char *from)
+{
+    ALOGW("dead IAudioTrack, %s, creating a new one from %s()", isOffloadedOrDirect_l() ? "Offloaded or Direct" : "PCM", from);
+    ++mSequence;
+
+    // refresh the audio configuration cache in this process to make sure we get new
+    // output parameters and new IAudioFlinger in createTrack_l()
+    AudioSystem::clearAudioConfigCache();
+
+    if (isOffloadedOrDirect_l() || mDoNotReconnect) {
+        // FIXME re-creation of offloaded and direct tracks is not yet implemented;
+        // reconsider enabling for linear PCM encodings when position can be preserved.
+        return DEAD_OBJECT;
+    }
+
+    // Save so we can return count since creation.
+    mUnderrunCountOffset = getUnderrunCount_l();
+
+    // save the old static buffer position
+    uint32_t staticPosition = 0;
+    size_t bufferPosition = 0;
+    int loopCount = 0;
+    if (mStaticProxy != 0) {
+        mStaticProxy->getBufferPositionAndLoopCount(&bufferPosition, &loopCount);
+        staticPosition = mStaticProxy->getPosition().unsignedValue();
+    }
+
+    // See b/74409267. Connecting to a BT A2DP device supporting multiple codecs
+    // causes a lot of churn on the service side, and it can reject starting
+    // playback of a previously created track. May also apply to other cases.
+    const int INITIAL_RETRIES = 3;
+    int retries = INITIAL_RETRIES;
+retry:
+    if (retries < INITIAL_RETRIES) {
+        // See the comment for clearAudioConfigCache at the start of the function.
+        AudioSystem::clearAudioConfigCache();
+    }
+    mFlags = mOrigFlags;
+
+    // If a new IAudioTrack is successfully created, createTrack_l() will modify the
+    // following member variables: mAudioTrack, mCblkMemory and mCblk.
+    // It will also delete the strong references on previous IAudioTrack and IMemory.
+    // If a new IAudioTrack cannot be created, the previous (dead) instance will be left intact.
+    status_t result = createTrack_l();
+
+    if (result != NO_ERROR) {
+        ALOGW("%s(): createTrack_l failed, do not retry", __func__);
+        retries = 0;
+    } else {
+        // take the frames that will be lost by track recreation into account in saved position
+        // For streaming tracks, this is the amount we obtained from the user/client
+        // (not the number actually consumed at the server - those are already lost).
+        if (mStaticProxy == 0) {
+            mPosition = mReleased;
+        }
+        // Continue playback from last known position and restore loop.
+        if (mStaticProxy != 0) {
+            if (loopCount != 0) {
+                mStaticProxy->setBufferPositionAndLoop(bufferPosition,
+                        mLoopStart, mLoopEnd, loopCount);
+            } else {
+                mStaticProxy->setBufferPosition(bufferPosition);
+                if (bufferPosition == mFrameCount) {
+                    ALOGD("restoring track at end of static buffer");
+                }
+            }
+        }
+        // restore volume handler
+        mVolumeHandler->forall([this](const VolumeShaper &shaper) -> VolumeShaper::Status {
+            sp<VolumeShaper::Operation> operationToEnd =
+                    new VolumeShaper::Operation(shaper.mOperation);
+            // TODO: Ideally we would restore to the exact xOffset position
+            // as returned by getVolumeShaperState(), but we don't have that
+            // information when restoring at the client unless we periodically poll
+            // the server or create shared memory state.
+            //
+            // For now, we simply advance to the end of the VolumeShaper effect
+            // if it has been started.
+            if (shaper.isStarted()) {
+                operationToEnd->setNormalizedTime(1.f);
+            }
+            return mAudioTrack->applyVolumeShaper(shaper.mConfiguration, operationToEnd);
+        });
+
+        if (mState == STATE_ACTIVE) {
+            result = mAudioTrack->start();
+        }
+        // server resets to zero so we offset
+        mFramesWrittenServerOffset =
+                mStaticProxy.get() != nullptr ? staticPosition : mFramesWritten;
+        mFramesWrittenAtRestore = mFramesWrittenServerOffset;
+    }
+    if (result != NO_ERROR) {
+        ALOGW("%s() failed status %d, retries %d", __func__, result, retries);
+        if (--retries > 0) {
+            goto retry;
+        }
+        mState = STATE_STOPPED;
+        mReleased = 0;
+    }
+
+    return result;
 }
 
 

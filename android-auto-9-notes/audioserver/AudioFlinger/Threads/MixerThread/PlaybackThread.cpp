@@ -307,6 +307,10 @@ status_t AudioFlinger::PlaybackThread::addTrack_l(const sp<Track>& track)
          * 
         */
         mActiveTracks.add(track);
+        /***
+         * 
+         * 
+        */
         sp<EffectChain> chain = getEffectChain_l(track->sessionId());
         if (chain != 0) {
             ALOGV("addTrack_l() starting track on chain %p for session %d", chain.get(), track->sessionId());
@@ -320,6 +324,22 @@ status_t AudioFlinger::PlaybackThread::addTrack_l(const sp<Track>& track)
     return status;
 }
 
+void AudioFlinger::PlaybackThread::onAddNewTrack_l()
+{
+    ALOGV("signal playback thread");
+    broadcast_l();
+}
+
+
+void AudioFlinger::ThreadBase::broadcast_l()
+{
+    // Thread could be blocked waiting for async
+    // so signal it to handle state changes immediately
+    // If threadLoop is currently unlocked a signal of mWaitWorkCV will
+    // be lost so we also flag to prevent it blocking on mWaitWorkCV
+    mSignalPending = true;
+    mWaitWorkCV.broadcast();
+}
 
 
 

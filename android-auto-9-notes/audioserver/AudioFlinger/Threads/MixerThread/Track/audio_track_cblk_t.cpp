@@ -1,4 +1,20 @@
 
+// for audio_track_cblk_t::mFlags
+#define CBLK_UNDERRUN   0x01 // set by server immediately on output underrun, cleared by client
+#define CBLK_FORCEREADY 0x02 // set: track is considered ready immediately by AudioFlinger, clear: track is ready when buffer full
+#define CBLK_INVALID    0x04 // track buffer invalidated by AudioFlinger, need to re-create   //通过 restoreTrack_l 恢复 和 AudioFlinger上的连接
+#define CBLK_DISABLED   0x08 // output track disabled by AudioFlinger due to underrun,  need to re-start.  Unlike CBLK_UNDERRUN, this is not set  immediately, but only after a long string of underruns.
+// 0x10 unused
+#define CBLK_LOOP_CYCLE 0x20 // set by server each time a loop cycle other than final one completes
+#define CBLK_LOOP_FINAL 0x40 // set by server when the final loop cycle completes
+#define CBLK_BUFFER_END 0x80 // set by server when the position reaches end of buffer if not looping
+#define CBLK_OVERRUN   0x100 // set by server immediately on input overrun, cleared by client
+#define CBLK_INTERRUPT 0x200 // set by client on interrupt(), cleared by client in obtainBuffer()
+#define CBLK_STREAM_END_DONE 0x400 // set by server on render completion, cleared by client
+ 
+//EL_FIXME 20 seconds may not be enough and must be reconciled with new obtainBuffer implementation
+#define MAX_RUN_OFFLOADED_TIMEOUT_MS 20000 // assuming up to a maximum of 20 seconds of offloaded
+
 
 /**
  * @    /work/workcodes/aosp-p9.x-auto-ga/frameworks/av/include/private/media/AudioTrackShared.h

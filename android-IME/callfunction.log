@@ -1,0 +1,29 @@
+
+
+$ grep nativeImSearch -nrw .
+./src/main/java/com/android/inputmethod/pinyin/PinyinDecoderService.java:180:            return nativeImSearch(pyBuf, pyLen);    // imSearch
+
+$ find . -name *.java | xargs grep imSearch -nr
+./src/main/java/com/android/inputmethod/pinyin/PinyinIME.java:1874:                                        .imSearch(mPyBuf, length());    // chooseDecodingCandidate
+
+
+$ grep chooseDecodingCandidate -nrw .
+./src/main/java/com/android/inputmethod/pinyin/PinyinIME.java:876:            mDecInfo.chooseDecodingCandidate(candId); //chooseAndUpdate
+
+
+
+$ grep processFunctionKeys -nrw .
+./src/main/java/com/android/inputmethod/pinyin/PinyinIME.java:309:        if (processFunctionKeys(keyCode, realAction)) {//这里会出发先打印 processKey 日志，但是没有，所以不是执行这里
+
+
+
+//./src/main/java/com/android/inputmethod/pinyin/SkbContainer.java:313:        ((PinyinIME) mService).responseSoftKeyEvent(sKey);
+./src/main/java/com/android/inputmethod/pinyin/PinyinIME.java:1026:            if (processFunctionKeys(keyCode, true)) return;//responseSoftKeyEvent
+
+
+
+
+$ grep responseKeyEvent -nrw .
+./src/main/java/com/android/inputmethod/pinyin/SkbContainer.java:523:                responseKeyEvent(mSoftKeyDown);
+./src/main/java/com/android/inputmethod/pinyin/SkbContainer.java:623:                        responseKeyEvent(mSoftKeyDown);
+

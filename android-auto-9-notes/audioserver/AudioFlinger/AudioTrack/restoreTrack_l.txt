@@ -1,0 +1,62 @@
+
+
+// for audio_track_cblk_t::mFlags
+#define CBLK_UNDERRUN   0x01 // set by server immediately on output underrun, cleared by client
+#define CBLK_FORCEREADY 0x02 // set: track is considered ready immediately by AudioFlinger, clear: track is ready when buffer full
+#define CBLK_INVALID    0x04 // track buffer invalidated by AudioFlinger, need to re-create   //通过 restoreTrack_l 恢复 和 AudioFlinger上的连接
+#define CBLK_DISABLED   0x08 // output track disabled by AudioFlinger due to underrun,  need to re-start.  Unlike CBLK_UNDERRUN, this is not set  immediately, but only after a long string of underruns.
+// 0x10 unused
+#define CBLK_LOOP_CYCLE 0x20 // set by server each time a loop cycle other than final one completes
+#define CBLK_LOOP_FINAL 0x40 // set by server when the final loop cycle completes
+#define CBLK_BUFFER_END 0x80 // set by server when the position reaches end of buffer if not looping
+#define CBLK_OVERRUN   0x100 // set by server immediately on input overrun, cleared by client
+#define CBLK_INTERRUPT 0x200 // set by client on interrupt(), cleared by client in obtainBuffer()
+#define CBLK_STREAM_END_DONE 0x400 // set by server on render completion, cleared by client
+ 
+//EL_FIXME 20 seconds may not be enough and must be reconciled with new obtainBuffer implementation
+#define MAX_RUN_OFFLOADED_TIMEOUT_MS 20000 // assuming up to a maximum of 20 seconds of offloaded
+
+
+
+
+xqli@linux:/work/workcodes/aosp-p9.x-auto-ga$ grep restoreTrack_l -nrw frameworks/av/
+
+frameworks/av/media/libaudioclient/AudioSystem.cpp:1072:    // called by restoreTrack_l(), which needs new IAudioFlinger and IAudioPolicyService instances
+frameworks/av/media/libaudioclient/include/media/AudioTrack.h:735:     *      or any other error code returned by IAudioTrack::start() or restoreTrack_l().
+frameworks/av/media/libaudioclient/include/media/AudioTrack.h:969:            status_t restoreTrack_l(const char *from);
+frameworks/av/media/libaudioclient/include/media/AudioTrack.h:1027:    // whereupon restoreTrack_l() calls createTrack_l() to update the values.
+
+
+frameworks/av/media/libaudioclient/AudioTrack.cpp:721:        status = restoreTrack_l("start");    // 
+frameworks/av/media/libaudioclient/AudioTrack.cpp:1232:            (void) restoreTrack_l("getPosition");  
+frameworks/av/media/libaudioclient/AudioTrack.cpp:1233:            // FIXME: for compatibility with the Java API we ignore the restoreTrack_l()
+frameworks/av/media/libaudioclient/AudioTrack.cpp:1675:                    status = restoreTrack_l("obtainBuffer");
+frameworks/av/media/libaudioclient/AudioTrack.cpp:1853:        // for offloaded tracks restoreTrack_l() will just update the sequence and clear
+frameworks/av/media/libaudioclient/AudioTrack.cpp:1857:            status_t status __unused = restoreTrack_l("processAudioBuffer");
+frameworks/av/media/libaudioclient/AudioTrack.cpp:2224:status_t AudioTrack::restoreTrack_l(const char *from)
+frameworks/av/media/libaudioclient/AudioTrack.cpp:2398:        if (restoreTrack_l("applyVolumeShaper") == OK) {
+frameworks/av/media/libaudioclient/AudioTrack.cpp:2421:        if (restoreTrack_l("getVolumeShaperState") == OK) {
+frameworks/av/media/libaudioclient/AudioTrack.cpp:2440:        const status_t status = restoreTrack_l("getTimestampExtended");
+frameworks/av/media/libaudioclient/AudioTrack.cpp:2500:        const status_t status = restoreTrack_l("getTimestamp");
+
+
+frameworks/av/media/libmediaplayer2/include/mediaplayer2/JAudioTrack.h:279:     *      or any other error code returned by IAudioTrack::start() or restoreTrack_l().
+
+
+
+
+//  @  frameworks/av/media/libaudioclient/AudioTrack.cpp:721:        status = restoreTrack_l("start");
+
+int32_t flags = android_atomic_and(~(CBLK_STREAM_END_DONE | CBLK_DISABLED), &mCblk->mFlags);
+status_t status = NO_ERROR;
+if (!(flags & CBLK_INVALID)) {
+        //在 AudioTrack::createTrack_l 中 sp<IAudioTrack> track = audioFlinger->createTrack(input, output, &status)   //mAudioTrack 为 track
+┊   status = mAudioTrack->start();
+┊   if (status == DEAD_OBJECT) {
+┊   ┊   flags |= CBLK_INVALID;
+┊   }
+}    
+if (flags & CBLK_INVALID) {
+┊   status = restoreTrack_l("start");
+}    
+

@@ -1,0 +1,249 @@
+1|autolink_8q:/ # logcat --pid=2706                                                                                                                                                     
+--------- beginning of main
+02-24 11:22:50.286  2706  2706 D PinyinIME: onFinishInput.
+02-24 11:22:50.286  2706  2706 D PinyinIME: onStartInput  ccontentType: 0 Restarting:false
+02-24 11:22:53.588  2706  2706 D PinyinIME: onFinishInput.
+02-24 11:22:53.588  2706  2706 D PinyinIME: onStartInput  ccontentType: 0 Restarting:false
+02-24 11:22:59.660  2706  2706 D PinyinIME: onFinishInput.
+02-24 11:22:59.660  2706  2706 D PinyinIME: onStartInput  ccontentType: 1 Restarting:false
+02-24 11:22:59.678  2706  2706 D PinyinIME: onCreateInputView.
+02-24 11:22:59.703  2706  2706 D PinyinIME: onCreateCandidatesView.
+02-24 11:22:59.844  2706  2706 D PinyinIME: onStartInputView  contentType: 1 Restarting:false
+02-24 11:22:59.953  2706  2706 D OpenGLRenderer: Skia GL Pipeline
+02-24 11:23:00.136  2706  2720 I utmethod.pinyi: Background concurrent copying GC freed 1218(260KB) AllocSpace objects, 0(0B) LOS objects, 55% free, 1241KB/2MB, paused 97us total 218.268ms
+02-24 11:23:00.198  2706  3913 I ConfigStore: android::hardware::configstore::V1_0::ISurfaceFlingerConfigs::hasWideColorDisplay retrieved: 0
+02-24 11:23:00.198  2706  3913 I ConfigStore: android::hardware::configstore::V1_0::ISurfaceFlingerConfigs::hasHDRDisplay retrieved: 0
+02-24 11:23:00.198  2706  3913 I OpenGLRenderer: Initialized EGL, version 1.4
+02-24 11:23:00.199  2706  3913 D OpenGLRenderer: Swap behavior 2
+02-24 11:23:00.306  2706  3913 I display : open gpu gralloc module!
+02-24 11:23:00.950  2706  3913 I OpenGLRenderer: Davey! duration=744ms; Flags=0, IntendedVsync=81670507822, Vsync=81670507822, OldestInputEvent=9223372036854775807, NewestInputEvent=0, HandleInputStart=81681435125, AnimationStart=81681502750, PerformTraversalsStart=81681504750, DrawStart=81839615250, SyncQueued=81873744500, SyncStart=81907657625, IssueDrawCommandsStart=81907803125, SwapBuffers=82428191125, FrameCompleted=82448736125, DequeueBufferDuration=9691000, QueueBufferDuration=602000, 
+02-24 11:23:00.980  2706  2706 D PinyinIME: onStartInput  ccontentType: 1 Restarting:true
+02-24 11:23:00.980  2706  2706 D PinyinIME: onStartInputView  contentType: 1 Restarting:true
+
+
+
+
+
+02-24 11:23:12.086  2706  2706 D PinyinIME: processFunctionKeys
+02-24 11:23:12.086  2706  2706 I PinyinIME: responseSoftKeyEvent isUserDefKey:false isKeyCodeKey:true isUniStrKey:false isChineseTextWithSkb:true isCurrentSkbSticky:true
+02-24 11:23:12.086  2706  2706 D PinyinIME: processKey
+02-24 11:23:12.086  2706  2706 D PinyinIME: processFunctionKeys
+02-24 11:23:12.086  2706  2706 D PinyinIME: processKey
+02-24 11:23:12.087  2706  2706 D PinyinIME: processFunctionKeys
+02-24 11:23:12.087  2706  2706 D PinyinIME--JNI: im_reset_search 
+02-24 11:23:12.087  2706  2706 I PinyinIME: chooseAndUpdate:-1 isChineseText:true mImeState:STATE_IDLE
+02-24 11:23:12.087  2706  2706 D PinyinIME--JNI: im_search pybuf[n],pylen:1z
+02-24 11:23:12.089  2706  2706 D PinyinIME--JNI: im_get_spl_start_pos 
+02-24 11:23:12.089  2706  2706 D PinyinIME--JNI: im_get_sps_str 281474225811600
+02-24 11:23:12.089  2706  2706 D PinyinIME--JNI: im_get_spl_start_pos 
+02-24 11:23:12.089  2706  2706 D PinyinIME--JNI: im_get_sps_str 281474225811616
+02-24 11:23:12.089  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:0 cand_str:[n] max_len:256
+02-24 11:23:12.089  2706  2706 D PinyinIME--JNI: im_get_fixed_len
+02-24 11:23:12.091  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:0 cand_str:[`O] max_len:256
+02-24 11:23:12.091  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:1 cand_str:[`O] max_len:256
+02-24 11:23:12.091  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:2 cand_str:[��] max_len:256
+02-24 11:23:12.091  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:3 cand_str:[bT] max_len:256
+02-24 11:23:12.091  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:4 cand_str:[��] max_len:256
+02-24 11:23:12.091  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:5 cand_str:[t^] max_len:256
+02-24 11:23:12.091  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:6 cand_str:[�`] max_len:256
+02-24 11:23:12.091  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:7 cand_str:[�Q] max_len:256
+02-24 11:23:12.092  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:8 cand_str:[�b] max_len:256
+02-24 11:23:12.092  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:9 cand_str:[�T] max_len:256
+02-24 11:23:12.092  2706  2706 I PinyinIME: showCandidateWindow:true
+02-24 11:23:12.092  2706  2706 D PinyinIME: Candidates window is shown. Parent = com.android.inputmethod.pinyin.CandidatesContainer{93eaca3 V.E...... ......ID 0,0-1920,105 #7f0a0000 app:id/candidates_container}
+02-24 11:23:12.093  2706  2706 D PinyinIME: setCandidatesViewShown:true marginTop:15
+02-24 11:23:12.093  2706  2706 D PinyinIME: mSkbContainer setPadding
+02-24 11:23:12.093  2706  2706 D PinyinIME: mCandidatesContainer setPadding
+02-24 11:23:12.105  2706  2706 I PinyinIME: showCandidateWindow:true
+02-24 11:23:12.106  2706  2706 D PinyinIME: Candidates window is shown. Parent = com.android.inputmethod.pinyin.CandidatesContainer{93eaca3 V.E...... ......ID 0,0-1920,105 #7f0a0000 app:id/candidates_container}
+02-24 11:23:12.106  2706  2706 D PinyinIME: setCandidatesViewShown:true marginTop:15
+02-24 11:23:12.106  2706  2706 D PinyinIME: mSkbContainer setPadding
+02-24 11:23:12.106  2706  2706 D PinyinIME: mCandidatesContainer setPadding
+02-24 11:23:12.107  2706  2706 D PinyinIME: setCandidatesViewShown:true marginTop:15
+02-24 11:23:12.107  2706  2706 D PinyinIME: mSkbContainer setPadding
+02-24 11:23:12.107  2706  2706 D PinyinIME: mCandidatesContainer setPadding
+02-24 11:23:12.107  2706  2706 I PinyinIME: isChineseTextWithSkb:true
+
+
+
+
+02-24 11:23:12.630  2706  2706 D PinyinIME: processFunctionKeys
+02-24 11:23:12.630  2706  2706 I PinyinIME: responseSoftKeyEvent isUserDefKey:false isKeyCodeKey:true isUniStrKey:false isChineseTextWithSkb:true isCurrentSkbSticky:true
+02-24 11:23:12.630  2706  2706 D PinyinIME: processKey
+02-24 11:23:12.630  2706  2706 D PinyinIME: processFunctionKeys
+02-24 11:23:12.630  2706  2706 D PinyinIME: processStateInput
+02-24 11:23:12.630  2706  2706 D PinyinIME: processKey
+02-24 11:23:12.630  2706  2706 D PinyinIME: processFunctionKeys
+02-24 11:23:12.630  2706  2706 D PinyinIME: processStateInput
+02-24 11:23:12.630  2706  2706 I PinyinIME: processSurfaceChange
+02-24 11:23:12.655  2706  2706 I PinyinIME: chooseAndUpdate:-1 isChineseText:true mImeState:STATE_INPUT
+02-24 11:23:12.655  2706  2706 D PinyinIME--JNI: im_search pybuf[ni],pylen:2z
+02-24 11:23:12.655  2706  2706 D PinyinIME--JNI: im_get_spl_start_pos 
+02-24 11:23:12.655  2706  2706 D PinyinIME--JNI: im_get_sps_str 281474225810720
+02-24 11:23:12.655  2706  2706 D PinyinIME--JNI: im_get_spl_start_pos 
+02-24 11:23:12.655  2706  2706 D PinyinIME--JNI: im_get_sps_str 281474225810736
+02-24 11:23:12.655  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:0 cand_str:[n] max_len:256
+02-24 11:23:12.683  2706  2706 D PinyinIME--JNI: im_get_fixed_len
+02-24 11:23:12.684  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:0 cand_str:[`O] max_len:256
+02-24 11:23:12.684  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:1 cand_str:[`O] max_len:256
+02-24 11:23:12.684  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:2 cand_str:[�b] max_len:256
+02-24 11:23:12.684  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:3 cand_str:[<\] max_len:256
+02-24 11:23:12.684  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:4 cand_str:[bT] max_len:256
+02-24 11:23:12.684  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:5 cand_str:[�l] max_len:256
+02-24 11:23:12.684  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:6 cand_str:[�Y] max_len:256
+02-24 11:23:12.684  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:7 cand_str:[�Y] max_len:256
+02-24 11:23:12.684  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:8 cand_str:[{�] max_len:256
+02-24 11:23:12.684  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:9 cand_str:[�] max_len:256
+02-24 11:23:12.684  2706  2706 I PinyinIME: showCandidateWindow:true
+02-24 11:23:12.684  2706  2706 D PinyinIME: Candidates window is shown. Parent = com.android.inputmethod.pinyin.CandidatesContainer{93eaca3 V.E...... ........ 0,0-1920,105 #7f0a0000 app:id/candidates_container}
+02-24 11:23:12.694  2706  2706 D PinyinIME: setCandidatesViewShown:true marginTop:15
+02-24 11:23:12.694  2706  2706 D PinyinIME: mSkbContainer setPadding
+02-24 11:23:12.694  2706  2706 D PinyinIME: mCandidatesContainer setPadding
+02-24 11:23:12.760  2706  2706 D PinyinIME: setCandidatesViewShown:true marginTop:15
+02-24 11:23:12.771  2706  2706 D PinyinIME: mSkbContainer setPadding
+02-24 11:23:12.771  2706  2706 D PinyinIME: mCandidatesContainer setPadding
+02-24 11:23:12.771  2706  2706 I PinyinIME: isChineseTextWithSkb:true
+02-24 11:23:12.772  2706  2706 D PinyinIME: onStartInput  ccontentType: 1 Restarting:true
+02-24 11:23:12.773  2706  2706 I PinyinIME: resetToIdleState:false
+02-24 11:23:12.773  2706  2706 D PinyinIME: Candidates window is to be reset
+02-24 11:23:12.836  2706  2706 E PinyinIME: resetCandidateWindow showCandidateWindow false
+02-24 11:23:12.837  2706  2706 D PinyinIME: onStartInputView  contentType: 1 Restarting:true
+02-24 11:23:12.880  2706  2706 D PinyinIME: onStartInput  ccontentType: 1 Restarting:true
+02-24 11:23:12.885  2706  2706 D PinyinIME: onStartInputView  contentType: 1 Restarting:true
+
+
+
+
+02-24 11:23:16.613  2706  2706 D PinyinIME: processFunctionKeys
+02-24 11:23:16.613  2706  2706 I PinyinIME: responseSoftKeyEvent isUserDefKey:false isKeyCodeKey:true isUniStrKey:false isChineseTextWithSkb:true isCurrentSkbSticky:true
+02-24 11:23:16.613  2706  2706 D PinyinIME: processKey
+02-24 11:23:16.613  2706  2706 D PinyinIME: processFunctionKeys
+02-24 11:23:16.613  2706  2706 D PinyinIME: processKey
+02-24 11:23:16.613  2706  2706 D PinyinIME: processFunctionKeys
+02-24 11:23:16.613  2706  2706 D PinyinIME--JNI: im_reset_search 
+02-24 11:23:16.613  2706  2706 I PinyinIME: chooseAndUpdate:-1 isChineseText:true mImeState:STATE_IDLE
+02-24 11:23:16.613  2706  2706 D PinyinIME--JNI: im_search pybuf[s],pylen:1z
+02-24 11:23:16.617  2706  2706 D PinyinIME--JNI: im_get_spl_start_pos 
+02-24 11:23:16.617  2706  2706 D PinyinIME--JNI: im_get_sps_str 281474225811600
+02-24 11:23:16.617  2706  2706 D PinyinIME--JNI: im_get_spl_start_pos 
+02-24 11:23:16.617  2706  2706 D PinyinIME--JNI: im_get_sps_str 281474225811616
+02-24 11:23:16.617  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:0 cand_str:[s] max_len:256
+02-24 11:23:16.618  2706  2706 D PinyinIME--JNI: im_get_fixed_len
+02-24 11:23:16.618  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:0 cand_str:[/f] max_len:256
+02-24 11:23:16.618  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:1 cand_str:[/f] max_len:256
+02-24 11:23:16.618  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:2 cand_str:[��] max_len:256
+02-24 11:23:16.618  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:3 cand_str:[
+02-24 11:23:16.618  2706  2706 D PinyinIME--JNI: N] max_len:256
+02-24 11:23:16.619  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:4 cand_str:[�e] max_len:256
+02-24 11:23:16.619  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:5 cand_str:[@b] max_len:256
+02-24 11:23:16.619  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:6 cand_str:[{k] max_len:256
+02-24 11:23:16.619  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:7 cand_str:[�] max_len:256
+02-24 11:23:16.619  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:8 cand_str:[eU] max_len:256
+02-24 11:23:16.619  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:9 cand_str:[�N] max_len:256
+02-24 11:23:16.619  2706  2706 I PinyinIME: showCandidateWindow:true
+02-24 11:23:16.619  2706  2706 D PinyinIME: Candidates window is shown. Parent = com.android.inputmethod.pinyin.CandidatesContainer{93eaca3 V.E...... ........ 0,0-1920,105 #7f0a0000 app:id/candidates_container}
+02-24 11:23:16.620  2706  2706 D PinyinIME: setCandidatesViewShown:true marginTop:15
+02-24 11:23:16.620  2706  2706 D PinyinIME: mSkbContainer setPadding
+02-24 11:23:16.620  2706  2706 D PinyinIME: mCandidatesContainer setPadding
+02-24 11:23:16.624  2706  2706 I PinyinIME: showCandidateWindow:true
+02-24 11:23:16.624  2706  2706 D PinyinIME: Candidates window is shown. Parent = com.android.inputmethod.pinyin.CandidatesContainer{93eaca3 V.E...... ......ID 0,0-1920,105 #7f0a0000 app:id/candidates_container}
+02-24 11:23:16.624  2706  2706 D PinyinIME: setCandidatesViewShown:true marginTop:15
+02-24 11:23:16.624  2706  2706 D PinyinIME: mSkbContainer setPadding
+02-24 11:23:16.624  2706  2706 D PinyinIME: mCandidatesContainer setPadding
+02-24 11:23:16.626  2706  2706 D PinyinIME: setCandidatesViewShown:true marginTop:15
+02-24 11:23:16.626  2706  2706 D PinyinIME: mSkbContainer setPadding
+02-24 11:23:16.627  2706  2706 D PinyinIME: mCandidatesContainer setPadding
+02-24 11:23:16.627  2706  2706 I PinyinIME: isChineseTextWithSkb:true
+
+
+02-24 11:23:17.297  2706  2706 D PinyinIME: processFunctionKeys
+02-24 11:23:17.298  2706  2706 I PinyinIME: responseSoftKeyEvent isUserDefKey:false isKeyCodeKey:true isUniStrKey:false isChineseTextWithSkb:true isCurrentSkbSticky:true
+02-24 11:23:17.298  2706  2706 D PinyinIME: processKey
+02-24 11:23:17.298  2706  2706 D PinyinIME: processFunctionKeys
+02-24 11:23:17.298  2706  2706 D PinyinIME: processStateInput
+02-24 11:23:17.298  2706  2706 D PinyinIME: processKey
+02-24 11:23:17.298  2706  2706 D PinyinIME: processFunctionKeys
+02-24 11:23:17.298  2706  2706 D PinyinIME: processStateInput
+02-24 11:23:17.298  2706  2706 I PinyinIME: processSurfaceChange
+02-24 11:23:17.298  2706  2706 I PinyinIME: chooseAndUpdate:-1 isChineseText:true mImeState:STATE_INPUT
+02-24 11:23:17.298  2706  2706 D PinyinIME--JNI: im_search pybuf[sh],pylen:2z
+02-24 11:23:17.301  2706  2706 D PinyinIME--JNI: im_get_spl_start_pos 
+02-24 11:23:17.301  2706  2706 D PinyinIME--JNI: im_get_sps_str 281474225810720
+02-24 11:23:17.301  2706  2706 D PinyinIME--JNI: im_get_spl_start_pos 
+02-24 11:23:17.301  2706  2706 D PinyinIME--JNI: im_get_sps_str 281474225810736
+02-24 11:23:17.301  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:0 cand_str:[s] max_len:256
+02-24 11:23:17.301  2706  2706 D PinyinIME--JNI: im_get_fixed_len
+02-24 11:23:17.301  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:0 cand_str:[/f] max_len:256
+02-24 11:23:17.302  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:1 cand_str:[/f] max_len:256
+02-24 11:23:17.302  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:2 cand_str:[��] max_len:256
+02-24 11:23:17.302  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:3 cand_str:[
+02-24 11:23:17.302  2706  2706 D PinyinIME--JNI: N] max_len:256
+02-24 11:23:17.302  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:4 cand_str:[�e] max_len:256
+02-24 11:23:17.302  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:5 cand_str:[eU] max_len:256
+02-24 11:23:17.302  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:6 cand_str:[�] max_len:256
+02-24 11:23:17.302  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:7 cand_str:[�N] max_len:256
+02-24 11:23:17.302  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:8 cand_str:[O] max_len:256
+02-24 11:23:17.302  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:9 cand_str:[\] max_len:256
+02-24 11:23:17.302  2706  2706 I PinyinIME: showCandidateWindow:true
+02-24 11:23:17.302  2706  2706 D PinyinIME: Candidates window is shown. Parent = com.android.inputmethod.pinyin.CandidatesContainer{93eaca3 V.E...... ........ 0,0-1920,105 #7f0a0000 app:id/candidates_container}
+02-24 11:23:17.302  2706  2706 D PinyinIME: setCandidatesViewShown:true marginTop:15
+02-24 11:23:17.302  2706  2706 D PinyinIME: mSkbContainer setPadding
+02-24 11:23:17.302  2706  2706 D PinyinIME: mCandidatesContainer setPadding
+02-24 11:23:17.304  2706  2706 D PinyinIME: setCandidatesViewShown:true marginTop:15
+02-24 11:23:17.304  2706  2706 D PinyinIME: mSkbContainer setPadding
+02-24 11:23:17.304  2706  2706 D PinyinIME: mCandidatesContainer setPadding
+02-24 11:23:17.305  2706  2706 I PinyinIME: isChineseTextWithSkb:true
+02-24 11:23:17.774  2706  2706 D PinyinIME: processFunctionKeys
+02-24 11:23:17.775  2706  2706 I PinyinIME: responseSoftKeyEvent isUserDefKey:false isKeyCodeKey:true isUniStrKey:false isChineseTextWithSkb:true isCurrentSkbSticky:true
+02-24 11:23:17.775  2706  2706 D PinyinIME: processKey
+02-24 11:23:17.775  2706  2706 D PinyinIME: processFunctionKeys
+02-24 11:23:17.775  2706  2706 D PinyinIME: processStateInput
+02-24 11:23:17.775  2706  2706 D PinyinIME: processKey
+02-24 11:23:17.775  2706  2706 D PinyinIME: processFunctionKeys
+02-24 11:23:17.775  2706  2706 D PinyinIME: processStateInput
+02-24 11:23:17.775  2706  2706 I PinyinIME: processSurfaceChange
+02-24 11:23:17.775  2706  2706 I PinyinIME: chooseAndUpdate:-1 isChineseText:true mImeState:STATE_INPUT
+02-24 11:23:17.775  2706  2706 D PinyinIME--JNI: im_search pybuf[shi],pylen:3z
+02-24 11:23:17.776  2706  2706 D PinyinIME--JNI: im_get_spl_start_pos 
+02-24 11:23:17.777  2706  2706 D PinyinIME--JNI: im_get_sps_str 281474225810720
+02-24 11:23:17.777  2706  2706 D PinyinIME--JNI: im_get_spl_start_pos 
+02-24 11:23:17.777  2706  2706 D PinyinIME--JNI: im_get_sps_str 281474225810736
+02-24 11:23:17.777  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:0 cand_str:[s] max_len:256
+02-24 11:23:17.777  2706  2706 D PinyinIME--JNI: im_get_fixed_len
+02-24 11:23:17.777  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:0 cand_str:[/f] max_len:256
+02-24 11:23:17.778  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:1 cand_str:[/f] max_len:256
+02-24 11:23:17.778  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:2 cand_str:[�e] max_len:256
+02-24 11:23:17.778  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:3 cand_str:[�N] max_len:256
+02-24 11:23:17.778  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:4 cand_str:[O] max_len:256
+02-24 11:23:17.778  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:5 cand_str:[^] max_len:256
+02-24 11:23:17.778  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:6 cand_str:[_] max_len:256
+02-24 11:23:17.779  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:7 cand_str:[Ջ] max_len:256
+02-24 11:23:17.779  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:8 cand_str:[�w] max_len:256
+02-24 11:23:17.779  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:9 cand_str:[AS] max_len:256
+02-24 11:23:17.779  2706  2706 I PinyinIME: showCandidateWindow:true
+02-24 11:23:17.779  2706  2706 D PinyinIME: Candidates window is shown. Parent = com.android.inputmethod.pinyin.CandidatesContainer{93eaca3 V.E...... ........ 0,0-1920,105 #7f0a0000 app:id/candidates_container}
+02-24 11:23:17.779  2706  2706 D PinyinIME: setCandidatesViewShown:true marginTop:15
+02-24 11:23:17.779  2706  2706 D PinyinIME: mSkbContainer setPadding
+02-24 11:23:17.779  2706  2706 D PinyinIME: mCandidatesContainer setPadding
+02-24 11:23:17.783  2706  2706 D PinyinIME: setCandidatesViewShown:true marginTop:15
+02-24 11:23:17.783  2706  2706 D PinyinIME: mSkbContainer setPadding
+02-24 11:23:17.783  2706  2706 D PinyinIME: mCandidatesContainer setPadding
+02-24 11:23:17.783  2706  2706 I PinyinIME: isChineseTextWithSkb:true
+02-24 11:23:18.551  2706  2706 D PinyinIME: onChoiceTouched.
+02-24 11:23:18.551  2706  2706 I PinyinIME: chooseAndUpdate:0 isChineseText:true mImeState:STATE_INPUT
+02-24 11:23:18.551  2706  2706 D PinyinIME--JNI: im_choose 0z
+02-24 11:23:18.552  2706  2706 D PinyinIME--JNI: im_get_spl_start_pos 
+02-24 11:23:18.552  2706  2706 D PinyinIME--JNI: im_get_sps_str 281474225811520
+02-24 11:23:18.552  2706  2706 D PinyinIME--JNI: im_get_spl_start_pos 
+02-24 11:23:18.552  2706  2706 D PinyinIME--JNI: im_get_sps_str 281474225811536
+02-24 11:23:18.552  2706  2706 D PinyinIME--JNI: im_get_candidate cand_id:0 cand_str:[s] max_len:256
+02-24 11:23:18.552  2706  2706 D PinyinIME--JNI: im_get_fixed_len
+02-24 11:23:18.552  2706  2706 I PinyinIME: commitResultText:是
+02-24 11:23:18.618  2706  2706 D PinyinIME--JNI: im_get_predicts
+02-24 11:23:18.619  2706  2706 I PinyinIME: showCandidateWindow:false
+02-24 11:23:18.619  2706  2706 D PinyinIME: Candidates window is shown. Parent = com.android.inputmethod.pinyin.CandidatesContainer{93eaca3 V.E...... .......D 0,0-1920,105 #7f0a0000 app:id/candidates_container}
+02-24 11:23:18.619  2706  2706 D PinyinIME: setCandidatesViewShown:true marginTop:15
+02-24 11:23:18.619  2706  2706 D PinyinIME: mSkbContainer setPadding
+02-24 11:23:18.619  2706  2706 D PinyinIME: mCandidatesContainer setPadding
+^C
+130|autolink_8q:/ # 

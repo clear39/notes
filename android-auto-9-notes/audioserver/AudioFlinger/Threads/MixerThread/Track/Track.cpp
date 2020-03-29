@@ -127,6 +127,10 @@ bool TrackBase::isPatchTrack() const {
     return (mType == TYPE_PATCH);
 }
 
+audio_session_t TrackBase::sessionId() const { 
+    return mSessionId; 
+}
+
 /**
  * @system/media/audio/include/system/audio-base.h:360:    AUDIO_OUTPUT_FLAG_FAST             = 0x4,
 */
