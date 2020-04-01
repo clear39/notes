@@ -522,7 +522,9 @@ frameworks/av/services/audioflinger/Threads.cpp:8753:            track->invalida
 10-22 09:05:43.992  2962 11203 V APM_AudioPolicyManager: listAudioPorts() got 7 ports needed 7
 10-22 09:05:43.996  2962  3000 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 7 ports 0xe4a13000
 10-22 09:05:43.996  2962  3000 V APM_AudioPolicyManager: listAudioPorts() got 7 ports needed 7
+
 10-22 09:05:43.997  2962  2999 V AudioFlinger: createTrack() sessionId: 25
+
 10-22 09:05:43.997  2962  2999 W AudioFlinger_Thread: createTrack_l(): mismatch between requested flags (00000008) and output flags (00000000)
 10-22 09:05:43.997  2962  2999 D AudioFlinger_Thread: Client defaulted notificationFrames to 1772 for frameCount 5316
 

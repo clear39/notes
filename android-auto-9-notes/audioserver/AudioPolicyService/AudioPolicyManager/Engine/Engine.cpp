@@ -56,6 +56,56 @@ status_t Engine::initCheck()
 
 
 
+/**
+ * 
+*/
+routing_strategy Engine::getStrategyForUsage(audio_usage_t usage)
+{
+    // usage to strategy mapping
+    switch (usage) {
+    case AUDIO_USAGE_ASSISTANCE_ACCESSIBILITY:
+        return STRATEGY_ACCESSIBILITY;
+
+    case AUDIO_USAGE_MEDIA:
+    case AUDIO_USAGE_GAME:
+    case AUDIO_USAGE_ASSISTANT:
+    case AUDIO_USAGE_ASSISTANCE_NAVIGATION_GUIDANCE:
+    case AUDIO_USAGE_ASSISTANCE_SONIFICATION:
+        return STRATEGY_MEDIA;
+
+    case AUDIO_USAGE_VOICE_COMMUNICATION:
+        return STRATEGY_PHONE;
+
+    case AUDIO_USAGE_VOICE_COMMUNICATION_SIGNALLING:
+        return STRATEGY_DTMF;
+
+    case AUDIO_USAGE_ALARM:
+    case AUDIO_USAGE_NOTIFICATION_TELEPHONY_RINGTONE:
+        return STRATEGY_SONIFICATION;
+
+    case AUDIO_USAGE_NOTIFICATION:
+    case AUDIO_USAGE_NOTIFICATION_COMMUNICATION_REQUEST:
+    case AUDIO_USAGE_NOTIFICATION_COMMUNICATION_INSTANT:
+    case AUDIO_USAGE_NOTIFICATION_COMMUNICATION_DELAYED:
+    case AUDIO_USAGE_NOTIFICATION_EVENT:
+        return STRATEGY_SONIFICATION_RESPECTFUL;
+
+    case AUDIO_USAGE_UNKNOWN:
+    default:
+        return STRATEGY_MEDIA;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
 audio_devices_t Engine::getDeviceForStrategy(routing_strategy strategy) const
 {
     DeviceVector availableOutputDevices = mApmObserver->getAvailableOutputDevices();

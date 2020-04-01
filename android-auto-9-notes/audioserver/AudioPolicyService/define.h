@@ -1,4 +1,16 @@
-
+//  @   frameworks/av/services/audiopolicy/common/include/RoutingStrategy.h
+enum routing_strategy {
+    STRATEGY_MEDIA,                                                                                                                                                                                                
+    STRATEGY_PHONE,
+    STRATEGY_SONIFICATION,
+    STRATEGY_SONIFICATION_RESPECTFUL,
+    STRATEGY_DTMF,
+    STRATEGY_ENFORCED_AUDIBLE,
+    STRATEGY_TRANSMITTED_THROUGH_SPEAKER,
+    STRATEGY_ACCESSIBILITY,
+    STRATEGY_REROUTING,
+    NUM_STRATEGIES
+};
 
 //      @       system/media/audio/include/system/audio-base.h
 

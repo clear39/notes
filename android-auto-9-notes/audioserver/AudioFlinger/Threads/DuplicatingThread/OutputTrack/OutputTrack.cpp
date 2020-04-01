@@ -39,17 +39,6 @@ AudioFlinger::PlaybackThread::OutputTrack::OutputTrack(
 
 
 
-
-
-
-
-
-
-
-
-
-
-
 bool AudioFlinger::PlaybackThread::OutputTrack::write(void* data, uint32_t frames)
 {
     Buffer *pInBuffer;
@@ -134,11 +123,9 @@ bool AudioFlinger::PlaybackThread::OutputTrack::write(void* data, uint32_t frame
                 pInBuffer->raw = pInBuffer->mBuffer;
                 memcpy(pInBuffer->raw, inBuffer.raw, inBuffer.frameCount * mFrameSize);
                 mBufferQueue.add(pInBuffer);
-                ALOGV("OutputTrack::write() %p thread %p adding overflow buffer %zu", this,
-                        mThread.unsafe_get(), mBufferQueue.size());
+                ALOGV("OutputTrack::write() %p thread %p adding overflow buffer %zu", this, mThread.unsafe_get(), mBufferQueue.size());
             } else {
-                ALOGW("OutputTrack::write() %p thread %p no more overflow buffers",
-                        mThread.unsafe_get(), this);
+                ALOGW("OutputTrack::write() %p thread %p no more overflow buffers",mThread.unsafe_get(), this);
             }
         }
     }

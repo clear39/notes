@@ -96,9 +96,9 @@ void AudioPolicyService::setRecordSilenced(uid_t uid, bool silenced)
  * -------> AudioFlinger::createTrack(...)
 */
 status_t AudioPolicyService::getOutputForAttr(const audio_attributes_t *attr,
-                                              audio_io_handle_t *output,
-                                              audio_session_t session,
-                                              audio_stream_type_t *stream,
+                                              audio_io_handle_t *output,   //这是获取参数，用于对应 AudioFlinger中的MixerThread线程
+                                              audio_session_t session,      // 标记AudioTrack连接唯一sessionId,方便用于Track断开从新建立连接标记
+                                              audio_stream_type_t *stream, //这是获取参数，音频数据流类型
                                               pid_t pid,
                                               uid_t uid,
                                               const audio_config_t *config,

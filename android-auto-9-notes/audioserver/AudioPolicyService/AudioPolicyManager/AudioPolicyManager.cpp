@@ -855,6 +855,10 @@ status_t AudioPolicyManager::getOutputForAttr(const audio_attributes_t *attr,
 {
     audio_attributes_t attributes;
     if (attr != NULL) {
+        /**
+         * isValidAttributes主要通过 attr->usage  和 attr->flags 俩个属性值 判断
+         * @    frameworks/av/services/audiopolicy/managerdefault/AudioPolicyManager.cpp
+        */
         if (!isValidAttributes(attr)) {
             ALOGE("getOutputForAttr() invalid attributes: usage=%d content=%d flags=0x%x tags=[%s]", attr->usage, attr->content_type, attr->flags,attr->tags);
             return BAD_VALUE;
@@ -865,9 +869,16 @@ status_t AudioPolicyManager::getOutputForAttr(const audio_attributes_t *attr,
             ALOGE("getOutputForAttr():  invalid stream type");
             return BAD_VALUE;
         }
+        /**
+         * stream_type_to_audio_attributes 是将 stream 转化为 attributes(audio_attributes_t)
+         * @    frameworks/av/media/libaudioclient/include/media/AudioPolicyHelper.h
+        */
         stream_type_to_audio_attributes(*stream, &attributes);
     }
 
+    /**
+     * 注意: 这里很重要
+    */
     // TODO: check for existing client for this port ID
     if (*portId == AUDIO_PORT_HANDLE_NONE) {
         *portId = AudioPort::getNextUniqueId();
@@ -905,14 +916,21 @@ status_t AudioPolicyManager::getOutputForAttr(const audio_attributes_t *attr,
    /**
     * streamTypefromAttributesInt @ frameworks/av/services/audiopolicy/managerdefault/AudioPolicyManager.cpp
     * 通过 attributes->usage 或者 attributes->flags 转化成对应的 流类型 audio_stream_type_t（类似 AUDIO_STREAM_MUSIC）
+    * streamTypefromAttributesInt 和上面 stream_type_to_audio_attributes 逆向转化
    */
     *stream = streamTypefromAttributesInt(&attributes);
 
     // Explicit routing?
     sp<DeviceDescriptor> deviceDesc;
     if (*selectedDeviceId != AUDIO_PORT_HANDLE_NONE) {
+        /**
+         * 
+        */
         deviceDesc = mAvailableOutputDevices.getDeviceFromId(*selectedDeviceId);
     }
+    /**
+         * 
+        */
     mOutputRoutes.addRoute(session, *stream, SessionRoute::SOURCE_TYPE_NA, deviceDesc, uid);
    
    /**
@@ -958,6 +976,43 @@ status_t AudioPolicyManager::getOutputForAttr(const audio_attributes_t *attr,
     ALOGV("  getOutputForAttr() returns output %d selectedDeviceId %d", *output, *selectedDeviceId);
 
     return NO_ERROR;
+}
+
+
+uint32_t AudioPolicyManager::getStrategyForAttr(const audio_attributes_t *attr) {
+    // flags to strategy mapping
+    if ((attr->flags & AUDIO_FLAG_BEACON) == AUDIO_FLAG_BEACON) {
+        return (uint32_t) STRATEGY_TRANSMITTED_THROUGH_SPEAKER;
+    }
+    if ((attr->flags & AUDIO_FLAG_AUDIBILITY_ENFORCED) == AUDIO_FLAG_AUDIBILITY_ENFORCED) {
+        return (uint32_t) STRATEGY_ENFORCED_AUDIBLE;
+    }
+    // usage to strategy mapping
+    return static_cast<uint32_t>(mEngine->getStrategyForUsage(attr->usage));
+}
+
+
+audio_devices_t AudioPolicyManager::getDeviceForStrategy(routing_strategy strategy, bool fromCache)
+{
+    // Check if an explicit routing request exists for a stream type corresponding to the
+    // specified strategy and use it in priority over default routing rules.
+    for (int stream = 0; stream < AUDIO_STREAM_FOR_POLICY_CNT; stream++) {
+        /**
+         * 
+        */
+        if (getStrategy((audio_stream_type_t)stream) == strategy) {
+            audio_devices_t forcedDevice = mOutputRoutes.getActiveDeviceForStream(  (audio_stream_type_t)stream, mAvailableOutputDevices);
+            if (forcedDevice != AUDIO_DEVICE_NONE) {
+                return forcedDevice;
+            }
+        }
+    }
+
+    if (fromCache) {
+        ALOGVV("getDeviceForStrategy() from cache strategy %d, device %x", strategy, mDeviceForStrategy[strategy]);
+        return mDeviceForStrategy[strategy];
+    }
+    return mEngine->getDeviceForStrategy(strategy);
 }
 
 
