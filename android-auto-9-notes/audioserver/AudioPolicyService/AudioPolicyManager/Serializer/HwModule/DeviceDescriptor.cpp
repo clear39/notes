@@ -14,19 +14,57 @@ DeviceDescriptor::DeviceDescriptor(audio_devices_t type, const String8 &tagName)
 
 
 //  @   /work/workcodes/aosp-p9.0.0_2.1.0-auto-ga/frameworks/av/services/audiopolicy/common/managerdefinitions/include/AudioPort.h
-void AudioPort::setAudioProfiles(const AudioProfileVector &profiles) { mProfiles = profiles; }
+void AudioPort::setAudioProfiles(const AudioProfileVector &profiles) { 
+        mProfiles = profiles; 
+}
+
+bool AudioPort::isAttached() { 
+        return mModule != 0; 
+}
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+void DeviceDescriptor::toAudioPortConfig(struct audio_port_config *dstConfig,const struct audio_port_config *srcConfig) const
+{
+    dstConfig->config_mask = AUDIO_PORT_CONFIG_GAIN;
+    if (mSamplingRate != 0) {
+        dstConfig->config_mask |= AUDIO_PORT_CONFIG_SAMPLE_RATE;
+    }   
+    if (mChannelMask != AUDIO_CHANNEL_NONE) {
+        dstConfig->config_mask |= AUDIO_PORT_CONFIG_CHANNEL_MASK;
+    }   
+    if (mFormat != AUDIO_FORMAT_INVALID) {
+        dstConfig->config_mask |= AUDIO_PORT_CONFIG_FORMAT;
+    }   
+
+    if (srcConfig != NULL) {
+        dstConfig->config_mask |= srcConfig->config_mask;
+    }   
+
+    AudioPortConfig::toAudioPortConfig(dstConfig, srcConfig);
+
+    dstConfig->id = mId;// 在 void DeviceDescriptor::attach(const sp<HwModule>& module) 中赋值
+    /**
+     * 这里返回 AUDIO_PORT_ROLE_SINK
+    */
+    dstConfig->role = audio_is_output_device(mDeviceType) ? AUDIO_PORT_ROLE_SINK : AUDIO_PORT_ROLE_SOURCE;
+    dstConfig->type = AUDIO_PORT_TYPE_DEVICE;
+    dstConfig->ext.device.type = mDeviceType;  //       AUDIO_DEVICE_OUT_BUS
+
+    //TODO Understand why this test is necessary. i.e. why at boot time does it crash
+    // without the test?
+    // This has been demonstrated to NOT be true (at start up)
+    // ALOG_ASSERT(mModule != NULL);
+    /**
+     * 
+    */
+    dstConfig->ext.device.hw_module = mModule != 0 ? mModule->getHandle() : AUDIO_MODULE_HANDLE_NONE;
+    (void)audio_utils_strlcpy_zerofill(dstConfig->ext.device.address, mAddress.string());
+}
 
 
 
 
-bool AudioPort::isAttached() { return mModule != 0; }
-
-
-
-
-
-
-
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //  @   /work/workcodes/aosp-p9.0.0_2.1.0-auto-ga/frameworks/av/services/audiopolicy/common/managerdefinitions/src/DeviceDescriptor.cpp
 /**
  * 这里 verbose 传入为true

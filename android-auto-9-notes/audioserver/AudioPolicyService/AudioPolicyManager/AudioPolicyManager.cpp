@@ -687,6 +687,9 @@ uint32_t AudioPolicyManager::setOutputDevice(const sp<AudioOutputDescriptor>& ou
             outputDesc->toAudioPortConfig(&patch.sources[0]);
             patch.num_sources = 1;
             patch.num_sinks = 0;
+            /**
+             * system/media/audio/include/system/audio.h:496:#define AUDIO_PATCH_PORTS_MAX   16
+            */
             for (size_t i = 0; i < deviceList.size() && i < AUDIO_PATCH_PORTS_MAX; i++) {
                 deviceList.itemAt(i)->toAudioPortConfig(&patch.sinks[i]);
                 patch.num_sinks++;
@@ -1289,6 +1292,17 @@ void AudioPolicyManager::addOutput(audio_io_handle_t output, const sp<SwAudioOut
     selectOutputForMusicEffects();
     nextAudioPortGeneration();
 }
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+status_t AudioPolicyManager::listAudioPatches(unsigned int *num_patches,struct audio_patch *patches,unsigned int *generation)
+{
+    if (generation == NULL) {
+        return BAD_VALUE;
+    }
+    *generation = curAudioPortGeneration();
+    return mAudioPatches.listAudioPatches(num_patches, patches);
+}
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

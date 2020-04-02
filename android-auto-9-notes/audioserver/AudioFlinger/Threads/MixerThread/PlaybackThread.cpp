@@ -1098,7 +1098,9 @@ ssize_t AudioFlinger::PlaybackThread::threadLoop_write()
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- * 
+ * AudioFlinger::ThreadBase::processConfigEvents_l()   //CFG_EVENT_CREATE_AUDIO_PATCH
+ * -->AudioFlinger::MixerThread::createAudioPatch_l(const struct audio_patch *patch,audio_patch_handle_t *handle)
+ * -----> 
 */
 status_t AudioFlinger::PlaybackThread::createAudioPatch_l(const struct audio_patch *patch,audio_patch_handle_t *handle)
 {
@@ -1146,12 +1148,16 @@ status_t AudioFlinger::PlaybackThread::createAudioPatch_l(const struct audio_pat
      * hardware/libhardware/include/hardware/audio.h:57:#define AUDIO_DEVICE_API_VERSION_2_0 HARDWARE_DEVICE_API_VERSION(2, 0)
      * hardware/libhardware/include/hardware/audio.h:58:#define AUDIO_DEVICE_API_VERSION_3_0 HARDWARE_DEVICE_API_VERSION(3, 0)
      * 由于 (mOutput->audioHwDev->supportsAudioPatches() 中是判断 Module的版本（AUDIO_DEVICE_API_VERSION_2_0=2.0） 大于等于 AUDIO_DEVICE_API_VERSION_3_0（3.0）
+     * 这里false
+     * 
+     * 01-01 00:00:10.731  1776  1810 V AudioFlinger_Thread: createAudioPatch_l supportsAudioPatches:false
     */
     if (mOutput->audioHwDev->supportsAudioPatches()) {
         sp<DeviceHalInterface> hwDevice = mOutput->audioHwDev->hwDevice();
         status = hwDevice->createAudioPatch(patch->num_sources,patch->sources, patch->num_sinks,patch->sinks, handle);
     } else {
         char *address;
+        // 01-01 00:00:10.731  1776  1810 V AudioFlinger_Thread: createAudioPatch_l address:bus0_media_out
         if (strcmp(patch->sinks[0].ext.device.address, "") != 0) {
             //FIXME: we only support address on first sink with HAL version < 3.0
             address = audio_device_address_to_parameter(patch->sinks[0].ext.device.type,patch->sinks[0].ext.device.address);

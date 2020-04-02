@@ -228,4 +228,5 @@ void AudioPortConfig::toAudioPortConfig(struct audio_port_config *dstConfig,cons
     } else {
         dstConfig->config_mask &= ~AUDIO_PORT_CONFIG_GAIN;
     }
+    
 }
