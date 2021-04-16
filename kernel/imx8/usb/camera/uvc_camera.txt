@@ -1,0 +1,95 @@
+
+
+[  148.467620] ***hub_port_connect@@@ 
+[  148.700281] usb 1-1.1: new high-speed USB device number 4 using cdns-usb3
+[  148.804789] usb 1-1.1: config 1 interface 1 altsetting 0 bulk endpoint 0x84 has invalid maxpacket 64
+[  148.813961] usb 1-1.1: config 1 interface 1 altsetting 0 bulk endpoint 0x5 has invalid maxpacket 64
+[  148.823232] usb 1-1.1: config 1 interface 3 has no altsetting 13
+[  148.829675] usb 1-1.1: New USB device found, idVendor=0416, idProduct=5032
+[  148.836588] usb 1-1.1: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+[  148.844286] usb 1-1.1: Product: Webcam gadget
+[  148.848699] usb 1-1.1: Manufacturer: Linux Foundation
+[  148.853919] ========device_create_file======1-1.1=====
+[  148.854041] ========device_create_file======1-1.1=====
+[  148.859222] =====device_get_devnode==type====
+
+
+[  148.864631] ===handle_create====bus/usb/001/004===
+[  148.870410] =====device_get_devnode==type====
+[  148.879380] xqli bus_probe_device
+[  148.883803] xqli driver_probe_device
+[  148.890830] xqli usb_probe_device
+[  148.894178] xqli generic_probe
+
+
+
+
+[  148.897270] xqli usb_set_configuration
+[  148.913418] ========device_create_file======1-1.1:1.0=====
+[  148.913625] ========device_create_file======1-1.1:1.0=====
+
+[  148.923059] xqli bus_probe_device
+[  148.931984] ========device_create_file======ep_86=====
+
+[  148.932029] xqli bus_probe_device
+[  148.940590] ========device_create_file======1-1.1:1.1=====
+[  148.940815] ========device_create_file======1-1.1:1.1=====
+
+[  148.949980] xqli bus_probe_device
+[  148.958939] ========device_create_file======ep_84=====
+
+[  148.958983] xqli bus_probe_device
+[  148.967481] ========device_create_file======ep_05=====
+
+[  148.967520] xqli bus_probe_device
+[  148.976215] ========device_create_file======1-1.1:1.2=====
+[  148.976463] ========device_create_file======1-1.1:1.2=====
+
+
+[  148.984491] xqli bus_probe_device
+[  148.990031] xqli driver_probe_device
+[  148.997031] xqli usb_probe_interface
+[  149.000653] xqli uvc_probe uvcvideo: 
+[  149.000853] uvcvideo: Unknown video format 35363248-0000-0010-8000-00aa00389b71
+[  149.011792] uvcvideo: Found UVC 1.00 device Webcam gadget (0416:5032)
+[  149.034360] ========device_create_file======video0=====
+[  149.034404] ========device_create_file======video0=====
+[  149.039822] =====device_get_devnode==dev_name====
+[  149.045320] ===handle_create====video0===
+[  149.050128] =====device_get_devnode==dev_name====
+
+[  149.057564] xqli bus_probe_device
+[  149.062351] uvcvideo 1-1.1:1.2: Entity type for entity Extension 2 was not initialized!
+[  149.073736] uvcvideo 1-1.1:1.2: Entity type for entity Extension 6 was not initialized!
+[  149.081776] uvcvideo 1-1.1:1.2: Entity type for entity Processing 3 was not initialized!
+[  149.089897] uvcvideo 1-1.1:1.2: Entity type for entity Camera 1 was not initialized!
+[  149.097838] ========device_create_file======media0=====
+[  149.098349] ========device_create_file======media0=====
+[  149.103618] =====device_get_devnode==dev_name====
+[  149.108904] ===handle_create====media0===
+[  149.113703] =====device_get_devnode==dev_name====
+[  149.121428] xqli bus_probe_device
+[  149.124010] ========device_create_file======2c000000.vpu_decoder=====
+[  149.126184] ========device_create_file======media0=====
+[  149.129877] ========device_create_file======2c000000.vpu_decoder=====
+[  149.135997] ========device_create_file======input1=====
+[  149.141321] ========device_create_file======2c000000.vpu_decoder=====
+[  149.150596] xqli bus_probe_device
+[  149.153310] ========device_create_file======2c000000.vpu_decoder=====
+[  149.159421] input: Webcam gadget: UVC Camera as /devices/platform/5b110000.usb3/xhci-cdns3/usb1/1-1/1-1.1/1-1.1:1.2/input/input1
+[  149.180827] ========device_create_file======event1=====
+[  149.180866] ========device_create_file======event1=====
+[  149.186401] =====device_get_devnode==class====
+[  149.191905] ===handle_create====input/event1===
+[  149.196491] =====device_get_devnode==class====
+[  149.204568] xqli bus_probe_device
+[  149.214561] ========device_create_file======ep_87=====
+[  149.214616] xqli bus_probe_device
+[  149.223914] ========device_create_file======1-1.1:1.3=====
+[  149.224164] ========device_create_file======1-1.1:1.3=====
+[  149.232746] xqli bus_probe_device
+[  149.243521] =====device_get_devnode==type====
+[  149.250698] ========device_create_file======ep_00=====
+[  149.250751] xqli bus_probe_device
+
+

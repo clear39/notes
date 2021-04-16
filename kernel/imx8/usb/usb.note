@@ -1,0 +1,33 @@
+
+
+./vendor/etc/init/hw/init.freescale.rc:237:service early_init_sh /vendor/bin/init.insmod.sh /vendor/etc/early.init.cfg sys.all.early_init.ready
+./vendor/etc/init/hw/init.freescale.rc:244:service boot_completed_core_sh /vendor/bin/init.insmod.sh /vendor/etc/setup.core.cfg vendor.all.setup_core.ready
+./vendor/etc/init/hw/init.freescale.rc:251:service boot_completed_main_sh /vendor/bin/init.insmod.sh /vendor/etc/setup.main.cfg vendor.all.setup_main.ready
+
+
+./vendor/etc/setup.core.cfg:1:insmod /vendor/lib/modules/imx8_pc.ko
+./vendor/etc/setup.core.cfg:2:insmod /vendor/lib/modules/imx8_prg.ko
+./vendor/etc/setup.core.cfg:3:insmod /vendor/lib/modules/imx8_dprc.ko
+./vendor/etc/setup.core.cfg:4:insmod /vendor/lib/modules/imx-dpu-core.ko
+./vendor/etc/setup.core.cfg:5:insmod /vendor/lib/modules/imx-dpu-crtc.ko
+./vendor/etc/setup.core.cfg:6:insmod /vendor/lib/modules/imx-dpu-blit.ko
+./vendor/etc/setup.core.cfg:7:insmod /vendor/lib/modules/imx-dpu-render.ko
+
+./vendor/etc/setup.main.cfg:1:insmod /vendor/lib/modules/mx8_bt_rfkill.ko
+./vendor/etc/setup.main.cfg:2:insmod /vendor/lib/modules/xhci-hcd.ko
+./vendor/etc/setup.main.cfg:3:insmod /vendor/lib/modules/cdns3.ko    // drivers/usb/cdns3
+./vendor/etc/setup.main.cfg:4:insmod /vendor/lib/modules/sd_mod.ko
+./vendor/etc/setup.main.cfg:5:insmod /vendor/lib/modules/usbserial.ko
+./vendor/etc/setup.main.cfg:6:insmod /vendor/lib/modules/usb_wwan.ko
+./vendor/etc/setup.main.cfg:7:insmod /vendor/lib/modules/option.ko
+
+
+/sys/kernel/debug/usb/devices
+
+
+
+
+
+
+
+

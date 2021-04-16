@@ -1,0 +1,37 @@
+//  @   drivers/usb/phy/phy-generic.c
+usbphynop1: usbphynop1 {
+    compatible = "usb-nop-xceiv";
+    clocks = <&clk IMX8QXP_USB3_PHY_CLK>;  //clk @ fsl-imx8dx.dtsi
+    clock-names = "main_clk";
+    power-domains = <&pd_conn_usb2_phy>;
+};
+
+
+//  @   drivers/usb/cdns3/core.c:664
+usbotg3: usb3@5b110000 {
+    compatible = "Cadence,usb3";
+    reg = <0x0 0x5B110000 0x0 0x10000>,
+        <0x0 0x5B130000 0x0 0x10000>,
+        <0x0 0x5B140000 0x0 0x10000>,
+        <0x0 0x5B160000 0x0 0x40000>,
+        <0x0 0x5B120000 0x0 0x10000>;
+    interrupt-parent = <&wu>;
+    interrupts = <GIC_SPI 271 IRQ_TYPE_LEVEL_HIGH>;
+    clocks = <&clk IMX8QXP_USB3_LPM_CLK>,
+        <&clk IMX8QXP_USB3_BUS_CLK>,
+        <&clk IMX8QXP_USB3_ACLK>,
+        <&clk IMX8QXP_USB3_IPG_CLK>,
+        <&clk IMX8QXP_USB3_CORE_PCLK>;
+    clock-names = "usb3_lpm_clk", "usb3_bus_clk", "usb3_aclk",
+        "usb3_ipg_clk", "usb3_core_pclk";
+    power-domains = <&pd_conn_usb2>;
+    cdns3,usbphy = <&usbphynop1>;
+    status = "disabled";
+};
+
+
+//  @   arch/arm64/boot/dts/freescale/fsl-imx8qxp-autolink-tsu.dtsi
+&usbotg3 {
+	dr_mode = "host";
+	status = "okay";
+};

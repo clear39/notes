@@ -1,0 +1,125 @@
+console:/ $ settings put global tcl_device_out_type 8                          
+console:/ $ 01-06 08:19:05.488   371  2391 V APM_AudioPolicyManager: setPreferredDeviceForStrategy() strategy=21 device=00000008 addr=
+01-06 08:19:05.488   371  2391 V APM_AudioPolicyManager: checkForDeviceAndOutputChanges start
+01-06 08:19:05.488   371  2391 V APM_AudioPolicyManager: checkA2dpSuspend start
+01-06 08:19:05.488   371  2391 V APM_AudioPolicyManager: checkOutputForAllStrategies start
+01-06 08:19:05.489   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() devices {type:0x8,@:}
+01-06 08:19:05.489   371  2391 V APM_AudioPolicyManager: output 0 isDuplicated=0 device={type:0x2,@:;type:0x4,@:;type:0x8,@:;type:0x400,@:;type:0x40000,@:;type:0x80000,@:;type:0x80,@:;type:0x100,@:;type:0x200,@:;type:0x2000,@:;type:0x4000,@:;type:0x4000000,@:}
+01-06 08:19:05.489   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() found output 13
+01-06 08:19:05.489   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() devices {type:0x8,@:}
+01-06 08:19:05.489   371  2391 V APM_AudioPolicyManager: output 0 isDuplicated=0 device={type:0x2,@:;type:0x4,@:;type:0x8,@:;type:0x400,@:;type:0x40000,@:;type:0x80000,@:;type:0x80,@:;type:0x100,@:;type:0x200,@:;type:0x2000,@:;type:0x4000,@:;type:0x4000000,@:}
+01-06 08:19:05.489   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() found output 13
+01-06 08:19:05.489   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() devices {type:0x2,@:;type:0x8,@:}
+01-06 08:19:05.489   371  2391 V APM_AudioPolicyManager: output 0 isDuplicated=0 device={type:0x2,@:;type:0x4,@:;type:0x8,@:;type:0x400,@:;type:0x40000,@:;type:0x80000,@:;type:0x80,@:;type:0x100,@:;type:0x200,@:;type:0x2000,@:;type:0x4000,@:;type:0x4000000,@:}
+01-06 08:19:05.489   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() found output 13
+01-06 08:19:05.489   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() devices {type:0x2,@:;type:0x8,@:}
+01-06 08:19:05.489   371  2391 V APM_AudioPolicyManager: output 0 isDuplicated=0 device={type:0x2,@:;type:0x4,@:;type:0x8,@:;type:0x400,@:;type:0x40000,@:;type:0x80000,@:;type:0x80,@:;type:0x100,@:;type:0x200,@:;type:0x2000,@:;type:0x4000,@:;type:0x4000000,@:}
+01-06 08:19:05.490   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() found output 13
+01-06 08:19:05.490   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() devices {type:0x8,@:}
+01-06 08:19:05.490   371  2391 V APM_AudioPolicyManager: output 0 isDuplicated=0 device={type:0x2,@:;type:0x4,@:;type:0x8,@:;type:0x400,@:;type:0x40000,@:;type:0x80000,@:;type:0x80,@:;type:0x100,@:;type:0x200,@:;type:0x2000,@:;type:0x4000,@:;type:0x4000000,@:}
+01-06 08:19:05.490   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() found output 13
+01-06 08:19:05.490   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() devices {type:0x8,@:}
+01-06 08:19:05.490   371  2391 V APM_AudioPolicyManager: output 0 isDuplicated=0 device={type:0x2,@:;type:0x4,@:;type:0x8,@:;type:0x400,@:;type:0x40000,@:;type:0x80000,@:;type:0x80,@:;type:0x100,@:;type:0x200,@:;type:0x2000,@:;type:0x4000,@:;type:0x4000000,@:}
+01-06 08:19:05.490   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() found output 13
+01-06 08:19:05.490   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() devices {type:0x40000,@:}
+01-06 08:19:05.490   371  2391 V APM_AudioPolicyManager: output 0 isDuplicated=0 device={type:0x2,@:;type:0x4,@:;type:0x8,@:;type:0x400,@:;type:0x40000,@:;type:0x80000,@:;type:0x80,@:;type:0x100,@:;type:0x200,@:;type:0x2000,@:;type:0x4000,@:;type:0x4000000,@:}
+01-06 08:19:05.490   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() found output 13
+01-06 08:19:05.490   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() devices {type:0x40000,@:}
+01-06 08:19:05.490   371  2391 V APM_AudioPolicyManager: output 0 isDuplicated=0 device={type:0x2,@:;type:0x4,@:;type:0x8,@:;type:0x400,@:;type:0x40000,@:;type:0x80000,@:;type:0x80,@:;type:0x100,@:;type:0x200,@:;type:0x2000,@:;type:0x4000,@:;type:0x4000000,@:}
+01-06 08:19:05.491   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() found output 13
+01-06 08:19:05.491   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() devices {type:0x8,@:}
+01-06 08:19:05.491   371  2391 V APM_AudioPolicyManager: output 0 isDuplicated=0 device={type:0x2,@:;type:0x4,@:;type:0x8,@:;type:0x400,@:;type:0x40000,@:;type:0x80000,@:;type:0x80,@:;type:0x100,@:;type:0x200,@:;type:0x2000,@:;type:0x4000,@:;type:0x4000000,@:}
+01-06 08:19:05.491   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() found output 13
+01-06 08:19:05.491   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() devices {type:0x8,@:}
+01-06 08:19:05.491   371  2391 V APM_AudioPolicyManager: output 0 isDuplicated=0 device={type:0x2,@:;type:0x4,@:;type:0x8,@:;type:0x400,@:;type:0x40000,@:;type:0x80000,@:;type:0x80,@:;type:0x100,@:;type:0x200,@:;type:0x2000,@:;type:0x4000,@:;type:0x4000000,@:}
+01-06 08:19:05.491   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() found output 13
+01-06 08:19:05.491   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() devices {type:0x2,@:}
+01-06 08:19:05.491   371  2391 V APM_AudioPolicyManager: output 0 isDuplicated=0 device={type:0x2,@:;type:0x4,@:;type:0x8,@:;type:0x400,@:;type:0x40000,@:;type:0x80000,@:;type:0x80,@:;type:0x100,@:;type:0x200,@:;type:0x2000,@:;type:0x4000,@:;type:0x4000000,@:}
+01-06 08:19:05.491   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() found output 13
+01-06 08:19:05.491   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() devices {type:0x8,@:}
+01-06 08:19:05.492   371  2391 V APM_AudioPolicyManager: output 0 isDuplicated=0 device={type:0x2,@:;type:0x4,@:;type:0x8,@:;type:0x400,@:;type:0x40000,@:;type:0x80000,@:;type:0x80,@:;type:0x100,@:;type:0x200,@:;type:0x2000,@:;type:0x4000,@:;type:0x4000000,@:}
+01-06 08:19:05.492   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() found output 13
+01-06 08:19:05.492   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() devices {type:0x8,@:}
+01-06 08:19:05.492   371  2391 V APM_AudioPolicyManager: output 0 isDuplicated=0 device={type:0x2,@:;type:0x4,@:;type:0x8,@:;type:0x400,@:;type:0x40000,@:;type:0x80000,@:;type:0x80,@:;type:0x100,@:;type:0x200,@:;type:0x2000,@:;type:0x4000,@:;type:0x4000000,@:}
+01-06 08:19:05.492   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() found output 13
+01-06 08:19:05.492   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() devices {type:0x8,@:}
+01-06 08:19:05.492   371  2391 V APM_AudioPolicyManager: output 0 isDuplicated=0 device={type:0x2,@:;type:0x4,@:;type:0x8,@:;type:0x400,@:;type:0x40000,@:;type:0x80000,@:;type:0x80,@:;type:0x100,@:;type:0x200,@:;type:0x2000,@:;type:0x4000,@:;type:0x4000000,@:}
+01-06 08:19:05.492   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() found output 13
+01-06 08:19:05.492   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() devices {type:0x2,@:}
+01-06 08:19:05.492   371  2391 V APM_AudioPolicyManager: output 0 isDuplicated=0 device={type:0x2,@:;type:0x4,@:;type:0x8,@:;type:0x400,@:;type:0x40000,@:;type:0x80000,@:;type:0x80,@:;type:0x100,@:;type:0x200,@:;type:0x2000,@:;type:0x4000,@:;type:0x4000000,@:}
+01-06 08:19:05.492   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() found output 13
+01-06 08:19:05.492   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() devices {type:0x2,@:}
+01-06 08:19:05.493   371  2391 V APM_AudioPolicyManager: output 0 isDuplicated=0 device={type:0x2,@:;type:0x4,@:;type:0x8,@:;type:0x400,@:;type:0x40000,@:;type:0x80000,@:;type:0x80,@:;type:0x100,@:;type:0x200,@:;type:0x2000,@:;type:0x4000,@:;type:0x4000000,@:}
+01-06 08:19:05.493   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() found output 13
+01-06 08:19:05.493   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() devices {type:0x2,@:}
+01-06 08:19:05.493   371  2391 V APM_AudioPolicyManager: output 0 isDuplicated=0 device={type:0x2,@:;type:0x4,@:;type:0x8,@:;type:0x400,@:;type:0x40000,@:;type:0x80000,@:;type:0x80,@:;type:0x100,@:;type:0x200,@:;type:0x2000,@:;type:0x4000,@:;type:0x4000000,@:}
+01-06 08:19:05.493   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() found output 13
+01-06 08:19:05.493   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() devices {type:0x8,@:}
+01-06 08:19:05.493   371  2391 V APM_AudioPolicyManager: output 0 isDuplicated=0 device={type:0x2,@:;type:0x4,@:;type:0x8,@:;type:0x400,@:;type:0x40000,@:;type:0x80000,@:;type:0x80,@:;type:0x100,@:;type:0x200,@:;type:0x2000,@:;type:0x4000,@:;type:0x4000000,@:}
+01-06 08:19:05.493   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() found output 13
+01-06 08:19:05.493   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() devices {type:0x2,@:}
+01-06 08:19:05.494   371  2391 V APM_AudioPolicyManager: output 0 isDuplicated=0 device={type:0x2,@:;type:0x4,@:;type:0x8,@:;type:0x400,@:;type:0x40000,@:;type:0x80000,@:;type:0x80,@:;type:0x100,@:;type:0x200,@:;type:0x2000,@:;type:0x4000,@:;type:0x4000000,@:}
+01-06 08:19:05.494   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() found output 13
+01-06 08:19:05.494   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() devices {type:0x8,@:}
+01-06 08:19:05.494   371  2391 V APM_AudioPolicyManager: output 0 isDuplicated=0 device={type:0x2,@:;type:0x4,@:;type:0x8,@:;type:0x400,@:;type:0x40000,@:;type:0x80000,@:;type:0x80,@:;type:0x100,@:;type:0x200,@:;type:0x2000,@:;type:0x4000,@:;type:0x4000000,@:}
+01-06 08:19:05.494   371  2391 V APM_AudioPolicyManager: getOutputsForDevices() found output 13
+01-06 08:19:05.494   371  2391 V APM_AudioPolicyManager: checkOutputForAllStrategies end
+01-06 08:19:05.494   371  2391 V APM_AudioPolicyManager: checkSecondaryOutputs start
+01-06 08:19:05.494   371  2391 V APM_AudioPolicyManager: checkSecondaryOutputs end
+01-06 08:19:05.494   371  2391 V APM_AudioPolicyManager: updateDevicesAndOutputs start
+01-06 08:19:05.495   371  2391 V APM_AudioPolicyManager: updateDevicesAndOutputs end
+01-06 08:19:05.495   371  2391 V APM_AudioPolicyManager: checkForDeviceAndOutputChanges end
+01-06 08:19:05.495   371  2391 V APM_AudioPolicyManager: updateCallAndOutputRouting start size:1
+01-06 08:19:05.495   371  2391 V APM_AudioPolicyManager: getNewOutputDevices selected devices {type:0x8,@:}
+01-06 08:19:05.495   371  2391 V APM_AudioPolicyManager: setOutputDevices device {type:0x8,@:} delayMs 0
+01-06 08:19:05.495   371  2391 V APM_AudioPolicyManager: setOutputDevices() prevDevice {type:0x2,@:}
+01-06 08:19:05.497   371  2391 D Tcl_AudioPolicyManager: TclAudioPolicyManager computeSourceVolume
+01-06 08:19:05.497   371  2391 D Tcl_AudioPolicyManager: TclAudioPolicyManager computeSourceVolume
+01-06 08:19:05.793   371  2391 V APM_AudioPolicyManager: setOutputDevices changing device to {type:0x8,@:}
+01-06 08:19:05.856   371  2391 D AudioPolicyManager: #00 pc 0002e885  /system/lib/libaudiopolicymanagerdefault.so (android::AudioPolicyManager::installPatch(char const*, int, int*, audio_patch const*, int, unsigned int, android::sp<android::AudioPatch>*)+140)
+01-06 08:19:05.856   371  2391 D AudioPolicyManager: #01 pc 0003c935  /system/lib/libaudiopolicymanagerdefault.so (android::AudioPolicyManager::installPatch(char const*, int*, android::AudioIODescriptorInterface*, audio_patch const*, int)+108)
+01-06 08:19:05.856   371  2391 D AudioPolicyManager: #02 pc 00027789  /system/lib/libaudiopolicymanagerdefault.so (android::AudioPolicyManager::setOutputDevices(android::sp<android::SwAudioOutputDescriptor> const&, android::DeviceVector const&, bool, int, int*, bool)+1104)
+01-06 08:19:05.856   371  2391 D AudioPolicyManager: #03 pc 0002af61  /system/lib/libaudiopolicymanagerdefault.so (android::AudioPolicyManager::updateCallAndOutputRouting(bool, unsigned int)+336)
+01-06 08:19:05.856   371  2391 D AudioPolicyManager: #04 pc 00034f85  /system/lib/libaudiopolicymanagerdefault.so (android::AudioPolicyManager::setPreferredDeviceForStrategy(android::product_strategy_t, android::AudioDeviceTypeAddr const&)+244)
+01-06 08:19:05.856   371  2391 D AudioPolicyManager: #05 pc 00012629  /system/lib/libaudiopolicyservice.so (android::AudioPolicyService::setPreferredDeviceForStrategy(android::product_strategy_t, android::AudioDeviceTypeAddr const&)+36)
+01-06 08:19:05.856   371  2391 D AudioPolicyManager: #06 pc 000523c5  /system/lib/libaudioclient.so (android::BnAudioPolicyService::onTransact(unsigned int, android::Parcel const&, android::Parcel*, unsigned int)+1096)
+01-06 08:19:05.856   371  2391 D AudioPolicyManager: #07 pc 00034079  /system/lib/libbinder.so (android::BBinder::transact(unsigned int, android::Parcel const&, android::Parcel*, unsigned int)+144)
+01-06 08:19:05.857   371  2391 D AudioPolicyManager: #08 pc 00039ccd  /system/lib/libbinder.so (android::IPCThreadState::executeCommand(int)+624)
+01-06 08:19:05.857   371  2391 D AudioPolicyManager: #09 pc 000399a7  /system/lib/libbinder.so (android::IPCThreadState::getAndExecuteCommand()+98)
+01-06 08:19:05.857   371  2391 D AudioPolicyManager: #10 pc 0003a027  /system/lib/libbinder.so (android::IPCThreadState::joinThreadPool(bool)+38)
+01-06 08:19:05.857   371  2391 D AudioPolicyManager: #11 pc 0005333d  /system/lib/libbinder.so (android::PoolThread::threadLoop()+12)
+01-06 08:19:05.857   371  2391 D AudioPolicyManager: #12 pc 0000ee95  /system/lib/libutils.so (android::Thread::_threadLoop(void*)+168)
+01-06 08:19:05.857   371  2391 D AudioPolicyManager: #13 pc 0000e9dd  /system/lib/libutils.so (thread_data_t::trampoline(thread_data_t const*)+256)
+01-06 08:19:05.857   371  2391 D AudioPolicyManager: #14 pc 000aabb3  /apex/com.android.runtime/lib/bionic/libc.so (__pthread_start(void*)+40)
+01-06 08:19:05.857   371  2391 D AudioPolicyManager: #15 pc 00064023  /apex/com.android.runtime/lib/bionic/libc.so (__start_thread+30)
+01-06 08:19:05.883   371  2391 V APM_AudioPolicyManager: setOutputDevices() AF::createAudioPatch returned 0 patchHandle 124 num_sources 1 num_sinks 1
+01-06 08:19:05.884   371  2391 V APM_AudioPolicyManager: applyStreamVolumes() for device 0x8
+01-06 08:19:05.885   371  2391 D Tcl_AudioPolicyManager: TclAudioPolicyManager computeSourceVolume
+01-06 08:19:05.888   371  2391 D Tcl_AudioPolicyManager: TclAudioPolicyManager computeSourceVolume
+01-06 08:19:05.889   371  2391 D Tcl_AudioPolicyManager: TclAudioPolicyManager computeSourceVolume
+01-06 08:19:05.890   371  2391 V APM_AudioPolicyManager: checkAndSetVolume cannot set volume group 7 volume with force use = 0 for comm
+01-06 08:19:05.890   371  2391 D Tcl_AudioPolicyManager: TclAudioPolicyManager computeSourceVolume
+01-06 08:19:05.890   371  2391 D Tcl_AudioPolicyManager: TclAudioPolicyManager computeSourceVolume
+01-06 08:19:05.890   371  2391 V APM_AudioPolicyManager: checkAndSetVolume: volume source 10 muted count 1 active=0
+01-06 08:19:05.890   371  2391 D Tcl_AudioPolicyManager: TclAudioPolicyManager computeSourceVolume
+01-06 08:19:05.891   371  2391 D Tcl_AudioPolicyManager: TclAudioPolicyManager computeSourceVolume
+01-06 08:19:05.891   371  2391 D Tcl_AudioPolicyManager: TclAudioPolicyManager computeSourceVolume
+01-06 08:19:05.891   371  2391 V APM_AudioPolicyManager: applyStreamVolumes() for device 0x8
+01-06 08:19:05.891   371  2391 D Tcl_AudioPolicyManager: TclAudioPolicyManager computeSourceVolume
+01-06 08:19:05.892   371  2391 D Tcl_AudioPolicyManager: TclAudioPolicyManager computeSourceVolume
+01-06 08:19:05.892   371  2391 V APM_AudioPolicyManager: checkAndSetVolume cannot set volume group 7 volume with force use = 0 for comm
+01-06 08:19:05.892   371  2391 D Tcl_AudioPolicyManager: TclAudioPolicyManager computeSourceVolume
+01-06 08:19:05.892   371  2391 D Tcl_AudioPolicyManager: TclAudioPolicyManager computeSourceVolume
+01-06 08:19:05.892   371  2391 V APM_AudioPolicyManager: checkAndSetVolume: volume source 10 muted count 1 active=0
+01-06 08:19:05.892   371  2391 D Tcl_AudioPolicyManager: TclAudioPolicyManager computeSourceVolume
+01-06 08:19:05.892   371  2391 D Tcl_AudioPolicyManager: TclAudioPolicyManager computeSourceVolume
+01-06 08:19:05.893   371  2391 D Tcl_AudioPolicyManager: TclAudioPolicyManager computeSourceVolume
+01-06 08:19:05.893   371  2391 V APM_AudioPolicyManager: updateCallAndOutputRouting end
+01-06 08:19:05.893   371  2078 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 0 ports 0xef184090
+01-06 08:19:05.893   371  2078 V APM_AudioPolicyManager: listAudioPorts() got 0 ports needed 12
+01-06 08:19:05.893   371  1166 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 0 ports 0xef184098
+01-06 08:19:05.893   371  1166 V APM_AudioPolicyManager: listAudioPorts() got 0 ports needed 12
+01-06 08:19:05.893   371  1166 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 12 ports 0xeeef20c0
+01-06 08:19:05.894   371  1166 V APM_AudioPolicyManager: listAudioPorts() got 12 ports needed 12
+01-06 08:19:05.894   371  2078 V APM_AudioPolicyManager: listAudioPorts() role 0 type 0 num_ports 12 ports 0xeeef2480
+01-06 08:19:05.895   371  2078 V APM_AudioPolicyManager: listAudioPorts() got 12 ports needed 12

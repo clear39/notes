@@ -1,0 +1,130 @@
+内核堆栈信息打印:dump_stack()
+
+setenv("ANDROID_LOG_TAGS", "*:v", 1);
+
+sudo ./uuu_imx_android_flash.sh -f imx8qxp-tsu -a -e -D ./
+
+烧写:
+dd if=/data/tmp/boot.img of=/dev/block/mmcblk0p5
+
+
+setprop persist.sys.disable_rescure true
+
+
+
+# 拷贝 menuconfig.sh 到 vendor/nxp-opensource/kernel_imx/ 目录下，直接运行该脚本，配置内核".config"文件
+# 生成的“.config” 文件在 vendor/nxp-opensource/kernel_imx/out 目录下
+cp menuconfig.sh    vendor/nxp-opensource/kernel_imx/
+
+
+# 将 vendor/nxp-opensource/kernel_imx/out/.config 拷贝到  vendor/nxp-opensource/kernel_imx/arch/arm64/configs/autolink_android_car_defconfig
+cp vendor/nxp-opensource/kernel_imx/out/.config   vendor/nxp-opensource/kernel_imx/arch/arm64/configs/autolink_android_car_defconfig
+
+# 进行make编译后
+# 用 out/target/product/autolink_8q/obj/KERNEL_OBJ/.config vendor/nxp-opensource/kernel_imx/out/.config 文件进行对比
+# 即可知道当前配置了那些属性
+
+
+
+# Ubuntu系统启用IPv6的两种方法 https://www.cnblogs.com/boowii/p/6072476.html
+# ubuntu 配置ip地址为ipv4
+sudo gedit /etc/default/ufw
+
+
+// 内核日志开启
+#BOARD_KERNEL_CMDLINE += loglevel=1
+
+内核打印日志等级init/main.c
+
+#define KERN_EMERG      "<0>"    /* system is unusable */
+#define KERN_ALERT      "<1>"    /* action must be taken immediately */
+#define KERN_CRIT       "<2>"    /* critical conditions */
+#define KERN_ERR        "<3>"    /* error conditions */
+#define KERN_WARNING    "<4>"    /* warning conditions */
+#define KERN_NOTICE     "<5>"    /* normal but significant */
+#define KERN_INFO       "<6>"    /* informational */
+#define KERN_DEBUG      "<7>"    /* debug-level messages */
+
+cat /proc/sys/kernel/printk
+
+echo 7 >  /proc/sys/kernel/printk
+
+
+
+autolink_8q:/ # ls /dev/block/by-name/ -al                                     
+total 0
+drwxr-xr-x 2 root root 460 1970-01-01 08:00 .
+drwxr-xr-x 5 root root 820 2019-12-18 09:44 ..
+lrwxrwxrwx 1 root root  20 1970-01-01 08:00 boot_a -> /dev/block/mmcblk0p5
+lrwxrwxrwx 1 root root  20 1970-01-01 08:00 boot_b -> /dev/block/mmcblk0p6
+lrwxrwxrwx 1 root root  47 1970-01-01 08:00 bootloader -> /dev/block/platform/5b010000.usdhc/mmcblk0boot0
+lrwxrwxrwx 1 root root  20 1970-01-01 08:00 bootloader_a -> /dev/block/mmcblk0p1
+lrwxrwxrwx 1 root root  20 1970-01-01 08:00 bootloader_b -> /dev/block/mmcblk0p2
+lrwxrwxrwx 1 root root  21 1970-01-01 08:00 cust -> /dev/block/mmcblk0p18
+lrwxrwxrwx 1 root root  20 1970-01-01 08:00 dtbo_a -> /dev/block/mmcblk0p3
+lrwxrwxrwx 1 root root  20 1970-01-01 08:00 dtbo_b -> /dev/block/mmcblk0p4
+lrwxrwxrwx 1 root root  21 1970-01-01 08:00 fbmisc -> /dev/block/mmcblk0p15
+lrwxrwxrwx 1 root root  21 1970-01-01 08:00 m4res -> /dev/block/mmcblk0p19
+lrwxrwxrwx 1 root root  21 1970-01-01 08:00 metadata -> /dev/block/mmcblk0p10
+lrwxrwxrwx 1 root root  20 1970-01-01 08:00 misc -> /dev/block/mmcblk0p9
+lrwxrwxrwx 1 root root  21 1970-01-01 08:00 navigation -> /dev/block/mmcblk0p20
+lrwxrwxrwx 1 root root  21 1970-01-01 08:00 presistdata -> /dev/block/mmcblk0p11
+lrwxrwxrwx 1 root root  20 1970-01-01 08:00 system_a -> /dev/block/mmcblk0p7
+lrwxrwxrwx 1 root root  20 1970-01-01 08:00 system_b -> /dev/block/mmcblk0p8
+lrwxrwxrwx 1 root root  21 1970-01-01 08:00 userdata -> /dev/block/mmcblk0p14
+lrwxrwxrwx 1 root root  21 1970-01-01 08:00 vbmeta_a -> /dev/block/mmcblk0p16
+lrwxrwxrwx 1 root root  21 1970-01-01 08:00 vbmeta_b -> /dev/block/mmcblk0p17
+lrwxrwxrwx 1 root root  21 1970-01-01 08:00 vendor_a -> /dev/block/mmcblk0p12
+lrwxrwxrwx 1 root root  21 1970-01-01 08:00 vendor_b -> /dev/block/mmcblk0p13
+
+
+
+
+内核配置：
+mkdir out
+make ARCH=arm64 O=./out autolink_android_car_defconfig
+make ARCH=arm64 O=./out menuconfig
+
+内核编译：
+make bootimage
+
+
+
+查看分区映射：
+autolink_8q:/ # ls /dev/block/by-name/ -al                                     
+total 0
+drwxr-xr-x 2 root root 460 1970-01-01 08:00 .
+drwxr-xr-x 5 root root 820 2019-12-18 09:44 ..
+lrwxrwxrwx 1 root root  20 1970-01-01 08:00 boot_a -> /dev/block/mmcblk0p5
+lrwxrwxrwx 1 root root  20 1970-01-01 08:00 boot_b -> /dev/block/mmcblk0p6
+lrwxrwxrwx 1 root root  47 1970-01-01 08:00 bootloader -> /dev/block/platform/5b010000.usdhc/mmcblk0boot0
+lrwxrwxrwx 1 root root  20 1970-01-01 08:00 bootloader_a -> /dev/block/mmcblk0p1
+lrwxrwxrwx 1 root root  20 1970-01-01 08:00 bootloader_b -> /dev/block/mmcblk0p2
+lrwxrwxrwx 1 root root  21 1970-01-01 08:00 cust -> /dev/block/mmcblk0p18
+lrwxrwxrwx 1 root root  20 1970-01-01 08:00 dtbo_a -> /dev/block/mmcblk0p3
+lrwxrwxrwx 1 root root  20 1970-01-01 08:00 dtbo_b -> /dev/block/mmcblk0p4
+lrwxrwxrwx 1 root root  21 1970-01-01 08:00 fbmisc -> /dev/block/mmcblk0p15
+lrwxrwxrwx 1 root root  21 1970-01-01 08:00 m4res -> /dev/block/mmcblk0p19
+lrwxrwxrwx 1 root root  21 1970-01-01 08:00 metadata -> /dev/block/mmcblk0p10
+lrwxrwxrwx 1 root root  20 1970-01-01 08:00 misc -> /dev/block/mmcblk0p9
+lrwxrwxrwx 1 root root  21 1970-01-01 08:00 navigation -> /dev/block/mmcblk0p20
+lrwxrwxrwx 1 root root  21 1970-01-01 08:00 presistdata -> /dev/block/mmcblk0p11
+lrwxrwxrwx 1 root root  20 1970-01-01 08:00 system_a -> /dev/block/mmcblk0p7
+lrwxrwxrwx 1 root root  20 1970-01-01 08:00 system_b -> /dev/block/mmcblk0p8
+lrwxrwxrwx 1 root root  21 1970-01-01 08:00 userdata -> /dev/block/mmcblk0p14
+lrwxrwxrwx 1 root root  21 1970-01-01 08:00 vbmeta_a -> /dev/block/mmcblk0p16
+lrwxrwxrwx 1 root root  21 1970-01-01 08:00 vbmeta_b -> /dev/block/mmcblk0p17
+lrwxrwxrwx 1 root root  21 1970-01-01 08:00 vendor_a -> /dev/block/mmcblk0p12
+lrwxrwxrwx 1 root root  21 1970-01-01 08:00 vendor_b -> /dev/block/mmcblk0p13
+
+
+
+
+
+
+
+
+
+
+
+

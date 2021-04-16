@@ -1,0 +1,90 @@
+/*
+ * Copyright 2019 NXP
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ */
+
+#include "fsl-imx8qxp-autolink-tsu.dtsi"
+
+/delete-node/ &i2c0_cm40;
+/delete-node/ &i2c1;
+
+
+&i2c_rpbus_1 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+
+	tlv320aic3x: tlv320aic3x@18{
+		compatible = "ti,tlv320aic3104";
+		reg = <0x18>;
+		clocks = <&clk IMX8QXP_AUD_MCLKOUT0>;
+		clock-names = "mclk";
+                // pinctrl-names = "codec_pwr";
+	        // pinctrl-0 = <&pinctrl_codec>;
+	        // gpio-reset = <&gpio3 3 0>;
+		ai3x-micbias-vg = <3>;
+	};
+};
+
+&i2c_rpbus_5 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "disabled";
+};
+
+&i2c_rpbus_12 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "disabled";
+};
+
+&i2c_rpbus_14 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "disabled";
+};
+
+&i2c_rpbus_15 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "disabled";
+};
+
+&rpmsg{
+	/*
+	 * 64K for one rpmsg instance:
+	 */
+	vdev-nums = <2>;
+	reg = <0x0 0x90000000 0x0 0x20000>;
+	status = "okay";
+};
+
+
+&intmux_cm40 {
+	status = "disabled";
+};
+
+&flexcan1 {
+	status = "disabled";
+};
+
+&flexcan2 {
+	status = "disabled";
+};
+
+&flexspi0 {
+	status = "disabled";
+};
+
+&lpuart3 {
+	status = "disabled";
+};

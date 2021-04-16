@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ParameterFrameworkConfiguration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    SystemClassName="Policy" 
+    ServerPort="5019"
+    TuningAllowed="false">
+
+    <!--对应创建 CSubsystemPlugins -->
+    <SubsystemPlugins>
+        <!--对应创建 CPluginLocation -->
+        <Location Folder="">
+            <!--存储在CPluginLocation的 -->
+            <!--frameworks/av/services/audiopolicy/engineconfigurable/parameter-framework/plugin/Android.bp-->
+            <Plugin Name="libpolicy-subsystem.so"/>
+        </Location>
+    </SubsystemPlugins>
+
+    <!--对应创建 CFrameworkConfigurationLocation -->
+    <!--Path 属性值存储在 _configurationUri 中 -->
+    <StructureDescriptionFileLocation Path="Structure/Policy/PolicyClass.xml"/>
+
+    <!--对应创建 CFrameworkConfigurationGroup -->
+    <SettingsConfiguration>
+        <!--对应创建 ConfigurableDomainsFileLocation -->
+        <ConfigurableDomainsFileLocation Path="Settings/Policy/PolicyConfigurableDomains.xml"/>
+    </SettingsConfiguration>
+
+    
+</ParameterFrameworkConfiguration>

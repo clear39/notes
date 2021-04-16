@@ -1,0 +1,73 @@
+12-27 11:12:45.421  2316  2316 F DEBUG   :       #00 pc 00044b94  /system/lib/libparameter.so (CParameterBlackboard::writeInteger(void const*, unsigned int, unsigned int)+72) (BuildId: 94e36e1389e1845a07a9abe3f8a0fc3c)
+12-27 11:12:45.421  2316  2316 F DEBUG   :       #01 pc 0003e17b  /system/lib/libparameter.so (bool CBitParameter::doSet<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > >(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >, unsigned int, CParameterAccessContext&) const+102) (BuildId: 94e36e1389e1845a07a9abe3f8a0fc3c)
+12-27 11:12:45.421  2316  2316 F DEBUG   :       #02 pc 0003e0d3  /system/lib/libparameter.so (CBitParameter::doSetValue(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, unsigned int, CParameterAccessContext&) const+38) (BuildId: 94e36e1389e1845a07a9abe3f8a0fc3c)
+12-27 11:12:45.421  2316  2316 F DEBUG   :       #03 pc 0003e63d  /system/lib/libparameter.so (CBaseParameter::serializeXmlSettings(CXmlElement&, CConfigurationAccessContext&) const+132) (BuildId: 94e36e1389e1845a07a9abe3f8a0fc3c)
+12-27 11:12:45.422  2316  2316 F DEBUG   :       #04 pc 0004277f  /system/lib/libparameter.so (CAreaConfiguration::serializeXmlSettings(CXmlElement&, CConfigurationAccessContext&)+42) (BuildId: 94e36e1389e1845a07a9abe3f8a0fc3c)
+
+
+
+12-27 11:12:45.422  2316  2316 F DEBUG   :       #05 pc 00056683  /system/lib/libparameter.so (CDomainConfiguration::importOneConfigurableElementSettings(CAreaConfiguration*, CXmlElement&, CXmlDomainImportContext&)+622) (BuildId: 94e36e1389e1845a07a9abe3f8a0fc3c)
+
+
+
+12-27 11:12:45.422  2316  2316 F DEBUG   :       #06 pc 0005614b  /system/lib/libparameter.so (CDomainConfiguration::parseSettings(CXmlElement&, CXmlDomainImportContext&)+174) (BuildId: 94e36e1389e1845a07a9abe3f8a0fc3c)
+12-27 11:12:45.422  2316  2316 F DEBUG   :       #07 pc 000467bd  /system/lib/libparameter.so (CConfigurableDomain::parseSettings(CXmlElement const&, CXmlDomainImportContext&)+192) (BuildId: 94e36e1389e1845a07a9abe3f8a0fc3c)
+12-27 11:12:45.422  2316  2316 F DEBUG   :       #08 pc 00046071  /system/lib/libparameter.so (CConfigurableDomain::fromXml(CXmlElement const&, CXmlSerializingContext&)+188) (BuildId: 94e36e1389e1845a07a9abe3f8a0fc3c)
+12-27 11:12:45.422  2316  2316 F DEBUG   :       #09 pc 0004dd07  /system/lib/libparameter.so (CElement::fromXml(CXmlElement const&, CXmlSerializingContext&)+310) (BuildId: 94e36e1389e1845a07a9abe3f8a0fc3c)
+12-27 11:12:45.422  2316  2316 F DEBUG   :       #10 pc 00076b15  /system/lib/libparameter.so (CXmlMemoryDocSink::doProcess(CXmlDocSource&, CXmlSerializingContext&)+200) (BuildId: 94e36e1389e1845a07a9abe3f8a0fc3c)
+12-27 11:12:45.422  2316  2316 F DEBUG   :       #11 pc 000604d5  /system/lib/libparameter.so (CParameterMgr::xmlParse(CXmlElementSerializingContext&, CElement*, _xmlDoc*, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&, CParameterMgr::ElementLibrary, bool, std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > const&)+804) (BuildId: 94e36e1389e1845a07a9abe3f8a0fc3c)
+12-27 11:12:45.422  2316  2316 F DEBUG   :       #12 pc 00060897  /system/lib/libparameter.so (CParameterMgr::loadSettingsFromConfigFile(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >&)+670) (BuildId: 94e36e1389e1845a07a9abe3f8a0fc3c)
+12-27 11:12:45.422  2316  2316 F DEBUG   :       #13 pc 0005f423  /system/lib/libparameter.so (CParameterMgr::loadSettings(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >&)+34) (BuildId: 94e36e1389e1845a07a9abe3f8a0fc3c)
+12-27 11:12:45.423  2316  2316 F DEBUG   :       #14 pc 0005d8ff  /system/lib/libparameter.so (CParameterMgr::load(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >&)+142) (BuildId: 94e36e1389e1845a07a9abe3f8a0fc3c)
+12-27 11:12:45.423  2316  2316 F DEBUG   :       #15 pc 0003d86d  /system/lib/libparameter.so (CParameterMgrPlatformConnector::start(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >&)+6) (BuildId: 94e36e1389e1845a07a9abe3f8a0fc3c)
+12-27 11:12:45.423  2316  2316 F DEBUG   :       #16 pc 0004166f  /system/lib/libaudiopolicyengineconfigurable.so (android::audio_policy::ParameterManagerWrapper::start(std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> >&)+30) (BuildId: 0b4e10e74f75e9b1cad4a7189fdebd47)
+12-27 11:12:45.423  2316  2316 F DEBUG   :       #17 pc 0001e97d  /system/lib/libaudiopolicyengineconfigurable.so (android::audio_policy::Engine::initCheck()+32) (BuildId: 0b4e10e74f75e9b1cad4a7189fdebd47)
+12-27 11:12:45.423  2316  2316 F DEBUG   :       #18 pc 00038ffd  /system/lib/libaudiopolicymanagerdefault.so (android::AudioPolicyManager::initialize()+380) (BuildId: f924672a8959ae6927397fda2f1e12fe)
+12-27 11:12:45.423  2316  2316 F DEBUG   :       #19 pc 00005463  /system/lib/libaudiopolicymanager.so (createAudioPolicyManager+22) (BuildId: 0c04bdc033e3fcacd154ae0d5bc131a6)
+12-27 11:12:45.423  2316  2316 F DEBUG   :       #20 pc 00007ea1  /system/lib/libaudiopolicyservice.so (android::AudioPolicyService::onFirstRef()+216) (BuildId: 226c49329ae452f8abb77c830761a3a8)
+12-27 11:12:45.423  2316  2316 F DEBUG   :       #21 pc 00002503  /system/bin/audioserver (BuildId: 89322306a12a7e7e7b3c25062ac249db)
+12-27 11:12:45.423  2316  2316 F DEBUG   :       #22 pc 00002695  /system/bin/audioserver (android::BinderService<android::AudioPolicyService>::publish(bool, int)+68) (BuildId: 89322306a12a7e7e7b3c25062ac249db)
+12-27 11:12:45.424  2316  2316 F DEBUG   :       #23 pc 00002311  /system/bin/audioserver (main+576) (BuildId: 89322306a12a7e7e7b3c25062ac249db)
+12-27 11:12:45.424  2316  2316 F DEBUG   :       #24 pc 0005d3f9  /apex/com.android.runtime/lib/bionic/libc.so (__libc_init+68) (BuildId: aa529401e59439e0c6bc7c514840a24d)
+
+
+
+
+
+
+
+
+
+
+
+
+
+12-27 13:16:29.141  6014  6014 D PFWWrapper: #02 pc 00044c35  /system/lib/libparameter.so (CParameterBlackboard::writeInteger(void const*, unsigned int, unsigned int)+76)
+
+
+12-27 13:16:29.141  6014  6014 D PFWWrapper: #03 pc 00042c15  /system/lib/libparameter.so (CBitwiseAreaConfiguration::copyTo(CParameterBlackboard*, unsigned int) const+112)
+
+
+
+12-27 13:16:29.141  6014  6014 D PFWWrapper: #04 pc 0004278d  /system/lib/libparameter.so (CAreaConfiguration::restore(CParameterBlackboard*, bool, std::__1::list<std::__1::ba:__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > >*) const+28)
+
+
+
+12-27 13:16:29.141  6014  6014 D PFWWrapper: #05 pc 0005739f  /system/lib/libparameter.so (CDomainConfiguration::restore(CParameterBlackboard*, bool, std::__1::list<std::__1::d::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > >*) const+3
+
+12-27 13:16:29.141  6014  6014 D PFWWrapper: #06 pc 000478af  /system/lib/libparameter.so (CConfigurableDomain::apply(CParameterBlackboard*, CSyncerSet*, bool, std::__1::basic1::char_traits<char>, std::__1::allocator<char> >&) const+718)
+
+12-27 13:16:29.141  6014  6014 D PFWWrapper: #07 pc 0004faeb  /system/lib/libparameter.so (CConfigurableDomains::apply(CParameterBlackboard*, CSyncerSet&, bool, std::__1::listng<char, std::__1::char_traits<char>, std::__1::allocator<char> >, std::__1::allocator<std::__1::basic_string<char, std::__1::char_traits<char>, std::__1::allocator<char> > > 
+12-27 13:16:29.141  6014  6014 D PFWWrapper: #08 pc 0005fb83  /system/lib/libparameter.so (CParameterMgr::doApplyConfigurations(bool)+438)
+12-27 13:16:29.141  6014  6014 D PFWWrapper: #09 pc 0005dc2d  /system/lib/libparameter.so (CParameterMgr::load(std::__1::basic_string<char, std::__1::char_traits<char>, std::_&)+648)
+12-27 13:16:29.141  6014  6014 D PFWWrapper: #10 pc 0003d8f5  /system/lib/libparameter.so (CParameterMgrPlatformConnector::start(std::__1::basic_string<char, std::__1::char_tr:allocator<char> >&)+6)
+12-27 13:16:29.141  6014  6014 D PFWWrapper: #11 pc 0004166f  /system/lib/libaudiopolicyengineconfigurable.so (android::audio_policy::ParameterManagerWrapper::start(std::__1::d::__1::char_traits<char>, std::__1::allocator<char> >&)+30)
+12-27 13:16:29.141  6014  6014 D PFWWrapper: #12 pc 0001e97d  /system/lib/libaudiopolicyengineconfigurable.so (android::audio_policy::Engine::initCheck()+32)
+12-27 13:16:29.141  6014  6014 D PFWWrapper: #13 pc 00038ffd  /system/lib/libaudiopolicymanagerdefault.so (android::AudioPolicyManager::initialize()+380)
+12-27 13:16:29.141  6014  6014 D PFWWrapper: #14 pc 00005463  /system/lib/libaudiopolicymanager.so (createAudioPolicyManager+22)
+12-27 13:16:29.141  6014  6014 D PFWWrapper: #15 pc 00007ea1  /system/lib/libaudiopolicyservice.so (android::AudioPolicyService::onFirstRef()+216)
+12-27 13:16:29.141  6014  6014 D PFWWrapper: #16 pc 00002503  /system/bin/audioserver
+12-27 13:16:29.141  6014  6014 D PFWWrapper: #17 pc 00002695  /system/bin/audioserver (android::BinderService<android::AudioPolicyService>::publish(bool, int)+68)
+12-27 13:16:29.141  6014  6014 D PFWWrapper: #18 pc 00002311  /system/bin/audioserver (main+576)
+12-27 13:16:29.141  6014  6014 D PFWWrapper: #19 pc 0005d3f9  /apex/com.android.runtime/lib/bionic/libc.so (__libc_init+68)
+

@@ -1,0 +1,28 @@
+[    4.299472] Hardware name: Freescale i.MX8QXP MEK (DT)
+[    4.304607] Call trace:
+[    4.307060] [<ffff00000808b198>] dump_backtrace+0x0/0x414
+[    4.312463] [<ffff00000808b5c0>] show_stack+0x14/0x1c
+[    4.317521] [<ffff000008aa8408>] dump_stack+0x90/0xb0
+[    4.322576] [<ffff0000086411c4>] cdns3_probe+0x20/0x6f8
+[    4.327805] [<ffff0000085954dc>] platform_drv_probe+0x74/0xec
+[    4.333557] [<ffff0000085934e4>] driver_probe_device+0x36c/0x3dc
+
+
+
+[    4.339567] [<ffff000008593648>] __driver_attach+0xf4/0xf8
+[    4.345057] [<ffff000008590fbc>] bus_for_each_dev+0x64/0xb4
+
+[    4.350635] [<ffff000008592c74>] driver_attach+0x20/0x28
+
+[    4.355952] [<ffff00000859270c>] bus_add_driver+0x1c8/0x234
+[    4.361530] [<ffff000008594434>] driver_register+0x74/0x10c
+[    4.367106] [<ffff0000085953fc>] __platform_driver_register+0x4c/0x54
+[    4.373555] [<ffff000008ee58f4>] cdns3_driver_platform_register+0x30/0x38
+
+
+
+
+[    4.380347] [<ffff000008083ca0>] do_one_initcall+0x48/0x14c
+[    4.385925] [<ffff000008ea0df0>] kernel_init_freeable+0x13c/0x1d8
+[    4.392023] [<ffff000008abd39c>] kernel_init+0x10/0x13c
+[    4.397252] [<ffff000008084f14>] ret_from_fork+0x10/0x18

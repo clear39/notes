@@ -25,10 +25,10 @@ sudo apt-get -y install meld
 
 sudo apt-get -y install minicom
 
-cp ~/.bashrc ~/.bashrc-bk
-echo "ANDROID_SDK=/work/tools/android-sdk" >> ~/.bashrc
-echo "export PATH=$$PATH:$$ANDROID_SDK/tools:$$ANDROID_SDK/platform-tools" >> ~/.bashrc 
-echo "export PATH=$$PATH:/usr/local/go/bin" >> ~/.bashrc
+#cp ~/.bashrc ~/.bashrc-bk
+#echo "ANDROID_SDK=/work/tools/android-sdk" >> ~/.bashrc
+#echo "export PATH=\$\$PATH:\$\$ANDROID_SDK/tools:\$\$ANDROID_SDK/platform-tools" >> ~/.bashrc 
+#echo "export PATH=$$PATH:/usr/local/go/bin" >> ~/.bashrc
 source ~/.bashrc
 
 

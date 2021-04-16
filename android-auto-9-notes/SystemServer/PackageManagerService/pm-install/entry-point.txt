@@ -1,0 +1,23 @@
+
+
+@ frameworks/base/cmds/pm/pm
+
+#!/system/bin/sh
+cmd package "$@"
+
+
+//这里会调用 PackageManagerService.onShellCommand 函数
+
+//继续调用PackageManagerShellCommand.exec(exec函数继承于ShellCommand)
+
+//内部ShellCommand.exec中调用继续调用PackageManagerShellCommand.runInstall()
+
+
+
+
+//////////log//////////////////////////////////////////////////////////////////
+12-11 00:30:05.107  1842  2467 D PackageManagerShellCommand: makeInstallParams start installFlags:0x0
+12-11 00:30:05.107  1842  2467 D PackageManagerShellCommand: makeInstallParams installFlags:0x0
+12-11 00:30:05.108  1842  2467 D PackageManagerShellCommand: runInstall sessionParams:android.content.pm.PackageInstaller$SessionParams@c3b1315,inPath:/data/app-release.apk,installerPackageName:null,userId:1
+12-11 00:30:05.127  1842  2467 D PackageInstaller: installFlags start: 0x40
+12-11 00:30:05.180  1842  2467 D PackageInstaller: installFlags: 0x70

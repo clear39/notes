@@ -1,0 +1,60 @@
+
+
+
+autolink_8q:/ # ls -al /sys/bus/i2c/                                           
+total 0
+drwxr-xr-x  4 root root    0 1970-01-01 02:17 .
+drwxr-xr-x 27 root root    0 1970-01-01 01:58 ..
+drwxr-xr-x  2 root root    0 1970-01-01 02:17 devices
+drwxr-xr-x 12 root root    0 1970-01-01 02:17 drivers
+-rw-r--r--  1 root root 4096 1970-01-01 02:17 drivers_autoprobe
+--w-------  1 root root 4096 1970-01-01 02:17 drivers_probe
+--w-------  1 root root 4096 1970-01-01 02:17 uevent
+
+
+
+autolink_8q:/ # ls -al /sys/bus/i2c/                                           
+total 0
+drwxr-xr-x  4 root root    0 1970-01-01 02:17 .
+drwxr-xr-x 27 root root    0 1970-01-01 01:58 ..
+drwxr-xr-x  2 root root    0 1970-01-01 02:17 devices
+drwxr-xr-x 12 root root    0 1970-01-01 02:17 drivers
+-rw-r--r--  1 root root 4096 1970-01-01 02:17 drivers_autoprobe
+--w-------  1 root root 4096 1970-01-01 02:17 drivers_probe
+--w-------  1 root root 4096 1970-01-01 02:17 uevent
+
+
+
+autolink_8q:/ # ls -al /sys/bus/i2c/drivers/tlv320aic3x-codec/                                 <
+total 0
+drwxr-xr-x  2 root root    0 1970-01-01 02:17 .
+drwxr-xr-x 12 root root    0 1970-01-01 02:17 ..
+lrwxrwxrwx  1 root root    0 1970-01-01 02:18 1-0018 -> ../../../../devices/platform/i2c-rpbus-1/i2c-1/1-0018
+--w-------  1 root root 4096 1970-01-01 02:18 bind
+--w-------  1 root root 4096 1970-01-01 02:18 uevent
+--w-------  1 root root 4096 1970-01-01 02:18 unbind
+
+
+autolink_8q:/ # ls -al /sys/bus/i2c/devices/                                   
+total 0
+drwxr-xr-x 2 root root 0 1970-01-01 02:17 .
+drwxr-xr-x 4 root root 0 1970-01-01 02:17 ..
+lrwxrwxrwx 1 root root 0 1970-01-01 02:18 1-0018 -> ../../../devices/platform/i2c-rpbus-1/i2c-1/1-0018
+lrwxrwxrwx 1 root root 0 1970-01-01 02:18 i2c-1 -> ../../../devices/platform/i2c-rpbus-1/i2c-1
+lrwxrwxrwx 1 root root 0 1970-01-01 02:18 i2c-16 -> ../../../devices/platform/5a820000.i2c/i2c-16
+
+
+autolink_8q:/ # ls -al /sys/devices/platform/i2c-rpbus-1/i2c-1/                                <
+total 0
+drwxr-xr-x 5 root root    0 1970-01-01 01:58 .
+drwxr-xr-x 4 root root    0 1970-01-01 01:58 ..
+drwxr-xr-x 3 root root    0 1970-01-01 01:58 1-0018
+--w------- 1 root root 4096 1970-01-01 02:19 delete_device
+lrwxrwxrwx 1 root root    0 1970-01-01 02:19 device -> ../../i2c-rpbus-1
+drwxr-xr-x 3 root root    0 1970-01-01 01:58 i2c-dev
+-r--r--r-- 1 root root 4096 1970-01-01 02:19 name
+--w------- 1 root root 4096 1970-01-01 02:19 new_device
+lrwxrwxrwx 1 root root    0 1970-01-01 02:19 of_node -> ../../../../firmware/devicetree/base/i2c-rpbus-1
+drwxr-xr-x 2 root root    0 1970-01-01 01:58 power
+lrwxrwxrwx 1 root root    0 1970-01-01 02:19 subsystem -> ../../../../bus/i2c
+-rw-r--r-- 1 root root 4096 1970-01-01 01:58 uevent

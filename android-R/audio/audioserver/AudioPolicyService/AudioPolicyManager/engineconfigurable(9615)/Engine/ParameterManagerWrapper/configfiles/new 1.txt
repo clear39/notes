@@ -1,0 +1,304 @@
+12-28 10:20:05.490   374   632 V APM::AudioPolicyEngine/PFWWrapper: setDeviceConnectionState start: device(     0x8) with address () connected
+12-28 10:20:05.490   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager: getNumericalValue strValue: iValue:0 _bInclusive:1
+12-28 10:20:05.490   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager: listPossibleValues:{0, none}
+12-28 10:20:05.490   374   632 V APM::AudioPolicyEngine/PFWWrapper: setDeviceConnectionState end currentValueMask:       0 deviceAddressId:       0 
+
+
+
+
+12-28 10:20:05.490   374   632 V APM::AudioPolicyEngine/PFWWrapper: setAvailableOutputDevices  start outputDevices(0x04000a)
+12-28 10:20:05.490   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager: Selection criterion changed event: Criterion name: AvailableOutputDevices, current state: Speaker|WiredHeadphone|HdmiArc
+
+
+
+
+12-28 10:20:05.490   374   632 V APM::AudioPolicyEngine/PFWWrapper: applyPlatformConfiguration start
+12-28 10:20:05.490   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager: Configuration application request {
+12-28 10:20:05.490   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:     Applying configurations {
+12-28 10:20:05.490   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         checkForSubsystemsToResync uiNbChildren:1
+12-28 10:20:05.490   374   632 I APM::AudioPolicyEngine/PFWWrapper: 
+12-28 10:20:05.490   374   632 I APM::AudioPolicyEngine/PFWWrapper:         checkForSubsystemsToResync subsystem:policy
+12-28 10:20:05.490   374   632 I APM::AudioPolicyEngine/PFWWrapper: 
+12-28 10:20:05.490   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         checkForSubsystemsToResync finish
+
+
+
+
+12-28 10:20:05.490   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply start uiNbConfigurableDomains:32 bForce:0
+
+
+12-28 10:20:05.491   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForProductStrategy.Media.Device2
+12-28 10:20:05.491   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.491   374   632 I APM::AudioPolicyEngine/PFWWrapper: _pLastAppliedConfiguration(Default) :0xef55bd60
+12-28 10:20:05.491   374   632 I APM::AudioPolicyEngine/PFWWrapper: pApplicableDomainConfiguration(WiredHeadphone) :0xef55ada0
+12-28 10:20:05.491   374   632 I APM::AudioPolicyEngine/PFWWrapper: Applying configuration 'WiredHeadphone' from domain 'DeviceForProductStrategy.Media.Device2'
+12-28 10:20:05.491   374   632 I APM::AudioPolicyEngine/PFWWrapper:  bSync:0 _bSequenceAware:0
+12-28 10:20:05.491   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.491   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+
+
+
+12-28 10:20:05.491   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForProductStrategy.Media.Arc
+12-28 10:20:05.491   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.491   374   632 I APM::AudioPolicyEngine/PFWWrapper: _pLastAppliedConfiguration(Selected) :0xef55be40
+12-28 10:20:05.491   374   632 I APM::AudioPolicyEngine/PFWWrapper: pApplicableDomainConfiguration(NotSelected) :0xef53e7e0
+12-28 10:20:05.491   374   632 I APM::AudioPolicyEngine/PFWWrapper: Applying configuration 'NotSelected' from domain 'DeviceForProductStrategy.Media.Arc'
+12-28 10:20:05.491   374   632 I APM::AudioPolicyEngine/PFWWrapper:  bSync:0 _bSequenceAware:0
+12-28 10:20:05.491   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.491   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+
+12-28 10:20:05.492   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForProductStrategies.Dtmf.Device2
+12-28 10:20:05.492   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.492   374   632 I APM::AudioPolicyEngine/PFWWrapper: _pLastAppliedConfiguration(Default) :0xef531740
+12-28 10:20:05.492   374   632 I APM::AudioPolicyEngine/PFWWrapper: pApplicableDomainConfiguration(WiredHeadphone) :0xef52ec60
+12-28 10:20:05.492   374   632 I APM::AudioPolicyEngine/PFWWrapper: Applying configuration 'WiredHeadphone' from domain 'DeviceForProductStrategies.Dtmf.Device2'
+12-28 10:20:05.492   374   632 I APM::AudioPolicyEngine/PFWWrapper:  bSync:0 _bSequenceAware:0
+12-28 10:20:05.492   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.492   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+
+
+
+12-28 10:20:05.492   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForProductStrategies.Dtmf.Arc
+12-28 10:20:05.492   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.492   374   632 I APM::AudioPolicyEngine/PFWWrapper: _pLastAppliedConfiguration(Selected) :0xef531820
+12-28 10:20:05.492   374   632 I APM::AudioPolicyEngine/PFWWrapper: pApplicableDomainConfiguration(NotSelected) :0xef523380
+12-28 10:20:05.492   374   632 I APM::AudioPolicyEngine/PFWWrapper: Applying configuration 'NotSelected' from domain 'DeviceForProductStrategies.Dtmf.Arc'
+12-28 10:20:05.492   374   632 I APM::AudioPolicyEngine/PFWWrapper:  bSync:0 _bSequenceAware:0
+12-28 10:20:05.492   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.492   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+
+
+
+12-28 10:20:05.492   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForProductStrategy.EnforcedAudible.Speaker
+12-28 10:20:05.492   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.492   374   632 I APM::AudioPolicyEngine/PFWWrapper: _pLastAppliedConfiguration(Selected) :0xef523ee0
+12-28 10:20:05.492   374   632 I APM::AudioPolicyEngine/PFWWrapper: pApplicableDomainConfiguration(NotSelected) :0xef524f80
+12-28 10:20:05.492   374   632 I APM::AudioPolicyEngine/PFWWrapper: Applying configuration 'NotSelected' from domain 'DeviceForProductStrategy.EnforcedAudible.Speaker'
+12-28 10:20:05.492   374   632 I APM::AudioPolicyEngine/PFWWrapper:  bSync:0 _bSequenceAware:0
+12-28 10:20:05.492   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.492   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+
+
+
+12-28 10:20:05.492   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForProductStrategy.EnforcedAudible.Device2
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: _pLastAppliedConfiguration(NoDevice) :0xef527360
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: pApplicableDomainConfiguration(WiredHeadphone) :0xef525ae0
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: Applying configuration 'WiredHeadphone' from domain 'DeviceForProductStrategy.EnforcedAudible.Device2'
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper:  bSync:0 _bSequenceAware:0
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+
+
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForProductStrategy.Phone.Device
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: _pLastAppliedConfiguration(Default) :0xef4e7500
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: pApplicableDomainConfiguration(WiredHeadphone) :0xef528be0
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: Applying configuration 'WiredHeadphone' from domain 'DeviceForProductStrategy.Phone.Device'
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper:  bSync:0 _bSequenceAware:0
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+
+
+
+
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForProductStrategy.Sonification.Device2
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: _pLastAppliedConfiguration(None) :0xef4d7000
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: pApplicableDomainConfiguration(WiredHeadphone) :0xef4e9800
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: Applying configuration 'WiredHeadphone' from domain 'DeviceForProductStrategy.Sonification.Device2'
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper:  bSync:0 _bSequenceAware:0
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+
+
+
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForProductStrategy.SonificationRespectful.Device2
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: _pLastAppliedConfiguration(None) :0xef4dd4a0
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: pApplicableDomainConfiguration(WiredHeadphone) :0xef4d9760
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: Applying configuration 'WiredHeadphone' from domain 'DeviceForProductStrategy.SonificationRespectful.Device2'
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper:  bSync:0 _bSequenceAware:0
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+
+
+
+
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForProductStrategy.TransmittedThroughSpeaker.Speaker
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         accessHW bReceive:0
+12-28 10:20:05.493   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         accessHW bReceive:0
+12-28 10:20:05.494   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         accessHW bReceive:0
+12-28 10:20:05.494   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         accessHW bReceive:0
+12-28 10:20:05.494   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         accessHW bReceive:0
+12-28 10:20:05.494   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         accessHW bReceive:0
+12-28 10:20:05.494   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply sync finish:
+12-28 10:20:05.494   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply end uiNbConfigurableDomains:32 bForce:0
+12-28 10:20:05.494   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:     }
+12-28 10:20:05.494   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager: }
+12-28 10:20:05.494   374   632 V APM::AudioPolicyEngine/PFWWrapper: applyPlatformConfiguration end
+12-28 10:20:05.494   374   632 V APM::AudioPolicyEngine/PFWWrapper: setAvailableOutputDevices end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+12-28 10:20:05.524   374   632 V APM::AudioPolicyEngine/PFWWrapper: setForceUse start usage:1 config:10
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager: Selection criterion changed event: Criterion name: ForceUseForMedia, current state: ForceNoBtA2dp
+12-28 10:20:05.524   374   632 V APM::AudioPolicyEngine/PFWWrapper: applyPlatformConfiguration start
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager: Configuration application request {
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:     Applying configurations {
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         checkForSubsystemsToResync uiNbChildren:1
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: 
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper:         checkForSubsystemsToResync subsystem:policy
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: 
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         checkForSubsystemsToResync finish
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply start uiNbConfigurableDomains:32 bForce:0
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForInputSource.Calibration
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForInputSource.DefaultAndMic
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForInputSource.VoiceUplinkAndVoiceDownlinkAndVoiceCall
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForInputSource.Camcorder
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForInputSource.EchoReference
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForInputSource.VoiceRecognitionAndUnprocessedAndHotword
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForInputSource.VoiceCommunication
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForInputSource.RemoteSubmix
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForInputSource.FmTuner
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForInputSource.Voice
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.524   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:VolumeProfilesForStream.Calibration
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:VolumeProfilesForStream.Dtmf
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForProductStrategy.Media.Device2
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForProductStrategy.Media.Arc
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForProductStrategy.Media.Spdif
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForProductStrategy.Media.AuxLine
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForProductStrategy.Accessibility.Device
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForProductStrategy.Accessibility.Arc
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForProductStrategy.Accessibility.Spdif
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForProductStrategy.Accessibility.AuxLine
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForProductStrategies.Dtmf.Device2
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForProductStrategies.Dtmf.Arc
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForProductStrategies.Dtmf.Spdif
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForProductStrategies.Dtmf.AuxLine
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForProductStrategy.EnforcedAudible.Speaker
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForProductStrategy.EnforcedAudible.Device2
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForProductStrategy.Phone.Device
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForProductStrategy.Sonification.Speaker
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.525   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForProductStrategy.Sonification.Device2
+12-28 10:20:05.526   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.526   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.526   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.526   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForProductStrategy.SonificationRespectful.Speakers
+12-28 10:20:05.526   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.526   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.526   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.526   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForProductStrategy.SonificationRespectful.Device2
+12-28 10:20:05.526   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.526   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.526   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.526   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply CConfigurableDomain:DeviceForProductStrategy.TransmittedThroughSpeaker.Speaker
+12-28 10:20:05.526   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         apply info: [CConfigurableDomain::apply [
+12-28 10:20:05.526   374   632 I APM::AudioPolicyEngine/PFWWrapper: ] 
+12-28 10:20:05.526   374   632 I APM::AudioPolicyEngine/PFWWrapper: ]
+12-28 10:20:05.526   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply sync finish:
+12-28 10:20:05.526   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:         CConfigurableDomains::apply end uiNbConfigurableDomains:32 bForce:0
+12-28 10:20:05.526   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager:     }
+12-28 10:20:05.526   374   632 I APM::AudioPolicyEngine/PFWWrapper: policy-parameter-manager: }
+12-28 10:20:05.526   374   632 V APM::AudioPolicyEngine/PFWWrapper: applyPlatformConfiguration end
+12-28 10:20:05.526   374   632 V APM::AudioPolicyEngine/PFWWrapper: setForceUse end

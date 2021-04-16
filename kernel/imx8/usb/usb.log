@@ -1,0 +1,748 @@
+
+//这个应该是roothub才会调用，请确认
+//INIT_WORK如何工作
+static int hub_probe(struct usb_interface *intf, const struct usb_device_id *id)  // drivers/usb/core/hub.c:1791   //INIT_WORK(&hub->events, hub_event);
+hub_event 在 hub_probe 中调
+
+
+
+
+
+
+
+
+hub_event如何工作的？
+
+static void hub_event(struct work_struct *work)		 
+---> static void port_event(struct usb_hub *hub, int port1)	 // [   92.128613] hub 1-1:1.0: state 7 ports 2 chg 0000 evt 0002
+------> static void hub_port_connect_change(struct usb_hub *hub, int port1,u16 portstatus, u16 portchange) // [   92.134290] usb 1-1-port1: status 0101, change 0001, 12 Mb/s
+---------> static void hub_port_connect(struct usb_hub *hub, int port1, u16 portstatus,u16 portchange)  // [   92.139996] ***hub_port_connect@@@ 
+
+
+
+
+[   92.128613] hub 1-1:1.0: state 7 ports 2 chg 0000 evt 0002
+
+[   92.134290] usb 1-1-port1: status 0101, change 0001, 12 Mb/s
+
+[   92.139996] ***hub_port_connect@@@ 
+
+[   92.283758] usb 1-1-port1: debounce total 100ms stable 100ms status 0x101  // static inline int hub_port_debounce_be_stable(struct usb_hub *hub, int port1)
+
+[   92.375731] usb 1-1.1: new high-speed USB device number 4 using cdns-usb3   // static int hub_port_init(struct usb_hub *hub, struct usb_device *udev, int port1,int retry_counter)
+
+
+[   92.484300] usb 1-1.1: udev 4, busnum 1, minor = 3	          // usb_new_device
+			
+[   92.489128] usb 1-1.1: New USB device found, idVendor=0951, idProduct=1642			//static void announce_device(struct usb_device *udev)
+[   92.496214] usb 1-1.1: New USB device strings: Mfr=1, Product=2, SerialNumber=3		//static void announce_device(struct usb_device *udev)
+[   92.503553] usb 1-1.1: Product: DT 101 G2							//static void announce_device(struct usb_device *udev)
+[   92.507776] usb 1-1.1: Manufacturer: Kingston						//static void announce_device(struct usb_device *udev)
+[   92.512159] usb 1-1.1: SerialNumber: 001CC0EC33FABB1165DD005A				//static void announce_device(struct usb_device *udev)
+
+//如何衔接上的？？？？？？？？？？？？？？？？？？？？？？？？？
+
+[   92.528100] usb-storage 1-1.1:1.0: USB Mass Storage device detected				//drivers/usb/storage/usb.c +959
+
+[   92.537089] scsi host0: usb-storage 1-1.1:1.0
+[   93.570699] scsi 0:0:0:0: Direct-Access     Kingston DT 101 G2        PMAP PQ: 0 ANSI: 0 CCS
+[   94.028021] sd 0:0:0:0: [sda] 7831552 512-byte logical blocks: (4.01 GB/3.73 GiB)
+[   94.036951] sd 0:0:0:0: [sda] Write Protect is off
+[   94.041778] sd 0:0:0:0: [sda] Mode Sense: 23 00 00 00
+[   94.049012] sd 0:0:0:0: [sda] No Caching mode page found
+[   94.054343] sd 0:0:0:0: [sda] Assuming drive cache: write through
+[   96.154002] sdcardfs version 2.0
+[   96.157295] sdcardfs: dev_name -> /mnt/media_rw/usb1-4
+[   96.162643] sdcardfs: options -> fsuid=1023,fsgid=1023,mask=0,userid=0,gid=1015
+[   96.170015] sdcardfs: mnt -> ffff8000761208e0
+[   96.174501] sdcardfs: mounted on top of /mnt/media_rw/usb1-4 type vfat
+[   96.181730] Remount options were mask=18,gid=9997 for vfsmnt ffff800072c0c8e0.
+[   96.188980] sdcardfs : options - debug:1
+[   96.192918] sdcardfs : options - gid:9997
+[   96.196942] sdcardfs : options - mask:18
+[   96.201266] Remount options were mask=18,gid=9997 for vfsmnt ffff800072c0f6e0.
+[   96.208512] sdcardfs : options - debug:1
+[   96.212462] sdcardfs : options - gid:9997
+[   96.216489] sdcardfs : options - mask:18
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// hub 插入
+autolink_8q:/ # [ 2491.616610] hub 1-1:1.0: state 7 ports 2 chg 0000 evt 0002
+[ 2491.622240] usb 1-1-port1: status 0101, change 0001, 12 Mb/s
+[ 2491.627931] ***hub_port_connect@@@ 
+[ 2491.775754] usb 1-1-port1: debounce total 100ms stable 100ms status 0x101
+[ 2491.859712] usb 1-1.1: new high-speed USB device number 5 using cdns-usb3
+[ 2491.966240] usb 1-1.1: udev 5, busnum 1, minor = 4
+[ 2491.971063] usb 1-1.1: New USB device found, idVendor=05e3, idProduct=0610
+[ 2491.978131] usb 1-1.1: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+[ 2491.985476] usb 1-1.1: Product: USB2.1 Hub
+[ 2491.989759] usb 1-1.1: Manufacturer: GenesysLogic
+
+
+//如何衔接上的？？？？？？？？？？？？？？？？？？？？？？？？？
+[ 2492.000496] hub 1-1.1:1.0: USB hub found
+[ 2492.004773] hub 1-1.1:1.0: 4 ports detected
+[ 2492.008995] hub 1-1.1:1.0: standalone hub
+[ 2492.013082] hub 1-1.1:1.0: ganged power switching
+[ 2492.017805] hub 1-1.1:1.0: global over-current protection
+[ 2492.023219] hub 1-1.1:1.0: Single TT
+[ 2492.026815] hub 1-1.1:1.0: TT requires at most 32 FS bit times (2664 ns)
+[ 2492.033533] hub 1-1.1:1.0: Port indicators are supported
+[ 2492.038867] hub 1-1.1:1.0: power on to power good time: 100ms
+[ 2492.044954] hub 1-1.1:1.0: local power source is good
+[ 2492.050034] hub 1-1.1:1.0: no over-current condition exists
+[ 2492.058069] hub 1-1.1:1.0: enabling power on all ports
+[ 2492.168591] hub 1-1.1:1.0: state 7 ports 4 chg 0000 evt 0000
+[ 2492.175506] hub 1-1.1:1.0: hub_suspend
+[ 2492.179727] usb 1-1.1: usb auto-suspend, wakeup 1
+
+autolink_8q:/ # 
+autolink_8q:/ # 
+autolink_8q:/ # 
+autolink_8q:/ # 
+autolink_8q:/ # [ 2504.416613] hub 1-1:1.0: state 7 ports 2 chg 0000 evt 0002
+[ 2504.422263] usb 1-1-port1: status 0100, change 0001, 12 Mb/s
+[ 2504.427953] ***hub_port_connect@@@ 
+[ 2504.431451] usb 1-1.1: USB disconnect, device number 5
+[ 2504.436998] usb 1-1.1: unregistering device
+[ 2504.587767] usb 1-1-port1: debounce total 100ms stable 100ms status 0x100
+
+
+[    1.387655]  xhci-cdns3: xHCI Host Controller
+[    1.392036]  xhci-cdns3: new USB bus registered, assigned bus number 1
+[    1.440533]  xhci-cdns3: hcc params 0x200073c8 hci version 0x100 quirks 0xffffffffa0010010
+[    1.448859] CPU: 0 PID: 1 Comm: swapper/0 Not tainted 4.14.98-07235-g29b166a0f598-dirty #17
+[    1.457216] Hardware name: Freescale i.MX8QXP MEK (DT)
+[    1.462352] Call trace:
+[    1.464805] [<ffff00000808b198>] dump_backtrace+0x0/0x414
+[    1.470209] [<ffff00000808b5c0>] show_stack+0x14/0x1c
+[    1.475266] [<ffff000008a9d388>] dump_stack+0x90/0xb0
+[    1.480322] [<ffff000008626c90>] usb_add_hcd+0x2e4/0x830
+[    1.485638] [<ffff000008645480>] cdns3_host_start+0x238/0x420
+[    1.491387] [<ffff00000864107c>] cdns3_probe+0x630/0x738
+[    1.496705] [<ffff000008594ef4>] platform_drv_probe+0x74/0xec
+[    1.502457] [<ffff000008592f4c>] driver_probe_device+0x258/0x30c
+[    1.508467] [<ffff0000085930ac>] __driver_attach+0xac/0xb0
+[    1.513958] [<ffff000008590c40>] bus_for_each_dev+0x64/0xb4
+[    1.519535] [<ffff000008592800>] driver_attach+0x20/0x28
+[    1.524852] [<ffff000008592374>] bus_add_driver+0x1c4/0x228
+[    1.530429] [<ffff000008593e4c>] driver_register+0x74/0x10c
+[    1.536007] [<ffff000008594e14>] __platform_driver_register+0x4c/0x54
+[    1.542456] [<ffff000008ee5904>] cdns3_driver_platform_register+0x30/0x38
+[    1.549246] [<ffff000008083ca0>] do_one_initcall+0x48/0x14c
+[    1.554827] [<ffff000008ea0df0>] kernel_init_freeable+0x13c/0x1d8
+[    1.560924] [<ffff000008ab231c>] kernel_init+0x10/0x13c
+[    1.566152] [<ffff000008084f14>] ret_from_fork+0x10/0x18
+[    1.571503] ***register_root_hub@@@
+
+
+//打印堆栈信息
+[   64.377566] hub 1-1:1.0: state 7 ports 2 chg 0000 evt 0002
+[   64.383197] usb 1-1-port1: status 0101, change 0001, 12 Mb/s
+[   64.388892] ***hub_port_connect@@@ 
+[   64.534358] usb 1-1-port1: debounce total 100ms stable 100ms status 0x101
+[   64.626309] usb 1-1.1: new high-speed USB device number 4 using cdns-usb3
+[   64.804488] usb 1-1.1: udev 4, busnum 1, minor = 3
+[   64.809298] usb 1-1.1: New USB device found, idVendor=0951, idProduct=1642
+[   64.816326] usb 1-1.1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[   64.823654] usb 1-1.1: Product: DT 101 G2
+[   64.827792] usb 1-1.1: Manufacturer: Kingston
+[   64.832168] usb 1-1.1: SerialNumber: 001CC0EC33FABB1165DD005A
+[   64.852143] CPU: 0 PID: 983 Comm: kworker/0:2 Not tainted 4.14.98-07235-g29b166a0f598-dirty #14
+
+[   64.860859] Hardware name: Freescale i.MX8QXP MEK (DT)
+[   64.866014] Workqueue: usb_hub_wq hub_event
+[   64.870204] Call trace:
+[   64.872661] [<ffff00000808b198>] dump_backtrace+0x0/0x414
+[   64.878070] [<ffff00000808b5c0>] show_stack+0x14/0x1c
+[   64.883126] [<ffff000008a9a408>] dump_stack+0x90/0xb0
+[   64.888181] [<ffff00000866f2dc>] storage_probe+0x24/0xdc
+[   64.893500] [<ffff00000862e180>] usb_probe_interface+0xf8/0x2a0
+
+[   64.899426] [<ffff000008592f4c>] driver_probe_device+0x258/0x30c
+[   64.905433] [<ffff000008593148>] __device_attach_driver+0x98/0xe8
+[   64.911534] [<ffff000008590cf0>] bus_for_each_drv+0x60/0xb0
+[   64.917109] [<ffff000008592bf0>] __device_attach+0x100/0x154
+[   64.922773] [<ffff0000085933ec>] device_initial_probe+0x10/0x18
+[   64.928698] [<ffff0000085920a4>] bus_probe_device+0x90/0x98
+[   64.934276] [<ffff00000858fad4>] device_add+0x3ec/0x564
+
+[   64.939508] [<ffff00000862c694>] usb_set_configuration+0x454/0x788   // drivers/usb/core/message.c //屏蔽这里是可以正常有节点
+[   64.945694] [<ffff000008639000>] generic_probe+0x30/0x94             // drivers/usb/core/generic.c
+
+[   64.951008] [<ffff00000862dc94>] usb_probe_device+0x2c/0x64		// drivers/usb/core/driver.c
+[   64.956585] [<ffff000008592f4c>] driver_probe_device+0x258/0x30c     // drivers/base/dd.c
+[   64.962599] [<ffff000008593148>] __device_attach_driver+0x98/0xe8
+[   64.968697] [<ffff000008590cf0>] bus_for_each_drv+0x60/0xb0
+[   64.974275] [<ffff000008592bf0>] __device_attach+0x100/0x154
+[   64.979939] [<ffff0000085933ec>] device_initial_probe+0x10/0x18
+[   64.985864] [<ffff0000085920a4>] bus_probe_device+0x90/0x98		// drivers/base/bus.c
+[   64.991439] [<ffff00000858fad4>] device_add+0x3ec/0x564
+
+[   64.996670] [<ffff000008622348>] usb_new_device+0x29c/0x620
+[   65.002248] [<ffff000008623d98>] hub_event+0x930/0x12fc
+[   65.007480] [<ffff0000080cb990>] process_one_work+0x140/0x3f8
+[   65.013230] [<ffff0000080cbd80>] worker_thread+0x138/0x3e4
+[   65.018720] [<ffff0000080d1d68>] kthread+0x104/0x130
+[   65.023689] [<ffff000008084f14>] ret_from_fork+0x10/0x18
+[   65.030307] xqli storage_probe
+[   65.030318] usb-storage 1-1.1:1.0: USB Mass Storage device detected
+[   65.041543] scsi host0: usb-storage 1-1.1:1.0
+[   65.055254] usb_new_device usb device_add call
+[   66.084812] scsi 0:0:0:0: Direct-Access     Kingston DT 101 G2        PMAP PQ: 0 ANSI: 0 CCS
+[   66.556378] sd 0:0:0:0: [sda] 7831552 512-byte logical blocks: (4.01 GB/3.73 GiB)
+[   66.565268] sd 0:0:0:0: [sda] Write Protect is off
+[   66.570104] sd 0:0:0:0: [sda] Mode Sense: 23 00 00 00
+[   66.576548] sd 0:0:0:0: [sda] No Caching mode page found
+[   66.581900] sd 0:0:0:0: [sda] Assuming drive cache: write through
+
+
+
+
+void bus_probe_device(struct device *dev)
+
+
+
+
+
+
+[   94.948869] hub 1-1:1.0: state 7 ports 2 chg 0000 evt 0002
+[   94.954414] usb 1-1: @@@@@@@@@@@@@@@port_event@@@@@@@@@@@@@@@@@@
+[   94.960824] usb 1-1-port1: hub_port_connect_change status 0101, change 0001, 12 Mb/s
+[   94.968595] ***hub_port_connect@@@ 
+[   95.114308] usb 1-1-port1: debounce total 100ms stable 100ms status 0x101
+[   95.198280] usb 1-1.1: new high-speed USB device number 5 using cdns-usb3
+[   95.302848] usb 1-1.1: default language 0x0409
+[   95.311378] usb 1-1.1: udev 5, busnum 1, minor = 4
+[   95.316198] usb 1-1.1: New USB device found, idVendor=0951, idProduct=1642
+[   95.323256] usb 1-1.1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[   95.330597] usb 1-1.1: Product: DT 101 G2
+[   95.334787] usb 1-1.1: Manufacturer: Kingston
+[   95.339178] usb 1-1.1: SerialNumber: 001CC0EC33FABB1165DD005A
+[   95.345113] device: '1-1.1': device_add
+[   95.350501] usb 1-1.1: adding 1-1.1:1.0 (config #1, interface 0)
+[   95.357300] device: '1-1.1:1.0': device_add
+[   95.363126] usb-storage 1-1.1:1.0: USB Mass Storage device detected
+[   95.369672] scsi host0: usb-storage 1-1.1:1.0
+[   95.374063] device: 'host0': device_add
+[   95.379234] device: 'host0': device_add
+[   95.384902] device: 'ep_81': device_add
+[   95.388851] device: 'ep_02': device_add
+[   95.394223] device: 'ep_00': device_add
+[   96.418694] scsi 0:0:0:0: Direct-Access     Kingston DT 101 G2        PMAP PQ: 0 ANSI: 0 CCS
+[   96.427168] device: 'target0:0:0': device_add
+[   96.432947] device: '0:0:0:0': device_add
+[   96.439208] device: '0:0:0:0': device_add
+[   96.445626] device: '0:0:0:0': device_add
+[   96.451366] device: '0:0:0:0': device_add
+[   96.945634] sd 0:0:0:0: [sda] 7831552 512-byte logical blocks: (4.01 GB/3.73 GiB)
+[   96.954575] sd 0:0:0:0: [sda] Write Protect is off
+[   96.959396] sd 0:0:0:0: [sda] Mode Sense: 23 00 00 00
+[   96.967407] sd 0:0:0:0: [sda] No Caching mode page found
+[   96.972739] sd 0:0:0:0: [sda] Assuming drive cache: write through
+[   96.978999] device: '8:0': device_add
+[   96.984089] device: 'sda': device_add
+[   96.989121] type=1400 audit(1606151838.968:58): avc: denied { dac_read_search } for pid=1609 comm="Binder:1609_2" capability=2 scontext=u:r:vold:s0 tcontext=u:r:vold:s0 tclass=capability permissive=1
+[   97.006920] type=1400 audit(1606151846.228:59): avc: denied { create } for pid=28 comm="kdevtmpfs" name="sda" scontext=u:r:kernel:s0 tcontext=u:object_r:device:s0 tclass=blk_file permissive=1
+[   97.009529]  sda: sda4
+[   97.027080] device: 'sda4': device_add
+[   97.039256] sd 0:0:0:0: [sda] Attached SCSI removable disk
+[   97.761206] FAT-fs (sda4): Volume was not properly unmounted. Some data may be corrupt. Please run fsck.
+[   97.796231] sdcardfs version 2.0
+[   97.799530] sdcardfs: dev_name -> /mnt/media_rw/usb1-4
+[   97.804704] sdcardfs: options -> fsuid=1023,fsgid=1023,mask=0,userid=0,gid=1015
+[   97.812039] sdcardfs: mnt -> ffff80080e0f9c20
+[   97.816530] sdcardfs: mounted on top of /mnt/media_rw/usb1-4 type vfat
+[   97.823718] Remount options were mask=18,gid=9997 for vfsmnt ffff80006cf24720.
+[   97.830984] sdcardfs : options - debug:1
+[   97.834926] sdcardfs : options - gid:9997
+[   97.838957] sdcardfs : options - mask:18
+[   97.843279] Remount options were mask=18,gid=9997 for vfsmnt ffff800071fd16e0.
+[   97.850533] sdcardfs : options - debug:1
+[   97.854470] sdcardfs : options - gid:9997
+[   97.858500] sdcardfs : options - mask:18
+
+
+
+
+
+
+
+
+[  504.050056] hub 1-1:1.0: state 7 ports 2 chg 0000 evt 0002
+[  504.055606] usb 1-1: @@@@@@@@@@@@@@@port_event@@@@@@@@@@@@@@@@@@
+[  504.062032] usb 1-1-port1: hub_port_connect_change status 0101, change 0001, 12 Mb/s
+[  504.069801] ***hub_port_connect@@@ 
+[  504.215238] usb 1-1-port1: debounce total 100ms stable 100ms status 0x101
+[  504.299197] usb 1-1.1: new high-speed USB device number 5 using cdns-usb3
+[  504.405155] usb 1-1.1: default language 0x0409
+[  504.410203] usb 1-1.1: udev 5, busnum 1, minor = 4
+[  504.415030] usb 1-1.1: New USB device found, idVendor=05e3, idProduct=0610
+[  504.421932] usb 1-1.1: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+[  504.429277] usb 1-1.1: Product: USB2.1 Hub
+[  504.433396] usb 1-1.1: Manufacturer: GenesysLogic
+[  504.438142] device: '1-1.1': device_add
+[  504.443727] usb 1-1.1: adding 1-1.1:1.0 (config #1, interface 0)
+[  504.449782] device: '1-1.1:1.0': device_add
+[  504.455356] hub 1-1.1:1.0: USB hub found
+[  504.459618] hub 1-1.1:1.0: 4 ports detected
+[  504.463839] hub 1-1.1:1.0: standalone hub
+[  504.467863] hub 1-1.1:1.0: ganged power switching
+[  504.472587] hub 1-1.1:1.0: global over-current protection
+[  504.478003] hub 1-1.1:1.0: Single TT
+[  504.481599] hub 1-1.1:1.0: TT requires at most 32 FS bit times (2664 ns)
+[  504.488312] hub 1-1.1:1.0: Port indicators are supported
+[  504.493665] hub 1-1.1:1.0: power on to power good time: 100ms
+[  504.499743] hub 1-1.1:1.0: local power source is good
+[  504.504827] hub 1-1.1:1.0: no over-current condition exists
+[  504.510429] device: '1-1.1-port1': device_add
+[  504.515488] device: '1-1.1-port2': device_add
+[  504.519894] device: '1-1.1-port3': device_add
+[  504.524306] device: '1-1.1-port4': device_add
+[  504.530876] hub 1-1.1:1.0: enabling power on all ports
+[  504.538285] device: 'ep_81': device_add
+[  504.542637] device: 'ep_00': device_add
+[  504.640028] hub 1-1.1:1.0: state 7 ports 4 chg 0000 evt 0000
+[  504.646940] hub 1-1.1:1.0: hub_suspend
+[  504.650959] usb 1-1.1: usb auto-suspend, wakeup 1
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+[  109.377537] hub 1-1:1.0: state 7 ports 2 chg 0000 evt 0002
+[  109.383085] usb 1-1: @@@@@@@@@@@@@@@port_event@@@@@@@@@@@@@@@@@@
+[  109.389236] usb 1-1-port1: hub_port_connect_change status 0101, change 0001, 12 Mb/s
+[  109.397002] ***hub_port_connect@@@ 
+[  109.541354] usb 1-1-port1: debounce total 100ms stable 100ms status 0x101
+[  109.633329] usb 1-1.1: new high-speed USB device number 4 using cdns-usb3
+[  109.739324] usb 1-1.1: default language 0x0409
+[  109.744369] usb 1-1.1: udev 4, busnum 1, minor = 3
+[  109.749211] usb 1-1.1: New USB device found, idVendor=05e3, idProduct=0610
+[  109.756109] usb 1-1.1: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+[  109.763459] usb 1-1.1: Product: USB2.1 Hub
+[  109.767577] usb 1-1.1: Manufacturer: GenesysLogic
+[  109.772319] device: '1-1.1': device_add
+[  109.776199] ========device_create_file======1-1.1=====
+[  109.776343] ========device_create_file======1-1.1=====
+[  109.781788] CPU: 1 PID: 28 Comm: kdevtmpfs Not tainted 4.14.98-07235-g29b166a0f598-dirty #32
+[  109.795367] Hardware name: Freescale i.MX8QXP MEK (DT)
+[  109.800510] Call trace:
+[  109.802973] [<ffff00000808b198>] dump_backtrace+0x0/0x414
+[  109.808379] [<ffff00000808b5c0>] show_stack+0x14/0x1c
+[  109.813443] [<ffff000008a99c08>] dump_stack+0x90/0xb0
+[  109.818507] [<ffff00000825f084>] init_special_inode+0x1c/0xc8
+[  109.824267] [<ffff0000081d5304>] shmem_get_inode+0x120/0x25c
+[  109.829936] [<ffff0000081d5638>] shmem_mknod+0x28/0xec
+[  109.835080] [<ffff00000824b34c>] vfs_mknod2+0x140/0x1ac
+[  109.840312] [<ffff00000824b3e4>] vfs_mknod+0x2c/0x34
+[  109.845281] [<ffff000008598440>] devtmpfsd+0x1a0/0x2f0
+[  109.850423] [<ffff0000080d1d68>] kthread+0x104/0x130
+[  109.855392] [<ffff000008084f14>] ret_from_fork+0x10/0x18
+[  109.864297] CPU: 3 PID: 1251 Comm: ueventd Not tainted 4.14.98-07235-g29b166a0f598-dirty #32
+[  109.865686] usb 1-1.1: adding 1-1.1:1.0 (config #1, interface 0)
+[  109.872747] Hardware name: Freescale i.MX8QXP MEK (DT)
+[  109.872751] Call trace:
+[  109.872766] [<ffff00000808b198>] dump_backtrace+0x0/0x414
+[  109.872778] [<ffff00000808b5c0>] show_stack+0x14/0x1c
+[  109.878797] device: '1-1.1:1.0': device_add
+[  109.883922] [<ffff000008a99c08>] dump_stack+0x90/0xb0
+[  109.883931] [<ffff00000825f084>] init_special_inode+0x1c/0xc8
+[  109.883947] [<ffff0000081d5304>] shmem_get_inode+0x120/0x25c
+[  109.886394] ========device_create_file======1-1.1:1.0=====
+[  109.891772] [<ffff0000081d5638>] shmem_mknod+0x28/0xec
+[  109.891779] [<ffff00000824b34c>] vfs_mknod2+0x140/0x1ac
+[  109.891791] [<ffff0000082513c8>] SyS_mknodat+0x1c4/0x204
+[  109.891801] Exception stack(0xffff0000115b3ec0 to 0xffff0000115b4000)
+[  109.897660] hub 1-1.1:1.0: USB hub found
+[  109.901028] 3ec0: 00000000ffffff9c 0000ffffca472aa1 00000000000021b0 000000000000bd03
+[  109.906399] hub 1-1.1:1.0: 4 ports detected
+[  109.911822] 3ee0: 000000000000014d 0000000000000018 ff647360647161ff 7f7f7f7f7f7f7f7f
+[  109.911829] 3f00: 0000000000000021 00000000ffffff9c 0000ffffca472aa1 00000000000021b0
+[  109.911837] 3f20: 65645f6273753a72 0030733a65636976 00000000ffffffff 0000ffffca4725e8
+[  109.911846] 3f40: 0000ffffca472080 0000ffffca4724d4 0000ffffca47206a 0000ffffca472aa0
+[  109.917514] hub 1-1.1:1.0: standalone hub
+[  109.922985] 3f60: 0000000000000000 0000000000000000 0000000000607a20 0000ffffca472ab0
+[  109.922991] 3f80: 00000000000021b0 0000ffffca472aa1 0000000000607a20 0000ffffbaf1fa78
+[  109.923002] 3fa0: 00000000000001b0 0000ffffca4729c0 0000000000453e70 0000ffffca472930
+[  109.928146] hub 1-1.1:1.0: ganged power switching
+[  109.933358] 3fc0: 0000000000539140 0000000040000000 00000000ffffff9c 0000000000000021
+[  109.933363] 3fe0: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+[  109.933374] [<ffff000008083ac0>] el0_svc_naked+0x34/0x38
+[  109.934980] CPU: 2 PID: 2017 Comm: UsbService host Not tainted 4.14.98-07235-g29b166a0f598-dirty #32
+[  109.938706] hub 1-1.1:1.0: global over-current protection
+[  109.945139] Hardware name: Freescale i.MX8QXP MEK (DT)
+[  109.945143] Call trace:
+[  109.945156] [<ffff00000808b198>] dump_backtrace+0x0/0x414
+[  109.945173] [<ffff00000808b5c0>] show_stack+0x14/0x1c
+[  109.949094] hub 1-1.1:1.0: Single TT
+[  109.956913] [<ffff000008a99c08>] dump_stack+0x90/0xb0
+[  109.956921] [<ffff000008630aec>] usbdev_open+0x24/0x224
+[  109.956933] [<ffff0000082441f8>] chrdev_open+0x100/0x200
+[  109.956945] [<ffff00000823aabc>] do_dentry_open+0x224/0x324
+[  109.961134] hub 1-1.1:1.0: TT requires at most 32 FS bit times (2664 ns)[  454.599532] usb 1-1-port1: debounce total 100ms stable 100ms status 0x101
+[  454.691499] usb 1-1.1: new high-speed USB device number 4 using cdns-usb3
+[  454.796006] usb 1-1.1: config 1 interface 1 altsetting 0 bulk endpoint 0x84 has invalid maxpacket 64
+[  454.805182] usb 1-1.1: config 1 interface 1 altsetting 0 bulk endpoint 0x5 has invalid maxpacket 64
+[  454.814454] usb 1-1.1: config 1 interface 3 has no altsetting 13
+[  454.820635] usb 1-1.1: default language 0x0409
+[  454.825435] usb 1-1.1: udev 4, busnum 1, minor = 3
+[  454.830256] usb 1-1.1: New USB device found, idVendor=0416, idProduct=5032
+[  454.837320] usb 1-1.1: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+[  454.844671] usb 1-1.1: Product: Webcam gadget
+[  454.849164] usb 1-1.1: Manufacturer: Linux Foundation
+[  454.854242] device: '1-1.1': device_add
+[  454.858120] ========device_create_file======1-1.1=====
+[  454.858244] ========device_create_file======1-1.1=====
+[  454.863595] CPU: 0 PID: 3 Comm: kworker/0:0 Not tainted 4.14.98-07235-g29b166a0f598-dirty #35
+[  454.877258] Hardware name: Freescale i.MX8QXP MEK (DT)
+[  454.882415] Workqueue: usb_hub_wq hub_event
+[  454.886605] Call trace:
+[  454.889064] [<ffff00000808b198>] dump_backtrace+0x0/0x414
+[  454.894475] [<ffff00000808b5c0>] show_stack+0x14/0x1c
+[  454.899536] [<ffff000008a9dc88>] dump_stack+0x90/0xb0
+[  454.904596] [<ffff00000859b620>] devtmpfs_create_node+0x60/0x13c
+[  454.910613] [<ffff00000858fecc>] device_add+0x56c/0x57c
+[  454.915842] [<ffff0000086226ec>] usb_new_device+0x288/0x5fc
+[  454.921419] [<ffff000008624138>] hub_event+0x93c/0x12f8
+[  454.926651] [<ffff0000080cb990>] process_one_work+0x140/0x3f8
+[  454.932408] [<ffff0000080cbd80>] worker_thread+0x138/0x3e4
+[  454.937900] [<ffff0000080d1d68>] kthread+0x104/0x130
+[  454.942870] [<ffff000008084f14>] ret_from_fork+0x10/0x18
+[  454.948229] =====device_get_devnode==type====
+[  454.948895] ===handle_create====bus/usb/001/004===
+[  454.953504] =====device_get_devnode==type====
+[  454.973183] usb 1-1.1: adding 1-1.1:1.0 (config #1, interface 0)
+[  109.968952] [<ffff00000823bfd8>] vfs_open+0x54/0x84
+[  109.968959] [<ffff00000824ed1c>] path_openat+0x5a0/0xa68
+[  109.968973] [<ffff000008250ff4>] do_filp_open+0x6c/0x118
+[  109.976804] hub 1-1.1:1.0: Port indicators are supported
+[  109.984622] [<ffff00000823c328>] do_sys_open+0x16c/0x274
+[  109.984627] [<ffff00000823c468>] SyS_openat+0x10/0x18
+[  109.984631] Exception stack(0xffff00001cfdbec0 to 0xffff00001cfdc000)
+[  109.984642] bec0: 00000000ffffff9c 0000f1972c161cb4 0000000000000002 0000000000000000
+[  109.992475] hub 1-1.1:1.0: power on to power good time: 100ms
+[  109.996473] bee0: 000000008000002f 00000000ffffffff 0000000000000084 0000f1974d475212
+[  109.996479] bf00: 0000000000000038 00000000ffffff9c 0000000000000006 0000f1974d43e5b8
+[  109.996491] bf20: 0000000000000014 0000000000000000 00000000ffffffff 0000f1972c1619a8
+[  110.004681] hub 1-1.1:1.0: local power source is good
+[  110.012145] bf40: 0000f1974df6bfa0 0000f1974d3af218 0000f1972c16142a 0000f1972c161cb4
+[  110.012151] bf60: 0000000000000001 0000f1972c161fd4 0000000000000000 0000000000000003
+[  110.012159] bf80: 0000f1972c161d18 0000f1972c161cb4 0000f1972c161d18 0000f1974df4f17c
+[  110.012169] bfa0: 0000f1972c161d28 0000f1972c161c30 0000f1974df4e344 0000f1972c161c20
+[  110.020009] hub 1-1.1:1.0: no over-current condition exists
+[  110.024698] bfc0: 0000f1974d3f3768 0000000080000000 00000000ffffff9c 0000000000000038
+[  110.024704] bfe0: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+[  110.024715] [<ffff000008083ac0>] el0_svc_naked+0x34/0x38
+[  110.248324] device: '1-1.1-port1': device_add[  454.599532] usb 1-1-port1: debounce total 100ms stable 100ms status 0x101
+[  454.691499] usb 1-1.1: new high-speed USB device number 4 using cdns-usb3
+[  454.796006] usb 1-1.1: config 1 interface 1 altsetting 0 bulk endpoint 0x84 has invalid maxpacket 64
+[  454.805182] usb 1-1.1: config 1 interface 1 altsetting 0 bulk endpoint 0x5 has invalid maxpacket 64
+[  454.814454] usb 1-1.1: config 1 interface 3 has no altsetting 13
+[  454.820635] usb 1-1.1: default language 0x0409
+[  454.825435] usb 1-1.1: udev 4, busnum 1, minor = 3
+[  454.830256] usb 1-1.1: New USB device found, idVendor=0416, idProduct=5032
+[  454.837320] usb 1-1.1: New USB device strings: Mfr=1, Product=2, SerialNumber=0
+[  454.844671] usb 1-1.1: Product: Webcam gadget
+[  454.849164] usb 1-1.1: Manufacturer: Linux Foundation
+[  454.854242] device: '1-1.1': device_add
+[  454.858120] ========device_create_file======1-1.1=====
+[  454.858244] ========device_create_file======1-1.1=====
+[  454.863595] CPU: 0 PID: 3 Comm: kworker/0:0 Not tainted 4.14.98-07235-g29b166a0f598-dirty #35
+[  454.877258] Hardware name: Freescale i.MX8QXP MEK (DT)
+[  454.882415] Workqueue: usb_hub_wq hub_event
+[  454.886605] Call trace:
+[  454.889064] [<ffff00000808b198>] dump_backtrace+0x0/0x414
+[  454.894475] [<ffff00000808b5c0>] show_stack+0x14/0x1c
+[  454.899536] [<ffff000008a9dc88>] dump_stack+0x90/0xb0
+[  454.904596] [<ffff00000859b620>] devtmpfs_create_node+0x60/0x13c
+[  454.910613] [<ffff00000858fecc>] device_add+0x56c/0x57c
+[  454.915842] [<ffff0000086226ec>] usb_new_device+0x288/0x5fc
+[  454.921419] [<ffff000008624138>] hub_event+0x93c/0x12f8
+[  454.926651] [<ffff0000080cb990>] process_one_work+0x140/0x3f8
+[  454.932408] [<ffff0000080cbd80>] worker_thread+0x138/0x3e4
+[  454.937900] [<ffff0000080d1d68>] kthread+0x104/0x130
+[  454.942870] [<ffff000008084f14>] ret_from_fork+0x10/0x18
+[  454.948229] =====device_get_devnode==type====
+[  454.948895] ===handle_create====bus/usb/001/004===
+[  454.953504] =====device_get_devnode==type====
+[  454.973183] usb 1-1.1: adding 1-1.1:1.0 (config #1, interface 0)
+[  110.252936] ========device_create_file======1-1.1-port1=====
+[  110.253398] device: '1-1.1-port2': device_add
+[  110.263444] ========device_create_file======1-1.1-port2=====
+[  110.263486] device: '1-1.1-port3': device_add
+[  110.273529] ========device_create_file======1-1.1-port3=====
+[  110.273570] device: '1-1.1-port4': device_add
+[  110.283626] ========device_create_file======1-1.1-port4=====
+[  110.285326] hub 1-1.1:1.0: enabling power on all ports
+[  110.297429] device: 'ep_81': device_add
+[  110.301308] ========device_create_file======ep_81=====
+[  110.303042] device: 'ep_00': device_add
+[  110.304031] CPU: 3 PID: 2017 Comm: UsbService host Not tainted 4.14.98-07235-g29b166a0f598-dirty #32
+[  110.308251] ========device_create_file======ep_00=====
+[  110.312029] Hardware name: Freescale i.MX8QXP MEK (DT)
+[  110.312033] Call trace:
+[  110.312048] [<ffff00000808b198>] dump_backtrace+0x0/0x414
+[  110.312063] [<ffff00000808b5c0>] show_stack+0x14/0x1c
+[  110.344343] [<ffff000008a99c08>] dump_stack+0x90/0xb0
+[  110.349398] [<ffff000008630aec>] usbdev_open+0x24/0x224
+[  110.354627] [<ffff0000082441f8>] chrdev_open+0x100/0x200
+[  110.359943] [<ffff00000823aabc>] do_dentry_open+0x224/0x324
+[  110.365519] [<ffff00000823bfd8>] vfs_open+0x54/0x84
+[  110.370405] [<ffff00000824ed1c>] path_openat+0x5a0/0xa68
+[  110.375717] [<ffff000008250ff4>] do_filp_open+0x6c/0x118
+[  110.381035] [<ffff00000823c328>] do_sys_open+0x16c/0x274
+[  110.386350] [<ffff00000823c468>] SyS_openat+0x10/0x18
+[  110.391407] Exception stack(0xffff00001cfdbec0 to 0xffff00001cfdc000)
+[  110.397856] bec0: 00000000ffffff9c 0000f19743ca8aa0 0000000000000002 0000000000000000
+[  110.398085] hub 1-1.1:1.0: state 7 ports 4 chg 0000 evt 0000
+[  110.405689] bee0: 000000006fc110f0 000000000000002b 0000000000000007 000000000000002a
+[  110.405695] bf00: 0000000000000038 00000000ffffff9c 0000000000000006 00000000ffffffff
+[  110.405701] bf20: 0000f1972cdc5e78 ffffffffffffffff ffffffffff000000 ffffffffffffffff
+[  110.405708] bf40: 0000f1974df6bfa0 0000f1974d3af218 0000f1972c16142a 0000f19743ca8aa0
+[  110.442674] bf60: 0000000000000001 0000000000000001 0000f1972c161528 0000f19743ca8aa0
+[  110.450508] bf80: 0000f1972c162588 00000000000005e3 0000000000000610 0000000013640000
+[  110.458346] bfa0: 00000000136401d8 0000f1972c1614a0 0000f1974df4e344 0000f1972c161490
+[  110.466182] bfc0: 0000f1974d3f3768 0000000080000000 00000000ffffff9c 0000000000000038
+[  110.474018] bfe0: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+[  110.481855] [<ffff000008083ac0>] el0_svc_naked+0x34/0x38
+[  110.489008] CPU: 0 PID: 2017 Comm: UsbService host Not tainted 4.14.98-07235-g29b166a0f598-dirty #32
+[  110.498150] Hardware name: Freescale i.MX8QXP MEK (DT)
+[  110.503293] Call trace:
+[  110.505748] [<ffff00000808b198>] dump_backtrace+0x0/0x414
+[  110.511154] [<ffff00000808b5c0>] show_stack+0x14/0x1c
+[  110.516216] [<ffff000008a99c08>] dump_stack+0x90/0xb0
+[  110.521272] [<ffff000008630aec>] usbdev_open+0x24/0x224
+[  110.526503] [<ffff0000082441f8>] chrdev_open+0x100/0x200
+[  110.531815] [<ffff00000823aabc>] do_dentry_open+0x224/0x324
+[  110.537392] [<ffff00000823bfd8>] vfs_open+0x54/0x84
+[  110.542279] [<ffff00000824ed1c>] path_openat+0x5a0/0xa68
+[  110.547593] [<ffff000008250ff4>] do_filp_open+0x6c/0x118
+[  110.552910] [<ffff00000823c328>] do_sys_open+0x16c/0x274
+[  110.558225] [<ffff00000823c468>] SyS_openat+0x10/0x18
+[  110.563281] Exception stack(0xffff00001cfdbec0 to 0xffff00001cfdc000)
+[  110.569733] bec0: 00000000ffffff9c 0000f19743ca8aa0 0000000000000002 0000000000000000
+[  110.577576] bee0: 0000000000000131 0000f1972c161380 0065006e00650047 004c007300790073
+[  110.585411] bf00: 0000000000000038 00000000ffffff9c 0000000000000006 00000000ffffffff
+[  110.593248] bf20: 0000f1972cdc5e78 006300690067006f ffffffffff000000 ffffffffffffffff
+[  110.601084] bf40: 0000f1974df6bfa0 0000f1974d3af218 0000f1972c16142a 0000f19743ca8aa0
+[  110.608920] bf60: 0000000000000001 0000000000000002 0000f1972c161528 0000f19743ca8aa0
+[  110.616756] bf80: 0000f1972c162588 00000000000005e3 0000000000000610 0000000013640610
+[  110.624592] bfa0: 00000000136401d8 0000f1972c1614a0 0000f1974df4e344 0000f1972c161490
+[  110.632428] bfc0: 0000f1974d3f3768 0000000080000000 00000000ffffff9c 0000000000000038
+[  110.640264] bfe0: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+[  110.648100] [<ffff000008083ac0>] el0_svc_naked+0x34/0x38
+[  110.654880] CPU: 0 PID: 2017 Comm: UsbService host Not tainted 4.14.98-07235-g29b166a0f598-dirty #32
+[  110.664020] Hardware name: Freescale i.MX8QXP MEK (DT)
+[  110.669162] Call trace:
+[  110.671608] [<ffff00000808b198>] dump_backtrace+0x0/0x414
+[  110.677011] [<ffff00000808b5c0>] show_stack+0x14/0x1c
+[  110.682069] [<ffff000008a99c08>] dump_stack+0x90/0xb0
+[  110.687126] [<ffff000008630aec>] usbdev_open+0x24/0x224
+[  110.692356] [<ffff0000082441f8>] chrdev_open+0x100/0x200
+[  110.697670] [<ffff00000823aabc>] do_dentry_open+0x224/0x324
+[  110.703247] [<ffff00000823bfd8>] vfs_open+0x54/0x84
+[  110.708132] [<ffff00000824ed1c>] path_openat+0x5a0/0xa68
+[  110.713446] [<ffff000008250ff4>] do_filp_open+0x6c/0x118
+[  110.718764] [<ffff00000823c328>] do_sys_open+0x16c/0x274
+[  110.724080] [<ffff00000823c468>] SyS_openat+0x10/0x18
+[  110.729137] Exception stack(0xffff00001cfdbec0 to 0xffff00001cfdc000)
+[  110.735586] bec0: 00000000ffffff9c 0000f19743ca8aa0 0000000000000002 0000000000000000
+[  110.743429] bee0: 0000000013640690 0000000000000003 0000000000000000 0000000013640d21
+[  110.751264] bf00: 0000000000000038 00000000ffffff9c 0000000000000006 00000000ffffffff
+[  110.759101] bf20: 0000f1972cdc5e78 0000000000000070 000000006fbedf28 0000000000000000
+[  110.766937] bf40: 0000f1974df6bfa0 0000f1974d3af218 0000f1972c16142a 0000f19743ca8aa0
+[  110.774773] bf60: 0000000000000001 0000000000000000 0000f1972c161528 0000f19743ca8aa0
+[  110.782609] bf80: 0000f1972c162588 00000000000005e3 0000000000000610 0000000013640610
+[  110.790445] bfa0: 00000000136401d8 0000f1972c1614a0 0000f1974df4e344 0000f1972c161490
+[  110.798281] bfc0: 0000f1974d3f3768 0000000080000000 00000000ffffff9c 0000000000000038
+[  110.806117] bfe0: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+[  110.813953] [<ffff000008083ac0>] el0_svc_naked+0x34/0x38
+[  110.821196] hub 1-1.1:1.0: hub_suspend
+[  110.825229] usb 1-1.1: usb auto-suspend, wakeup 1
+
+
+
+[  879.609474] CPU: 0 PID: 3181 Comm: sh Not tainted 4.14.98-07235-g29b166a0f598-dirty #32
+[  879.617487] Hardware name: Freescale i.MX8QXP MEK (DT)
+[  879.622629] Call trace:
+[  879.625092] [<ffff00000808b198>] dump_backtrace+0x0/0x414
+[  879.630498] [<ffff00000808b5c0>] show_stack+0x14/0x1c
+[  879.635561] [<ffff000008a99c08>] dump_stack+0x90/0xb0
+[  879.640626] [<ffff000008630aec>] usbdev_open+0x24/0x224
+[  879.645864] [<ffff0000082441f8>] chrdev_open+0x100/0x200
+[  879.651186] [<ffff00000823aabc>] do_dentry_open+0x224/0x324
+[  879.656762] [<ffff00000823bfd8>] vfs_open+0x54/0x84
+[  879.661648] [<ffff00000824ed1c>] path_openat+0x5a0/0xa68
+[  879.666965] [<ffff000008250ff4>] do_filp_open+0x6c/0x118
+[  879.672280] [<ffff00000823c328>] do_sys_open+0x16c/0x274
+[  879.677597] [<ffff00000823c468>] SyS_openat+0x10/0x18
+
+
+
+
+
+
+
+
+
+1|autolink_8q:/ # mknod /dev/globalmem2 c 230 1                                
+[ 1330.072888] CPU: 1 PID: 3191 Comm: mknod Not tainted 4.14.98-07235-g29b166a0f598-dirty #32
+[ 1330.081164] Hardware name: Freescale i.MX8QXP MEK (DT)
+[ 1330.086305] Call trace:
+[ 1330.088769] [<ffff00000808b198>] dump_backtrace+0x0/0x414
+[ 1330.094181] [<ffff00000808b5c0>] show_stack+0x14/0x1c
+[ 1330.099236] [<ffff000008a99c08>] dump_stack+0x90/0xb0
+[ 1330.104294] [<ffff00000825f084>] init_special_inode+0x1c/0xc8
+[ 1330.110052] [<ffff0000081d5304>] shmem_get_inode+0x120/0x25c
+[ 1330.115714] [<ffff0000081d5638>] shmem_mknod+0x28/0xec
+[ 1330.120858] [<ffff00000824b34c>] vfs_mknod2+0x140/0x1ac
+[ 1330.126090] [<ffff0000082513c8>] SyS_mknodat+0x1c4/0x204
+[ 1330.131403] Exception stack(0xffff00000a6fbec0 to 0xffff00000a6fc000)
+[ 1330.137853] bec0: 00000000ffffff9c 0000ffffca3aca4f 00000000000021b0 000000000000e601
+[ 1330.145688] bee0: 0000000040100401 8400000812080020 4523ff79241f5324 00004eb29e313def
+[ 1330.153524] bf00: 0000000000000021 00000000ffffff9c 0000ffffca3aca4f 00000000000021b0
+[ 1330.161358] bf20: 8000000000000000 0000000000000000 0000f3ad5a800000 0000000000000000
+[ 1330.169196] bf40: 0000f3ad5b1b25f0 0000f3ad5b132f70 0000000000000000 00000000000021b0
+[ 1330.177032] bf60: 0000ffffca3aca4f 00000000000000e6 0000000000000001 0000b14d54101930
+[ 1330.184868] bf80: 0000b14d540fd888 0000000000000000 0000000000000000 0000000000000000
+[ 1330.192704] bfa0: 0000000000000000 0000ffffca3abb90 0000b14d54091f08 0000ffffca3abb60
+[ 1330.200541] bfc0: 0000f3ad5b132f78 0000000020000000 00000000ffffff9c 0000000000000021
+[ 1330.208376] bfe0: 0000000000000000 0000000000000000 0000000000000000 0000000000000000
+[ 1330.216211] [<ffff000008083ac0>] el0_svc_naked+0x34/0x38
+
+
+bus_probe_device
+
+[  109.802973] [<ffff00000808b198>] dump_backtrace+0x0/0x414
+[  109.808379] [<ffff00000808b5c0>] show_stack+0x14/0x1c
+[  109.813443] [<ffff000008a99c08>] dump_stack+0x90/0xb0
+[  109.818507] [<ffff00000825f084>] init_special_inode+0x1c/0xc8
+[  109.824267] [<ffff0000081d5304>] shmem_get_inode+0x120/0x25c
+[  109.829936] [<ffff0000081d5638>] shmem_mknod+0x28/0xec
+[  109.835080] [<ffff00000824b34c>] vfs_mknod2+0x140/0x1ac
+[  109.840312] [<ffff00000824b3e4>] vfs_mknod+0x2c/0x34
+[  109.845281] [<ffff000008598440>] devtmpfsd+0x1a0/0x2f0
+[  109.850423] [<ffff0000080d1d68>] kthread+0x104/0x130bus_probe_device
+[  109.855392] [<ffff000008084f14>] ret_from_fork+0x10/0x18
+
+
+
+int devtmpfs_create_node(struct device *dev)
+devtmpfs.c
+
+[ 1643.621119] CPU: 0 PID: 1706 Comm: kworker/0:2 Not tainted 4.14.98-07235-g29b166a0f598-dirty #34
+[ 1643.635049] Hardware name: Freescale i.MX8QXP MEK (DT)
+[ 1643.640207] Workqueue: usb_hub_wq hub_event
+[ 1643.644396] Call trace:
+[ 1643.646854] [<ffff00000808b198>] dump_backtrace+0x0/0x414
+[ 1643.652266] [<ffff00000808b5c0>] show_stack+0x14/0x1c
+[ 1643.657329] [<ffff000008a9cc88>] dump_stack+0x90/0xb0
+[ 1643.662395] [<ffff00000859b5e8>] devtmpfs_create_node+0x60/0x13c
+[ 1643.668413] [<ffff00000858fecc>] device_add+0x56c/0x57c
+[ 1643.673640] [<ffff0000086226b4>] usb_new_device+0x288/0x5fc
+[ 1643.679219] [<ffff000008624100>] hub_event+0x93c/0x12f8
+[ 1643.684451] [<ffff0000080cb990>] process_one_work+0x140/0x3f8
+[ 1643.690209] [<ffff0000080cbd80>] worker_thread+0x138/0x3e4
+[ 1643.695700] [<ffff0000080d1d68>] kthread+0x104/0x130
+[ 1643.700671] [<ffff000008084f14>] ret_from_fork+0x10/0x18
+[ 1643.706544] ===handle_create====bus/usb/001/004===
+
+
+
+
+https://zhidao.baidu.com/question/493500391625879332.html
+
+
+
+
+$ [  214.002863] ***hub_port_connect@@@ 
+[  214.229147] usb 1-1.1: new full-speed USB device number 5 using cdns-usb3
+[  214.339649] usb 1-1.1: New USB device found, idVendor=0403, idProduct=6001
+[  214.346570] usb 1-1.1: New USB device strings: Mfr=1, Product=2, SerialNumber=3
+[  214.354128] usb 1-1.1: Product: FT232R USB UART
+[  214.358682] usb 1-1.1: Manufacturer: FTDI
+[  214.362724] usb 1-1.1: SerialNumber: AR0K40HM
+[  214.367338] ========device_create_file======1-1.1=====
+[  214.367479] ========device_create_file======1-1.1=====
+[  214.372672] =====device_get_devnode==type====
+[  214.378094] ===handle_create====bus/usb/001/005===
+[  214.382721] =====device_get_devnode==type====
+[  214.391706] xqli bus_probe_device
+[  214.396259] xqli driver_probe_device
+[  214.403492] xqli usb_probe_device
+[  214.406841] xqli generic_probe
+[  214.409945] xqli usb_set_configuration
+[  214.414047] ========device_create_file======1-1.1:1.0=====
+[  214.416911] ========device_create_file======1-1.1:1.0=====
+[  214.423745] xqli bus_probe_device
+[  214.432688] ========device_create_file======ep_81=====
+[  214.432737] xqli bus_probe_device
+[  214.441274] ========device_create_file======ep_02=====
+[  214.441310] xqli bus_probe_device
+[  214.449826] =====device_get_devnode==type====
+[  214.455539] ========device_create_file======ep_00=====
+
+
+
+
+
+
+
+
+
+
+
+./drivers/usb/core/hub.c:627:	if (queue_work(hub_wq, &hub->events))
+
+
+
+
+
+
+
+
+

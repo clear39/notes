@@ -1,0 +1,30 @@
+[    0.741174] Call trace:
+[    0.743619] [<ffff00000808b198>] dump_backtrace+0x0/0x414
+[    0.748996] [<ffff00000808b5c0>] show_stack+0x14/0x1c
+[    0.754036] [<ffff000008aa8408>] dump_stack+0x90/0xb0
+[    0.759074] [<ffff00000863ec34>] mxs_phy_probe+0x38/0x488
+[    0.764460] [<ffff0000085954dc>] platform_drv_probe+0x74/0xec
+[    0.770195] [<ffff0000085934e4>] driver_probe_device+0x36c/0x3dc
+[    0.776187] [<ffff0000085936ec>] __device_attach_driver+0xa0/0x134
+[    0.782355] [<ffff00000859106c>] bus_for_each_drv+0x60/0xb0
+
+
+
+[    0.787915] [<ffff00000859302c>] __device_attach+0x100/0x16c
+
+[    0.793562] [<ffff0000085939d4>] device_initial_probe+0x10/0x18
+[    0.799469] [<ffff000008592438>] bus_probe_device+0xa8/0xb0
+[    0.805029] [<ffff00000858fd64>] device_add+0x404/0x57c
+
+
+
+[    0.810244] [<ffff0000087e9914>] of_device_add+0x50/0x5c
+[    0.815541] [<ffff0000087e9ea8>] of_platform_device_create_pdata+0x80/0xd0
+[    0.822404] [<ffff0000087e9ff8>] of_platform_bus_create.part.2+0xc4/0x32c
+[    0.829181] [<ffff0000087ea5a0>] of_platform_populate+0x9c/0x104
+[    0.835178] [<ffff000008ef1984>] of_platform_default_populate_init+0x6c/0x78
+
+[    0.842212] [<ffff000008083ca0>] do_one_initcall+0x48/0x14c
+[    0.847773] [<ffff000008ea0df0>] kernel_init_freeable+0x13c/0x1d8
+[    0.853854] [<ffff000008abd39c>] kernel_init+0x10/0x13c
+[    0.859066] [<ffff000008084f14>] ret_from_fork+0x10/0x18

@@ -1,0 +1,21 @@
+
+
+
+
+./init/main.c:962:static noinline void __init kernel_init_freeable(void);
+./init/main.c:1000:	kernel_init_freeable();
+./init/main.c:1042:static noinline void __init kernel_init_freeable(void)
+
+
+
+
+  1 F   t    phys_addr_t       include/linux/types.h
+               typedef u32 phys_addr_t;
+  2 F   t    phys_addr_t       include/linux/types.h
+               typedef u64 phys_addr_t;
+  3 F   t    phys_addr_t       tools/testing/selftests/rcutorture/formal/srcu-cbmc/include/linux/types.h
+               typedef u32 phys_addr_t;
+  4 F   t    phys_addr_t       tools/testing/selftests/rcutorture/formal/srcu-cbmc/include/linux/types.h
+               typedef u64 phys_addr_t;
+  5 F   t    phys_addr_t       tools/virtio/linux/kernel.h
+               typedef unsigned long long phys_addr_t;

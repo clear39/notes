@@ -1,0 +1,25 @@
+
+//  @   vendor/nxp-opensource/kernel_imx/arch/arm64/boot/dts/freescale/fsl-imx8dx.dtsi
+i2c_rpbus_1: i2c-rpbus-1 {
+    compatible = "fsl,i2c-rpbus";
+    status = "disabled";
+};
+
+
+//  @   vendor/nxp-opensource/kernel_imx/arch/arm64/boot/dts/freescale/fsl-imx8qxp-autolink-tsu-rpmsg-car.dtsi
+&i2c_rpbus_1 {  
+	#address-cells = <1>;
+	#size-cells = <0>;
+	status = "okay";
+
+	tlv320aic3x: tlv320aic3x@18{
+		compatible = "ti,tlv320aic3104";
+		reg = <0x18>;
+		clocks = <&clk IMX8QXP_AUD_MCLKOUT0>;
+		clock-names = "mclk";
+		// pinctrl-names = "codec_pwr";
+		// pinctrl-0 = <&pinctrl_codec>;
+		// gpio-reset = <&gpio3 3 0>;
+		ai3x-micbias-vg = <3>;
+	};
+};
