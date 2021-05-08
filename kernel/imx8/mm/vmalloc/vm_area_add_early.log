@@ -1,0 +1,75 @@
+
+/bin/bash -c "
+(rm -rf out/target/common/obj/JAVA_LIBRARIES/apache-xml_intermediates/dex-hiddenapi/ ) && 
+(mkdir -p out/target/common/obj/JAVA_LIBRARIES/apache-xml_intermediates/dex-hiddenapi/ ) && 
+(find out/target/common/obj/JAVA_LIBRARIES/apache-xml_intermediates/dex/ -maxdepth 1 -name \"classes*.dex\" | sort | xargs -I{} cp -f {} out/target/common/obj/JAVA_LIBRARIES/apache-xml_intermediates/dex-hiddenapi/ ) && 
+(find out/target/common/obj/JAVA_LIBRARIES/apache-xml_intermediates/dex-hiddenapi/ -name \"classes*.dex\" | sort | sed 's/^/--dex=/' | xargs out/host/linux-x86/bin/hiddenapi --light-greylist=out/target/common/obj/PACKAGING/hiddenapi-light-greylist.txt --dark-greylist=out/target/common/obj/PACKAGING/hiddenapi-dark-greylist.txt --blacklist=out/target/common/obj/PACKAGING/hiddenapi-blacklist.txt )"
+
+
+
+[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 4.14.98-07231-g0b7bec8f6197-dirty #3
+[    0.000000] Hardware name: Freescale i.MX8QXP MEK (DT)
+[    0.000000] Call trace:
+[    0.000000] [<ffff00000808b198>] dump_backtrace+0x0/0x414
+[    0.000000] [<ffff00000808b5c0>] show_stack+0x14/0x1c
+[    0.000000] [<ffff000008a78888>] dump_stack+0x90/0xb0
+[    0.000000] [<ffff000008e803dc>] vm_area_add_early+0x10/0x30
+[    0.000000] [<ffff000008e67208>] map_kernel_segment+0xa0/0xb4   // arch/arm64/mm/mmu.c
+[    0.000000] [<ffff000008e674e8>] paging_init+0x124/0x758
+[    0.000000] [<ffff000008e635c8>] setup_arch+0x1bc/0x540
+[    0.000000] [<ffff000008e60924>] start_kernel+0x78/0x408
+
+
+
+[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 4.14.98-07231-g0b7bec8f6197-dirty #3
+[    0.000000] Hardware name: Freescale i.MX8QXP MEK (DT)
+[    0.000000] Call trace:
+[    0.000000] [<ffff00000808b198>] dump_backtrace+0x0/0x414
+[    0.000000] [<ffff00000808b5c0>] show_stack+0x14/0x1c
+[    0.000000] [<ffff000008a78888>] dump_stack+0x90/0xb0
+[    0.000000] [<ffff000008e803dc>] vm_area_add_early+0x10/0x30
+[    0.000000] [<ffff000008e67208>] map_kernel_segment+0xa0/0xb4
+[    0.000000] [<ffff000008e67548>] paging_init+0x184/0x758
+[    0.000000] [<ffff000008e635c8>] setup_arch+0x1bc/0x540
+[    0.000000] [<ffff000008e60924>] start_kernel+0x78/0x408
+
+
+
+[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 4.14.98-07231-g0b7bec8f6197-dirty #3
+[    0.000000] Hardware name: Freescale i.MX8QXP MEK (DT)
+[    0.000000] Call trace:
+[    0.000000] [<ffff00000808b198>] dump_backtrace+0x0/0x414
+[    0.000000] [<ffff00000808b5c0>] show_stack+0x14/0x1c
+[    0.000000] [<ffff000008a78888>] dump_stack+0x90/0xb0
+[    0.000000] [<ffff000008e803dc>] vm_area_add_early+0x10/0x30
+[    0.000000] [<ffff000008e67208>] map_kernel_segment+0xa0/0xb4
+[    0.000000] [<ffff000008e6756c>] paging_init+0x1a8/0x758
+[    0.000000] [<ffff000008e635c8>] setup_arch+0x1bc/0x540
+[    0.000000] [<ffff000008e60924>] start_kernel+0x78/0x408
+
+
+
+[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 4.14.98-07231-g0b7bec8f6197-dirty #3
+[    0.000000] Hardware name: Freescale i.MX8QXP MEK (DT)
+[    0.000000] Call trace:
+[    0.000000] [<ffff00000808b198>] dump_backtrace+0x0/0x414
+[    0.000000] [<ffff00000808b5c0>] show_stack+0x14/0x1c
+[    0.000000] [<ffff000008a78888>] dump_stack+0x90/0xb0
+[    0.000000] [<ffff000008e803dc>] vm_area_add_early+0x10/0x30
+[    0.000000] [<ffff000008e67208>] map_kernel_segment+0xa0/0xb4
+[    0.000000] [<ffff000008e675c8>] paging_init+0x204/0x758
+[    0.000000] [<ffff000008e635c8>] setup_arch+0x1bc/0x540
+[    0.000000] [<ffff000008e60924>] start_kernel+0x78/0x408
+
+
+[    0.000000] CPU: 0 PID: 0 Comm: swapper Not tainted 4.14.98-07231-g0b7bec8f6197-dirty #3
+[    0.000000] Hardware name: Freescale i.MX8QXP MEK (DT)
+[    0.000000] Call trace:
+[    0.000000] [<ffff00000808b198>] dump_backtrace+0x0/0x414
+[    0.000000] [<ffff00000808b5c0>] show_stack+0x14/0x1c
+[    0.000000] [<ffff000008a78888>] dump_stack+0x90/0xb0
+[    0.000000] [<ffff000008e803dc>] vm_area_add_early+0x10/0x30
+[    0.000000] [<ffff000008e67208>] map_kernel_segment+0xa0/0xb4
+[    0.000000] [<ffff000008e67624>] paging_init+0x260/0x758
+[    0.000000] [<ffff000008e635c8>] setup_arch+0x1bc/0x540
+[    0.000000] [<ffff000008e60924>] start_kernel+0x78/0x408

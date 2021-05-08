@@ -1,0 +1,138 @@
+
+U-Boot SPL 2018.03-00016-ge544c217f1 (Apr 16 2021 - 08:06:31 +0800)
+Trying to boot from MMC1
+Warning: you configured more USDHC controllers(2) than supported by the board
+Authentication key not yet programmed 
+keyslot package magic error, do nothing here!
+Authentication key not yet programmed 
+Booting from bootloader_a...U
+welcome to lk/MP
+
+boot args 0x2000000 0xfe000000 0x2000 0x0
+generic_arm64_map_regs: failed -5 name=gic
+initializing trusty (Built: 17:01:08 Mar  5 2019)
+Initializing Trusted OS SMC handler
+int rebuild_hset_all(struct uctx *):238: Rebuilding all handles set
+hwcrypto: 222: Initializing
+hwrng_caam: 44: Init HWRNG service provider
+hwrng_srv: 256: Start HWRNG service
+int rebuild_hset_all(struct uctx *):238: Rebuilding all handles set
+hwcrypto_caam: 78: Init HWCRYPTO service provider
+hwcrypto_srv: 306: Start HWCRYPTO service
+hwkey_caam: 169: Init HWKEY service provider
+hwkey_caam: 138: Invalid magic
+hwkey_srv: 331: Start HWKEY service
+hwcrypto: 237: enter main event loop
+int rebuild_hset_all(struct uctx *):238: Rebuilding all handles set
+int rebuild_hset_all(struct uctx *):238: Rebuilding all handles set
+int rebuild_hset_all(struct uctx *):238: Rebuilding all handles set
+MMC:   FSL_SDHC: 0
+In:    serial@5a060000
+Out:   serial@5a060000
+Err:   serial@5a060000
+AUTOLINK TSU.......
+flash target is MMC:0
+libtipc.c: INFO Initializing Trusty device
+trusty_dev.c: INFO selected trusty api version: 3 (requested 3)
+libtipc.c: INFO Initializing Trusty IPC device
+libtipc.c: INFO Initializing RPMB storage proxy service
+ss: get_rpmb_auth_key: failed to get key: -2
+ss: proxy_connect: can't get storage auth key: (-2)
+ipc: do_connect: failure initializing channel state (1001)
+rpmb_proxy.c:312: ERROR rpmb_storage_proxy_init: unexpected proxy channel close
+libtipc.c:93: ERROR Initlializing RPMB storage proxy service failed (-8)
+Authentication key not yet programmed 
+libtipc.c: INFO Initializing Trusty Hardware Crypto client
+Fastboot: Normal
+Normal Boot
+Hit any key to stop autoboot:  1  0 
+avb.c:86: ERROR avb_do_tipc: AVB TIPC client not initialized
+Verifying slot _a ...
+avb_vbmeta_image.c:206: ERROR: Hash does not match!
+avb_slot_verify.c:692: ERROR: vbmeta_a: Error verifying vbmeta image: HASH_MISMATCH
+avb.c:86: ERROR avb_do_tipc: AVB TIPC client not initialized
+fsl_read_rollback_index_rpmb: read rollback from Trusty error!
+Authentication key not yet programmed 
+avb_slot_verify.c:388: ERROR: boot_a: Hash of data does not match digest in descriptor.
+avb.c:86: ERROR avb_do_tipc: AVB TIPC client not initialized
+ verify FAIL, state: UNLOCK
+ boot 'boot_a' still
+
+
+Kernel load addr 0x80280000 size 9008 KiB
+kernel   @ 80280000 (9223391)
+ramdisk  @ 83400000 (2592218)
+fdt      @ 83200000 (74830)
+
+
+
+avb.c:86: ERROR avb_do_tipc: AVB TIPC client not initialized
+avb.c:86: ERROR avb_do_tipc: AVB TIPC client not initialized
+ERROR - failed to read public key for keymaster
+keymaster.c:318: ERROR Keymaster TIPC client not initialized!
+avb.c:86: ERROR avb_do_tipc: AVB TIPC client not initialized
+ipc_dev.c:306: ERROR trusty_ipc_dev_close: secure OS returned (-7)
+
+
+
+## Flattened Device Tree blob at 83200000                                 // boot_get_fdt
+   Booting using the fdt blob at 0x83200000								  // boot_get_fdt
+   Using Device Tree in place at 0000000083200000, end 000000008321544d   // boot_relocate_fdt
+
+
+
+/dma-controller@591F0000, 56208
+/dma-controller@599F0000, 57184
+/dma-controller@5a1f0000, 55332
+/dma-controller@5a1f0000, 55332
+
+
+
+
+
+
+
+
+
+
+
+
+
+$ grep boot_relocate_fdt -nrw .
+./common/bootm.c:656:		ret = boot_relocate_fdt(&images->lmb, &images->ft_addr,
+./common/image.c:1500:		ret = boot_relocate_fdt(lmb, of_flat_tree, &of_size);
+./common/bootm_os.c:275:		ret = boot_relocate_fdt(lmb, of_flat_tree, &of_size);
+./arch/mips/lib/bootm.c:249:	return boot_relocate_fdt(&images->lmb, &images->ft_addr,
+
+
+
+$ grep boot_get_fdt  -nrw .
+./common/bootm.c:241:	ret = boot_get_fdt(flag, argc, argv, IH_ARCH_DEFAULT, &images,    // bootm_find_images
+
+
+
+
+$ grep bootm_find_images -nrw .
+./common/bootm.c:281:		return bootm_find_images(flag, argc, argv);			// bootm_find_other
+./cmd/booti.c:70:	if (bootm_find_images(flag, argc, argv))
+./cmd/bootz.c:55:	if (bootm_find_images(flag, argc, argv))
+
+
+
+$ grep bootm_find_other -nrw .
+./common/bootm.c:623:		ret = bootm_find_other(cmdtp, flag, argc, argv);	//do_bootm_states
+
+
+
+$ grep do_bootm_states -nrw .
+./cmd/bootm.c:83:	ret = do_bootm_states(cmdtp, flag, argc, argv, state, &images, 0);
+./cmd/bootm.c:189:	return do_bootm_states(cmdtp, flag, argc, argv, BOOTM_STATE_START |
+./cmd/booti.c:30:	ret = do_bootm_states(cmdtp, flag, argc, argv, BOOTM_STATE_START,
+./cmd/booti.c:94:	ret = do_bootm_states(cmdtp, flag, argc, argv,
+./cmd/bootz.c:31:	ret = do_bootm_states(cmdtp, flag, argc, argv, BOOTM_STATE_START,
+./cmd/bootz.c:86:	ret = do_bootm_states(cmdtp, flag, argc, argv,
+
+
+
+
+

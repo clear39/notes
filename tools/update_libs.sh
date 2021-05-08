@@ -1,10 +1,8 @@
 # !/bin/bash
 # Standard Android Build Environment
 
-sudo ln -s /work/bin/repo /usr/local/bin/repo
-
-sudo ln -s /work/bin/uuu /usr/local/bin/uuu
-
+sudo apt-get upgrade
+sudo apt-get update
 sudo apt-get -y install linux-doc libcorelinux-doc
 
 sudo apt-get -y install manpages-posix  manpages-posix-dev
@@ -24,14 +22,6 @@ sudo apt-get -y install subversion
 sudo apt-get -y install meld
 
 sudo apt-get -y install minicom
-
-#cp ~/.bashrc ~/.bashrc-bk
-#echo "ANDROID_SDK=/work/tools/android-sdk" >> ~/.bashrc
-#echo "export PATH=\$\$PATH:\$\$ANDROID_SDK/tools:\$\$ANDROID_SDK/platform-tools" >> ~/.bashrc 
-#echo "export PATH=$$PATH:/usr/local/go/bin" >> ~/.bashrc
-source ~/.bashrc
-
-
 
 apt-get update
 apt-get install -y git-core gnupg flex bison gperf build-essential
