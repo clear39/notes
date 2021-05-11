@@ -7,6 +7,9 @@ sudo ./uuu_imx_android_flash.sh -f imx8qxp-tsu -a -e -D ./
 烧写:
 dd if=/data/tmp/boot.img of=/dev/block/mmcblk0p5
 
+dd if=/data/tmp/boot.img of=/dev/block/by-name/boot_a
+
+
 
 setprop persist.sys.disable_rescure true
 
