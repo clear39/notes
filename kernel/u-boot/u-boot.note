@@ -1,2 +1,4 @@
+
+// uboot 单独烧写
 dd if=/data/bootloader-imx8qxp-tsu.img of=/dev/block/by-name/bootloader_a
 

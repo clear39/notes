@@ -11,6 +11,7 @@ struct task_struct {
 	struct thread_info		thread_info;
 #endif
 	/* -1 unrunnable, 0 runnable, >0 stopped: */
+	// 任务状态（-1是不运行状态，0是运行状态，大于0是停止状态）
 	volatile long			state;
 
 	/*
@@ -19,6 +20,7 @@ struct task_struct {
 	 */
 	randomized_struct_fields_start
 
+	// 指向内核栈的指针
 	void				*stack;
 	atomic_t			usage;
 	/* Per task flags (PF_*), defined further below: */
@@ -72,7 +74,13 @@ struct task_struct {
 	unsigned int			btrace_seq;
 #endif
 
+	// @ include/uapi/linux/sched.h
+	//进程的调度策略，有6种
+	//限期进程调度策略: SCHED_DEADLINE
+	//实时进程调度策略: SCHED_FIFO SCHED_RR
+	//普通进程调度策略: SCHED_NORMAL SCHED_BATCH SCHED_IDLE
 	unsigned int			policy;
+
 	int				nr_cpus_allowed;
 	cpumask_t			cpus_allowed;
 
@@ -99,6 +107,7 @@ struct task_struct {
 	struct rb_node			pushable_dl_tasks;
 #endif
 
+	// 进程内存管理信息
 	struct mm_struct		*mm;
 	struct mm_struct		*active_mm;
 
@@ -153,6 +162,7 @@ struct task_struct {
 
 	struct restart_block		restart_block;
 
+	// 进程标识符，用来代表一个进程
 	pid_t				pid;
 	pid_t				tgid;
 
@@ -190,6 +200,8 @@ struct task_struct {
 
 	/* PID/PID hash table linkage. */
 	struct pid_link			pids[PIDTYPE_MAX];
+
+	//线程链表
 	struct list_head		thread_group;
 	struct list_head		thread_node;
 
@@ -269,9 +281,11 @@ struct task_struct {
 	unsigned long			last_switch_count;
 #endif
 	/* Filesystem information: */
+	// 文件系统信息
 	struct fs_struct		*fs;
 
 	/* Open file information: */
+	// 打开文件信息
 	struct files_struct		*files;
 
 	/* Namespaces: */
@@ -279,6 +293,7 @@ struct task_struct {
 
 	/* Signal handlers: */
 	struct signal_struct		*signal;
+	
 	struct sighand_struct		*sighand;
 	sigset_t			blocked;
 	sigset_t			real_blocked;
@@ -572,6 +587,7 @@ struct task_struct {
 #ifdef CONFIG_UPROBES
 	struct uprobe_task		*utask;
 #endif
+	
 #if defined(CONFIG_BCACHE) || defined(CONFIG_BCACHE_MODULE)
 	unsigned int			sequential_io;
 	unsigned int			sequential_io_avg;
@@ -580,12 +596,15 @@ struct task_struct {
 	unsigned long			task_state_change;
 #endif
 	int				pagefault_disabled;
+
 #ifdef CONFIG_MMU
 	struct task_struct		*oom_reaper_list;
 #endif
+
 #ifdef CONFIG_VMAP_STACK
 	struct vm_struct		*stack_vm_area;
 #endif
+
 #ifdef CONFIG_THREAD_INFO_IN_TASK
 	/* A live task holds one reference: */
 	atomic_t			stack_refcount;
@@ -605,6 +624,7 @@ struct task_struct {
 	randomized_struct_fields_end
 
 	/* CPU-specific state of this task: */
+	// 进程的CPU状态，切换时，切换时要保存到停止进程的task_struct中
 	struct thread_struct		thread;
 
 	/*

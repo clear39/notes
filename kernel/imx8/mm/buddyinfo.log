@@ -1,0 +1,34 @@
+autolink_8q:/ # cat /proc/buddyinfo                                            
+Node 0, zone      DMA     12      6      6     11      9      7      3      6      8      9      6     10      9     44 
+Node 0, zone   Normal    679    143     35     44     42      4      1      0      0      0      0      0      0      0 
+
+
+autolink_8q:/ # echo m > /proc/sysrq-trigger                                   
+[  477.268275] sysrq: SysRq : Show Memory
+[  477.272090] Mem-Info:
+[  477.274379] active_anon:71419 inactive_anon:169 isolated_anon:0
+[  477.274379]  active_file:26446 inactive_file:127149 isolated_file:0
+[  477.274379]  unevictable:735 dirty:0 writeback:0 unstable:0
+[  477.274379]  slab_reclaimable:7495 slab_unreclaimable:10730
+[  477.274379]  mapped:84183 shmem:205 pagetables:4748 bounce:0
+[  477.274379]  free:434439 free_pcp:1118 free_cma:187339
+[  477.309202] Node 0 active_anon:285676kB inactive_anon:676kB active_file:105784kB inactive_file:508596kB unevictable:2940kB isolated(anon):0kB isolated(file):0kB mapped:336732kB dirty:0kB writeback:0kB shmem:o
+[  477.337082] DMA free:1728224kB min:3708kB low:8400kB high:10252kB active_anon:15572kB inactive_anon:4kB active_file:1672kB inactive_file:18784kB unevictable:0kB writepending:0kB present:1937408kB managed:185B
+[  477.365795] lowmem_reserve[]: 0 968 968
+[  477.369670] Normal free:9532kB min:1980kB low:4484kB high:5472kB active_anon:270104kB inactive_anon:672kB active_file:104112kB inactive_file:489812kB unevictable:2940kB writepending:0kB present:1048576kB manB
+[  477.398953] lowmem_reserve[]: 0 0 0
+
+[  477.402461] DMA: 12*4kB (UMEC) 6*8kB (EC) 6*16kB (EC) 11*32kB (UMEC) 9*64kB (EC) 7*128kB (EC) 3*256kB (C) 6*512kB (MC) 8*1024kB (UMEC) 9*2048kB (UMEC) 6*4096kB (UMEC) 10*8192kB (UMEC) 9*16384kB (UMEC) 44*327B
+
+[  477.422801] Normal: 713*4kB (UME) 153*8kB (UME) 37*16kB (UM) 44*32kB (UME) 42*64kB (UME) 4*128kB (UM) 1*256kB (E) 0*512kB 0*1024kB 0*2048kB 0*4096kB 0*8192kB 0*16384kB 0*32768kB = 9532kB
+
+[  477.440065] Node 0 hugepages_total=0 hugepages_free=0 hugepages_surp=0 hugepages_size=2048kB
+[  477.448530] 154378 total pagecache pages
+[  477.452468] 0 pages in swap cache
+[  477.455785] Swap cache stats: add 0, delete 0, find 0/0
+[  477.461038] Free swap  = 0kB
+[  477.463934] Total swap = 0kB
+[  477.466817] 746496 pages RAM
+[  477.469725] 0 pages HighMem/MovableOnly
+[  477.473585] 34598 pages reserved
+[  477.476837] 204800 pages cma reserved

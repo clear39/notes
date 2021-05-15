@@ -2,9 +2,11 @@
 // @ include/linux/mm_types.h
 
 // 该数据结构是描述进程内存管理的核心数据结构，该数据结构也提供了管理VMA(struct vm_area_struct) 所需要的信息
+// VMA按照起始地址以递增的方式插入mm_struct->mmap链表中，当进程拥有大量的VMA时，描述链表和查找特定的VMA是非常抵消的操作;
+// 例如在与计算的机器中，所以内核中通常要靠红黑树来协助，以便提高查找速度
 
 struct mm_struct {
-	// 
+	// 形成一个单链表，进程中所有的VMA都链接到这个链表中，链表头就是 mm_struct->mmap
 	struct vm_area_struct *mmap;		/* list of VMAs */
 
 	// 红黑树的根节点，用来链接进程地址空间struct vm_area_struct中的vm_rb
@@ -27,6 +29,7 @@ struct mm_struct {
 
 	unsigned long task_size;		/* size of task vm space */
 	unsigned long highest_vm_end;		/* highest vma end address */
+	// 页全局目录的基地址
 	pgd_t * pgd;
 
 	/**
