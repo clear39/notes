@@ -1,0 +1,66 @@
+[    0.000000] __fdt_scan_reserved_mem 
+[    0.000000] __fdt_scan_reserved_mem cpus
+[    0.000000] __fdt_scan_reserved_mem cpu@0
+[    0.000000] __fdt_scan_reserved_mem cpu@1
+[    0.000000] __fdt_scan_reserved_mem cpu@2
+[    0.000000] __fdt_scan_reserved_mem cpu@3
+[    0.000000] __fdt_scan_reserved_mem l2-cache0
+[    0.000000] __fdt_scan_reserved_mem idle-states
+[    0.000000] __fdt_scan_reserved_mem cpu-sleep
+[    0.000000] __fdt_scan_reserved_mem cluster-sleep
+[    0.000000] __fdt_scan_reserved_mem energy-costs
+[    0.000000] __fdt_scan_reserved_mem core-cost-a35
+[    0.000000] __fdt_scan_reserved_mem cluster-cost-a35
+[    0.000000] __fdt_scan_reserved_mem pmu
+[    0.000000] __fdt_scan_reserved_mem psci
+[    0.000000] __fdt_scan_reserved_mem aliases
+[    0.000000] __fdt_scan_reserved_mem memory@80000000
+
+
+
+[    0.000000] __fdt_scan_reserved_mem reserved-memory
+
+
+
+[    0.000000] __fdt_scan_reserved_mem decoder_boot@0x84000000
+[    0.000000] __reserved_mem_reserve_reg decoder_boot@0x84000000
+[    0.000000] fdt_reserved_mem_save_node decoder_boot@0x84000000
+
+[    0.000000] __fdt_scan_reserved_mem encoder_boot@0x86000000
+[    0.000000] __reserved_mem_reserve_reg encoder_boot@0x86000000
+[    0.000000] fdt_reserved_mem_save_node encoder_boot@0x86000000
+
+[    0.000000] __fdt_scan_reserved_mem rpmsg@0x90000000
+[    0.000000] __reserved_mem_reserve_reg rpmsg@0x90000000
+[    0.000000] fdt_reserved_mem_save_node rpmsg@0x90000000
+
+[    0.000000] __fdt_scan_reserved_mem rpmsg_dma@0x90400000
+[    0.000000] __reserved_mem_reserve_reg rpmsg_dma@0x90400000
+[    0.000000] fdt_reserved_mem_save_node rpmsg_dma@0x90400000
+
+[    0.000000] __fdt_scan_reserved_mem decoder_rpc@0x92000000
+[    0.000000] __reserved_mem_reserve_reg decoder_rpc@0x92000000
+[    0.000000] fdt_reserved_mem_save_node decoder_rpc@0x92000000
+
+[    0.000000] __fdt_scan_reserved_mem encoder_rpc@0x92200000
+[    0.000000] __reserved_mem_reserve_reg encoder_rpc@0x92200000
+[    0.000000] fdt_reserved_mem_save_node encoder_rpc@0x92200000
+
+[    0.000000] __fdt_scan_reserved_mem dsp@0x92400000
+[    0.000000] __reserved_mem_reserve_reg dsp@0x92400000
+[    0.000000] fdt_reserved_mem_save_node dsp@0x92400000
+
+
+[    0.000000] __fdt_scan_reserved_mem encoder_reserved@0x94400000
+[    0.000000] __reserved_mem_reserve_reg encoder_reserved@0x94400000
+[    0.000000] fdt_reserved_mem_save_node encoder_reserved@0x94400000
+
+[    0.000000] __fdt_scan_reserved_mem imx_ion@0
+
+[    0.000000] __fdt_scan_reserved_mem interrupt-controller@51a00000
+
+
+[    0.000000] Reserved memory: created DMA memory pool at 0x0000000090400000, size 8 MiB
+[    0.000000] OF: reserved mem: initialized node rpmsg_dma@0x90400000, compatible id shared-dma-pool
+[    0.000000] dma_contiguous_reserve(limit 100000000)
+[    0.000000] dma_contiguous_reserve: reserving 800 MiB for global area
