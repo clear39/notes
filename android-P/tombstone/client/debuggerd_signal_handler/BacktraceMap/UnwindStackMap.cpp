@@ -1,6 +1,3 @@
-
-
-
 //	@	system/core/libbacktrace/UnwindStackMap.cpp
 
 //-------------------------------------------------------------------------
@@ -17,7 +14,7 @@ BacktraceMap* BacktraceMap::Create(pid_t pid, bool uncached) {
   } else {
     map = new UnwindStackMap(pid);
   }
-  // 
+  //
   if (!map->Build()) {
     delete map;
     return nullptr;
@@ -26,12 +23,7 @@ BacktraceMap* BacktraceMap::Create(pid_t pid, bool uncached) {
 }
 
 
-
-
 UnwindStackMap::UnwindStackMap(pid_t pid) : BacktraceMap(pid) {}
-
-
-
 
 bool UnwindStackMap::Build() {
   if (pid_ == 0) {
@@ -42,15 +34,18 @@ bool UnwindStackMap::Build() {
   }
 
   // Create the process memory object.
+  // 构建 MemoryRemote
   process_memory_ = unwindstack::Memory::CreateProcessMemory(pid_);
 
   // Create a JitDebug object for getting jit unwind information.
   std::vector<std::string> search_libs_{"libart.so", "libartd.so"};
+
   jit_debug_.reset(new unwindstack::JitDebug(process_memory_, search_libs_));
 #if !defined(NO_LIBDEXFILE_SUPPORT)
   dex_files_.reset(new unwindstack::DexFiles(process_memory_, search_libs_));
 #endif
 
+  // 解析 /proc/pid/maps ,并存储到 stack_maps_ 中
   if (!stack_maps_->Parse()) {
     return false;
   }
@@ -73,6 +68,18 @@ bool UnwindStackMap::Build() {
 }
 
 
+std::shared_ptr<Memory> Memory::CreateProcessMemory(pid_t pid) {
+  if (pid == getpid()) {
+    return std::shared_ptr<Memory>(new MemoryLocal());
+  }
+  // pid 为 crash进程
+  // getpid() 为 crash_dump进程
+  // 所以执行这里
+  return std::shared_ptr<Memory>(new MemoryRemote(pid));
+}
+
+
+
 
 
 
@@ -88,9 +95,9 @@ bool Backtrace::Unwind(unwindstack::Regs* regs, BacktraceMap* back_map,
                        std::vector<std::string>* skip_names, BacktraceUnwindError* error) {
   UnwindStackMap* stack_map = reinterpret_cast<UnwindStackMap*>(back_map);
   auto process_memory = stack_map->process_memory();
-  // 
+  //
   unwindstack::Unwinder unwinder(MAX_BACKTRACE_FRAMES + num_ignore_frames, stack_map->stack_maps(), regs, stack_map->process_memory());
-  // 
+  //
   unwinder.SetResolveNames(stack_map->ResolveNames());
   if (stack_map->GetJitDebug() != nullptr) {
     unwinder.SetJitDebug(stack_map->GetJitDebug(), regs->Arch());

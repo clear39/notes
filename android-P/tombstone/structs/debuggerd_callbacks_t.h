@@ -13,10 +13,13 @@ typedef struct {
 
 
 // @	bionic/linker/linker_main.cpp
+
 debuggerd_callbacks_t callbacks = {
     .get_abort_message = []() {
       return g_abort_message;
     },
     .post_dump = &notify_gdb_of_libraries,
   };
+
+
   debuggerd_init(&callbacks);

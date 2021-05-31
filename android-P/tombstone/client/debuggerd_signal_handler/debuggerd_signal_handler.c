@@ -81,8 +81,7 @@ static void debuggerd_signal_handler(int signal_number, siginfo_t* info, void* c
     }
   }
 
-  // Essentially pthread_create without CLONE_FILES, so we still work during file descriptor
-  // exhaustion.
+  // Essentially pthread_create without CLONE_FILES, so we still work during file descriptor exhaustion.
   pid_t child_pid =
     clone(debuggerd_dispatch_pseudothread, pseudothread_stack,
           CLONE_THREAD | CLONE_SIGHAND | CLONE_VM | CLONE_CHILD_SETTID | CLONE_CHILD_CLEARTID,
@@ -118,8 +117,157 @@ static void debuggerd_signal_handler(int signal_number, siginfo_t* info, void* c
 }
 
 
-// @	system/core/debuggerd/handler/debuggerd_fallback.cpp
 
+static int debuggerd_dispatch_pseudothread(void* arg) {
+  debugger_thread_info* thread_info = static_cast<debugger_thread_info*>(arg);
+
+  for (int i = 0; i < 1024; ++i) {
+    close(i);
+  }
+
+  int devnull = TEMP_FAILURE_RETRY(open("/dev/null", O_RDWR));
+  if (devnull == -1) {
+    fatal_errno("failed to open /dev/null");
+  } else if (devnull != 0) {
+    fatal_errno("expected /dev/null fd to be 0, actually %d", devnull);
+  }
+
+  // devnull will be 0.
+  TEMP_FAILURE_RETRY(dup2(devnull, 1));
+  TEMP_FAILURE_RETRY(dup2(devnull, 2));
+
+  unique_fd input_read, input_write;
+  unique_fd output_read, output_write;
+  // 管道创建
+  if (!Pipe(&input_read, &input_write) != 0 || !Pipe(&output_read, &output_write)) {
+    fatal_errno("failed to create pipe");
+  }
+
+  // ucontext_t is absurdly large on AArch64, so piece it together manually with writev.
+  uint32_t version = 1;
+  constexpr size_t expected = sizeof(version) + sizeof(siginfo_t) + sizeof(ucontext_t) + sizeof(uintptr_t);
+
+  errno = 0;
+  if (fcntl(output_write.get(), F_SETPIPE_SZ, expected) < static_cast<int>(expected)) {
+    fatal_errno("failed to set pipe bufer size");
+  }
+
+  struct iovec iovs[4] = {
+      {.iov_base = &version, .iov_len = sizeof(version)},
+      {.iov_base = thread_info->siginfo, .iov_len = sizeof(siginfo_t)},
+      {.iov_base = thread_info->ucontext, .iov_len = sizeof(ucontext_t)},
+      {.iov_base = &thread_info->abort_msg, .iov_len = sizeof(uintptr_t)},
+  };
+
+  ssize_t rc = TEMP_FAILURE_RETRY(writev(output_write.get(), iovs, 4));
+  if (rc == -1) {
+    fatal_errno("failed to write crash info");
+  } else if (rc != expected) {
+    fatal("failed to write crash info, wrote %zd bytes, expected %zd", rc, expected);
+  }
+
+  // Don't use fork(2) to avoid calling pthread_atfork handlers.
+  pid_t crash_dump_pid = __fork();
+  if (crash_dump_pid == -1) {
+    async_safe_format_log(ANDROID_LOG_FATAL, "libc", "failed to fork in debuggerd signal handler: %s", strerror(errno));
+  } else if (crash_dump_pid == 0) {
+    TEMP_FAILURE_RETRY(dup2(input_write.get(), STDOUT_FILENO));
+    TEMP_FAILURE_RETRY(dup2(output_read.get(), STDIN_FILENO));
+    input_read.reset();
+    input_write.reset();
+    output_read.reset();
+    output_write.reset();
+
+    raise_caps();
+
+    char main_tid[10];
+    char pseudothread_tid[10];
+    char debuggerd_dump_type[10];
+    // 格式化参数
+    async_safe_format_buffer(main_tid, sizeof(main_tid), "%d", thread_info->crashing_tid);
+    async_safe_format_buffer(pseudothread_tid, sizeof(pseudothread_tid), "%d", thread_info->pseudothread_tid);
+    async_safe_format_buffer(debuggerd_dump_type, sizeof(debuggerd_dump_type), "%d", get_dump_type(thread_info));
+    /*
+    #if defined(__LP64__)
+    #define CRASH_DUMP_NAME "crash_dump64"
+    #else
+    #define CRASH_DUMP_NAME "crash_dump32"
+    #endif
+
+    #define CRASH_DUMP_PATH "/system/bin/" CRASH_DUMP_NAME
+    */
+    execle(CRASH_DUMP_PATH, CRASH_DUMP_NAME, main_tid, pseudothread_tid, debuggerd_dump_type, nullptr, nullptr);
+    //
+    fatal_errno("exec failed");
+  }
+
+  input_write.reset();
+  output_read.reset();
+
+  // crash_dump will ptrace and pause all of our threads, and then write to the pipe to tell
+  // us to fork off a process to read memory from.
+  char buf[4];
+  rc = TEMP_FAILURE_RETRY(read(input_read.get(), &buf, sizeof(buf)));
+  if (rc == -1) {
+    async_safe_format_log(ANDROID_LOG_FATAL, "libc", "read of IPC pipe failed: %s", strerror(errno));
+    return 1;
+  } else if (rc == 0) {
+    async_safe_format_log(ANDROID_LOG_FATAL, "libc", "crash_dump helper failed to exec");
+    return 1;
+  } else if (rc != 1) {
+    async_safe_format_log(ANDROID_LOG_FATAL, "libc", "read of IPC pipe returned unexpected value: %zd", rc);
+    return 1;
+  } else if (buf[0] != '\1') {
+    async_safe_format_log(ANDROID_LOG_FATAL, "libc", "crash_dump helper reported failure");
+    return 1;
+  }
+
+  // crash_dump is ptracing us, fork off a copy of our address space for it to use.
+  create_vm_process();
+
+  // Don't leave a zombie child.
+  int status;
+  if (TEMP_FAILURE_RETRY(waitpid(crash_dump_pid, &status, 0)) == -1) {
+    async_safe_format_log(ANDROID_LOG_FATAL, "libc", "failed to wait for crash_dump helper: %s", strerror(errno));
+  } else if (WIFSTOPPED(status) || WIFSIGNALED(status)) {
+    async_safe_format_log(ANDROID_LOG_FATAL, "libc", "crash_dump helper crashed or stopped");
+  }
+
+  if (thread_info->siginfo->si_signo != DEBUGGER_SIGNAL) {
+    // For crashes, we don't need to minimize pause latency.
+    // Wait for the dump to complete before having the process exit, to avoid being murdered by
+    // ActivityManager or init.
+    TEMP_FAILURE_RETRY(read(input_read, &buf, sizeof(buf)));
+  }
+
+  return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// @	system/core/debuggerd/handler/debuggerd_fallback.cpp
 extern "C" void debuggerd_fallback_handler(siginfo_t* info, ucontext_t* ucontext, void* abort_message) {
   if (info->si_signo == DEBUGGER_SIGNAL && info->si_value.sival_int != 0) {
     return trace_handler(info, ucontext);
@@ -156,10 +304,10 @@ static void crash_handler(siginfo_t* info, ucontext_t* ucontext, void* abort_mes
 output_fd 执行 tombstone 输出文件
 ucontext 信号回调函数返回，系统API
 siginfo 信号回调函数返回，系统API
-abort_message 
+abort_message
 */
 static void debuggerd_fallback_tombstone(int output_fd, ucontext_t* ucontext, siginfo_t* siginfo,void* abort_message) {
-	// 
+	//
   if (!__linker_enable_fallback_allocator()) {
     async_safe_format_log(ANDROID_LOG_ERROR, "libc", "fallback allocator already in use");
     return;
@@ -171,7 +319,6 @@ static void debuggerd_fallback_tombstone(int output_fd, ucontext_t* ucontext, si
 
 
 //	@	system/core/debuggerd/libdebuggerd/tombstone.cpp
-
 void engrave_tombstone_ucontext(int tombstone_fd, uint64_t abort_msg_address, siginfo_t* siginfo, ucontext_t* ucontext) {
   pid_t pid = getpid();
   pid_t tid = gettid();
@@ -209,53 +356,3 @@ void engrave_tombstone_ucontext(int tombstone_fd, uint64_t abort_msg_address, si
   std::shared_ptr<Memory> process_memory = backtrace_map->GetProcessMemory();
   engrave_tombstone(unique_fd(dup(tombstone_fd)), backtrace_map.get(), process_memory.get(), threads, tid, abort_msg_address, nullptr, nullptr);
 }
-
-void engrave_tombstone(unique_fd output_fd, BacktraceMap* map, Memory* process_memory,
-                       const std::map<pid_t, ThreadInfo>& threads, pid_t target_thread,
-                       uint64_t abort_msg_address, OpenFilesList* open_files,
-                       std::string* amfd_data) {
-  // don't copy log messages to tombstone unless this is a dev device
-  bool want_logs = android::base::GetBoolProperty("ro.debuggable", false);
-
-  log_t log;
-  log.current_tid = target_thread;
-  log.crashed_tid = target_thread;
-  log.tfd = output_fd.get();
-  log.amfd_data = amfd_data;
-
-  _LOG(&log, logtype::HEADER, "*** *** *** *** *** *** *** *** *** *** *** *** *** *** *** ***\n");
-  dump_header_info(&log);
-
-  auto it = threads.find(target_thread);
-  if (it == threads.end()) {
-    LOG(FATAL) << "failed to find target thread";
-  }
-  dump_thread(&log, map, process_memory, it->second, abort_msg_address, true);
-
-  if (want_logs) {
-    dump_logs(&log, it->second.pid, 50);
-  }
-
-  for (auto& [tid, thread_info] : threads) {
-    if (tid == target_thread) {
-      continue;
-    }
-
-    dump_thread(&log, map, process_memory, thread_info, 0, false);
-  }
-
-  if (open_files) {
-    _LOG(&log, logtype::OPEN_FILES, "\nopen files:\n");
-    dump_open_files_list(&log, *open_files, "    ");
-  }
-
-  if (want_logs) {
-    dump_logs(&log, it->second.pid, 0);
-  }
-}
-
-
-
-
-
-
