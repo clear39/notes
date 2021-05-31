@@ -73,6 +73,9 @@ int main(int argc, char** argv) {
   // the threads, fetch their registers and associated information, and then
   // fork a separate process as a snapshot of the process's address space.
   std::set<pid_t> threads;
+  // 获取所有线程
+  // system/core/libprocinfo/include/procinfo/process.h
+  // 读取/proc/pid/task/
   if (!android::procinfo::GetProcessTids(g_target_thread, &threads)) {
     PLOG(FATAL) << "failed to get process threads";
   }
@@ -83,6 +86,7 @@ int main(int argc, char** argv) {
 
   {
     ATRACE_NAME("ptrace");
+    // 遍历线程数组
     for (pid_t thread : threads) {
       // Trace the pseudothread separately, so we can use different options.
       if (thread == pseudothread_tid) {
@@ -99,7 +103,7 @@ int main(int argc, char** argv) {
       info.tid = thread;
       info.process_name = process_name;
       info.thread_name = get_thread_name(thread);
-
+      //  system/core/debuggerd/crash_dump.cpp
       if (!ptrace_interrupt(thread, &info.signo)) {
         PLOG(WARNING) << "failed to ptrace interrupt thread " << thread;
         ptrace(PTRACE_DETACH, thread, 0, 0);
@@ -108,6 +112,7 @@ int main(int argc, char** argv) {
 
       if (thread == g_target_thread) {
         // Read the thread's registers along with the rest of the crash info out of the pipe.
+        // abort_address 获取异常地址
         ReadCrashInfo(input_pipe, &siginfo, &info.registers, &abort_address);
         info.siginfo = &siginfo;
         info.signo = info.siginfo->si_signo;
@@ -122,6 +127,7 @@ int main(int argc, char** argv) {
 
       thread_info[thread] = std::move(info);
     }
+
   }
 
   // Trace the pseudothread with PTRACE_O_TRACECLONE and tell it to fork.
@@ -274,4 +280,37 @@ BacktraceMap* BacktraceMap::Create(pid_t pid, bool uncached) {
     return nullptr;
   }
   return map;
+}
+
+
+// Interrupt a process and wait for it to be interrupted.
+static bool ptrace_interrupt(pid_t tid, int* received_signal) {
+  //
+  if (ptrace(PTRACE_INTERRUPT, tid, 0, 0) == 0) {
+    return wait_for_stop(tid, received_signal);
+  }
+
+  PLOG(ERROR) << "failed to interrupt " << tid << " to detach";
+  return false;
+}
+
+
+
+static void ReadCrashInfo(unique_fd& fd, siginfo_t* siginfo, std::unique_ptr<unwindstack::Regs>* regs, uintptr_t* abort_address) {
+  std::aligned_storage<sizeof(CrashInfo) + 1, alignof(CrashInfo)>::type buf;
+  ssize_t rc = TEMP_FAILURE_RETRY(read(fd.get(), &buf, sizeof(buf)));
+  if (rc == -1) {
+    PLOG(FATAL) << "failed to read target ucontext";
+  } else if (rc != sizeof(CrashInfo)) {
+    LOG(FATAL) << "read " << rc << " bytes when reading target crash information, expected " << sizeof(CrashInfo);
+  }
+
+  CrashInfo* crash_info = reinterpret_cast<CrashInfo*>(&buf);
+  if (crash_info->version != 1) {
+    LOG(FATAL) << "version mismatch, expected 1, received " << crash_info->version;
+  }
+
+  *siginfo = crash_info->siginfo;
+  regs->reset(Regs::CreateFromUcontext(Regs::CurrentArch(), &crash_info->ucontext));
+  *abort_address = crash_info->abort_msg_address;
 }

@@ -4,7 +4,7 @@ cc_binary {
         "util.cpp",
         "tombstoned/intercept_manager.cpp",
         "tombstoned/tombstoned.cpp",
-    ],  
+    ],
     defaults: ["debuggerd_defaults"],
 
     header_libs: ["libdebuggerd_common_headers"],
@@ -14,7 +14,7 @@ cc_binary {
         "libcutils",
         "libevent",
         "liblog",
-    ],  
+    ],
 
     init_rc: ["tombstoned/tombstoned.rc"],
 }
