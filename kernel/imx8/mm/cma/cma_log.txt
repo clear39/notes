@@ -1,3 +1,6 @@
+
+
+
 [    0.000000] __fdt_scan_reserved_mem 
 [    0.000000] __fdt_scan_reserved_mem cpus
 [    0.000000] __fdt_scan_reserved_mem cpu@0
@@ -62,5 +65,8 @@
 
 [    0.000000] Reserved memory: created DMA memory pool at 0x0000000090400000, size 8 MiB
 [    0.000000] OF: reserved mem: initialized node rpmsg_dma@0x90400000, compatible id shared-dma-pool
+
+
+
 [    0.000000] dma_contiguous_reserve(limit 100000000)
 [    0.000000] dma_contiguous_reserve: reserving 800 MiB for global area

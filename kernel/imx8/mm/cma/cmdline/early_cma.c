@@ -1,3 +1,20 @@
+/*
+总结：
+1) 通过early_cma函数解析命令参数
+2)
+setup_arch
+--->arm64_memblock_init
+------>dma_contiguous_reserve   // @ arch/arm64/mm/init.c
+--------->dma_contiguous_reserve_area   // @ drivers/base/dma-contiguous.c  cma->name在这里强制赋值为"reserved"
+------------>cma_declare_contiguous
+--------------->cma_init_reserved_mem  //在这里加入到cma_areas和cma_area_count中
+*/
+
+// 	@	include/linux/cma.h:13:	#define MAX_CMA_AREAS	(1 + CONFIG_CMA_AREAS)  // CONFIG_CMA_AREAS=7
+struct cma cma_areas[MAX_CMA_AREAS]; // MAX_CMA_AREAS = 8
+unsigned cma_area_count;
+
+
 //	@	drivers/base/dma-contiguous.c
 
 // 格式：cma=nn[MG]@[start[MG][-end[MG]]]
@@ -128,7 +145,8 @@ void __init dma_contiguous_reserve(phys_addr_t limit)
 	phys_addr_t selected_limit = limit;
 	bool fixed = false;
 
-	pr_debug("%s(limit %08lx)\n", __func__, (unsigned long)limit);
+	// [    0.000000] dma_contiguous_reserve(limit 0x100000000)
+	pr_debug("%s(limit 0x%08lx)\n", __func__, (unsigned long)limit);
 
 	if (size_cmdline != -1) {
 
@@ -152,6 +170,7 @@ void __init dma_contiguous_reserve(phys_addr_t limit)
 
 	// struct cma *dma_contiguous_default_area;
 	if (selected_size && !dma_contiguous_default_area) {
+		// [    0.000000] dma_contiguous_reserve: reserving 800 MiB for global area
 		pr_debug("%s: reserving %ld MiB for global area\n", __func__, (unsigned long)selected_size / SZ_1M);
 
 		dma_contiguous_reserve_area(selected_size, selected_base,
@@ -270,8 +289,7 @@ int __init cma_declare_contiguous(phys_addr_t base,
 	 */
 	if (fixed && base < highmem_start && base + size > highmem_start) {
 		ret = -EINVAL;
-		pr_err("Region at %pa defined on low/high memory boundary (%pa)\n",
-			&base, &highmem_start);
+		pr_err("Region at %pa defined on low/high memory boundary (%pa)\n", &base, &highmem_start);
 		goto err;
 	}
 
@@ -307,9 +325,7 @@ int __init cma_declare_contiguous(phys_addr_t base,
 		}
 
 		if (!addr) {
-			addr = memblock_alloc_range(size, alignment, base,
-						    limit,
-						    MEMBLOCK_NONE);
+			addr = memblock_alloc_range(size, alignment, base, limit, MEMBLOCK_NONE);
 			if (!addr) {
 				ret = -ENOMEM;
 				goto err;
@@ -372,6 +388,7 @@ int __init cma_init_reserved_mem(phys_addr_t base, phys_addr_t size,
 		return -ENOSPC;
 	}
 
+	// 
 	if (!size || !memblock_is_region_reserved(base, size))
 		return -EINVAL;
 
@@ -405,5 +422,9 @@ int __init cma_init_reserved_mem(phys_addr_t base, phys_addr_t size,
 	totalcma_pages += (size / PAGE_SIZE);
 	return 0;
 }
+
+
+
+
 
 

@@ -1,76 +1,4 @@
 
-//	@	drivers/tty/sysrq.c
-
-device_initcall(sysrq_init);
-
-static int __init sysrq_init(void)
-{
-	sysrq_init_procfs();
-
-	if (sysrq_on())
-		sysrq_register_handler();
-
-	return 0;
-}
-
-static void sysrq_init_procfs(void)
-{
-	if (!proc_create("sysrq-trigger", S_IWUSR, NULL, &proc_sysrq_trigger_operations))
-		pr_err("Failed to register proc interface\n");
-}
-
-
-static const struct file_operations proc_sysrq_trigger_operations = {
-	.write		= write_sysrq_trigger,
-	.llseek		= noop_llseek,
-};
-
-/*
- * writing 'C' to /proc/sysrq-trigger is like sysrq-C
- */
-static ssize_t write_sysrq_trigger(struct file *file, const char __user *buf, size_t count, loff_t *ppos)
-{
-	if (count) {
-		char c;
-
-		if (get_user(c, buf))
-			return -EFAULT;
-
-		__handle_sysrq(c, false);
-	}
-
-	return count;
-}
-
-
-
-
-
-
-// CONFIG_MAGIC_SYSRQ_DEFAULT_ENABLE=0x1
-static int __read_mostly sysrq_enabled = CONFIG_MAGIC_SYSRQ_DEFAULT_ENABLE;
-
-static bool __read_mostly sysrq_always_enabled;
-
-static bool sysrq_on(void)
-{
-	return sysrq_enabled || sysrq_always_enabled;
-}
-
-// 
-__setup("sysrq_always_enabled", sysrq_always_enabled_setup);
-
-
-
-static struct input_handler sysrq_handler = {
-	.filter		= sysrq_filter,
-	.connect	= sysrq_connect,
-	.disconnect	= sysrq_disconnect,
-	.name		= "sysrq",
-	.id_table	= sysrq_ids,
-};
-
-
 static inline void sysrq_register_handler(void)
 {
 	int error;
@@ -83,6 +11,14 @@ static inline void sysrq_register_handler(void)
 	else
 		sysrq_handler_registered = true;
 }
+
+static struct input_handler sysrq_handler = {
+	.filter		= sysrq_filter,
+	.connect	= sysrq_connect,
+	.disconnect	= sysrq_disconnect,
+	.name		= "sysrq",
+	.id_table	= sysrq_ids,
+};
 
 
 static void sysrq_of_get_keyreset_config(void)

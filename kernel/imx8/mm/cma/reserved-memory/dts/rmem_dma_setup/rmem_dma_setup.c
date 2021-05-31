@@ -21,7 +21,6 @@ rpmsg_dma@0x90400000 {
 	phandle = <0x000000ef>;
 };
 */
-
 static int __init rmem_dma_setup(struct reserved_mem *rmem)
 {
 	unsigned long node = rmem->fdt_node;

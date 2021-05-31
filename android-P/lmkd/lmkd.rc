@@ -1,4 +1,5 @@
 # 在/etc/init/lmkd.rc中，启动lmkd系统服务，创建了lmkd socket，并且将lmkd设置为system-background类型的进程
+
 service lmkd /system/bin/lmkd
     class core
     group root readproc
